@@ -1,0 +1,6 @@
+Change this file to '.ts' extenstion
+
+Data management: You could create a DataStoreService 
+class or module that manages data for 
+your application, such as caching data, syncing data 
+across devices, and handling updates from external sources.

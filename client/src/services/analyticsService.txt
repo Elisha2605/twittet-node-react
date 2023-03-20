@@ -1,0 +1,5 @@
+Change this file to '.ts' extenstion
+
+Analytics: You could create an AnalyticsService class or module that 
+handles analytics tracking, such as logging user actions, monitoring 
+performance, and generating reports.

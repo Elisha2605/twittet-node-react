@@ -1,0 +1,5 @@
+Change this file to '.ts' extenstion
+
+Authentication: You could create an AuthService class or module that 
+handles user authentication, such as logging in and out, storing user 
+tokens, and checking user permissions.
