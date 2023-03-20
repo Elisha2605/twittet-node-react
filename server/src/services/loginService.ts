@@ -1,12 +1,19 @@
-import { IUser, User } from 'src/model/userModel';
+import User, { IUser } from 'src/model/userModel';
 
 export const loginUser = async (
     email: string,
     password: string
 ): Promise<IUser> => {
-    const user = User.find((user) => {
-        return user.email === email && user.password === password;
-    });
+    try {
+        const newObj = {
+            email: email,
+            password: password,
+        };
 
-    return user;
+        const user = new User(newObj);
+        user.save();
+        return user;
+    } catch (error) {
+        console.log(error);
+    }
 };

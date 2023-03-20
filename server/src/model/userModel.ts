@@ -1,26 +1,34 @@
+import mongoose from 'mongoose';
+import { handleError } from './errors/errorHandlingService';
+
 export interface FormInputs {
     email: string;
     password: string;
 }
 
 export interface IUser {
-    id: number;
-    name: string;
     email: string;
     password: string;
 }
 
-export const User = [
-    {
-        id: 1,
-        name: 'Aïcha Haïdara',
-        email: 'a@a.com',
-        password: '123',
+export const userModel = {
+    email: {
+        type: String,
+        required: true,
     },
-    {
-        id: 2,
-        name: 'Juan Doe',
-        email: 'juan@example.com',
-        password: 'juan123',
+    password: {
+        type: String,
+        required: true,
     },
-];
+};
+
+const userSchema = new mongoose.Schema<IUser>(userModel, {
+    timestamps: true,
+});
+
+userSchema.set('collection', 'User');
+const User = mongoose.model('User', userSchema, 'User');
+
+User.on('error', handleError);
+
+export default User;
