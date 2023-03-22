@@ -1,4 +1,4 @@
-# Welcome to the app that will change lifes
+# Fake Twitter App
 <sub>Developer: Elisha Ngoma</sub>
 
 This is a web application built as part of my bachelor project. The app mimics the functionality of Twitter, allowing users to create accounts, post tweets, follow other users, and engage with their tweets through likes and comments.
