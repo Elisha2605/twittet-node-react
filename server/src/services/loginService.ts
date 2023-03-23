@@ -17,3 +17,12 @@ export const loginUser = async (
         console.log(error);
     }
 };
+
+export const getAllUser = async (): Promise<any> => {
+    try {
+        const user = User.find({});
+        return user;
+    } catch (error) {
+        console.error(error);
+    }
+};

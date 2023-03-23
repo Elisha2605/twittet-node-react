@@ -14,7 +14,7 @@ dbConn();
 app.use(express.json());
 app.use(cors());
 
-app.use('/api/great', userRouter);
 app.use('/api/login', loginRouter);
+app.use('/api/users', userRouter);
 
 export default app;

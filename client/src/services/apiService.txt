@@ -1,4 +1,0 @@
-Change this file to '.ts' extenstion
-
-API calls: You could create a ApiService class or module that handles all your API requests and responses. 
-This can make it easier to manage your API calls and handle errors consistently across your application.
