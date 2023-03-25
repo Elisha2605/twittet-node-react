@@ -7,23 +7,27 @@ import styles from './NavigationItem.module.css';
 
 interface NavigationProps {
     icon: IconDefinition,
-    name: string,
+    label: string,
     path: string,
 }
 
-const NavigationItem: FC<NavigationProps> = ({ name, icon, path}) => {
+const NavigationItem: FC<NavigationProps> = ({ label, icon, path}) => {
     return (
         <React.Fragment>
             <div className={styles.container}>
                 <FontAwesomeIcon 
                     icon={icon}
-                    color="####"
+                    color={''}
+                    fill={'none'}
+                    size={'2xl'}
+                    // border={true}
+                    style={{ width: "30px" }}
                 />
-                <h2>Home</h2>
-            <NavLink 
-                to={path}
-            >
-            </NavLink>
+                <h2>{label}</h2>
+                <NavLink 
+                    to={path}
+                >
+                </NavLink>
             </div>
         </React.Fragment>
     )
