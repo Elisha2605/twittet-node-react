@@ -1,0 +1,7 @@
+.container {
+    background: blue;
+    padding-right: 5rem;
+    float: right;
+    overflow-y: scroll;
+    max-height: 100%;
+}
