@@ -1,12 +1,12 @@
 import React, { FC } from "react";
-import styles from "./***.module.css";
+import styles from "./.module.css";
 
-interface *** {
+interface  {
     
 }
 
-const MainHeader: FC<****> = ({ 
-    *** 
+const : FC<> = ({ 
+     
 }) => {
 
     return (
@@ -16,4 +16,4 @@ const MainHeader: FC<****> = ({
     )
 }
 
-export default ****;
+export default ;

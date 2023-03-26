@@ -1,0 +1,43 @@
+.container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 6rem;
+    padding: 0.2rem 0.9rem;
+    margin-right: 0.6rem;
+    border-radius: var(--border-round);
+
+}
+
+.container:hover {
+    background: var(--color-secondary-light);
+    border-radius: var(--border-round);
+    cursor: pointer;
+}
+
+.avatar {
+    max-width: 100%;
+    max-height: 100%;
+    margin-top: 0.5rem;
+}
+
+.avatar img {
+    width: 3rem;
+    height: 3rem;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.userWrapper {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.userInfo {
+    min-width: 7.5rem;
+}
+
+.username {
+    color: var(--color-secondary);
+}

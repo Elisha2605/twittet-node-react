@@ -2,7 +2,13 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 1rem;
-    margin-top: 0.5rem;
-    padding-top: 1rem;
+    gap: 1.5rem;
+    padding: 0.7rem 1rem;
+    width: fit-content;
+}
+
+.container:hover {
+    background: var(--color-secondary-light);
+    border-radius: var(--border-round);
+    cursor: pointer;
 }

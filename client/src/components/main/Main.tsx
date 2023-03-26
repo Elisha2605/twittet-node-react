@@ -16,6 +16,7 @@ const Main = () => {
                     </Header>
                     <div className={styles.main}>
                         Main
+                        
                     </div>
                 </div>
                 <div>

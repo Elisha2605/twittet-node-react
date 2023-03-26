@@ -9,21 +9,21 @@ interface NavigationProps {
     icon: IconDefinition,
     label: string,
     path: string,
+    style?: any,
 }
 
-const NavigationItem: FC<NavigationProps> = ({ label, icon, path}) => {
+const NavigationItem: FC<NavigationProps> = ({ label, icon, path, style}) => {
     return (
         <React.Fragment>
             <div className={styles.container}>
                 <FontAwesomeIcon 
                     icon={icon}
                     color={''}
-                    fill={'none'}
                     size={'2xl'}
                     // border={true}
-                    style={{ width: "30px" }}
+                    style={{ flex: "none", width: "23px" }}
                 />
-                <h2>{label}</h2>
+                <h2 className={styles.label}>{label}</h2>
                 <NavLink 
                     to={path}
                 >
