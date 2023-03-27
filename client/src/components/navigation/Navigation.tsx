@@ -68,7 +68,7 @@ const Navigation = () => {
                 <NavigationUserInfo 
                     avatar={"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"} 
                     firstName={"Alvin"} 
-                    username={"@alvin40900"}
+                    username={"alvin40900"}
                 />
             </div>
         </React.Fragment>

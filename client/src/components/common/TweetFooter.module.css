@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+    /* justify-content: space-evenly; */
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding-left: 4rem;
+}
+.item p {
+    font-size: .8rem;
+}
