@@ -16,7 +16,7 @@ export enum ButtonSize {
 interface ButtonProps {
     value: any;
     type: ButtonType;
-    size?: ButtonSize;
+    size: ButtonSize;
     loading?: Boolean;
     className?: string;
     onClick: Function;

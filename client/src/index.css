@@ -15,13 +15,18 @@
     /* color hover */
     --color-primary-darker: #0d8cce;
     --color-secondary-light: #E1E8ED;
+    --color-secondary-lighter: #f2f4f6;
+    --color-black-lighter: #282828;
 
     /* font-size */
+    --font-size-regular: 1rem;
+
     --font-size-btn-lg: 1.2rem;
     --font-size-btn-sm: 1rem;
 
     /* font-weight */
     --font-weight-600: 600;
+    --font-weight-500: 500;
     
     /* border */
     --border-light: 0.5px solid var(--color-secondary);

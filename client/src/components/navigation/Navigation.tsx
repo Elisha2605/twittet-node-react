@@ -1,5 +1,5 @@
 import React from "react";
-import { faBook, faHashtag, faHome} from "@fortawesome/free-solid-svg-icons";
+import { faHashtag, faHome} from "@fortawesome/free-solid-svg-icons";
 import { faBell, faBookmark, faEnvelope, faUser } from "@fortawesome/free-regular-svg-icons";
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import styles from './Navigation.module.css';
@@ -7,12 +7,12 @@ import NavigationItem from "./NavigationItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import Button, { ButtonSize, ButtonType } from "../common/Button";
-import NavigationUser from "./NavigationUser";
+import NavigationUserInfo from "./NavigationUserInfo";
 
 const Navigation = () => {
 
     const onTweet = () => {
-
+        // TODO
     }
     
     return (
@@ -49,7 +49,8 @@ const Navigation = () => {
                     <NavigationItem
                         icon={faBookmark} 
                         label={"Bookmarks"} 
-                        path='/' 
+                        path='/'
+                        className={styles.bookmarks} 
                     />
                     <NavigationItem
                         icon={faUser} 
@@ -60,13 +61,14 @@ const Navigation = () => {
                         icon={faEllipsisH} 
                         label={"More"} 
                         path='/' 
+                        className={styles.ellipsis}
                     />
                 </div>
                 <Button value={'Tweet'} type={ButtonType.primary} size={ButtonSize.medium} onClick={onTweet} />
-                <NavigationUser 
+                <NavigationUserInfo 
                     avatar={"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"} 
                     firstName={"Alvin"} 
-                    username={"@alvin40900"} 
+                    username={"@alvin40900"}
                 />
             </div>
         </React.Fragment>

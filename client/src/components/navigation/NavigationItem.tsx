@@ -6,16 +6,16 @@ import styles from './NavigationItem.module.css';
 
 
 interface NavigationProps {
-    icon: IconDefinition,
-    label: string,
-    path: string,
-    style?: any,
+    icon: IconDefinition;
+    label: string;
+    path: string;
+    className?: string;
 }
 
-const NavigationItem: FC<NavigationProps> = ({ label, icon, path, style}) => {
+const NavigationItem: FC<NavigationProps> = ({ label, icon, path, className}) => {
     return (
         <React.Fragment>
-            <div className={styles.container}>
+            <div className={`${styles.container} ${className}`}>
                 <FontAwesomeIcon 
                     icon={icon}
                     color={''}

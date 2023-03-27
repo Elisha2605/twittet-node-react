@@ -1,6 +1,5 @@
 .primarySmall, .secondarySmall {
     color: var(--color-white);
-    padding: 0.2rem 1rem;
     border-radius: var(--border-round);
     font-size: var(--font-size-btn-sm);
     font-weight: var(--font-weight-600);
@@ -8,10 +7,20 @@
 
 .primarySmall {
     background: var(--color-primary);
+    padding: 0.4rem 1rem;
 }   
+
+.primarySmall {
+    background: var(--color-primary-darker);
+}
 
 .secondarySmall {
     background: var(--color-black);
+    padding: 0.2rem 1rem;
+}
+
+.secondarySmall:hover {
+    background: var(--color-black-lighter);
 }
 
 .tietary {

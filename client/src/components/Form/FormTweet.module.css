@@ -1,0 +1,34 @@
+.textarea {
+    border: none;
+    /* padding: 8px 0; */
+    resize: none;
+    width: 100%;
+    font-family: inherit;
+    font-size: var(--font-size-btn-lg);
+    /* border: 1px solid gray; */
+}
+
+.textarea:hover {
+    border-color: #c6c6c6;
+}
+
+.textarea:focus {
+    outline: none;
+}
+
+.textarea::placeholder {
+    color: var(--color-secondary);
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+
+.icons {
+    display: flex;
+    gap: 1rem;
+}

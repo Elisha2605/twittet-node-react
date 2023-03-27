@@ -1,5 +1,8 @@
 .app {
-    
+    font-family: 'Helvetica Neue', sans-serif;
+    font-weight: normal;
+    font-style: normal;  
+    color: rgb(47, 47, 47);
 }
 
 .navigation {
@@ -8,7 +11,7 @@
     left: 0;
     height: 100%;
     width: 22rem;
-    border-right-color: rgb(71, 71, 71);
+    border-right-color: var(--color-secondary-light);
     border-style: solid;
     border-width: 0 1px 0 0;
 }

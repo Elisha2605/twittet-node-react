@@ -12,3 +12,15 @@
 .naviItems {
     margin-bottom: 1rem;
 }
+
+.userInfo {
+    margin-top: 6rem;
+}
+
+.bookmarks svg {
+    font-size: 23px;
+}
+
+.ellipsis svg {
+    font-size: 23px;
+}
