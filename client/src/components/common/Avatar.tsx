@@ -2,8 +2,8 @@ import React, { FC } from "react";
 import styles from "./Avatar.module.css";
 
 interface AvatarProps {
-    size: string;
-    path: string;
+    size?: string;
+    path?: string;
     alt?: string;
     link?: string;
 }

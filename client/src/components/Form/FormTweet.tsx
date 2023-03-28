@@ -7,7 +7,7 @@ import styles from "./FormTweet.module.css";
 
 
 interface FormProps {
-
+    
 }
 
 const FormTweet: FC<FormProps> = ({

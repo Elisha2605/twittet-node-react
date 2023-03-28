@@ -34,36 +34,3 @@
     background: var(--color-secondary-light);
     cursor: pointer;
 }
-
-
-
-.mainWrapper {
-    position: relative;
-    float: right;
-    overflow-y: scroll;
-    height: 100%;
-    border-color: var(--color-secondary-light);
-    border-style: solid;
-    border-width: 0 1px 0 0;
-}
-
-.main {
-    /* padding: 0 1rem 0 1rem; */
-}
-
-::-webkit-scrollbar {
-    width: 0;
-}
-
-::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: #888;
-    border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background-color: #555;
-}

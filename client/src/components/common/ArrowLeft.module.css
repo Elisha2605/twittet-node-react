@@ -1,0 +1,9 @@
+.faArrowLeft {
+    padding: 0.6rem 0.7rem;
+    border-radius: 50%;
+}
+
+.faArrowLeft:hover {
+    background: var(--color-secondary-lighter);
+    cursor: pointer;
+}

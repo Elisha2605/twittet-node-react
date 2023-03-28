@@ -35,7 +35,7 @@ const Tweet: FC<TweetProps> = ({
             <div className={styles.container}>
                 <UserInfo
                     avatar={avatar}
-                    firstName={firstName}
+                    firstname={firstName}
                     username={username}
                     isOption={isOption}
                 />

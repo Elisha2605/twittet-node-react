@@ -3,8 +3,8 @@ import styles from './Header.module.css';
 
 interface HeaderProps {
     title?: string;
-    children: React.ReactNode;
-    border: boolean;
+    children?: React.ReactNode;
+    border?: boolean;
 }
 
 const Header: FC<HeaderProps> = ({ title, children, border, ...attributes }) => {

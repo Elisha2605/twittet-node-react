@@ -1,15 +1,9 @@
 .textarea {
     border: none;
-    /* padding: 8px 0; */
     resize: none;
     width: 100%;
     font-family: inherit;
-    font-size: var(--font-size-btn-lg);
-    /* border: 1px solid gray; */
-}
-
-.textarea:hover {
-    border-color: #c6c6c6;
+    font-size: var(--font-size-lg);
 }
 
 .textarea:focus {
@@ -26,7 +20,6 @@
     align-items: center;
     margin-top: 1rem;
 }
-
 
 .icons {
     display: flex;

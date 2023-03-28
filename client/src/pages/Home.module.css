@@ -1,0 +1,29 @@
+/* make this a component - tweet from */
+.formSection {
+    display: grid;
+    grid-template-columns: 0fr 1fr;
+    gap: 1rem;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+}
+.formSection textarea {
+    margin-top: 0.7rem;
+}
+
+.headerItems {
+    display: flex;
+    margin-top: 1rem;
+    width: 100%;
+    text-align: center;
+    font-weight: var(--font-weight-500);
+}
+
+.forYou, .following {
+    width: 100%;
+    padding: 0.5rem;
+}
+.forYou:hover, .following:hover {
+    background: var(--color-secondary-light);
+    cursor: pointer;
+}
+
+

@@ -1,5 +1,6 @@
 .container {
     padding: 0 1rem 1rem 1rem;
+    border-top: 1px solid var(--color-secondary-light);
 }
 
 .container:hover {
@@ -11,7 +12,6 @@
 .container .tweet, 
 .container .image {
     margin-left: 4rem;
-
 }
 
 .tweet {

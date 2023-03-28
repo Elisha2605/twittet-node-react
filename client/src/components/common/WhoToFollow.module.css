@@ -14,6 +14,11 @@
     padding-left: 1rem;
 }
 
+.firstname {
+    font-weight: var(--font-weight-500);
+}
+
+
 .userInfo:hover {
     background: var(--color-secondary-light);
     cursor: pointer;

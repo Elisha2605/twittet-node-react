@@ -23,7 +23,7 @@ const NavigationUserInfo: FC<NavigationUserInfoProps> = ({
                 <div className={styles.avatar}><img src={avatar} alt="" /></div>
                 <div className={`${styles.userWrapper}`}>
                     <div className={styles.userInfo}>
-                        <p>{firstName}</p>
+                        <p className={styles.firstname}>{firstName}</p>
                         <p className={styles.username}>@{username}</p>
                     </div>
                     <FontAwesomeIcon icon={faEllipsis} />
