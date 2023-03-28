@@ -1,4 +1,4 @@
-import { faEllipsisH } from "@fortawesome/free-solid-svg-icons";
+import { faCheckCircle, faEllipsisH } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { FC } from "react";
 import styles from "./UserInfo.module.css";
@@ -30,7 +30,7 @@ const UserInfo: FC<UserInfoProps> = ({
 
                         <div className={styles.userInfoOptionWrapper}>
                             <div className={styles.userInfo}>
-                                <a href={link}><p>{firstName}</p></a>
+                                <a href={link}><p>{firstName} <FontAwesomeIcon icon={faCheckCircle} color={'var(--color-primary)'} /> </p></a>
                                 <p className={styles.username}>@{username} · {'Mar 26'} </p>
                             </div>
                             <FontAwesomeIcon icon={faEllipsisH} />
