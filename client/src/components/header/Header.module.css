@@ -1,7 +1,8 @@
 .container {
     position: sticky;
     top: 0;
-    background: white;
+    background: rgba(255, 255, 255, 0.877);
+    backdrop-filter: blur(5px);
 }
 
 .title {
