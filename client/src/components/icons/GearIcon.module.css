@@ -1,0 +1,9 @@
+.faGear {
+    padding: 0.6rem 0.7rem;
+    border-radius: 50%;
+}
+
+.faGear:hover {
+    background: var(--color-secondary-lighter);
+    cursor: pointer;
+}

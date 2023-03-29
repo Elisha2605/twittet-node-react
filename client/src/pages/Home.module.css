@@ -2,7 +2,33 @@
     margin-left: 1rem;
 }
 
-/* make this a component - tweet from */
+/* Nav */
+.homeNaveBar {
+    margin-top: 1rem;
+}
+
+.homeNaveBar .active {
+    color: var(--color-black);
+    font-weight: var(--font-weight-600);
+    position: relative;
+}
+
+.homeNaveBar .active {
+    transition: .2s ease-in-out;
+}
+
+.homeNaveBar .active:after {
+    content: "";
+    position: absolute;
+    bottom: 0; 
+    left: 50%; 
+    transform: translate(-50%);    
+    width: 30%; 
+    border-bottom: 4px solid var(--color-primary);
+    border-radius: 1rem;
+}
+
+/* make this a component - tweet from and move this css code */
 .formSection {
     display: grid;
     grid-template-columns: 0fr 1fr;
@@ -29,5 +55,3 @@
     background: var(--color-secondary-light);
     cursor: pointer;
 }
-
-

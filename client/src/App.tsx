@@ -7,6 +7,7 @@ import { Route, Routes } from 'react-router-dom';
 import Profile from './pages/Profile';
 import Explore from './pages/Explore';
 import Bookmarks from './pages/Bookmarks';
+import Notifications from './pages/Notifications';
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
                     <Routes>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/explore" element={<Explore />} />
+                        <Route path="/notification" element={<Notifications />} />
                         <Route path="/bookmarks" element={<Bookmarks />} />
                         <Route path="/profile" element={<Profile />} />
                     </Routes>

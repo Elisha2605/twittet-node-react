@@ -1,7 +1,7 @@
 import { faCheckCircle, faEllipsisH } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { FC } from "react";
-import Menu from "./Menu";
+import MenuIcon from "../icons/MenuIcon";
 import styles from "./UserInfo.module.css";
 
 interface UserInfoProps {
@@ -36,7 +36,7 @@ const UserInfo: FC<UserInfoProps> = ({
                                 <a href={link}><p className={styles.firstname}>{firstname} <FontAwesomeIcon icon={faCheckCircle} color={'var(--color-primary)'} /></p></a>
                                 <p className={styles.username}>@{username} · {'Mar 26'} </p>
                             </div>
-                            <Menu />
+                            <MenuIcon />
                         </div>
 
                     ): (

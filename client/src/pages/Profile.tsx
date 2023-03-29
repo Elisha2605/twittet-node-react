@@ -8,9 +8,10 @@ import styles from './Profile.module.css';
 import Layout from '../Layout.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDays } from '@fortawesome/free-regular-svg-icons';
-import ArrowLeft from '../components/common/ArrowLeft';
+import ArrowLeftIcon from '../components/icons/ArrowLeftIcon';
 import Button, { ButtonSize, ButtonType } from '../components/common/Button';
 import HeaderTitle from '../components/header/HeaderTitle';
+import HorizontalNavBar from '../components/common/HorizontalNavBar';
 
 const Profile = () => {
     
@@ -26,7 +27,7 @@ const Profile = () => {
                     {/* HEADER - START */}
                     <Header border={true}>
                         <div className={styles.headerItems}>
-                            <ArrowLeft />
+                            <ArrowLeftIcon />
                             <HeaderTitle title={'Aïcha'} subTitle={'1 Tweet'} />
                         </div>
                     </Header>
@@ -53,12 +54,12 @@ const Profile = () => {
                                 </div>
                             </div>
 
-                            <div className={styles.profileNavigation}>
+                            <HorizontalNavBar className={styles.profileNav}>
                                 <div className={styles.active}>Tweets</div>
                                 <div>Replies</div>
                                 <div>Media</div>
                                 <div>Likes</div>
-                            </div>
+                            </HorizontalNavBar>
 
                         {/* TWEETS - START */}
                         <Tweet 

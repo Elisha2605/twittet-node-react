@@ -39,7 +39,7 @@ const Navigation = () => {
                     <NavigationItem
                         icon={faBell} 
                         label={"Notifications"} 
-                        path='/' 
+                        path='/notification' 
                     />
                     <NavigationItem
                         icon={faEnvelope} 

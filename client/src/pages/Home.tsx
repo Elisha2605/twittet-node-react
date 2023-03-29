@@ -9,6 +9,7 @@ import Tweet from '../components/tweet/Tweet';
 import styles from './Home.module.css';
 import Layout from '../Layout.module.css';
 import HeaderTitle from '../components/header/HeaderTitle';
+import HorizontalNavBar from '../components/common/HorizontalNavBar';
 
 const HomePage = () => {
     return (
@@ -18,10 +19,10 @@ const HomePage = () => {
                     {/* Home page - start */}
                     <Header border={true}>
                         <HeaderTitle title={'Home'} className={styles.title}/>
-                        <div className={styles.headerItems}>
-                            <div className={styles.forYou}>For you</div>
-                            <div className={styles.following}>Following</div>
-                        </div>
+                        <HorizontalNavBar className={styles.homeNaveBar}>
+                            <div className={styles.active}>For you</div>
+                            <div>Following</div>
+                        </HorizontalNavBar>
                     </Header>
                     <div className={styles.main}>
                         {/* TweetForm */}

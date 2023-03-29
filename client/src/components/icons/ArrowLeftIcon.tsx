@@ -1,13 +1,13 @@
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { FC } from 'react';
-import styles from './ArrowLeft.module.css';
+import styles from './ArrowLeftIcon.module.css';
 
-interface ArrowLeftProps {
+interface ArrowLeftIconProps {
     className?: string;
 }
 
-const ArrowLeft: FC<ArrowLeftProps> = ({ className }) => {
+const ArrowLeftIcon: FC<ArrowLeftIconProps> = ({ className }) => {
     return (
         <React.Fragment>
             <FontAwesomeIcon icon={faArrowLeft} className={`${styles.faArrowLeft} ${className}`} />
@@ -15,4 +15,4 @@ const ArrowLeft: FC<ArrowLeftProps> = ({ className }) => {
     );
 };
 
-export default ArrowLeft;
+export default ArrowLeftIcon;

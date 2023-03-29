@@ -1,0 +1,17 @@
+.container {
+    display: flex;
+    color: var(--color-secondary);
+    font-weight: var(--font-weight-500);
+}
+
+.container div {
+    text-align: center;
+    width: 100%;
+    padding: 0.9rem;
+}
+
+.container div:hover {
+    cursor: pointer;
+    transition: 0.1s ease-in-out;
+    background: var(--color-secondary-light);
+}

@@ -1,38 +1,33 @@
 import React from 'react';
 import Header from '../components/header/Header';
-import styles from './Explore.module.css';
+import styles from './Notifications.module.css';
 import Layout from '../Layout.module.css';
-import SearchBar from '../components/common/SearchBar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGear } from '@fortawesome/free-solid-svg-icons';
-import PageUnderConstruction from '../components/common/PageUnderConstruction';
+import HeaderTitle from '../components/header/HeaderTitle';
 import GearIcon from '../components/icons/GearIcon';
+import HorizontalNavBar from '../components/common/HorizontalNavBar';
+import PageUnderConstruction from '../components/common/PageUnderConstruction';
 
 
-const Explore = () => {
+const Notification = () => {
     
     return (
         <React.Fragment>
             <div className={Layout.mainSectionContainer}>
                 <div className={Layout.mainSection}>
                     {/* Home page - start */}
-                        <Header>
+                        <Header border={true}>
                             <div className={styles.headerWrapper}>
-                                <SearchBar width={85} />
-                                <GearIcon className={styles.gearIcon}/>
+                                <HeaderTitle title={'Notifications'} />
+                                <GearIcon />
                             </div>
+                            <HorizontalNavBar className={styles.NotificationNav}>
+                                <div className={styles.active}>All</div>
+                                <div>Mentions</div>
+                            </HorizontalNavBar>
                         </Header>
                     {/* Home page - start */}
                     <div className={styles.main}>
-                        {/* TweetForm */}
-
-                        <PageUnderConstruction message={'Maybe display some weather info'} />
-                        
-                        {/* TweetForm */}
-                        
-                        {/* tweets - start */}
-                        
-                        {/* tweets - end */}
+                        <PageUnderConstruction message={'Will display - all notificatins and all Mentions'}/>
                     </div>
                 </div>
                     {/* Home page - start */}
@@ -46,4 +41,4 @@ const Explore = () => {
     );
 };
 
-export default Explore;
+export default Notification;

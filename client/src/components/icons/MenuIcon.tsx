@@ -1,11 +1,11 @@
 import { faEllipsisH } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { FC } from "react";
-import styles from "./Menu.module.css";
+import styles from "./MenuIcon.module.css";
 
 
 
-const Menu: FC<{ className?: string }> = ({ className }) => {
+const MenuIcon: FC<{ className?: string }> = ({ className }) => {
 
     return (
         <React.Fragment>
@@ -14,4 +14,4 @@ const Menu: FC<{ className?: string }> = ({ className }) => {
     )
 }
 
-export default Menu;
+export default MenuIcon;

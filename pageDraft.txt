@@ -16,10 +16,6 @@ const  = () => {
                         </Header>
                     {/* Home page - start */}
                     <div className={styles.main}>
-                        {/* TweetForm */}
-                      
-                        {/* TweetForm */}
-                        
                         {/* tweets - start */}
                         
                         {/* tweets - end */}
