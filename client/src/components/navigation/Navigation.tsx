@@ -29,12 +29,12 @@ const Navigation = () => {
                     <NavigationItem
                         icon={faHome} 
                         label={"Home"} 
-                        path='/home' 
+                        path='/' 
                     />
                     <NavigationItem
                         icon={faHashtag} 
                         label={"Explore"} 
-                        path='/' 
+                        path='/explore' 
                     />
                     <NavigationItem
                         icon={faBell} 
@@ -49,7 +49,7 @@ const Navigation = () => {
                     <NavigationItem
                         icon={faBookmark} 
                         label={"Bookmarks"} 
-                        path='/'
+                        path='/bookmarks'
                         className={styles.bookmarks} 
                     />
                     <NavigationItem

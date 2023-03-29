@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDays } from '@fortawesome/free-regular-svg-icons';
 import ArrowLeft from '../components/common/ArrowLeft';
 import Button, { ButtonSize, ButtonType } from '../components/common/Button';
+import HeaderTitle from '../components/header/HeaderTitle';
 
 const Profile = () => {
     
@@ -26,10 +27,7 @@ const Profile = () => {
                     <Header border={true}>
                         <div className={styles.headerItems}>
                             <ArrowLeft />
-                            <div className={styles.headerInfo}>
-                                <p className={styles.profileName}>Aïcha</p>
-                                <p className={styles.likes}>1 Tweet</p>
-                            </div>
+                            <HeaderTitle title={'Aïcha'} subTitle={'1 Tweet'} />
                         </div>
                     </Header>
                     {/* HEADER - END */}

@@ -1,0 +1,38 @@
+.headerWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem 0 1rem;
+}
+
+.emptyBookmarksWrapper {
+    
+}
+
+.emptyBookmarksImage {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 3rem;
+    gap: 2rem;
+}
+
+.emptyBookmarksImage img {
+    width: 21rem;
+}
+
+.emptyBookmarksMessage {
+    width: 70%;
+    margin-left: 2rem;
+}
+.emptyBookmarksMessage .messageTitle {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-600);
+}
+
+.messageBody {
+    color: var(--color-secondary);
+}

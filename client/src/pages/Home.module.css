@@ -1,3 +1,7 @@
+.title {
+    margin-left: 1rem;
+}
+
 /* make this a component - tweet from */
 .formSection {
     display: grid;

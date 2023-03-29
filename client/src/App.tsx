@@ -5,6 +5,8 @@ import HomePage from './pages/Home';
 import Layout from './Layout.module.css';
 import { Route, Routes } from 'react-router-dom';
 import Profile from './pages/Profile';
+import Explore from './pages/Explore';
+import Bookmarks from './pages/Bookmarks';
 
 function App() {
 
@@ -16,7 +18,9 @@ function App() {
                 </div>
                 <div className={Layout.page}>
                     <Routes>
-                        <Route path="/home" element={<HomePage />} />
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/explore" element={<Explore />} />
+                        <Route path="/bookmarks" element={<Bookmarks />} />
                         <Route path="/profile" element={<Profile />} />
                     </Routes>
                 </div>

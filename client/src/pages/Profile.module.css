@@ -57,8 +57,8 @@
     margin-left: 1rem;
 }
 .userInfo .firstname {
-    font-size: var(--font-size-xlg);
-    font-weight: var(--font-weight-700);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-600);
 }
 .userInfo .username {
     font-size: var(--font-size-md); 

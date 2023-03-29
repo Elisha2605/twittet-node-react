@@ -1,8 +1,13 @@
-.faEllipsisH {
+/* .faEllipsisH {
     position: absolute;
     border-radius: 50%;
     top: -0.5rem;
     right: -0.5rem;
+    padding: 0.6rem;
+} */
+
+.faEllipsisH {
+    border-radius: 50%;
     padding: 0.6rem;
 }
 

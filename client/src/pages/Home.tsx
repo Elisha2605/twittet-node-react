@@ -8,6 +8,7 @@ import Header from '../components/header/Header';
 import Tweet from '../components/tweet/Tweet';
 import styles from './Home.module.css';
 import Layout from '../Layout.module.css';
+import HeaderTitle from '../components/header/HeaderTitle';
 
 const HomePage = () => {
     return (
@@ -15,7 +16,8 @@ const HomePage = () => {
             <div className={Layout.mainSectionContainer}>
                 <div className={Layout.mainSection}>
                     {/* Home page - start */}
-                    <Header border={true} title={'Home'}>
+                    <Header border={true}>
+                        <HeaderTitle title={'Home'} className={styles.title}/>
                         <div className={styles.headerItems}>
                             <div className={styles.forYou}>For you</div>
                             <div className={styles.following}>Following</div>
@@ -53,7 +55,7 @@ const HomePage = () => {
                             likes={'21.3'} 
                             views={'446'} 
                         />
-                         <Tweet 
+                        <Tweet 
                             avatar={'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80'} 
                             firstName={'Luis Suárez'} 
                             username={'LuisSuarez9'} 
@@ -82,7 +84,7 @@ const HomePage = () => {
                     {/* Home page - start */}
                 <div>
                     <Header border={false}>
-                        <SearchBar />
+                        <SearchBar width={74}/>
                     </Header>
                     <Aside className={styles.aside}>
                         <WhoToFollow />
