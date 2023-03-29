@@ -44,7 +44,7 @@ const Navigation = () => {
                     <NavigationItem
                         icon={faEnvelope} 
                         label={"Message"} 
-                        path='/' 
+                        path='/message' 
                     />
                     <NavigationItem
                         icon={faBookmark} 

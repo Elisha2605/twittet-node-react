@@ -1,23 +1,37 @@
 import React, { FC } from "react";
 import styles from "./Avatar.module.css";
 
+export enum Size {
+    small = 'small',
+    medium = 'medium',
+    big = 'big'
+}
+
 interface AvatarProps {
-    size?: string;
+    size: Size;
     path?: string;
     alt?: string;
     link?: string;
+    className: string;
 }
 
 const Avatar: FC<AvatarProps> = ({ 
     size,
     path,
     alt,
-    link
+    link,
+    className
 }) => {
+
+    let allSizes = styles.small;
+
+    if (size === Size.medium) {
+        allSizes = styles.medium;
+    }
 
     return (
         <React.Fragment>
-            <div className={styles.container}>
+            <div className={`${className} ${allSizes} ${styles[size]}`}>
                 <img src={path} alt={alt} />
             </div>
         </React.Fragment>

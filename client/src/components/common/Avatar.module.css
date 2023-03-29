@@ -9,3 +9,19 @@
     object-fit: cover;
     border-radius: 50%;
 }
+
+/* image sizes */
+.small img, .medium img, big img {
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.small img {
+    width: 3rem;
+    height: 3rem;
+}
+
+.medium img {
+    width: 4.5rem;
+    height: 4.5rem;
+}

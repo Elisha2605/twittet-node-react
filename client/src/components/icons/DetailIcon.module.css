@@ -1,0 +1,9 @@
+.faCircleExclamation {
+    padding: 0.6rem 0.7rem;
+    border-radius: 50%;
+}
+
+.faCircleExclamation:hover {
+    background: var(--color-secondary-lighter);
+    cursor: pointer;
+}

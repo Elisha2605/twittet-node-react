@@ -14,11 +14,18 @@
     margin-left: 22rem;
 }
 
-.mainSectionContainer {
+.mainSectionContainer,
+.mainSectionSectionMessageContainer 
+{
     display: grid;
     grid-template-columns: 1.9fr 1.5fr;
     gap: 2rem;
     height: 100vh;
+}
+
+.mainSectionSectionMessageContainer {
+    grid-template-columns: 1fr 1.5fr;
+    padding-right: 6rem;
 }
 
 .mainSection {

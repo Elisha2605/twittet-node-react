@@ -1,6 +1,6 @@
 import React from 'react';
 import Aside from '../components/aside/Aside';
-import Avatar from '../components/common/Avatar';
+import Avatar, { Size } from '../components/common/Avatar';
 import SearchBar from '../components/common/SearchBar';
 import WhoToFollow from '../components/common/WhoToFollow';
 import FormTweet from '../components/Form/FormTweet';
@@ -27,7 +27,7 @@ const HomePage = () => {
                     <div className={styles.main}>
                         {/* TweetForm */}
                         <div className={styles.formSection}>    
-                            <Avatar size={''} path={"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"} />
+                            <Avatar path={"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"} size={Size.small} className={''} />
                             <FormTweet />
                         </div>
                         {/* TweetForm */}

@@ -8,6 +8,7 @@ import Profile from './pages/Profile';
 import Explore from './pages/Explore';
 import Bookmarks from './pages/Bookmarks';
 import Notifications from './pages/Notifications';
+import Message from './pages/Messages';
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
                         <Route path="/" element={<HomePage />} />
                         <Route path="/explore" element={<Explore />} />
                         <Route path="/notification" element={<Notifications />} />
+                        <Route path="/message" element={<Message />} />
                         <Route path="/bookmarks" element={<Bookmarks />} />
                         <Route path="/profile" element={<Profile />} />
                     </Routes>

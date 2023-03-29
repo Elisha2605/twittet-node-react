@@ -6,6 +6,9 @@ import HeaderTitle from '../components/header/HeaderTitle';
 import GearIcon from '../components/icons/GearIcon';
 import HorizontalNavBar from '../components/common/HorizontalNavBar';
 import PageUnderConstruction from '../components/common/PageUnderConstruction';
+import SearchBar from '../components/common/SearchBar';
+import Aside from '../components/aside/Aside';
+import WhoToFollow from '../components/common/WhoToFollow';
 
 
 const Notification = () => {
@@ -32,9 +35,12 @@ const Notification = () => {
                 </div>
                     {/* Home page - start */}
                 <div>
-                   {/* Aside - start */}
-                   
-                   {/* Aside - end */}
+                    <Header border={false}>
+                        <SearchBar width={74}/>
+                    </Header>
+                    <Aside className={styles.aside}>
+                        <WhoToFollow />
+                    </Aside>
                 </div>
             </div>
         </React.Fragment>

@@ -7,7 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 import PageUnderConstruction from '../components/common/PageUnderConstruction';
 import GearIcon from '../components/icons/GearIcon';
-
+import Aside from '../components/aside/Aside';
+import WhoToFollow from '../components/common/WhoToFollow';
 
 const Explore = () => {
     
@@ -37,9 +38,12 @@ const Explore = () => {
                 </div>
                     {/* Home page - start */}
                 <div>
-                   {/* Aside - start */}
-                   
-                   {/* Aside - end */}
+                    <Header border={false}>
+                        <SearchBar width={74}/>
+                    </Header>
+                    <Aside className={styles.aside}>
+                        <WhoToFollow />
+                    </Aside>
                 </div>
             </div>
         </React.Fragment>
