@@ -15,20 +15,15 @@ interface NavigationProps {
 const NavigationItem: FC<NavigationProps> = ({ label, icon, path, className}) => {
     return (
         <React.Fragment>
-            <div className={`${styles.container} ${className}`}>
+            <NavLink to={path} className={`${styles.container} ${className}`} >
                 <FontAwesomeIcon 
                     icon={icon}
                     color={''}
                     size={'2xl'}
-                    // border={true}
                     style={{ flex: "none", width: "23px" }}
                 />
                 <h2 className={styles.label}>{label}</h2>
-                <NavLink 
-                    to={path}
-                >
-                </NavLink>
-            </div>
+            </NavLink>
         </React.Fragment>
     )
 }

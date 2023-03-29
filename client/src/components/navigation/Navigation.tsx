@@ -29,7 +29,7 @@ const Navigation = () => {
                     <NavigationItem
                         icon={faHome} 
                         label={"Home"} 
-                        path='/' 
+                        path='/home' 
                     />
                     <NavigationItem
                         icon={faHashtag} 
@@ -55,7 +55,7 @@ const Navigation = () => {
                     <NavigationItem
                         icon={faUser} 
                         label={"Profile"} 
-                        path='/' 
+                        path='/profile' 
                     />
                     <NavigationItem
                         icon={faEllipsisH} 
