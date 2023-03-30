@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 
 import Aside from '../aside/Aside';
-import Avatar from '../common/Avatar';
-import SearchBar from '../common/SearchBar';
-import WhoToFollow from '../common/WhoToFollow';
+import Avatar from '../ui/Avatar';
+import SearchBar from '../ui/SearchBar';
+import WhoToFollow from '../ui/WhoToFollow';
 import FormTweet from '../Form/FormTweet';
 import Header from '../header/Header';
 import Tweet from '../tweet/Tweet';

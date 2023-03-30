@@ -1,7 +1,7 @@
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { FC } from "react";
-import MenuIcon from "../icons/MenuIcon";
+import PopUpMenu from "./PopUpMenu";
 import styles from "./UserInfo.module.css";
 
 interface UserInfoProps {
@@ -12,6 +12,8 @@ interface UserInfoProps {
     link?: string;
     className?: string;
     isOption?: boolean;
+    options?: string[];
+    onClickOption?: Function;
 }
 
 const UserInfo: FC<UserInfoProps> = ({ 
@@ -22,6 +24,8 @@ const UserInfo: FC<UserInfoProps> = ({
      link,
      className,
      isOption,
+     options,
+     onClickOption
 }) => {
 
     return (
@@ -38,7 +42,8 @@ const UserInfo: FC<UserInfoProps> = ({
                                 <a href={link}><p className={styles.firstname}>{firstname} <FontAwesomeIcon icon={faCheckCircle} color={'var(--color-primary)'} /></p></a>
                                 <p className={styles.username}>@{username} · {'Mar 26'} </p>
                             </div>
-                            <MenuIcon />
+                            {/* <MenuIcon /> */}
+                            <PopUpMenu options={options!} onClick={(option) => onClickOption!(option)} />
                         </div>
 
                     ) : (

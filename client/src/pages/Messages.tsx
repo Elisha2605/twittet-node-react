@@ -5,10 +5,10 @@ import Layout from '../Layout.module.css';
 import HeaderTitle from '../components/header/HeaderTitle';
 import GearIcon from '../components/icons/GearIcon';
 import EnvelopeIcon from '../components/icons/EnvelopeIcon';
-import SearchBar from '../components/common/SearchBar';
+import SearchBar from '../components/ui/SearchBar';
 import Aside from '../components/aside/Aside';
 import DetailIcon from '../components/icons/DetailIcon';
-import Avatar, { Size } from '../components/common/Avatar';
+import Avatar, { Size } from '../components/ui/Avatar';
 
 const Message = () => {
     

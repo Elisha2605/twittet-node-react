@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Aside from '../components/aside/Aside';
-import SearchBar from '../components/ui/SearchBar';
-import WhoToFollow from '../components/ui/WhoToFollow';
+import SearchBar from '../components/common/SearchBar';
+import WhoToFollow from '../components/common/WhoToFollow';
 import Header from '../components/header/Header';
 import Tweet from '../components/tweet/Tweet';
 import styles from './Profile.module.css';
@@ -9,12 +9,38 @@ import Layout from '../Layout.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDays } from '@fortawesome/free-regular-svg-icons';
 import ArrowLeftIcon from '../components/icons/ArrowLeftIcon';
-import Button, { ButtonSize, ButtonType } from '../components/ui/Button';
+import Button, { ButtonSize, ButtonType } from '../components/common/Button';
 import HeaderTitle from '../components/header/HeaderTitle';
-import HorizontalNavBar from '../components/ui/HorizontalNavBar';
+import HorizontalNavBar from '../components/common/HorizontalNavBar';
+import Modal from '../components/common/Modal';
 
 const Profile = () => {
+    
+    const [modalOpen, setMadalOpen] = useState(false);
+    const [modalTweet, setModalTweet] = useState(false);
 
+    const modalRef = useRef<HTMLDivElement>(null);
+
+    const handleOpenModal = () => setMadalOpen(true);
+    const handleTweet = () => setModalTweet(true);
+
+    useEffect(() => {
+        document.addEventListener('mousedown', hadleClikOUtside );
+        return () => {
+            document.removeEventListener('mousedown', hadleClikOUtside);
+        };
+    }, [modalRef])
+
+    const hadleClikOUtside = (e: MouseEvent) => {
+        if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+            setMadalOpen(false);
+            setModalTweet(false)
+        }
+    }
+
+    const onEditProfile = () => {
+
+    }   
 
     
 
@@ -37,7 +63,17 @@ const Profile = () => {
                             <div className={styles.imageWrapper}>
                                 <div className={styles.coverImage}><img src={'https://images.unsplash.com/photo-1595670322505-4de61b9cdf47?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80'} alt="" /></div>
                                 <div className={styles.profileImage}><img src={'https://scontent-cph2-1.xx.fbcdn.net/v/t39.30808-6/337155884_6676092215753622_8028443491988735130_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=COWC1Tbi0OEAX90FF4l&_nc_ht=scontent-cph2-1.xx&oh=00_AfDALx_ItxXaDTobKuTxM-spnA2t2KV4BMhZJ2y_vgFF_w&oe=642840C8'} alt="" /></div>
-                                <Button className={styles.editProfileBtn} value={'Edit profile'} type={ButtonType.tietary} size={ButtonSize.small} onClick={() => {console.log('Edit profile clicked');}} />
+                                <Button className={styles.editProfileBtn} value={'Edit profile'} type={ButtonType.tietary} size={ButtonSize.small} onClick={handleOpenModal} />
+                                <Modal 
+                                    modalRef={modalRef}
+                                    isOpen={modalOpen} 
+                                    onClose={() => setMadalOpen(false)} 
+                                    isOverlay={false} 
+                                    >
+                                        <h2>This is the modal content</h2>
+                                        <p>You can put any content you like in here.</p>
+                                        <button onClick={() => setMadalOpen(false)}>Close Modal</button>
+                                </Modal>
                             </div>
                             <div className={styles.userInfo}>
                                 <p className={styles.firstname}>Aïcha</p>
@@ -54,13 +90,23 @@ const Profile = () => {
                             </div>
 
                             <HorizontalNavBar className={styles.profileNav}>
-                                <div className={styles.active}>Tweets</div>
+                                <div className={styles.active} onClick={handleTweet} >Tweets</div>
                                 <div>Replies</div>
                                 <div>Media</div>
                                 <div>Likes</div>
                             </HorizontalNavBar>
+                            <Modal 
+                                modalRef={modalRef}
+                                isOpen={modalTweet} 
+                                onClose={() => setModalTweet(false)} 
+                                isOverlay={false} 
+                                >
+                                    <h2>Elisha</h2>
+                                    <p>Lorem ipsum inventore quibusdam, libero officiis perspiciatis illum deserunt, corrupti soluta animi perferendis dicta!</p>
+                                    <button onClick={() => setModalTweet(false)}>Close Modal</button>
+                            </Modal>
                         {/* TWEETS - START */}
-                        {/* <Tweet 
+                        <Tweet 
                             avatar={'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80'} 
                             firstName={'Luis Suárez'} 
                             username={'LuisSuarez9'} 
@@ -71,7 +117,7 @@ const Profile = () => {
                             reposts={'924'} 
                             likes={'21.3'} 
                             views={'446'} 
-                        /> */}
+                        />
                         {/* TWEETS - END */}
 
                         {/* MAIN - END */}

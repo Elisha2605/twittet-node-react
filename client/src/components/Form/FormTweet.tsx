@@ -2,7 +2,7 @@ import { faCalendar, faFaceSmileWink, faImage } from "@fortawesome/free-regular-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { FC, useRef, useState } from "react";
 import useAutosizeTextArea from "../../hooks/useAutosizeTextArea";
-import Button, { ButtonSize, ButtonType } from "../common/Button";
+import Button, { ButtonSize, ButtonType } from "../ui/Button";
 import styles from "./FormTweet.module.css";
 
 

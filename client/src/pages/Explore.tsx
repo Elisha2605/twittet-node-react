@@ -2,13 +2,13 @@ import React from 'react';
 import Header from '../components/header/Header';
 import styles from './Explore.module.css';
 import Layout from '../Layout.module.css';
-import SearchBar from '../components/common/SearchBar';
+import SearchBar from '../components/ui/SearchBar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
-import PageUnderConstruction from '../components/common/PageUnderConstruction';
+import PageUnderConstruction from '../components/ui/PageUnderConstruction';
 import GearIcon from '../components/icons/GearIcon';
 import Aside from '../components/aside/Aside';
-import WhoToFollow from '../components/common/WhoToFollow';
+import WhoToFollow from '../components/ui/WhoToFollow';
 
 const Explore = () => {
     

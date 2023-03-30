@@ -1,6 +1,6 @@
-import React, { FC } from "react";
-import Button, { ButtonSize, ButtonType } from "../common/Button";
-import UserInfo from "../common/UserInfo";
+import React from "react";
+import Button, { ButtonSize, ButtonType } from "./Button";
+import UserInfo from "./UserInfo";
 
 
 import styles from "./WhoToFollow.module.css";

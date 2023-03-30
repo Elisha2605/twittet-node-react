@@ -1,17 +1,31 @@
 import React from 'react';
 import Aside from '../components/aside/Aside';
-import Avatar, { Size } from '../components/common/Avatar';
-import SearchBar from '../components/common/SearchBar';
-import WhoToFollow from '../components/common/WhoToFollow';
+import Avatar, { Size } from '../components/ui/Avatar';
+import SearchBar from '../components/ui/SearchBar';
+import WhoToFollow from '../components/ui/WhoToFollow';
 import FormTweet from '../components/Form/FormTweet';
 import Header from '../components/header/Header';
 import Tweet from '../components/tweet/Tweet';
 import styles from './Home.module.css';
 import Layout from '../Layout.module.css';
 import HeaderTitle from '../components/header/HeaderTitle';
-import HorizontalNavBar from '../components/common/HorizontalNavBar';
+import HorizontalNavBar from '../components/ui/HorizontalNavBar';
 
 const HomePage = () => {
+
+    const options = ["Option 1", "Option 2", "Option 3"];
+
+    const handleOptionClick = (option: string) => {
+        // TODO: handle menu option clickes
+        if (option === "Option 1") {
+            console.log("one");
+            // Insert your code to handle when Option 1 is clicked here
+          } else {
+            console.log(`${option} was clicked!`);
+            // Insert your code to handle when an option other than Option 1 is clicked here
+          }
+    }
+    
     return (
         <React.Fragment>
             <div className={Layout.mainSectionContainer}>
@@ -44,6 +58,8 @@ const HomePage = () => {
                             reposts={'924'} 
                             likes={'21.3'} 
                             views={'446'} 
+                            options={options}
+                            onClickOption={handleOptionClick}
                         />
                         <Tweet 
                             avatar={'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=689&q=80'} 
@@ -55,6 +71,8 @@ const HomePage = () => {
                             reposts={'924'} 
                             likes={'21.3'} 
                             views={'446'} 
+                            options={options}
+                            onClickOption={handleOptionClick}
                         />
                         <Tweet 
                             avatar={'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80'} 
@@ -67,6 +85,8 @@ const HomePage = () => {
                             reposts={'924'} 
                             likes={'21.3'} 
                             views={'446'} 
+                            options={options}
+                            onClickOption={handleOptionClick}
                         />
                         <Tweet 
                             avatar={'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80'} 
@@ -78,6 +98,8 @@ const HomePage = () => {
                             reposts={'924'} 
                             likes={'21.3'} 
                             views={'446'} 
+                            options={options}
+                            onClickOption={handleOptionClick}
                         />
                         {/* tweets - end */}
                     </div>

@@ -1,0 +1,48 @@
+.container {
+    position: relative;
+    z-index: 1000;
+
+}
+
+.menuBtn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.menuList {
+    background-color: white; /* add a non-transparent background color */
+    border-radius: 1rem;
+    box-shadow: 0 0 0 1px rgba(15, 15, 15, 0.1), 0 8px 16px rgba(15, 15, 15, 0.1);
+    list-style-type: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 15rem;
+    z-index: 2000;
+    pointer-events: auto;
+}
+
+.menuItemList {
+    color: #1c2938;
+    cursor: pointer;
+    font-weight: var(--font-weight-400);
+    line-height: 1.5rem;
+    padding: 0.5rem 1.5rem;
+    transition: all 0.1s ease-out;
+}
+
+.menuItemList:hover {
+    background-color: rgba(29, 161, 242, 0.1);
+    color: #1da1f2;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background-color: transparent;
+}

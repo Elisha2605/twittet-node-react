@@ -5,11 +5,13 @@ import styles from "./MenuIcon.module.css";
 
 
 
-const MenuIcon: FC<{ className?: string }> = ({ className }) => {
+const MenuIcon: FC<{ className?: string, onClick?: Function }> = ({ className, onClick }) => {
 
     return (
         <React.Fragment>
-            <FontAwesomeIcon icon={faEllipsisH} className={`${styles.faEllipsisH} ${className}`} />
+            <div onClick={(e) =>onClick}>
+                <FontAwesomeIcon icon={faEllipsisH} className={`${styles.faEllipsisH} ${className}`} />
+            </div>
         </React.Fragment>
     )
 }

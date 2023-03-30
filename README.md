@@ -58,7 +58,7 @@ The client folder structure is as follows:
 
 - `pages`: Contains top-level page components, such as a LoginPage, DashboardPage, and ProfilePage.
 
-- `api`: Contains files that handle communication with the backend API.
+- `services`: Contains files that handle communication with the backend API (api, auth, analytics, etc..).
 
 - `utils`: Contains utility functions that are used across the application.
 

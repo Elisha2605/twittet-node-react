@@ -4,11 +4,11 @@ import styles from './Notifications.module.css';
 import Layout from '../Layout.module.css';
 import HeaderTitle from '../components/header/HeaderTitle';
 import GearIcon from '../components/icons/GearIcon';
-import HorizontalNavBar from '../components/common/HorizontalNavBar';
-import PageUnderConstruction from '../components/common/PageUnderConstruction';
-import SearchBar from '../components/common/SearchBar';
+import HorizontalNavBar from '../components/ui/HorizontalNavBar';
+import PageUnderConstruction from '../components/ui/PageUnderConstruction';
+import SearchBar from '../components/ui/SearchBar';
 import Aside from '../components/aside/Aside';
-import WhoToFollow from '../components/common/WhoToFollow';
+import WhoToFollow from '../components/ui/WhoToFollow';
 
 
 const Notification = () => {

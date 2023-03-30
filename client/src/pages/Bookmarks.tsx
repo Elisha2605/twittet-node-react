@@ -3,12 +3,25 @@ import Header from '../components/header/Header';
 import styles from './Bookmarks.module.css';
 import Layout from '../Layout.module.css';
 import HeaderTitle from '../components/header/HeaderTitle';
-import Menu from '../components/icons/MenuIcon';
-import SearchBar from '../components/common/SearchBar';
+import SearchBar from '../components/ui/SearchBar';
 import Aside from '../components/aside/Aside';
-import WhoToFollow from '../components/common/WhoToFollow';
+import WhoToFollow from '../components/ui/WhoToFollow';
+import PopUpMenu from '../components/ui/PopUpMenu';
 
 const Bookmarks = () => {
+
+    const options = ["Option 1", "Option 2", "Option 3"];
+
+    const handleOptionClick = (option: string) => {
+        // TODO: handle menu option clickes
+        if (option === "Option 1") {
+            console.log("one");
+            // Insert your code to handle when Option 1 is clicked here
+          } else {
+            console.log(`${option} was clicked!`);
+            // Insert your code to handle when an option other than Option 1 is clicked here
+          }
+    }
     
     return (
         <React.Fragment>
@@ -18,7 +31,7 @@ const Bookmarks = () => {
                         <Header>
                             <div className={styles.headerWrapper}>
                                 <HeaderTitle title={'Bookmarks'} subTitle={'@Alvin44943'} />
-                                <Menu />
+                                <PopUpMenu options={options} onClick={handleOptionClick} />
                             </div>
                         </Header>
                     {/* Home page - start */}

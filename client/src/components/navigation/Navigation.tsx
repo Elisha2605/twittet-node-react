@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { faHashtag, faHome} from "@fortawesome/free-solid-svg-icons";
 import { faBell, faBookmark, faEnvelope, faUser } from "@fortawesome/free-regular-svg-icons";
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
@@ -6,14 +6,31 @@ import styles from './Navigation.module.css';
 import NavigationItem from "./NavigationItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
-import Button, { ButtonSize, ButtonType } from "../common/Button";
+import Button, { ButtonSize, ButtonType } from "../ui/Button";
 import NavigationUserInfo from "./NavigationUserInfo";
+import Modal from "../ui/Modal";
+import PageUnderConstruction from "../ui/PageUnderConstruction";
 
 const Navigation = () => {
+    const [modalOpen, setMadalOpen] = useState(false);
+    const modalRef = useRef<HTMLDivElement>(null);
 
-    const onTweet = () => {
-        // TODO
+    useEffect(() => {
+        document.addEventListener('mousedown', hadleClikOUtside );
+        return () => {
+            document.removeEventListener('mousedown', hadleClikOUtside);
+        };
+    }, [modalRef])
+
+    const hadleClikOUtside = (e: MouseEvent) => {
+        if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+            setMadalOpen(false);
+        }
     }
+
+    const handleOpenModal = () => {
+        setMadalOpen(true);
+    };
     
     return (
         <React.Fragment>
@@ -64,7 +81,16 @@ const Navigation = () => {
                         className={styles.ellipsis}
                     />
                 </div>
-                <Button value={'Tweet'} type={ButtonType.primary} size={ButtonSize.medium} onClick={onTweet} />
+                <Button value={'Tweet'} type={ButtonType.primary} size={ButtonSize.medium} onClick={handleOpenModal} />
+                <Modal 
+                    modalRef={modalRef}
+                    isOpen={modalOpen} 
+                    onClose={() => setMadalOpen(false)} 
+                    isOverlay={true} 
+                    >
+                        <PageUnderConstruction />
+                        <button onClick={() => setMadalOpen(false)}>Close Modal</button>
+                </Modal>
                 <NavigationUserInfo 
                     avatar={"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"} 
                     firstName={"Alvin"} 
