@@ -82,7 +82,7 @@ const Profile = () => {
                     {/* Home page - start */}
                 <div>
                     <Header border={false}>
-                        <SearchBar />
+                        <SearchBar width={74} />
                     </Header>
                     <Aside className={styles.aside}>
                         <WhoToFollow />

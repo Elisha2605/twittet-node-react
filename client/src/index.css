@@ -40,7 +40,6 @@
 
     /* border-round */
     --border-round: 4rem;
-
 }
 
 h1 {
@@ -62,6 +61,12 @@ button{
 	outline: inherit;
 }
 
+
+/* for dark mode */
+/* * {
+    background: rgb(42, 42, 42);
+    color: white !important;
+} */
 /* Remove default margin and padding */
 html,
 body,

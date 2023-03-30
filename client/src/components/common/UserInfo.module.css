@@ -1,7 +1,8 @@
 .container {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.7rem;
+    padding-top: 0.3rem;
 }
 
 .avatar {
@@ -27,7 +28,7 @@
     align-items: center;
     gap: 3rem;
     width: 100%;
-}
+}   
 
 /* userInfoOption */
 .userInfoOptionWrapper {
@@ -38,7 +39,7 @@
 }
 .userInfoOptionWrapper .userInfo {
     display: flex;
-    gap: 0.4rem;
+    gap: 0.3rem;
     width: 100%;
 }
 

@@ -38,13 +38,16 @@ const Tweet: FC<TweetProps> = ({
                     firstname={firstName}
                     username={username}
                     isOption={isOption}
+                    className={styles.userInfo}
                 />
-                <p className={styles.tweet}>{tweet}</p>
-                {image && (
-                    <div className={styles.image}>
-                        <img src={image} alt="" />
-                    </div>
-                )}
+                <div className={styles.body}>
+                    <p className={styles.tweet}>{tweet}</p>
+                    {image && (
+                        <div className={styles.image}>
+                            <img src={image} alt="" />
+                        </div>
+                    )}
+                </div>
                 <TweetFooter
                     comments={comments}
                     reposts={reposts}
