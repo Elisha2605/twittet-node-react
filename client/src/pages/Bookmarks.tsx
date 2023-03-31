@@ -7,10 +7,19 @@ import SearchBar from '../components/ui/SearchBar';
 import Aside from '../components/aside/Aside';
 import WhoToFollow from '../components/ui/WhoToFollow';
 import PopUpMenu from '../components/ui/PopUpMenu';
+import { options, icons } from '../data/menuOptions';
+
 
 const Bookmarks = () => {
 
-    const options = ["Option 1", "Option 2", "Option 3"];
+    // const options = ["Delete", "Edit", "Option 3"];
+
+    // const icons={
+    //    "Delete": <FontAwesomeIcon icon={faTrash} />,
+    //    "Edit": <FontAwesomeIcon icon={faEdit} />,
+    //    "Option 3": <FontAwesomeIcon icon={faPizzaSlice} />,
+    // }
+    
 
     const handleOptionClick = (option: string) => {
         // TODO: handle menu option clickes
@@ -31,7 +40,7 @@ const Bookmarks = () => {
                         <Header>
                             <div className={styles.headerWrapper}>
                                 <HeaderTitle title={'Bookmarks'} subTitle={'@Alvin44943'} />
-                                <PopUpMenu options={options} onClick={handleOptionClick} />
+                                <PopUpMenu options={options} onClick={handleOptionClick} icons={icons} />
                             </div>
                         </Header>
                     {/* Home page - start */}

@@ -3,17 +3,18 @@ import Aside from '../components/aside/Aside';
 import Avatar, { Size } from '../components/ui/Avatar';
 import SearchBar from '../components/ui/SearchBar';
 import WhoToFollow from '../components/ui/WhoToFollow';
-import FormTweet from '../components/Form/FormTweet';
+import FormTweet from '../components/form/FormTweet';
 import Header from '../components/header/Header';
 import Tweet from '../components/tweet/Tweet';
 import styles from './Home.module.css';
 import Layout from '../Layout.module.css';
 import HeaderTitle from '../components/header/HeaderTitle';
 import HorizontalNavBar from '../components/ui/HorizontalNavBar';
+import { options, icons } from '../data/menuOptions';
+
 
 const HomePage = () => {
 
-    const options = ["Option 1", "Option 2", "Option 3"];
 
     const handleOptionClick = (option: string) => {
         // TODO: handle menu option clickes
@@ -59,6 +60,7 @@ const HomePage = () => {
                             likes={'21.3'} 
                             views={'446'} 
                             options={options}
+                            icons={icons}
                             onClickOption={handleOptionClick}
                         />
                         <Tweet 

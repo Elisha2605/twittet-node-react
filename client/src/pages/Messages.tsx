@@ -44,7 +44,7 @@ const Message = () => {
                     </Header>
                     <Aside className={styles.aside}>
                         <div className={styles.userToInfo}>
-                            <Avatar size={Size.medium} path={'https://images.unsplash.com/photo-1570158268183-d296b2892211?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NTF8fGJsYWNrJTIwcHJvZmlsZXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=800&q=60'} className={''} />
+                            <Avatar size={Size.medium} path={'https://scontent-cph2-1.xx.fbcdn.net/v/t39.30808-6/337155884_6676092215753622_8028443491988735130_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=COWC1Tbi0OEAX90FF4l&_nc_ht=scontent-cph2-1.xx&oh=00_AfDALx_ItxXaDTobKuTxM-spnA2t2KV4BMhZJ2y_vgFF_w&oe=642840C8'} className={''} />
                             <p className={styles.fullname}>Aïcha Haïdara</p>
                             <p className={styles.username}>@haidara_e</p>
                             <p className={styles.moreInfo}>Joined September 2011 · 14 Followers</p>

@@ -4,7 +4,7 @@ import Aside from '../aside/Aside';
 import Avatar from '../ui/Avatar';
 import SearchBar from '../ui/SearchBar';
 import WhoToFollow from '../ui/WhoToFollow';
-import FormTweet from '../Form/FormTweet';
+import FormTweet from '../form/FormTweet';
 import Header from '../header/Header';
 import Tweet from '../tweet/Tweet';
 import styles from './Main.module.css';

@@ -17,6 +17,7 @@ interface TweetProps {
     likes: string;
     views: string;
     options: string[];
+    icons?: Record<string, React.ReactNode>;
     onClickOption: Function;
 }
 
@@ -33,13 +34,13 @@ const Tweet: FC<TweetProps> = ({
     likes,
     views,
     options,
+    icons,
     onClickOption,
 }) => {
     
     return (
         <React.Fragment>
                 <div className={`${styles.container}`}>
-
                     <UserInfo
                         avatar={avatar}
                         firstname={firstName}
@@ -47,6 +48,7 @@ const Tweet: FC<TweetProps> = ({
                         isOption={isOption}
                         className={styles.userInfo}
                         options={options}
+                        icons={icons}
                         onClickOption={onClickOption}
                     />
                     <NavLink to={'/message'}>

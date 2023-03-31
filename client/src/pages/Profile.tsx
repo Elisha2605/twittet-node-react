@@ -15,7 +15,18 @@ import HorizontalNavBar from '../components/ui/HorizontalNavBar';
 
 const Profile = () => {
 
+    const options = ["Option 1", "Option 2", "Option 3"];
 
+    const handleOptionClick = (option: string) => {
+        // TODO: handle menu option clickes
+        if (option === "Option 1") {
+            console.log("one");
+            // Insert your code to handle when Option 1 is clicked here
+          } else {
+            console.log(`${option} was clicked!`);
+            // Insert your code to handle when an option other than Option 1 is clicked here
+          }
+    }
     
 
     return (
@@ -60,7 +71,7 @@ const Profile = () => {
                                 <div>Likes</div>
                             </HorizontalNavBar>
                         {/* TWEETS - START */}
-                        {/* <Tweet 
+                        <Tweet 
                             avatar={'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80'} 
                             firstName={'Luis Suárez'} 
                             username={'LuisSuarez9'} 
@@ -71,7 +82,9 @@ const Profile = () => {
                             reposts={'924'} 
                             likes={'21.3'} 
                             views={'446'} 
-                        /> */}
+                            options={options}
+                            onClickOption={handleOptionClick}
+                        />
                         {/* TWEETS - END */}
 
                         {/* MAIN - END */}

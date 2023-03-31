@@ -13,6 +13,7 @@ interface UserInfoProps {
     className?: string;
     isOption?: boolean;
     options?: string[];
+    icons?: Record<string, React.ReactNode>;
     onClickOption?: Function;
 }
 
@@ -25,6 +26,7 @@ const UserInfo: FC<UserInfoProps> = ({
      className,
      isOption,
      options,
+     icons,
      onClickOption
 }) => {
 
@@ -36,14 +38,12 @@ const UserInfo: FC<UserInfoProps> = ({
                 )}
                 <div className={`${styles.userWrapper} ${className}`}>
                     {isOption ? (
-
                         <div className={styles.userInfoOptionWrapper}>
                             <div className={styles.userInfo}>
                                 <a href={link}><p className={styles.firstname}>{firstname} <FontAwesomeIcon icon={faCheckCircle} color={'var(--color-primary)'} /></p></a>
                                 <p className={styles.username}>@{username} · {'Mar 26'} </p>
                             </div>
-                            {/* <MenuIcon /> */}
-                            <PopUpMenu options={options!} onClick={(option) => onClickOption!(option)} />
+                            <PopUpMenu options={options!} icons={icons} onClick={(option) => onClickOption!(option)} />
                         </div>
 
                     ) : (
