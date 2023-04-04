@@ -12,10 +12,10 @@ import ArrowLeftIcon from '../components/icons/ArrowLeftIcon';
 import Button, { ButtonSize, ButtonType } from '../components/ui/Button';
 import HeaderTitle from '../components/header/HeaderTitle';
 import HorizontalNavBar from '../components/ui/HorizontalNavBar';
+import { options } from '../data/menuOptions';
+
 
 const Profile = () => {
-
-    const options = ["Option 1", "Option 2", "Option 3"];
 
     const handleOptionClick = (option: string) => {
         // TODO: handle menu option clickes
@@ -27,7 +27,6 @@ const Profile = () => {
             // Insert your code to handle when an option other than Option 1 is clicked here
           }
     }
-    
 
     return (
         <React.Fragment>
@@ -47,7 +46,7 @@ const Profile = () => {
                         {/* MAIN - START */}
                             <div className={styles.imageWrapper}>
                                 <div className={styles.coverImage}><img src={'https://images.unsplash.com/photo-1595670322505-4de61b9cdf47?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80'} alt="" /></div>
-                                <div className={styles.profileImage}><img src={'https://scontent-cph2-1.xx.fbcdn.net/v/t39.30808-6/337155884_6676092215753622_8028443491988735130_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=COWC1Tbi0OEAX90FF4l&_nc_ht=scontent-cph2-1.xx&oh=00_AfDALx_ItxXaDTobKuTxM-spnA2t2KV4BMhZJ2y_vgFF_w&oe=642840C8'} alt="" /></div>
+                                <div className={styles.profileImage}><img src={'https://scontent-cph2-1.xx.fbcdn.net/v/t39.30808-6/337155884_6676092215753622_8028443491988735130_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=VWfgq-NaluQAX9o1CBW&_nc_ht=scontent-cph2-1.xx&oh=00_AfAhYA-IBvju2jtouurcdXRcGbSq17JRB8nHn5lYDurwPQ&oe=643029C8'} alt="" /></div>
                                 <Button className={styles.editProfileBtn} value={'Edit profile'} type={ButtonType.tietary} size={ButtonSize.small} onClick={() => {console.log('Edit profile clicked');}} />
                             </div>
                             <div className={styles.userInfo}>
