@@ -1,9 +1,6 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import 'src/strategies/JwtStrategy';
-import 'src/strategies/LocalStrategy';
-import './authentication';
 import { dbConn } from './config/db';
 import session from 'express-session';
 import passport from 'passport';
@@ -13,6 +10,9 @@ import httpContext from 'express-http-context';
 import cookieParser from 'cookie-parser';
 import { UserContext } from './config/custom.config';
 import bodyParser from 'body-parser';
+import 'src/strategies/JwtStrategy';
+import 'src/strategies/LocalStrategy';
+import 'src/authentication';
 
 declare module 'express-session' {
     interface SessionData extends UserContext {

@@ -15,42 +15,59 @@ export interface Status {
     user?: IUser;
 }
 
-export const signup = async (email: string, password: string): Promise<Status> => {
-    if (!password) {
+export const signup = async (
+    email: string,
+    password: string
+): Promise<Status> => {
+    try {
+        const isUser = await User.findOne({ email: email });
+        if (!password) {
+            return {
+                succeded: false,
+                message: 'Repeated password is different',
+            };
+        }
+        if (isUser) {
+            return {
+                succeded: false,
+                message: 'User already exists',
+            };
+        }
+        if (!email) {
+            return {
+                succeded: false,
+                message: 'Email is missing',
+            };
+        }
+        const expiry = new Date();
+        expiry.setFullYear(expiry.getFullYear() + 1);
+
+        const user = await User.register(
+            new User({
+                email: email,
+            }),
+            password
+        );
+
+        user.expiryDate = expiry;
+        const token = getToken({ _id: user._id });
+        const refreshToken = getRefreshToken({ _id: user._id });
+        user.refreshToken.push({ refreshToken: refreshToken });
+        const newUser = await user.save();
+        if (newUser === null || newUser === undefined) {
+            return { succeded: false, message: 'failed to save ' };
+        } else {
+            return {
+                succeded: true,
+                message: 'Successfylly user creation!',
+                refreshToken: refreshToken,
+                token: token,
+            };
+        }
+    } catch (error) {
         return {
             succeded: false,
-            message: 'Repeated password is different',
-        };
-    }
-    if (!email) {
-        return {
-            succeded: false,
-            message: 'Email is missing',
-        };
-    }
-    const expiry = new Date();
-    expiry.setFullYear(expiry.getFullYear() + 1);
-
-    const user = await User.register(
-        new User({
-            email: email,
-        }),
-        password
-    );
-
-    user.expiryDate = expiry;
-    const token = getToken({ _id: user._id });
-    const refreshToken = getRefreshToken({ _id: user._id });
-    user.refreshToken.push({ refreshToken: refreshToken });
-    const newUser = await user.save();
-    if (newUser === null || newUser === undefined) {
-        return { succeded: false, message: 'failed to save ' };
-    } else {
-        return {
-            succeded: true,
-            message: 'Successfylly user creation!',
-            refreshToken: refreshToken,
-            token: token,
+            message: 'Server Error',
         };
     }
 };
