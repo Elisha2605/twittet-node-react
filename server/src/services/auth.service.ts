@@ -55,9 +55,6 @@ export const signup = async (
         );
 
         user.expiryDate = expiry;
-        const token = getToken({ _id: user._id });
-        const refreshToken = getRefreshToken({ _id: user._id });
-        user.refreshToken.push({ refreshToken: refreshToken });
         const newUser = await user.save();
         if (newUser === null || newUser === undefined) {
             return { success: false, message: 'failed to save ' };
@@ -65,8 +62,6 @@ export const signup = async (
             return {
                 success: true,
                 message: 'Successfylly user creation!',
-                token: token,
-                refreshToken: refreshToken,
             };
         }
     } catch (error) {

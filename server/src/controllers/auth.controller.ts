@@ -17,7 +17,6 @@ export const singUp = asyncHandler(async (req: Request, res: Response) => {
         req.body.passwordConfirmation
     );
     if (result.success) {
-        res.cookie('refreshToken', result.refreshToken, COOKIE_OPTIONS);
         res.status(200);
         res.send({ success: true, token: result.token });
     } else {
@@ -46,7 +45,6 @@ export const logIn = asyncHandler(async (req: Request, res: Response) => {
 export const logOUt = asyncHandler(async (req: Request, res: Response) => {
     const { signedCookies = {} } = req;
     const { refreshToken } = signedCookies;
-    console.log(signedCookies);
     const result = await logout(req.user._id, refreshToken);
     if (result.success) {
         res.clearCookie('refreshToken', COOKIE_OPTIONS);
