@@ -44,17 +44,14 @@ export const signup = async (
                 message: 'Email is missing',
             };
         }
-        const expiry = new Date();
-        expiry.setFullYear(expiry.getFullYear() + 1);
-
         const user = await User.register(
             new User({
                 email: email,
+                isActive: true,
             }),
             password
         );
 
-        user.expiryDate = expiry;
         const newUser = await user.save();
         if (newUser === null || newUser === undefined) {
             return { success: false, message: 'failed to save ' };
@@ -62,6 +59,7 @@ export const signup = async (
             return {
                 success: true,
                 message: 'Successfylly user creation!',
+                user: user,
             };
         }
     } catch (error) {
@@ -82,9 +80,6 @@ export const login = async (userId: string): Promise<Status> => {
     if (loggedInUser === null || loggedInUser === undefined) {
         return { success: false, message: 'failed to save ' };
     } else {
-        // req.session.user = { id: userId, email: user.email };
-        // await req.session.save();
-        // console.log(req.session.user);
         return {
             success: true,
             message: 'Successfylly Logged in!',

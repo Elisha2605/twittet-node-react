@@ -15,10 +15,10 @@ const sessionSchema = new mongoose.Schema({
 
 export interface IUser extends mongoose.Document {
     email: string;
-    expiryDate: Date;
     refreshToken: mongoose.Types.DocumentArray<ISession>;
     setPassword: any;
     changePassword: any;
+    isActive: boolean;
 }
 
 export const userModel = {
@@ -27,15 +27,16 @@ export const userModel = {
         unique: true,
         required: true,
     },
-    expiryDate: {
-        type: Date,
-    },
     authStrategy: {
         type: String,
         default: 'local',
     },
     refreshToken: {
         type: [sessionSchema],
+    },
+    isActive: {
+        type: Boolean,
+        require: true,
     },
 };
 

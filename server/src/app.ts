@@ -49,6 +49,10 @@ const store = new MongoDBStore({
     collection: 'sessions',
 });
 
+store.on('error', (error) => {
+    console.log(error);
+});
+
 app.use(
     session({
         secret: process.env.JWT_SECRET,
@@ -66,9 +70,6 @@ app.use(passport.session());
 app.use(cookieParser(process.env.JWT_SECRET));
 
 // ROUTES - API
-app.get('/', (req, res) => {
-    res.send('Hello ' + JSON.stringify(req.session));
-});
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 
