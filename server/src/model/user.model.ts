@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import passportLocalMongoose from 'passport-local-mongoose';
-import { handleError } from './errors/errorHandlingService';
+import { handleError } from 'src/utils/db.util';
 
 export interface ISession extends mongoose.Types.Subdocument {
     refreshToken: string;

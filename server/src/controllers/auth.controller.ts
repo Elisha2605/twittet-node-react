@@ -1,4 +1,4 @@
-import { UserContext } from 'src/config/custom.config';
+import { UserContext } from 'src/types/custom';
 import express, { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import { signup, login, logout } from 'src/services/auth.service';
