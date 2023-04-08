@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import { dbConn } from './config/db';
 import session from 'express-session';
 import passport from 'passport';
-import authRoutes from './routes/auth.routes';
 import mongoSession from 'connect-mongodb-session';
 import httpContext from 'express-http-context';
 import cookieParser from 'cookie-parser';
@@ -12,7 +11,8 @@ import { UserContext } from './config/custom.config';
 import bodyParser from 'body-parser';
 import 'src/strategies/JwtStrategy';
 import 'src/strategies/LocalStrategy';
-import 'src/authentication';
+import authRoutes from './routes/auth.routes';
+import userRoutes from './routes/user.routes';
 
 declare module 'express-session' {
     interface SessionData extends UserContext {
@@ -66,13 +66,14 @@ const corsOptions = {
     origin: true,
     credentials: true, //access-control-allow-credentials:true
     optionSuccessStatus: 200,
-    allowedHeaders: 'Content-Type, Authorization',
+    allowedHeaders:
+        'Content-Type, Authorization, Access-Control-Allow-Credentials',
 };
 app.use(cors(corsOptions));
 
 const store = new MongoDBStore({
     uri: process.env.MONGODB_CONNECTION_STRING,
-    collection: 'session',
+    collection: 'sessions',
 });
 
 app.use(
@@ -91,6 +92,23 @@ app.use(
 app.use(passport.session());
 app.use(cookieParser(process.env.JWT_SECRET));
 
-app.use('/auth', authRoutes);
+// ROUTES - API
+app.get('/', (req, res) => {
+    res.send('Hello ' + JSON.stringify(req.session));
+});
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+
+    if (res.headersSent) {
+        return next(err);
+    }
+
+    res.status(500).json({
+        error: 'Internal server error',
+    });
+});
 
 export default app;

@@ -1,8 +1,9 @@
-// import { Router } from 'express';
-// import { users } from 'src/controllers/user.controller';
+import { Router } from 'express';
+import { verifyUser } from 'src/middleware/auth.middleware';
+import { users } from 'src/controllers/user.controller';
 
-// const userRouter = Router();
+const userRouter = Router();
 
-// userRouter.get('', users);
+userRouter.get('', verifyUser(), users);
 
-// export default userRouter;
+export default userRouter;

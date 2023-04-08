@@ -13,7 +13,7 @@ import HorizontalNavBar from '../components/ui/HorizontalNavBar';
 import { options, icons } from '../data/menuOptions';
 
 
-const HomePage = () => {
+const Home = () => {
 
 
     const handleOptionClick = (option: string) => {
@@ -120,4 +120,4 @@ const HomePage = () => {
     );
 };
 
-export default HomePage;
+export default Home;

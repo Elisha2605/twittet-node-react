@@ -42,6 +42,7 @@ export const userModel = {
 const userSchema = new mongoose.Schema<IUser>(userModel, { timestamps: true });
 //Remove refreshToken from the response
 userSchema.set('toJSON', {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     transform: function (doc, ret, options) {
         delete ret.refreshToken;
         return ret;

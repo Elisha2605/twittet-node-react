@@ -46,7 +46,7 @@ const Navigation = () => {
                     <NavigationItem
                         icon={faHome} 
                         label={"Home"} 
-                        path='/' 
+                        path='/home' 
                     />
                     <NavigationItem
                         icon={faHashtag} 

@@ -9,18 +9,26 @@ import Explore from './pages/Explore';
 import Bookmarks from './pages/Bookmarks';
 import Notifications from './pages/Notifications';
 import Message from './pages/Messages';
+import Index from './pages/Index';
 
 function App() {
+
+    let nav = false;
 
     return (
         <React.Fragment>
             <div className={styles.app}>
-                <div className={Layout.navigation}>
-                    <Navigation />  
-                </div>
+                {!nav && (
+                    <Index />
+                )}
+                {nav && (
+                    <div className={Layout.navigation}>
+                        <Navigation />  
+                    </div>
+                )}
                 <div className={Layout.page}>
                     <Routes>
-                        <Route path="/" element={<HomePage />} />
+                        <Route path="/home" element={<HomePage />} />
                         <Route path="/explore" element={<Explore />} />
                         <Route path="/notification" element={<Notifications />} />
                         <Route path="/message" element={<Message />} />

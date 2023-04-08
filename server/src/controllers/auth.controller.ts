@@ -1,12 +1,8 @@
 import { UserContext } from 'src/config/custom.config';
 import express, { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
-import { signup, login } from 'src/services/auth.service';
-import { COOKIE_OPTIONS } from 'src/authentication';
-import passport from 'passport';
-import { NextFunction } from 'express-serve-static-core';
-import { IUser } from 'src/model/user.model';
-import { IVerifyOptions } from 'passport-local';
+import { signup, login, logout } from 'src/services/auth.service';
+import { COOKIE_OPTIONS } from 'src/middleware/auth.middleware';
 
 const router = express.Router();
 
@@ -15,56 +11,55 @@ declare module 'express-session' {
 }
 
 export const singUp = asyncHandler(async (req: Request, res: Response) => {
-    const result = await signup(req.body.email, req.body.password);
-    if (result.succeded) {
+    const result = await signup(
+        req.body.email,
+        req.body.password,
+        req.body.passwordConfirmation
+    );
+    if (result.success) {
         res.cookie('refreshToken', result.refreshToken, COOKIE_OPTIONS);
+        res.status(200);
         res.send({ success: true, token: result.token });
     } else {
         res.send(result);
     }
 });
 
-export const logIn = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
-    passport.authenticate(
-        'local',
-        async (err: Error, user: IUser, info: IVerifyOptions) => {
-            if (err) {
-                return next(err);
-            }
-            if (!user) {
-                return res.status(401).json({
-                    success: false,
-                    message: info.message,
-                });
-            }
-            try {
-                const result = await login(user._id);
-                if (result.succeded) {
-                    res.cookie(
-                        'refreshToken',
-                        result.refreshToken,
-                        COOKIE_OPTIONS
-                    );
-                    res.send({
-                        isLoggedIn: true,
-                        user: req.user,
-                        success: true,
-                        token: result.token,
-                        refreshToken: result.refreshToken,
-                    });
-                } else {
-                    res.statusCode = 500;
-                    res.send(new Error(result.message));
-                }
-            } catch (err) {
-                next(err);
-            }
-        }
-    )(req, res, next);
-};
+export const logIn = asyncHandler(async (req: Request, res: Response) => {
+    const result = await login((req.user as any)._id);
+    if (result.success) {
+        res.status(200);
+        res.cookie('refreshToken', result.refreshToken, COOKIE_OPTIONS);
+        res.send({
+            isLoggedIn: true,
+            user: req.user,
+            success: true,
+            token: result.token,
+            refreshToken: result.refreshToken,
+        });
+    } else {
+        res.statusCode = 500;
+        res.send(new Error(result.message));
+    }
+});
+
+export const logOUt = asyncHandler(async (req: Request, res: Response) => {
+    const { signedCookies = {} } = req;
+    const { refreshToken } = signedCookies;
+    console.log(signedCookies);
+    const result = await logout(req.user._id, refreshToken);
+    if (result.success) {
+        res.clearCookie('refreshToken', COOKIE_OPTIONS);
+        res.send({
+            isLoggedIn: false,
+            user: req.user,
+            success: true,
+            refreshToken: result.refreshToken,
+        });
+    } else {
+        res.statusCode = 500;
+        res.send(new Error(result.message));
+    }
+});
 
 export default router;

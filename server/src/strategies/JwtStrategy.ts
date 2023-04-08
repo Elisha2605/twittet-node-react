@@ -1,7 +1,7 @@
 import passport from 'passport';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import dotenv from 'dotenv';
-import User, { IUser } from 'src/model/user.model';
+import User from 'src/model/user.model';
 
 dotenv.config();
 
@@ -11,20 +11,17 @@ const opts = {
 };
 
 passport.use(
-    new JwtStrategy(opts, function (jwt_payload: any, done: any) {
-        User.findOne(
-            { _id: jwt_payload._id },
-            function (error: any, user: IUser) {
-                if (error) {
-                    return done(error, false);
-                }
-                if (user) {
-                    return done(null, user);
-                } else {
-                    return done(null, false);
-                }
+    new JwtStrategy(opts, async (jwt_payload: any, done: any) => {
+        try {
+            const user = await User.findOne({ _id: jwt_payload._id });
+            if (user) {
+                return done(null, user);
+            } else {
+                return done(null, false);
             }
-        );
+        } catch (error) {
+            return done(error, false);
+        }
     })
 );
 

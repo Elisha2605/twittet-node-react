@@ -1,4 +1,8 @@
-import { getRefreshToken, getToken, verifyToken } from 'src/authentication';
+import {
+    getRefreshToken,
+    getToken,
+    verifyToken,
+} from 'src/middleware/auth.middleware';
 import User, { IUser } from 'src/model/user.model';
 
 export interface UserSingUpInfo {
@@ -8,7 +12,7 @@ export interface UserSingUpInfo {
 }
 
 export interface Status {
-    succeded: boolean;
+    success: boolean;
     message: string;
     token?: string;
     refreshToken?: string;
@@ -17,25 +21,26 @@ export interface Status {
 
 export const signup = async (
     email: string,
-    password: string
+    password: string,
+    passwordConfirmation: string
 ): Promise<Status> => {
     try {
-        const isUser = await User.findOne({ email: email });
-        if (!password) {
+        if (password !== passwordConfirmation) {
             return {
-                succeded: false,
+                success: false,
                 message: 'Repeated password is different',
             };
         }
+        const isUser = await User.findOne({ email: email });
         if (isUser) {
             return {
-                succeded: false,
+                success: false,
                 message: 'User already exists',
             };
         }
         if (!email) {
             return {
-                succeded: false,
+                success: false,
                 message: 'Email is missing',
             };
         }
@@ -55,25 +60,24 @@ export const signup = async (
         user.refreshToken.push({ refreshToken: refreshToken });
         const newUser = await user.save();
         if (newUser === null || newUser === undefined) {
-            return { succeded: false, message: 'failed to save ' };
+            return { success: false, message: 'failed to save ' };
         } else {
             return {
-                succeded: true,
+                success: true,
                 message: 'Successfylly user creation!',
-                refreshToken: refreshToken,
                 token: token,
+                refreshToken: refreshToken,
             };
         }
     } catch (error) {
         return {
-            succeded: false,
+            success: false,
             message: 'Server Error',
         };
     }
 };
 
 export const login = async (userId: string): Promise<Status> => {
-    console.log('Inside login service');
     const token = getToken({ _id: userId });
     const refreshToken = getRefreshToken({ _id: userId });
     const user = await User.findById(userId);
@@ -81,56 +85,16 @@ export const login = async (userId: string): Promise<Status> => {
 
     const loggedInUser = await user.save();
     if (loggedInUser === null || loggedInUser === undefined) {
-        return { succeded: false, message: 'failed to save ' };
+        return { success: false, message: 'failed to save ' };
     } else {
+        // req.session.user = { id: userId, email: user.email };
+        // await req.session.save();
+        // console.log(req.session.user);
         return {
-            succeded: true,
+            success: true,
             message: 'Successfylly Logged in!',
             token: token,
             refreshToken: refreshToken,
-        };
-    }
-};
-
-export const refreshToken = async (refreshToken: string): Promise<Status> => {
-    const userId = verifyToken(refreshToken);
-    const user = await User.findById({ userId });
-    if (user) {
-        // TODO: TRY TO PRINT THIS AND SEE WHAT IT GIVES YOU
-        const tokenIndex = user.refreshToken.findIndex(
-            (index) => index.refreshToken === refreshToken
-        );
-
-        if (tokenIndex === -1) {
-            return {
-                succeded: false,
-                message: '404 Unauthorized',
-            };
-        } else {
-            const token = getToken({ _id: userId });
-            const newRefreshToken = getRefreshToken({ _id: userId });
-            user.refreshToken[tokenIndex].refreshToken = newRefreshToken;
-            const freshUser = await user.save();
-
-            if (freshUser === null || freshUser === undefined) {
-                return {
-                    succeded: false,
-                    message: 'failed to save user after token update ',
-                };
-            } else {
-                return {
-                    succeded: true,
-                    message: 'Refresh token updated!',
-                    user: freshUser,
-                    token: token,
-                    refreshToken: refreshToken,
-                };
-            }
-        }
-    } else {
-        return {
-            succeded: false,
-            message: '401 Unauthorized',
         };
     }
 };
@@ -148,18 +112,59 @@ export const logout = async (
     if (tokenIndex !== -1) {
         user.refreshToken.id(user.refreshToken[tokenIndex]._id).deleteOne();
     }
-
-    const LoggedOutUser = await user.save();
-
-    if (LoggedOutUser === null || LoggedOutUser === undefined) {
+    const logoutUser = await user.save();
+    if (logoutUser === null || logoutUser === undefined) {
         return {
-            succeded: false,
-            message: 'failed to logout user',
+            success: false,
+            message: 'Error: Failed to logout!',
         };
     } else {
         return {
-            succeded: true,
-            message: 'User succefully logged out',
+            success: true,
+            message: 'User sucessefully logged out',
+        };
+    }
+};
+
+export const refreshToken = async (refreshToken: string): Promise<Status> => {
+    const userId = verifyToken(refreshToken);
+    const user = await User.findById({ userId });
+    if (user) {
+        // TODO: TRY TO PRINT THIS AND SEE WHAT IT GIVES YOU
+        const tokenIndex = user.refreshToken.findIndex(
+            (index) => index.refreshToken === refreshToken
+        );
+
+        if (tokenIndex === -1) {
+            return {
+                success: false,
+                message: '404 Unauthorized',
+            };
+        } else {
+            const token = getToken({ _id: userId });
+            const newRefreshToken = getRefreshToken({ _id: userId });
+            user.refreshToken[tokenIndex].refreshToken = newRefreshToken;
+            const freshUser = await user.save();
+
+            if (freshUser === null || freshUser === undefined) {
+                return {
+                    success: false,
+                    message: 'failed to save user after token update ',
+                };
+            } else {
+                return {
+                    success: true,
+                    message: 'Refresh token updated!',
+                    user: freshUser,
+                    token: token,
+                    refreshToken: refreshToken,
+                };
+            }
+        }
+    } else {
+        return {
+            success: false,
+            message: '401 Unauthorized',
         };
     }
 };
