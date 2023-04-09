@@ -10,11 +10,10 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import 'src/strategies/JwtStrategy';
 import 'src/strategies/LocalStrategy';
-import '/src/types/index';
-import errorHandler from './middleware/error.middleware';
-import { loggerMiddleware } from './middleware/logger.middleware';
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
+import '/src/types/index';
+import errorHandler from './middleware/error.middleware';
 
 dotenv.config();
 
@@ -69,8 +68,6 @@ app.use(
 
 app.use(passport.session());
 app.use(cookieParser(process.env.JWT_SECRET));
-
-app.use(loggerMiddleware);
 
 // ROUTES - API
 app.use('/api/auth', authRoutes);
