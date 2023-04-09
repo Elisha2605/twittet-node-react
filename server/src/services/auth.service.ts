@@ -1,4 +1,8 @@
-import { getRefreshToken, getToken, verifyToken } from 'src/utils/jwt.util';
+import {
+    getRefreshToken,
+    getToken,
+    verifyToken,
+} from 'src/middleware/auth.middleware';
 import User, { IUser } from 'src/model/user.model';
 
 export interface UserSingUpInfo {

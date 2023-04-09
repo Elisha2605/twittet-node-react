@@ -55,7 +55,7 @@ const Index = () => {
                 <h1>Login</h1>
                 <form action="" className={styles.formControl} onSubmit={(e: any) => onLoginHanlder(e)}>
                     <label htmlFor="">Email</label>
-                    <input ref={logEmailRef} type={'email'} />
+                    <input ref={logEmailRef} type="email" />
                     <label htmlFor="">Passwold</label>
                     <input ref={logPasswordRef} type="text" />
                     <button className={styles.btn}>Login</button>
