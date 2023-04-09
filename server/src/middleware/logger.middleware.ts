@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction, response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { getLogger } from 'src/config/logger.config';
 
 const logger = getLogger();

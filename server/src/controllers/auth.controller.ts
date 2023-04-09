@@ -2,7 +2,7 @@ import { UserContext } from 'src/types/custom';
 import express, { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import { signup, login, logout } from 'src/services/auth.service';
-import { COOKIE_OPTIONS } from 'src/middleware/auth.middleware';
+import { COOKIE_OPTIONS } from 'src/utils/jwt.util';
 
 const router = express.Router();
 

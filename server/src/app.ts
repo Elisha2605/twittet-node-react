@@ -20,7 +20,6 @@ dotenv.config();
 
 const app: Application = express();
 
-
 dbConn();
 
 app.use(passport.initialize());
