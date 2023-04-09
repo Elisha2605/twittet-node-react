@@ -42,7 +42,7 @@ const Index = () => {
         <React.Fragment>
             <div className={styles.container}>
                 <h1>Signup</h1>
-                <form action="" className={styles.formControl} onSubmit={(e: any) => onSingupHandler(e)}>
+                <form action="" className={styles.formControl} onSubmit={onSingupHandler}>
                     <label htmlFor="">Email</label>
                     <input ref={emailRef} type="email" />
                     <label htmlFor="">Passwold</label>
@@ -53,7 +53,7 @@ const Index = () => {
                 </form>
 
                 <h1>Login</h1>
-                <form action="" className={styles.formControl} onSubmit={(e: any) => onLoginHanlder(e)}>
+                <form action="" className={styles.formControl} onSubmit={onLoginHanlder}>
                     <label htmlFor="">Email</label>
                     <input ref={logEmailRef} type={'email'} />
                     <label htmlFor="">Passwold</label>
