@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import passport from 'passport';
 import { logIn, logOUt, singUp } from 'src/controllers/auth.controller';
-import { verifyUser } from 'src/middleware/auth.middleware';
+import { verifyUser } from 'src/utils/jwt.util';
 
 const authRouter = Router();
 
