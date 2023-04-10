@@ -28,9 +28,8 @@ export const getRefreshToken = (user: any) => {
 };
 
 export const verifyToken = (refreshToken: string): string => {
-    console.log('Log from (authencation.ts) ' + refreshToken);
+    // console.log('Log from (authencation.ts) ' + refreshToken);
     const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-    console.log('Log from (authencation.ts) ' + payload);
     return (payload as JwtPayload)._id;
 };
 

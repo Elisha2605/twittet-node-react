@@ -1,38 +1,5 @@
-import axios from 'axios';
+import { GETREQUESTOPTIONS, http } from "../config/axios.config";
 
-const http = axios.create({
-    baseURL: 'http://localhost:4000/api',
-    timeout: 30000,
-});
-
-const getCurrentContext = () => {
-    const storedContext = JSON.parse(localStorage.getItem('context') as string);
-
-    if (storedContext !== null) {
-        return storedContext;
-    }
-};
-
-export const GETREQUESTOPTIONS = () => {
-    return {
-        withCredentials: true,
-        headers: {
-            'Content-Type': 'application/json',
-            authorization: `Bearer ${getCurrentContext().token}`,
-            Accept: 'application/json',
-        },
-    };
-};
-
-export const getAllUsers = async () => {
-    try {
-        const res = await http.get('/users');
-        return res.data;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-};
 
 export const singup = async (
     email: string,
@@ -77,9 +44,9 @@ export const login = async (email: string, password: string) => {
         const contex = {
             isLoggedIn: res.data.isLoggedIn,
             token: res.data.token,
-            expiryDate: res.data.user.expiryDate,
         };
         localStorage.setItem('context', JSON.stringify(contex));
+        window.location.href = '/'
     }
 
     return res.data;
@@ -93,6 +60,11 @@ export const logout = async () => {
         });
     if (res.status === 200) {
         localStorage.removeItem('context');
+        window.location.href = '/'
     }
     return res.data;
+};
+
+export const getNewContext = async () => {
+    return (await http.get('/auth/context', GETREQUESTOPTIONS())).data;
 };

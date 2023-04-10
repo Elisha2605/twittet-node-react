@@ -10,7 +10,7 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import 'src/strategies/JwtStrategy';
 import 'src/strategies/LocalStrategy';
-import '/src/types/index';
+import './types/user.type';
 import errorHandler from './middleware/error.middleware';
 import { loggerMiddleware } from './middleware/logger.middleware';
 import authRoutes from './routes/auth.routes';
