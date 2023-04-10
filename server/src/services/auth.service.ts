@@ -3,8 +3,12 @@ import User, { IUser } from 'src/model/user.model';
 
 export interface UserSingUpInfo {
     email: string;
-    password: string;
-    repeatPassword: string;
+    password?: string;
+    repeatPassword?: string;
+}
+
+export interface UserContext {
+    email: string;
 }
 
 export interface Status {
@@ -12,7 +16,7 @@ export interface Status {
     message: string;
     token?: string;
     refreshToken?: string;
-    user?: IUser;
+    user?: IUser | UserContext;
 }
 
 export const signup = async (

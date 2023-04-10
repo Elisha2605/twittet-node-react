@@ -1,9 +1,13 @@
-import React, { useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import styles from "./Index.module.css";
-import { login, logout, singup } from "../services/apiService";
-
+import { getNewContext, logout, singup, login } from "../api/auth.api";
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import AuthContext from "../context/user.context";
 
 const Index = () => {
+
+    const ctx = useContext(AuthContext)
+    
 
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
@@ -11,6 +15,9 @@ const Index = () => {
 
     const logEmailRef = useRef<HTMLInputElement>(null);
     const logPasswordRef = useRef<HTMLInputElement>(null);
+
+    const [loggedIn, setLoggedIn] = useState(false);
+    const navigate = useNavigate();
     
     const onSingupHandler = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -29,7 +36,7 @@ const Index = () => {
             logEmailRef.current?.value || '',
             logPasswordRef.current?.value || ''
         )
-
+        // navigate('/');
         console.log(formData);
     }
 
@@ -53,13 +60,19 @@ const Index = () => {
                 </form>
 
                 <h1>Login</h1>
-                <form action="" className={styles.formControl} onSubmit={onLoginHanlder}>
-                    <label htmlFor="">Email</label>
-                    <input ref={logEmailRef} type={'email'} />
-                    <label htmlFor="">Passwold</label>
-                    <input ref={logPasswordRef} type="text" />
-                    <button className={styles.btn}>Login</button>
-                </form>
+                {!loggedIn && (
+                    <form action="" className={styles.formControl} onSubmit={onLoginHanlder}>
+                        <label htmlFor="">Email</label>
+                        <input ref={logEmailRef} type={'email'} />
+                        <label htmlFor="">Passwold</label>
+                        <input ref={logPasswordRef} type="text" />
+                        <button className={styles.btn}>Login</button>
+                    </form>
+                )}
+                {!loggedIn && (
+                    <div>Successfully logged in</div>
+                )}
+                
 
                 <h1>Logout</h1>
                 <button className={styles.btn} onClick={onLogout}>Logout</button>

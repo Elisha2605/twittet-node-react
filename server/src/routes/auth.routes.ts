@@ -1,6 +1,11 @@
 import { Router } from 'express';
 import passport from 'passport';
-import { logIn, logOUt, singUp } from 'src/controllers/auth.controller';
+import {
+    context,
+    logIn,
+    logOUt,
+    singUp,
+} from 'src/controllers/auth.controller';
 import { verifyUser } from 'src/utils/jwt.util';
 
 const authRouter = Router();
@@ -12,5 +17,6 @@ authRouter.post(
     logIn
 );
 authRouter.post('/logout', verifyUser(), logOUt);
+authRouter.get('/context', verifyUser(), context);
 
 export default authRouter;

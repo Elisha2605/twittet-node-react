@@ -10,6 +10,7 @@ import Button, { ButtonSize, ButtonType } from "../ui/Button";
 import NavigationUserInfo from "./NavigationUserInfo";
 import Modal from "../ui/Modal";
 import PageUnderConstruction from "../ui/PageUnderConstruction";
+import { logout } from "../../api/auth.api";
 
 const Navigation = () => {
     const [modalOpen, setMadalOpen] = useState(false);
@@ -32,6 +33,11 @@ const Navigation = () => {
         setMadalOpen(true);
     };
     
+    // temp
+    const onLogout = async (e: React.MouseEvent) => {
+        await logout();
+    }
+
     return (
         <React.Fragment>
             <div className={styles.container}>
@@ -46,7 +52,7 @@ const Navigation = () => {
                     <NavigationItem
                         icon={faHome} 
                         label={"Home"} 
-                        path='/home' 
+                        path='/' 
                     />
                     <NavigationItem
                         icon={faHashtag} 
@@ -77,7 +83,7 @@ const Navigation = () => {
                     <NavigationItem
                         icon={faEllipsisH} 
                         label={"More"} 
-                        path='/' 
+                        path='#' 
                         className={styles.ellipsis}
                     />
                 </div>
@@ -91,6 +97,7 @@ const Navigation = () => {
                         <PageUnderConstruction />
                         <button onClick={() => setMadalOpen(false)}>Close Modal</button>
                 </Modal>
+                <button onClick={(e) => onLogout(e)}>logout</button>
                 <NavigationUserInfo 
                     avatar={"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"} 
                     firstName={"Alvin"} 
