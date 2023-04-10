@@ -33,11 +33,9 @@ export const AuthContextProvider = (props: any) => {
             ) {
                 context.isLoggedIn = newContext.isLoggedIn;
             }
-
             if (newContext.token !== undefined && newContext.token !== null) {
                 context.token = newContext.token;
             }
-
             localStorage.setItem('context', JSON.stringify(context));
             setCtx(context);
         });

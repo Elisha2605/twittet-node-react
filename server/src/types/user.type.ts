@@ -1,4 +1,9 @@
-import { UserContext } from 'src/types/custom';
+import { IUser } from 'src/model/user.model';
+
+export interface UserContext {
+    isLoggedIn: boolean;
+    user: IUser;
+}
 
 declare module 'express-session' {
     interface SessionData extends UserContext {
@@ -23,7 +28,7 @@ declare global {
     }
 }
 
-// extending the IncomingMessage interface of the http module
+// Extending the IncomingMessage interface of the http module
 declare module 'http' {
     interface IncomingMessage {
         user: any;

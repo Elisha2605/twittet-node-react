@@ -1,5 +1,7 @@
 import { getRefreshToken, getToken, verifyToken } from 'src/utils/jwt.util';
 import User, { IUser } from 'src/model/user.model';
+import { CustomError } from 'src/utils/helpers';
+import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
 
 export interface UserSingUpInfo {
     email: string;
@@ -7,7 +9,8 @@ export interface UserSingUpInfo {
     repeatPassword?: string;
 }
 
-export interface UserContext {
+// temp
+export interface UserEmail {
     email: string;
 }
 
@@ -16,33 +19,34 @@ export interface Status {
     message: string;
     token?: string;
     refreshToken?: string;
-    user?: IUser | UserContext;
+    user?: IUser | UserEmail;
+}
+
+interface Tokens {
+    token: string;
+    refreshToken: string;
+}
+
+interface NewTokens {
+    newToken: string;
+    newRefreshToken: string;
 }
 
 export const signup = async (
     email: string,
     password: string,
     passwordConfirmation: string
-): Promise<Status> => {
+): Promise<ApiResponse<any>> => {
     try {
         if (password !== passwordConfirmation) {
-            return {
-                success: false,
-                message: 'Repeated password is different',
-            };
+            throw CustomError('Repeated password is different', 400);
         }
         const isUser = await User.findOne({ email: email });
         if (isUser) {
-            return {
-                success: false,
-                message: 'User already exists',
-            };
+            throw CustomError('User already exists', 400);
         }
         if (!email) {
-            return {
-                success: false,
-                message: 'Email is missing',
-            };
+            throw CustomError('Email is missing', 400);
         }
         const user = await User.register(
             new User({
@@ -54,38 +58,58 @@ export const signup = async (
 
         const newUser = await user.save();
         if (newUser === null || newUser === undefined) {
-            return { success: false, message: 'failed to save ' };
-        } else {
-            return {
-                success: true,
-                message: 'Successfylly user creation!',
-                user: user,
-            };
+            throw CustomError('failed to save user on Login', 500);
         }
-    } catch (error) {
         return {
-            success: false,
-            message: 'Server Error',
+            success: true,
+            message: 'User Context sent successfully',
+            status: 200,
+            payload: { user: user },
         };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
     }
 };
 
-export const login = async (userId: string): Promise<Status> => {
-    const token = getToken({ _id: userId });
-    const refreshToken = getRefreshToken({ _id: userId });
-    const user = await User.findById(userId);
-    user.refreshToken.push({ refreshToken: refreshToken });
+export const login = async (userId: string): Promise<ApiResponse<Tokens>> => {
+    if (!userId) {
+        throw CustomError('Invalid input', 400);
+    }
 
-    const loggedInUser = await user.save();
-    if (loggedInUser === null || loggedInUser === undefined) {
-        return { success: false, message: 'failed to save ' };
-    } else {
-        return {
-            success: true,
-            message: 'Successfylly Logged in!',
-            token: token,
-            refreshToken: refreshToken,
+    try {
+        const token = getToken({ _id: userId });
+        const refreshToken = getRefreshToken({ _id: userId });
+        const user = await User.findById(userId);
+        user.refreshToken.push({ refreshToken: refreshToken });
+
+        const loggedInUser = await user.save();
+        if (loggedInUser === null || loggedInUser === undefined) {
+            throw CustomError('failed to save user on Login', 500);
+        } else {
+            return {
+                success: true,
+                message: 'User Context sent successfully',
+                status: 200,
+                payload: {
+                    token: token,
+                    refreshToken: refreshToken,
+                },
+            };
+        }
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
         };
+        return Promise.reject(errorResponse);
     }
 };
 
@@ -113,6 +137,51 @@ export const logout = async (
             success: true,
             message: 'User sucessefully logged out',
         };
+    }
+};
+
+export const getUserContext = async (
+    userId: string,
+    refreshToken: string
+): Promise<ApiResponse<NewTokens>> => {
+    if (!userId || !refreshToken) {
+        throw CustomError('Invalid input', 400);
+    }
+    try {
+        const user = await User.findOne({ _id: userId });
+
+        const tokenIndex = user.refreshToken.findIndex(
+            (index) => index.refreshToken === refreshToken
+        );
+
+        if (tokenIndex === -1) {
+            throw CustomError('Refresh token not found!', 404);
+        }
+
+        const newToken = getToken({ _id: userId });
+        const newRefreshToken = getRefreshToken({
+            _id: userId,
+        });
+
+        user.refreshToken[tokenIndex].refreshToken = newRefreshToken;
+        console.log('new refreshToken: ' + refreshToken);
+        return {
+            success: true,
+            message: 'User Context sent successfully',
+            status: 200,
+            payload: {
+                newToken: newToken,
+                newRefreshToken: newRefreshToken,
+            },
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
     }
 };
 
