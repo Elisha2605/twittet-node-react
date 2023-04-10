@@ -36,11 +36,16 @@ export const signup = async (
     email: string,
     password: string,
     passwordConfirmation: string
+    // TODO: Change type any in Promise
 ): Promise<ApiResponse<any>> => {
+    if (password !== passwordConfirmation) {
+        return {
+            success: false,
+            message: 'Incorect Password!',
+            status: 400,
+        };
+    }
     try {
-        if (password !== passwordConfirmation) {
-            throw CustomError('Repeated password is different', 400);
-        }
         const isUser = await User.findOne({ email: email });
         if (isUser) {
             throw CustomError('User already exists', 400);
@@ -78,10 +83,6 @@ export const signup = async (
 };
 
 export const login = async (userId: string): Promise<ApiResponse<Tokens>> => {
-    if (!userId) {
-        throw CustomError('Invalid input', 400);
-    }
-
     try {
         const token = getToken({ _id: userId });
         const refreshToken = getRefreshToken({ _id: userId });
@@ -91,17 +92,16 @@ export const login = async (userId: string): Promise<ApiResponse<Tokens>> => {
         const loggedInUser = await user.save();
         if (loggedInUser === null || loggedInUser === undefined) {
             throw CustomError('failed to save user on Login', 500);
-        } else {
-            return {
-                success: true,
-                message: 'User Context sent successfully',
-                status: 200,
-                payload: {
-                    token: token,
-                    refreshToken: refreshToken,
-                },
-            };
         }
+        return {
+            success: true,
+            message: 'User Context sent successfully',
+            status: 200,
+            payload: {
+                token: token,
+                refreshToken: refreshToken,
+            },
+        };
     } catch (error) {
         const errorResponse: ErrorResponse = {
             success: false,
@@ -116,27 +116,35 @@ export const login = async (userId: string): Promise<ApiResponse<Tokens>> => {
 export const logout = async (
     userId: string,
     refreshToken: string
-): Promise<Status> => {
-    const user = await User.findById(userId);
+): Promise<ApiResponse<null>> => {
+    try {
+        const user = await User.findById(userId);
 
-    const tokenIndex = user.refreshToken.findIndex(
-        (index) => index.refreshToken === refreshToken
-    );
+        const tokenIndex = user.refreshToken.findIndex(
+            (index) => index.refreshToken === refreshToken
+        );
 
-    if (tokenIndex !== -1) {
-        user.refreshToken.id(user.refreshToken[tokenIndex]._id).deleteOne();
-    }
-    const logoutUser = await user.save();
-    if (logoutUser === null || logoutUser === undefined) {
-        return {
-            success: false,
-            message: 'Error: Failed to logout!',
-        };
-    } else {
+        if (tokenIndex !== -1) {
+            user.refreshToken.id(user.refreshToken[tokenIndex]._id).deleteOne();
+        }
+
+        const logoutUser = await user.save();
+        if (logoutUser === null || logoutUser === undefined) {
+            throw CustomError('Failed to logout', 404);
+        }
         return {
             success: true,
-            message: 'User sucessefully logged out',
+            message: 'User succefully logged out',
+            status: 200,
         };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
     }
 };
 

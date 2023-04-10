@@ -8,6 +8,8 @@ import {
     getUserContext,
 } from 'src/services/auth.service';
 import { COOKIE_OPTIONS, verifyToken } from 'src/utils/jwt.util';
+import passport from 'passport';
+import { IVerifyOptions } from 'passport-local';
 
 const router = express.Router();
 
@@ -27,8 +29,16 @@ export const singUp = asyncHandler(
             const { payload } = response;
 
             if (response.success) {
-                res.status(200);
-                res.send({ success: true, token: payload.token });
+                res.status(response.status);
+                res.send({
+                    success: response.success,
+                    message: response.message,
+                    status: response.status,
+                    user: payload.user,
+                }); // return approprite user properties.
+            } else {
+                res.status(response.status);
+                res.send(response);
             }
         } catch (error) {
             res.status(error.status).json({
@@ -41,56 +51,68 @@ export const singUp = asyncHandler(
     }
 );
 
-export const logIn = asyncHandler(
-    async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const response = await login((req.user as any)._id);
-
-            const { payload } = response;
-
-            if (response.success) {
-                res.status(response.status);
-                res.cookie(
-                    'refreshToken',
-                    payload.refreshToken,
-                    COOKIE_OPTIONS
-                );
-                res.send({
-                    isLoggedIn: true,
-                    user: req.user,
-                    success: true,
-                    token: response.payload.token,
-                    refreshToken: response.payload.refreshToken,
+export const logIn = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    passport.authenticate(
+        'local',
+        { session: false },
+        async (err: Error, user: any, info: IVerifyOptions) => {
+            if (err) {
+                return next(err);
+            }
+            if (!user) {
+                return res.status(401).json({
+                    success: false,
+                    message: info.message,
                 });
             }
-        } catch (error) {
-            res.status(error.status).json({
-                sucess: error.success,
-                message: error.message,
-                status: error.status,
-            });
-            next(error);
+            try {
+                const response = await login(user._id);
+
+                const { payload } = response;
+
+                if (response.success) {
+                    res.cookie(
+                        'refreshToken',
+                        payload.refreshToken,
+                        COOKIE_OPTIONS
+                    );
+                    res.send({
+                        isLoggedIn: true,
+                        user: req.user,
+                        success: true,
+                        token: payload.token,
+                    });
+                } else {
+                    res.status(response.status);
+                    res.send(response.message);
+                }
+            } catch (err) {
+                next(err);
+            }
         }
-    }
-);
+    )(req, res, next);
+};
 
 export const logOUt = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const { signedCookies = {} } = req;
         const { refreshToken } = signedCookies;
-        const result = await logout(req.user._id, refreshToken);
+        const response = await logout(req.user._id, refreshToken);
         try {
-            if (result.success) {
+            if (response.success) {
                 res.clearCookie('refreshToken', COOKIE_OPTIONS);
                 res.send({
-                    isLoggedIn: false,
-                    user: req.user,
                     success: true,
-                    refreshToken: result.refreshToken,
+                    isLoggedIn: false,
+                    message: response.message,
                 });
             } else {
-                res.statusCode = 500;
-                res.send(new Error(result.message));
+                res.json(response.message);
+                res.send(response);
             }
         } catch (error) {
             next(error);

@@ -16,7 +16,6 @@ import { loggerMiddleware } from './middleware/logger.middleware';
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 
-
 dotenv.config();
 
 const app: Application = express();

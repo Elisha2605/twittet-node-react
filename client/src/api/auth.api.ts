@@ -44,7 +44,6 @@ export const login = async (email: string, password: string) => {
         const contex = {
             isLoggedIn: res.data.isLoggedIn,
             token: res.data.token,
-            expiryDate: res.data.user.expiryDate,
         };
         localStorage.setItem('context', JSON.stringify(contex));
         window.location.href = '/'
