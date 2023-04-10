@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { faHashtag, faHome} from "@fortawesome/free-solid-svg-icons";
 import { faBell, faBookmark, faEnvelope, faUser } from "@fortawesome/free-regular-svg-icons";
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
@@ -11,10 +11,14 @@ import NavigationUserInfo from "./NavigationUserInfo";
 import Modal from "../ui/Modal";
 import PageUnderConstruction from "../ui/PageUnderConstruction";
 import { logout } from "../../api/auth.api";
+import AuthContext from "../../context/user.context";
 
 const Navigation = () => {
     const [modalOpen, setMadalOpen] = useState(false);
+    const [user, setUser] = useState(null);
     const modalRef = useRef<HTMLDivElement>(null);
+
+    
 
     useEffect(() => {
         document.addEventListener('mousedown', hadleClikOUtside );
@@ -37,6 +41,19 @@ const Navigation = () => {
     const onLogout = async (e: React.MouseEvent) => {
         await logout();
     }
+
+    // Auth user info
+    const { me } = useContext(AuthContext);
+    useEffect(() => {
+        if (me) {
+            me().then((user) => setUser(user))
+        }
+    }, [me]);
+    if (!user) {
+        return null;
+    };
+    const { email } = user;
+
 
     return (
         <React.Fragment>
@@ -100,7 +117,7 @@ const Navigation = () => {
                 <button onClick={(e) => onLogout(e)}>logout</button>
                 <NavigationUserInfo 
                     avatar={"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"} 
-                    firstName={"Alvin"} 
+                    firstName={email} 
                     username={"alvin40900"}
                 />
             </div>
