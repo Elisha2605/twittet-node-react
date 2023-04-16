@@ -39,6 +39,12 @@
     font-weight: var(--font-weight-600);
 }  
 
+.tietaryBig {
+    background: var(--color-black);
+    color: var(--color-white);
+    padding: 0.7rem 1rem;
+}
+
 .tietary:hover {
     background: var(--color-secondary-lighter);
 } 

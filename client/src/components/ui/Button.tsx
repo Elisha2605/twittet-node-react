@@ -48,6 +48,10 @@ const Button: FC<ButtonProps> = ({
     if (type === ButtonType.tietary && size === ButtonSize.small) {
         allStyles = styles.tietary
     }
+    if (type === ButtonType.tietary && size === ButtonSize.big) {
+        allStyles = styles.tietaryBig
+    }
+    
 
     return (
         <button className={`${className} ${allStyles} ${styles[type]} ${loading ? styles.loading : ''}`}

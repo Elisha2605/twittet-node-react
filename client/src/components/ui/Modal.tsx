@@ -1,9 +1,12 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import styles from './Modal.module.css';
+import XmarkIcon from '../icons/XmarkIcon';
+import TwitterIcon from '../icons/TwitterIcon';
 
 interface ModalProps {
-    modalRef: React.RefObject<HTMLDivElement>
+    title?: string;
+    modalRef: React.RefObject<HTMLDivElement>;
     isOpen: boolean;
     isOverlay?: boolean;
     children: React.ReactNode;
@@ -11,6 +14,7 @@ interface ModalProps {
 }
 
 const Modal: FC<ModalProps> = ({
+    title,
     modalRef,
     isOpen,
     isOverlay = true,
@@ -38,13 +42,22 @@ const Modal: FC<ModalProps> = ({
                         <div className={styles.overlay} ></div>
                     )}
                     <div className={styles.content} ref={modalRef}>
+                        <div className={styles.wrapper}>  
+                            <TwitterIcon 
+                                size={'2xl'}
+                                color={'var(--color-primary)'}
+                            />  
+                            <h1>{title}</h1>
+                            {children}
+                        </div>
                         <button
                             className={styles.close}
                             onClick={handleClose}
                         >
-                            X
+                            <XmarkIcon 
+                                size={'sm'}
+                            />
                         </button>
-                        {children}
                     </div>
                 </div>
             ) : null}

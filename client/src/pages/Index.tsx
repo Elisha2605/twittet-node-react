@@ -1,91 +1,146 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import styles from "./Index.module.css";
-import { getNewContext, logout, singup, login } from "../api/auth.api";
-import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
-import AuthContext from "../context/user.context";
+import React, { useEffect, useRef, useState } from 'react';
+import styles from './Index.module.css';
+import hero from '../assets/hero.png';
+import TwitterIcon from '../components/icons/TwitterIcon';
+import Modal from '../components/ui/Modal';
+import Signup from '../components/auth/Signup';
+
 
 const Index = () => {
+    const [signupModalOpen, setSignupModalOpen] = useState(false);
+    const [loginModalOpen, setLoginModalOpen] = useState(false);
 
-    const ctx = useContext(AuthContext)
-    
+    const signupModalRef = useRef<HTMLDivElement>(null);
+    const loginModalRef = useRef<HTMLDivElement>(null);
 
-    const emailRef = useRef<HTMLInputElement>(null);
-    const profileRef = useRef<HTMLInputElement>(null);
-    const passwordRef = useRef<HTMLInputElement>(null);
-    const passwordConfirmRef = useRef<HTMLInputElement>(null);
+    useEffect(() => {
+        document.addEventListener('mousedown', hadleClikOUtside);
+        return () => {
+            document.removeEventListener('mousedown', hadleClikOUtside);
+        };
+    }, [signupModalRef]);
 
-    const logEmailRef = useRef<HTMLInputElement>(null);
-    const logPasswordRef = useRef<HTMLInputElement>(null);
-
-    const [loggedIn, setLoggedIn] = useState(false);
-    const navigate = useNavigate();
-    
-    const onSingupHandler = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (profileRef.current?.files?.[0]) {
-            console.log(profileRef.current?.files?.[0]);
-            const formData = await singup( 
-                emailRef.current?.value || '',
-                profileRef.current?.files?.[0],
-                passwordRef.current?.value || '',
-                passwordConfirmRef.current?.value || ''
-            )
-            console.log(formData);  
+    const hadleClikOUtside = (e: MouseEvent) => {
+        if (
+            (signupModalRef.current &&
+                !signupModalRef.current.contains(e.target as Node)) ||
+            (loginModalRef.current &&
+                !loginModalRef.current.contains(e.target as Node))
+        ) {
+            setSignupModalOpen(false);
+            setLoginModalOpen(false);
         }
-    }
-
-    const onLoginHanlder = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const formData = await login(
-            logEmailRef.current?.value || '',
-            logPasswordRef.current?.value || ''
-        )
-        // navigate('/');
-        console.log(formData);
-    }
-
-    const onLogout = async () => {
-        const res = await logout();
-        console.log(res);
-    }
-
+    };
+    
     return (
         <React.Fragment>
             <div className={styles.container}>
-                <h1>Signup</h1>
-                <form action="" className={styles.formControl} onSubmit={onSingupHandler} encType="multipart/form-data">
-                    <label htmlFor="">Email</label>
-                    <input ref={emailRef} type="email" />
-                    <label htmlFor="">Passwold</label>
-                    <input ref={passwordRef} type="text" />
-                    <label htmlFor="">Repeat passowrd</label>
-                    <input ref={passwordConfirmRef} type="text" />
-                    <label htmlFor="">Profile image</label>
-                    <input type="file" name="avatar" ref={profileRef}></input>
-                    <button className={styles.btn}>Singup</button>
-                </form>
-
-                <h1>Login</h1>
-                {!loggedIn && (
-                    <form action="" className={styles.formControl} onSubmit={onLoginHanlder}>
-                        <label htmlFor="">Email</label>
-                        <input ref={logEmailRef} type={'email'} />
-                        <label htmlFor="">Passwold</label>
-                        <input ref={logPasswordRef} type="text" />
-                        <button className={styles.btn}>Login</button>
-                    </form>
-                )}
-                {!loggedIn && (
-                    <div>Successfully logged in</div>
-                )}
-                
-
-                <h1>Logout</h1>
-                <button className={styles.btn} onClick={onLogout}>Logout</button>
+                <div className={styles.showcase}>
+                    <img src={hero} alt="" />
+                </div>
+                <div className={styles.left}>
+                    <TwitterIcon
+                        size={'2xl'}
+                        color={'var(--color-white)'}
+                        className={styles.twitterIcon}
+                    />
+                    <h1>Happening now</h1>
+                    <h2>Join Twitter today.</h2>
+                    <div
+                        className={styles.signup}
+                        onClick={() => setSignupModalOpen(true)}
+                    >
+                        Signup
+                    </div>
+                    <div 
+                        className={styles.login}
+                        onClick={() => setLoginModalOpen(true)}
+                    >Login</div>
+                    <Modal
+                        title={'Singup'}
+                        modalRef={signupModalRef}
+                        isOpen={signupModalOpen}
+                        onClose={() => setSignupModalOpen(false)}
+                        isOverlay={true}
+                    >
+                        <Signup />
+                    </Modal>
+                    <Modal
+                        modalRef={loginModalRef}
+                        isOpen={loginModalOpen}
+                        onClose={() => setSignupModalOpen(false)}
+                        isOverlay={true}
+                    >
+                        Login
+                    </Modal>
+                    <div className={styles.termsAndService}>
+                        <p>
+                            By singing up, you agree to the
+                            <span>Terms of Service</span> and{' '}
+                            <span>Privacy Policy</span>, including{' '}
+                            <span>Cookie Use</span>
+                        </p>
+                    </div>
+                </div>
+                <div className={styles.footer}>
+                    <ul>
+                        <li>
+                            <a href="#">About</a>
+                        </li>
+                        <li>
+                            <a href="#">Help center</a>
+                        </li>
+                        <li>
+                            <a href="#">Terms of service</a>
+                        </li>
+                        <li>
+                            <a href="#">Privacy policy</a>
+                        </li>
+                        <li>
+                            <a href="#">Cooki policy</a>
+                        </li>
+                        <li>
+                            <a href="#">Ads info</a>
+                        </li>
+                        <li>
+                            <a href="#">Blog</a>
+                        </li>
+                        <li>
+                            <a href="#">Status</a>
+                        </li>
+                        <li>
+                            <a href="#">Careers</a>
+                        </li>
+                        <li>
+                            <a href="#">Brand resources</a>
+                        </li>
+                        <li>
+                            <a href="#">Adverstising</a>
+                        </li>
+                        <li>
+                            <a href="#">Marketing</a>
+                        </li>
+                        <li>
+                            <a href="#">Twitter for Business</a>
+                        </li>
+                        <li>
+                            <a href="#">Developers</a>
+                        </li>
+                        <li>
+                            <a href="#">Directory</a>
+                        </li>
+                        <li>
+                            <a href="#">Settings</a>
+                        </li>
+                        <li>
+                            <a href="#">Settings</a>
+                        </li>
+                        <p>&copy; 2023 Bachelor project</p>
+                    </ul>
+                </div>
             </div>
         </React.Fragment>
-    )
-}
+    );
+};
 
 export default Index;
-
