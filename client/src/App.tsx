@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import styles from './App.module.css';
 import Navigation from './components/navigation/Navigation';
 import HomePage from './pages/Home';
@@ -14,7 +14,7 @@ import AuthContext, { StoredContext } from './context/user.context';
 
 function App() {
     const context = useContext(AuthContext);
-    let ctx: StoredContext | undefined = context.getUserContext();
+    let ctx: StoredContext = context.getUserContext();
 
     if (!ctx?.isLoggedIn) {
         return (

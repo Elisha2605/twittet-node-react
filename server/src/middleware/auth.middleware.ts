@@ -25,7 +25,7 @@ export const authenticate = async (
         if (!user) {
             return res.status(401).send({ message: 'Unauthorized' });
         }
-        req.user = user as IUser;
+        req.authUser = user as IUser;
         next();
     } catch (error) {
         return res.status(401).send({ message: 'Unauthorized' });

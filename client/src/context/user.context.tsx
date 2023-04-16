@@ -1,6 +1,6 @@
 import { getNewContext } from '../api/auth.api';
-
 import React, { useCallback, useEffect, useState } from 'react';
+import { getUserInfo } from '../api/user.api';
 
 export interface StoredContext {
     isLoggedIn: boolean;
@@ -17,7 +17,7 @@ const AuthContext = React.createContext({
     getUserContext: (): any => {
         return;
     },
-    getUserInfo: async (): Promise<any> => {},
+    me: async (): Promise<any> => {},
 });
 
 export const AuthContextProvider = (props: any) => {
@@ -53,9 +53,9 @@ export const AuthContextProvider = (props: any) => {
         };
     }, [retrieveContextCallback]);
 
-    const getUserInfo = async () => {
-        // TODO
-        // Call endpoint ('/api/user/info')
+    const me = async () => {
+        const res = await getUserInfo();
+        return res
     };
 
     const getUserContext = (): any => {
@@ -72,7 +72,7 @@ export const AuthContextProvider = (props: any) => {
     const contextValues = {
         isLoggeIn: ctx.isLoggedIn,
         getUserContext: getUserContext,
-        getUserInfo: getUserInfo,
+        me: me,
     };
 
     return (

@@ -10,6 +10,7 @@ const Index = () => {
     
 
     const emailRef = useRef<HTMLInputElement>(null);
+    const profileRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
     const passwordConfirmRef = useRef<HTMLInputElement>(null);
 
@@ -21,13 +22,16 @@ const Index = () => {
     
     const onSingupHandler = async (e: React.FormEvent) => {
         e.preventDefault();
-        const formData = await singup( 
-            emailRef.current?.value || '',
-            passwordRef.current?.value || '',
-            passwordConfirmRef.current?.value || ''
-        )
-        
-        console.log(formData);  
+        if (profileRef.current?.files?.[0]) {
+            console.log(profileRef.current?.files?.[0]);
+            const formData = await singup( 
+                emailRef.current?.value || '',
+                profileRef.current?.files?.[0],
+                passwordRef.current?.value || '',
+                passwordConfirmRef.current?.value || ''
+            )
+            console.log(formData);  
+        }
     }
 
     const onLoginHanlder = async (e: React.FormEvent) => {
@@ -49,13 +53,15 @@ const Index = () => {
         <React.Fragment>
             <div className={styles.container}>
                 <h1>Signup</h1>
-                <form action="" className={styles.formControl} onSubmit={onSingupHandler}>
+                <form action="" className={styles.formControl} onSubmit={onSingupHandler} encType="multipart/form-data">
                     <label htmlFor="">Email</label>
                     <input ref={emailRef} type="email" />
                     <label htmlFor="">Passwold</label>
                     <input ref={passwordRef} type="text" />
                     <label htmlFor="">Repeat passowrd</label>
                     <input ref={passwordConfirmRef} type="text" />
+                    <label htmlFor="">Profile image</label>
+                    <input type="file" name="avatar" ref={profileRef}></input>
                     <button className={styles.btn}>Singup</button>
                 </form>
 

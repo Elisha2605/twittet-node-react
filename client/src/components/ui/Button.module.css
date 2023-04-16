@@ -20,13 +20,16 @@
     background: var(--color-primary-darker);
 }
 
+/* Black btn */
 .secondarySmall {
     background: var(--color-black);
     padding: 0.2rem 1rem;
 }
 
 .secondarySmall:hover {
-    background: var(--color-black-lighter);
+    background: var(--color-white);
+    color: var(--color-black);
+    border: 1px solid var(--color-black)
 }
 
 .tietary {
