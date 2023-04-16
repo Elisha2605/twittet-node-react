@@ -42,7 +42,7 @@ export const userModel = {
     },
     name: {
         type: String,
-        unique: false,
+        unique: false, // change to true
         required: false, // change to true
         validate: {
             validator: (v: string) => {
@@ -53,7 +53,7 @@ export const userModel = {
     },
     username: {
         type: String,
-        unique: false,
+        unique: false, // change to true
         required: false, // change to true
         validate: {
             validator: (v: string) => {
