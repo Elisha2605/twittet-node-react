@@ -34,6 +34,11 @@ interface NewTokens {
 
 export const signup = async (
     email: string,
+    name: string,
+    // username: string,
+    avatar: string,
+    coverImage: string,
+    bio: string,
     password: string,
     passwordConfirmation: string
     // TODO: Change type any in Promise
@@ -56,7 +61,11 @@ export const signup = async (
         const user = await User.register(
             new User({
                 email: email,
-                isActive: true,
+                name: name,
+                // username: username,
+                avatar: avatar,
+                // coverImage: coverImage,
+                // bio: bio,
             }),
             password
         );
@@ -153,7 +162,7 @@ export const getUserContext = async (
     refreshToken: string
 ): Promise<ApiResponse<NewTokens>> => {
     if (!userId || !refreshToken) {
-        throw CustomError('Invalid input', 400);
+        throw CustomError('Invalid user', 400);
     }
     try {
         const user = await User.findOne({ _id: userId });

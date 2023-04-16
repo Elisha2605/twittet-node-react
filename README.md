@@ -41,13 +41,16 @@ The server folder structure is as follows:
 
 - `index.ts`: The entry point of the application. When the application is started, it runs the code in this file.
 
-- `src/app.ts`: Contains the middleware and routing logic for the application.
+- `app.ts`: Contains the middleware and routing logic for the application.
 
-- `src/routes`: Contains the routers for the application.
+- `routes`: Contains the routers for the application.
 
-- `src/controllers`: Contains the controllers for the application.
+- `controllers`: Contains the controllers for the application.
 
-- `src/models`: Contains the models for the application.
+- `services`: Contains the models for the application.
+
+- `models`: Contains the models for the application.
+
 
 
 ### Client Folder Structure

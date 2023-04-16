@@ -31,6 +31,6 @@ declare global {
 // Extending the IncomingMessage interface of the http module
 declare module 'http' {
     interface IncomingMessage {
-        user: any;
+        authUser: any;
     }
 }

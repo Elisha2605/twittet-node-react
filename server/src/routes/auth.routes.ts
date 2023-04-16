@@ -6,10 +6,11 @@ import {
     singUp,
 } from 'src/controllers/auth.controller';
 import { verifyUser } from 'src/utils/jwt.util';
+import upload from 'src/middleware/multer.middleware';
 
 const authRouter = Router();
 
-authRouter.post('/signup', singUp);
+authRouter.post('/signup', upload.single('avatar'), singUp);
 authRouter.post('/login', logIn);
 authRouter.post('/logout', verifyUser(), logOUt);
 authRouter.get('/context', verifyUser(), context);

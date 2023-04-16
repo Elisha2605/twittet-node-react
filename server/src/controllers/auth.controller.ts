@@ -19,15 +19,20 @@ declare module 'express-session' {
 
 export const singUp = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
+        console.log(req.file.filename);
         try {
             const response = await signup(
                 req.body.email,
+                req.body.name,
+                // req.body.username,
+                req.file.filename,
+                req.body.coverImage,
+                req.body.bio,
                 req.body.password,
                 req.body.passwordConfirmation
             );
 
             const { payload } = response;
-
             if (response.success) {
                 res.status(response.status);
                 res.send({

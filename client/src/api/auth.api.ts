@@ -3,14 +3,22 @@ import { GETREQUESTOPTIONS, http } from "../config/axios.config";
 
 export const singup = async (
     email: string,
+    avatar: File,
     password: string,
     passwordConfirmation: string
 ) => {
     try {
         const res = await http.post('/auth/signup', {
             email: email,
+            avatar: avatar,
             password: password,
             passwordConfirmation: passwordConfirmation,
+        }, 
+        {
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data',
+            },
         });
         return res.data;
     } catch (error) {

@@ -23,3 +23,7 @@ export const dbConn = (): void => {
     );
     mongoose.connection.on('error', () => consola.error('database error'));
 };
+
+export const dbClose = () => {
+    mongoose.connection.close();
+};
