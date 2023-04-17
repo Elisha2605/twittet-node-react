@@ -1,30 +1,31 @@
-import { GETREQUESTOPTIONS, http } from "../config/axios.config";
-
+import { GETREQUESTOPTIONS, http } from '../config/axios.config';
 
 export const singup = async (
     email: string,
-    avatar: File,
+    avatar: any | undefined,
     password: string,
     passwordConfirmation: string
 ) => {
-    try {
-        const res = await http.post('/auth/signup', {
+    const res = await http.post(
+        '/auth/signup',
+        {
             email: email,
             avatar: avatar,
             password: password,
             passwordConfirmation: passwordConfirmation,
-        }, 
+        },
         {
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'multipart/form-data',
             },
-        });
-        return res.data;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
+        }
+    )
+    .catch((error) => {
+        return error.response;
+    });
+    
+    return res.data;
 };
 
 export const login = async (email: string, password: string) => {
@@ -54,7 +55,7 @@ export const login = async (email: string, password: string) => {
             token: res.data.token,
         };
         localStorage.setItem('context', JSON.stringify(contex));
-        window.location.href = '/'
+        window.location.href = '/';
     }
 
     return res.data;
@@ -68,7 +69,7 @@ export const logout = async () => {
         });
     if (res.status === 200) {
         localStorage.removeItem('context');
-        window.location.href = '/'
+        window.location.href = '/';
     }
     return res.data;
 };

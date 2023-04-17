@@ -1,0 +1,9 @@
+.faXmark {
+    padding: 0.6rem 0.8rem;
+    border-radius: 50%;
+}
+
+.faXmark:hover {
+    background-color: rgb(219, 241, 255);
+    cursor: pointer;
+}

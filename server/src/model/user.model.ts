@@ -31,8 +31,8 @@ export interface IUser extends mongoose.Document {
 export const userModel = {
     email: {
         type: String,
-        unique: true,
-        required: true,
+        unique: true, // change to true
+        required: true, // change to true
         validate: {
             validator: (v: string) => {
                 return v !== undefined;
