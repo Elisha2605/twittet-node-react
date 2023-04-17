@@ -7,6 +7,11 @@ export const singup = async (
     password: string,
     passwordConfirmation: string
 ) => {
+    if (avatar) {
+        console.log('File selected');
+    } else {
+        console.log('No file selected');
+    }
     try {
         const res = await http.post('/auth/signup', {
             email: email,

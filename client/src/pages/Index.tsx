@@ -4,11 +4,13 @@ import hero from '../assets/hero.png';
 import TwitterIcon from '../components/icons/TwitterIcon';
 import Modal from '../components/ui/Modal';
 import Signup from '../components/auth/Signup';
+import Login from '../components/auth/Login';
 
 
 const Index = () => {
     const [signupModalOpen, setSignupModalOpen] = useState(false);
     const [loginModalOpen, setLoginModalOpen] = useState(false);
+    const [signupSuccess, setSignupSuccess] = useState(false);
 
     const signupModalRef = useRef<HTMLDivElement>(null);
     const loginModalRef = useRef<HTMLDivElement>(null);
@@ -32,6 +34,12 @@ const Index = () => {
         }
     };
     
+    const handleSignupSuccess = () => {
+        setSignupSuccess(true);
+        setSignupModalOpen(false);
+        setLoginModalOpen(true);
+    }
+
     return (
         <React.Fragment>
             <div className={styles.container}>
@@ -64,18 +72,20 @@ const Index = () => {
                         isOverlay={true}
                         logo={true}
                     >
-                        <Signup />
+                        <Signup onSuccess={handleSignupSuccess}/>
                     </Modal>
-                    <Modal
-                        title={'Singup'}
-                        modalRef={loginModalRef}
-                        isOpen={loginModalOpen}
-                        onClose={() => setLoginModalOpen(false)}
-                        isOverlay={true}
-                        logo={true}
-                    >
-                        Login
-                    </Modal>
+                    {(signupSuccess || loginModalOpen) && (
+                        <Modal
+                            title={'Login'}
+                            modalRef={loginModalRef}
+                            isOpen={loginModalOpen}
+                            onClose={() => setLoginModalOpen(false)}
+                            isOverlay={true}
+                            logo={true}
+                        >
+                            <Login />
+                        </Modal>
+                    )}
                     <div className={styles.termsAndService}>
                         <p>
                             By singing up, you agree to the

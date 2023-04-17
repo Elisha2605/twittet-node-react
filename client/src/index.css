@@ -11,6 +11,7 @@
     --color-secondary: #657786;
     --color-white: #ffffff;
     --color-black: #000000;
+    --color-error: #fb3b1e;
 
     /* color hover */
     --color-primary-darker: #0d8cce;
@@ -25,6 +26,7 @@
     --font-size-lg: 1.2rem;
     --font-size-md: 1rem;
     --font-size-sm: 0.8rem;
+    --font-size-xs: 0.7rem;
 
     --font-size-btn-sm: 1rem;
 

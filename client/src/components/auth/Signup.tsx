@@ -2,17 +2,14 @@ import React, { FC } from "react";
 import styles from "./Signup.module.css";
 import SignupForm from "./SignupForm";
 
-interface SignupProps {
-    
-}
 
-const Signup: FC<{}> = ({ 
-     
+const Signup: FC<{ onSuccess: () => void}> = ({ 
+     onSuccess,
 }) => {
 
     return (
         <React.Fragment>
-            <SignupForm />
+            <SignupForm onSuccess={onSuccess} />
         </React.Fragment>
     )
 }
