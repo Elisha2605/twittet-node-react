@@ -10,6 +10,7 @@ interface ModalProps {
     isOpen: boolean;
     isOverlay?: boolean;
     children: React.ReactNode;
+    logo?: boolean;
     onClose: () => void;
 }
 
@@ -19,9 +20,9 @@ const Modal: FC<ModalProps> = ({
     isOpen,
     isOverlay = true,
     children,
+    logo,
     onClose,
 }) => {
-
     const [modalOpen, setModalOpen] = useState(isOpen);
 
     useEffect(() => {
@@ -35,28 +36,22 @@ const Modal: FC<ModalProps> = ({
 
     return ReactDOM.createPortal(
         <React.Fragment>
-
             {modalOpen ? (
                 <div className={styles.container}>
-                    {isOverlay && (
-                        <div className={styles.overlay} ></div>
-                    )}
+                    {isOverlay && <div className={styles.overlay}></div>}
                     <div className={styles.content} ref={modalRef}>
-                        <div className={styles.wrapper}>  
-                            <TwitterIcon 
-                                size={'2xl'}
-                                color={'var(--color-primary)'}
-                            />  
+                        <div className={styles.wrapper}>
+                            {logo && (
+                                <TwitterIcon
+                                    size={'2xl'}
+                                    color={'var(--color-primary)'}
+                                />
+                            )}
                             <h1>{title}</h1>
                             {children}
                         </div>
-                        <button
-                            className={styles.close}
-                            onClick={handleClose}
-                        >
-                            <XmarkIcon 
-                                size={'sm'}
-                            />
+                        <button className={styles.close} onClick={handleClose}>
+                            <XmarkIcon size={'sm'} />
                         </button>
                     </div>
                 </div>

@@ -3,7 +3,7 @@ import { GETREQUESTOPTIONS, http } from "../config/axios.config";
 
 export const singup = async (
     email: string,
-    avatar: File,
+    avatar: any | undefined,
     password: string,
     passwordConfirmation: string
 ) => {

@@ -1,119 +1,45 @@
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 1rem 1rem 1rem;
+    border-top: 1px solid var(--color-secondary-light);
 }
 
-header {
-    background-color: #fff;
-    border-bottom: 1px solid #e6ecf0;
-    position: fixed;
-    top: 0;
-    left: 0;
+.container:hover {
+    background: var(--color-secondary-lighter);
+    transition: 0.1s ease-in;
+    cursor: pointer;
+}
+
+.test {
+    background: red;
+}
+
+.container .tweet, 
+.container .image {
+    margin-left: 3.7rem;
+}
+
+.userInfo {
+    margin-top: -1rem;
+}
+
+.body {
+    margin-top: -1.5rem;
+}
+
+.tweet {
+    margin-bottom: 0.5rem;
+    /* TODO: change the font-familly */
+}
+
+.image {
+    height: 20rem;
+    margin-bottom: 1rem;
+    border-radius: 1rem;
+}
+
+.image img {
     width: 100%;
-    z-index: 1;
-}
-
-.logo {
-    display: inline-block;
-    margin-right: 20px;
-    padding-top: 15px;
-}
-
-.logo img {
-    height: 40px;
-}
-
-.buttons {
-    display: inline-block;
-    float: right;
-    margin-top: 15px;
-}
-
-.signup {
-    background-color: #1da1f2;
-    color: #fff;
-    font-weight: bold;
-    padding: 10px 20px;
-    border-radius: 30px;
-    margin-right: 10px;
-}
-
-.login {
-    background-color: #fff;
-    color: #1da1f2;
-    font-weight: bold;
-    padding: 10px 20px;
-    border-radius: 30px;
-    border: 1px solid #1da1f2;
-}
-
-.signup:hover,
-.login:hover {
-    cursor: pointer;
-}
-
-.hero {
-    background-color: #1da1f2;
-    color: #fff;
-    padding: 200px 0;
-    text-align: center;
-}
-
-.hero h1 {
-    font-size: 3em;
-    margin-bottom: 20px;
-}
-
-.hero p {
-    font-size: 1.5em;
-    margin-bottom: 30px;
-}
-
-.hero a {
-    background-color: #fff;
-    color: #1da1f2;
-    font-weight: bold;
-    padding: 10px 20px;
-    border-radius: 30px;
-    border: 1px solid #1da1f2;
-    margin-right: 10px;
-}
-
-.hero a:hover {
-    background-color: #1da1f2;
-    color: #fff;
-    cursor: pointer;
-}
-
-footer {
-    background-color: #fff;
-    padding: 20px 0;
-    border-top: 1px solid #e6ecf0;
-}
-
-footer p {
-    margin-bottom: 10px;
-}
-
-nav ul {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-}
-
-nav ul li {
-    margin-right: 20px;
-    margin-bottom: 10px;
-}
-
-nav ul li a {
-    color: #1da1f2;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-nav ul li a:hover {
-    text-decoration: underline;
-    cursor: pointer;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 1rem;
 }

@@ -4,7 +4,7 @@ import { logout, singup, login } from '../api/auth.api';
 
 const Index = () => {
     const emailRef = useRef<HTMLInputElement>(null);
-    const profileRef = useRef<HTMLInputElement>(null);
+    const avatarRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
     const passwordConfirmRef = useRef<HTMLInputElement>(null);
 
@@ -13,16 +13,15 @@ const Index = () => {
 
     const onSingupHandler = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (profileRef.current?.files?.[0]) {
-            console.log(profileRef.current?.files?.[0]);
-            const formData = await singup(
-                emailRef.current?.value || '',
-                profileRef.current?.files?.[0],
-                passwordRef.current?.value || '',
-                passwordConfirmRef.current?.value || ''
-            );
-            console.log(formData);
-        }
+
+        console.log(avatarRef.current?.files?.[0]);
+        const formData = await singup(
+            emailRef.current?.value || '',
+            avatarRef ? avatarRef.current?.files?.[0] : undefined,
+            passwordRef.current?.value || '',
+            passwordConfirmRef.current?.value || ''
+        );
+        console.log(formData);
     };
 
     const onLoginHanlder = async (e: React.FormEvent) => {
@@ -56,7 +55,7 @@ const Index = () => {
                     <label htmlFor="">Repeat passowrd</label>
                     <input ref={passwordConfirmRef} type="text" />
                     <label htmlFor="">Profile image</label>
-                    <input type="file" name="avatar" ref={profileRef}></input>
+                    <input type="file" name="avatar" ref={avatarRef}></input>
                     <button className={styles.btn}>Singup</button>
                 </form>
 

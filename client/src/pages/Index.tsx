@@ -62,14 +62,17 @@ const Index = () => {
                         isOpen={signupModalOpen}
                         onClose={() => setSignupModalOpen(false)}
                         isOverlay={true}
+                        logo={true}
                     >
                         <Signup />
                     </Modal>
                     <Modal
+                        title={'Singup'}
                         modalRef={loginModalRef}
                         isOpen={loginModalOpen}
-                        onClose={() => setSignupModalOpen(false)}
+                        onClose={() => setLoginModalOpen(false)}
                         isOverlay={true}
+                        logo={true}
                     >
                         Login
                     </Modal>
