@@ -15,6 +15,8 @@ const SignupForm: FC<SignupFormProps> = ({
 }) => {
 
     const [ form, setForm ] = useState();
+    const [serverError, setServerError] = useState('');
+
     const { register, handleSubmit, reset, getValues, formState: { errors } } = useForm({
         defaultValues: {
             name: "",
@@ -38,6 +40,12 @@ const SignupForm: FC<SignupFormProps> = ({
             data.password,
             data.passwordConfirm
         );
+        if (!formData.success) {
+            const { message } = formData
+            console.log(message);
+            setServerError(message);
+            return;
+        }
         console.log(formData);
         setForm(formData)
         onSuccess();
@@ -50,6 +58,9 @@ const SignupForm: FC<SignupFormProps> = ({
     return (
         <React.Fragment>
             <form className={styles.container} onSubmit={handleSubmitForm}>
+                {serverError.length > 0 && (
+                    <p className={styles.serverErrorMsg}>{serverError}</p>
+                )} 
                 {/* <div className={styles.inputWrapper}>
                     <input
                         {...register("name")}

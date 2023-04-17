@@ -12,8 +12,9 @@ const Login: FC<{}> = ({
 
 }) => {
 
-    const [ form, setForm ] = useState();
-    
+    const [form, setForm] = useState();
+    const [serverError, setServerError] = useState('');
+
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         defaultValues: {
             email: "",
@@ -26,18 +27,28 @@ const Login: FC<{}> = ({
             data.email,
             data.password,
         );
-        console.log(formData);
-        const { message } = formData;
+        if (!formData.success) {
+            const { message } = formData;
+            console.log(message);
+            setServerError(message);
+            return;
+        }
         setForm(formData)
+        console.log(formData);
     });
 
     useEffect(() => {
-        reset({ password: '' }); // clear form input values
-    }, [form]);
+        if (serverError.length > 0) {
+            reset({ password: '' }); // clear form input values
+        }
+    }, [serverError]);
 
     return (
         <React.Fragment>
             <form className={styles.container} onSubmit={handleSubmitForm}>
+            {serverError.length > 0 && (
+                        <p className={styles.serverErrorMsg}>{serverError}</p>
+                    )} 
                 <div className={`${styles.inputWrapper} ${errors.email ? styles.inputError : ''}`}>
                     <input
                         {...register("email", { required: "Email field is required." })}

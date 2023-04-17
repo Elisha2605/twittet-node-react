@@ -61,3 +61,9 @@
     outline: none;
     border-color: var(--color-error);
 }
+
+.serverErrorMsg {
+    left: 0.5rem;
+    font-size: var(--font-size-md);
+    color: var(--color-error);
+}
