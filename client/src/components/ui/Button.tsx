@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import styles from "./Button.module.css";
+import LoadingRing from "./LoadingRing";
 
 export enum ButtonType {
     primary = 'primary',
@@ -57,7 +58,8 @@ const Button: FC<ButtonProps> = ({
         <button className={`${className} ${allStyles} ${styles[type]} ${loading ? styles.loading : ''}`}
             onClick={(e) => onClick(e, value)}
         >
-            {value}
+            {loading && <LoadingRing size={'small'} />}
+            {!loading && value}
         </button>
     )
 }

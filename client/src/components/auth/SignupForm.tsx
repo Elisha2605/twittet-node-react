@@ -16,6 +16,8 @@ const SignupForm: FC<SignupFormProps> = ({
 
     const [ form, setForm ] = useState();
     const [serverError, setServerError] = useState('');
+    const [isLoading, setLoading] = useState(false);
+
 
     const { register, handleSubmit, reset, getValues, formState: { errors } } = useForm({
         defaultValues: {
@@ -33,7 +35,8 @@ const SignupForm: FC<SignupFormProps> = ({
         return password === passwordConfirm || "Passwords do not match";
     };
 
-    const handleSubmitForm = handleSubmit(async (data: any) => {          
+    const handleSubmitForm = handleSubmit(async (data: any) => {         
+        setLoading(true);       
         const formData = await singup(
             data.email,
             data.avatar ? data.avatar?.[0] : undefined,
@@ -49,6 +52,7 @@ const SignupForm: FC<SignupFormProps> = ({
         console.log(formData);
         setForm(formData)
         onSuccess();
+        setLoading(false)
     });
 
     useEffect(() => {
@@ -151,6 +155,7 @@ const SignupForm: FC<SignupFormProps> = ({
                     type={ButtonType.tietary}
                     size={ButtonSize.big}
                     onClick={() => {}}
+                    loading={isLoading}
                 />
             </form>
         </React.Fragment>

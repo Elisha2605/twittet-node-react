@@ -55,7 +55,9 @@ export const login = async (email: string, password: string) => {
             token: res.data.token,
         };
         localStorage.setItem('context', JSON.stringify(contex));
-        window.location.href = '/';
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1000)
     }
 
     return res.data;

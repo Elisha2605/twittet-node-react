@@ -3,7 +3,7 @@ import styles from "./Signup.module.css";
 import SignupForm from "./SignupForm";
 
 
-const Signup: FC<{ onSuccess: () => void}> = ({ 
+const Signup: FC<{ onSuccess: () => void }> = ({ 
      onSuccess,
 }) => {
 
