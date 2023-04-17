@@ -23,7 +23,7 @@ function App() {
         setShowBackground(true); // Set the showBackground state to true when login is successful
         setTimeout(() => {
             setShowBackground(false); // Set the showBackground state to false after 1.5 seconds
-        }, 1500)
+        }, 1000)
     };
 
     if (!ctx?.isLoggedIn) {
