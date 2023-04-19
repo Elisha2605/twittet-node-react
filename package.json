@@ -18,7 +18,6 @@
     "seed": "ts-node -r dotenv/config -r tsconfig-paths/register server/src/config/seed.config.ts",
     "seed:clean": "npm run seed clean",
     "seed:users": "npm run seed users",
-    "seed:tweets": "npm run seed tweets",
     "seed:users:clean": "npm run seed clean -- users"
   },
   "keywords": [],
