@@ -1,0 +1,35 @@
+When a user sends a post request with a tweet that has mentions and hashtags, you can use regular expressions to extract the mentions and hashtags from the tweet text and their index in the text.
+
+For example, to extract mentions, you can use the regular expression /@\w+/g, which matches the "@" symbol followed by one or more alphanumeric characters. You can then loop through the matches and use the index method of the match object to get the index of each mention in the tweet text.
+
+Similarly, to extract hashtags, you can use the regular expression /#\w+/g, which matches the "#" symbol followed by one or more alphanumeric characters.
+
+Here's an example of how you can extract mentions and hashtags from a tweet text and their index in the text using JavaScript:
+
+const tweetText = "Hello @user1 and @user2! Have you heard about #hashtag?";
+const mentionRegex = /@\w+/g;
+const hashtagRegex = /#\w+/g;
+
+****************************
+const mentions = [];
+let mentionMatch;
+while ((mentionMatch = mentionRegex.exec(tweetText)) !== null) {
+  mentions.push({
+    username: mentionMatch[0].substring(1),
+    index: mentionMatch.index,
+  });
+}
+
+const hashtags = [];
+let hashtagMatch;
+while ((hashtagMatch = hashtagRegex.exec(tweetText)) !== null) {
+  hashtags.push({
+    hashtag: hashtagMatch[0].substring(1),
+    index: hashtagMatch.index,
+  });
+}
+******************************
+console.log(mentions); // [{ username: 'user1', index: 6 }, { username: 'user2', index: 16 }]
+console.log(hashtags); // [{ hashtag: 'hashtag', index: 35 }]
+
+In this example, mentions and hashtags are arrays of objects that contain the username or hashtag text and their index in the tweet text.

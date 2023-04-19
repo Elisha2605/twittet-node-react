@@ -89,7 +89,7 @@ const LoginForm: FC<LoginFormProps> = ({
                     }
                 </div>
                 <Button
-                    value={'Signup'}
+                    value={'Login'}
                     type={ButtonType.tietary}
                     size={ButtonSize.big}
                     onClick={() => {}}
