@@ -47,6 +47,7 @@ const SignupForm: FC<SignupFormProps> = ({
             const { message } = formData
             console.log(message);
             setServerError(message);
+            setLoading(false);
             return;
         }
         console.log(formData);

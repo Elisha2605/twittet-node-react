@@ -36,7 +36,7 @@ export const signup = async (
     email: string,
     name: string,
     // username: string,
-    avatar: string,
+    avatar: string | null,
     coverImage: string,
     bio: string,
     password: string,
@@ -49,6 +49,9 @@ export const signup = async (
             message: 'Incorect Password!',
             status: 400,
         };
+    }
+    if (avatar === null) {
+        avatar = 'default-avatar.jpg';
     }
     try {
         const isUser = await User.findOne({ email: email });

@@ -8,6 +8,7 @@ interface TweetProps {
     avatar: string | undefined;
     firstName: string;
     username: string;
+    time?: string;
     tweet?: string;
     image?: string;
     link?: string;
@@ -19,12 +20,14 @@ interface TweetProps {
     options: string[];
     icons?: Record<string, React.ReactNode>;
     onClickOption: Function;
+    tweetKey?: React.Key;
 }
 
 const Tweet: FC<TweetProps> = ({
     avatar,
     firstName,
     username,
+    time,
     tweet,
     image,
     link,
@@ -36,15 +39,17 @@ const Tweet: FC<TweetProps> = ({
     options,
     icons,
     onClickOption,
+    tweetKey,
 }) => {
     
     return (
         <React.Fragment>
-                <div className={`${styles.container}`}>
+                <div className={`${styles.container}`} key={tweetKey}>
                     <UserInfo
                         avatar={avatar}
                         firstname={firstName}
                         username={username}
+                        time={time}
                         isOption={isOption}
                         className={styles.userInfo}
                         options={options}

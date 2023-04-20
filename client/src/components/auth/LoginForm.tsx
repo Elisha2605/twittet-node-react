@@ -32,6 +32,7 @@ const LoginForm: FC<LoginFormProps> = ({
             const { message } = formData;
             console.log(message);
             setServerError(message);
+            setLoading(false);
             return;
         }
         onSuccess();
@@ -76,7 +77,7 @@ const LoginForm: FC<LoginFormProps> = ({
                             }
                         )}
                         className={styles.formInput}
-                        type="text"
+                        type="password"
                         id="password"
                         name="password"
                         placeholder=" "

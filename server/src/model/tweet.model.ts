@@ -14,7 +14,7 @@ export const tweetModel = {
     user: {
         type: Types.ObjectId,
         ref: 'User',
-        require: true,
+        // require: true,
     },
 
     image: {

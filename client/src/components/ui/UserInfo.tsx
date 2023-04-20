@@ -14,6 +14,7 @@ interface UserInfoProps {
     isOption?: boolean;
     options?: string[];
     icons?: Record<string, React.ReactNode>;
+    time?: string;
     onClickOption?: Function;
 }
 
@@ -27,6 +28,7 @@ const UserInfo: FC<UserInfoProps> = ({
      isOption,
      options,
      icons,
+     time,
      onClickOption
 }) => {
 
@@ -41,7 +43,7 @@ const UserInfo: FC<UserInfoProps> = ({
                         <div className={styles.userInfoOptionWrapper}>
                             <div className={styles.userInfo}>
                                 <a href={link}><p className={styles.firstname}>{firstname} <FontAwesomeIcon icon={faCheckCircle} color={'var(--color-primary)'} /></p></a>
-                                <p className={styles.username}>@{username} · {'Mar 26'} </p>
+                                <p className={styles.username}>@{username} {time && ` · ${time}`}</p>
                             </div>
                             <PopUpMenu options={options!} icons={icons} onClick={(option) => onClickOption!(option)} />
                         </div>

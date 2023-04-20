@@ -15,6 +15,7 @@ import errorHandler from './middleware/error.middleware';
 import { loggerMiddleware } from './middleware/logger.middleware';
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
+import tweetRouter from './routes/tweet.routes';
 
 dotenv.config();
 
@@ -23,13 +24,9 @@ const app: Application = express();
 dbConn();
 
 app.use(passport.initialize());
-app.use(
-    bodyParser.urlencoded({
-        extended: false,
-    })
-);
-app.use(bodyParser.json());
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(express.json());
 
 app.use(httpContext.middleware);
@@ -75,6 +72,7 @@ app.use(loggerMiddleware);
 // ROUTES - API
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/tweets', tweetRouter);
 
 // ERROR - REQUEST HANDLING
 app.use(errorHandler);
