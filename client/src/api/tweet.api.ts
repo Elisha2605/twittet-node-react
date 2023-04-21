@@ -14,7 +14,7 @@ export const getAllTweets = async () => {
     }
 };
 
-export const createTweet = async (text: string, image: any) => {
+export const createTweet = async (text: string, image: File | null) => {
     console.log('Inside createTweet');
     console.log(image);
 

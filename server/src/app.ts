@@ -16,6 +16,7 @@ import { loggerMiddleware } from './middleware/logger.middleware';
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import tweetRouter from './routes/tweet.routes';
+import path from 'path';
 
 dotenv.config();
 
@@ -73,6 +74,14 @@ app.use(loggerMiddleware);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/tweets', tweetRouter);
+
+// SERVING STATIC FILES
+app.use('/avatar', express.static(path.join(__dirname, 'uploads', 'avatar')));
+app.use('/cover', express.static(path.join(__dirname, 'uploads', 'cover')));
+app.use(
+    '/tweetImage',
+    express.static(path.join(__dirname, 'uploads', 'tweetImage'))
+);
 
 // ERROR - REQUEST HANDLING
 app.use(errorHandler);

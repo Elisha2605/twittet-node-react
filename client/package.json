@@ -25,9 +25,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "link-uploads": "node_modules/.bin/symlink-dir ../uploads src/uploads",
-    "postinstall": "npm run link-uploads"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [

@@ -32,7 +32,7 @@ const Avatar: FC<AvatarProps> = ({
     return (
         <React.Fragment>
             <div className={`${className} ${allSizes} ${styles[size]}`}>
-                <img src={path} alt={alt} />
+                <img src={path && path} alt={alt} />
             </div>
         </React.Fragment>
     )

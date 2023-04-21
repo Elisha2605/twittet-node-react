@@ -1,6 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
-import { createTweet, deleteTweet, getAllTweets } from 'src/services/tweet.service';
+import {
+    createTweet,
+    deleteTweet,
+    getAllTweets,
+} from 'src/services/tweet.service';
 
 export const getAllTweetsController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -20,6 +24,7 @@ export const getAllTweetsController = asyncHandler(
 export const createTweetController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         console.log('Inside the controller');
+        console.log(req.body);
         const userId = req.user._id;
         const text = req.body.text;
         const image = req.file ? req.file.filename : null;

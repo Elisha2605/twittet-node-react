@@ -11,7 +11,7 @@ interface TweetProps {
     username: string;
     time?: string;
     tweet?: string;
-    image?: string;
+    image?: string | null;
     link?: string;
     isOption?: boolean;
     comments: string;

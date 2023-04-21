@@ -1,4 +1,8 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, {
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
 import Aside from '../components/aside/Aside';
 import Avatar, { Size } from '../components/ui/Avatar';
 import SearchBar from '../components/ui/SearchBar';
@@ -12,12 +16,21 @@ import HeaderTitle from '../components/header/HeaderTitle';
 import HorizontalNavBar from '../components/ui/HorizontalNavBar';
 import { options, icons } from '../data/menuOptions';
 import useAuthUser from '../hooks/userAuth.hook';
-import { deleteTweet, getAllTweets } from '../api/tweet.api';
+import { createTweet, deleteTweet, getAllTweets } from '../api/tweet.api';
 import { getTimeDifference } from '../utils/helpers.utils';
+import useAutosizeTextArea from '../hooks/useAutosizeTextArea';
 
 const Home = () => {
-    const [tweets, setTweets] = useState([]);
+    const [tweets, setTweets] = useState<any[]>([]);
+    const [value, setValue] = useState('');
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [previewImage, setPreviewImage] = useState<string | null>(null);
 
+    // Adjust text erea with input value
+    const textAreaRef = useRef<HTMLTextAreaElement>(null);
+    useAutosizeTextArea(textAreaRef.current, value);
+
+    // fetching Tweets
     useEffect(() => {
         const fetchTweets = async () => {
             try {
@@ -35,16 +48,66 @@ const Home = () => {
     if (!authUser) {
         return null;
     }
-    const avatar = require(`../uploads/avatar/${authUser.avatar}`);
 
-    // TWEET MENU
+    // TWEET menu popup
     const handleOptionClick = async (option: string, tweetId: string) => {
         if (option === 'Delete') {
             const res = await deleteTweet(tweetId);
+            setTweets((preveState) =>
+                preveState.filter((tweet) => tweet._id !== tweetId)
+            );
             console.log(res);
         } else if (option === 'Edit') {
             console.log(option);
         }
+    };
+
+    //// new functions
+    const handleImageOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const val = e.target?.value;
+        setValue(val);
+    };
+
+    const handleCanselPreviewImage = () => {
+        if (previewImage) {
+            setPreviewImage(null);
+        }
+    };
+
+    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files && event.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+            const imageUrl = URL.createObjectURL(file);
+            setPreviewImage(imageUrl);
+        }
+    };
+
+    const handleSubmitTweet = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const text = textAreaRef.current?.value
+            ? textAreaRef.current?.value
+            : '';
+        const res = await createTweet(text, selectedFile);
+        const { tweet }: any = res;
+        const newTweet = {
+            _id: tweet._id,
+            text: tweet.text,
+            user: {
+                avatar: authUser.avatar,
+                name: authUser.name,
+                username: authUser.username,
+            },
+            createdAt: tweet.createdAt,
+            image: tweet.image,
+            comments: [],
+            reposts: [],
+            likes: [],
+        };
+        setSelectedFile(null);
+        setPreviewImage(null);
+        setValue('');
+        setTweets((prevTweets) => [newTweet, ...prevTweets]);
     };
 
     return (
@@ -63,36 +126,48 @@ const Home = () => {
                         {/* TweetForm - start */}
                         <div className={styles.formSection}>
                             <Avatar
-                                path={avatar}
+                                path={`http://localhost:4000/avatar/${authUser.avatar}`}
                                 size={Size.small}
                                 className={''}
                             />
-                            <FormTweet />
+                            <FormTweet
+                                value={value}
+                                textRef={textAreaRef}
+                                imagePreview={previewImage}
+                                onSubmit={handleSubmitTweet}
+                                onImageUpload={handleImageUpload}
+                                onCancelImagePreview={handleCanselPreviewImage}
+                                onChageImage={handleImageOnChange}
+                            />
                         </div>
                         {/* TweetForm - end */}
-                        
+
                         {/* tweets - start */}
                         {tweets.map((tweet: any) => (
                             <Tweet
-                            tweetId={tweet._id}
-                            key={tweet._id}
-                            avatar={require(`../uploads/avatar/${tweet.user.avatar}`)}
-                            firstName={tweet.user.name}
-                            username={tweet.user.username}
-                            time={getTimeDifference(new Date(tweet.createdAt).getTime())}
-                            tweet={tweet.text}
-                            image={tweet.image && require(`../uploads/tweetImage/${tweet.image}`)}
-                            isOption={true}
-                            comments={'164'}
-                            reposts={'924'}
-                            likes={'21.3'}
-                            views={'446'}
-                            options={options}
-                            icons={icons}
-                            onClickOption={handleOptionClick}
-                        />
+                                tweetId={tweet._id}
+                                key={tweet._id}
+                                avatar={
+                                    tweet.user.avatar &&
+                                    `http://localhost:4000/avatar/${tweet.user.avatar}`
+                                }
+                                firstName={tweet.user.name}
+                                username={tweet.user.username}
+                                time={getTimeDifference(
+                                    new Date(tweet.createdAt).getTime()
+                                )}
+                                tweet={tweet.text}
+                                image={tweet.image && `http://localhost:4000/tweetImage/${tweet.image}`}
+                                isOption={true}
+                                comments={'164'}
+                                reposts={'924'}
+                                likes={'21.3'}
+                                views={'446'}
+                                options={options}
+                                icons={icons}
+                                onClickOption={handleOptionClick}
+                            />
                         ))}
-                        
                         {/* tweets - end */}
                     </div>
                 </div>

@@ -48,11 +48,17 @@ export const createTweet = async (
             throw CustomError('Could not create tweet', 500);
         }
 
+        const populatedTweet = await newTweet.populate({
+            path: 'user',
+            select: 'name username avatar coverImage isVerified isProtected',
+            model: 'User',
+        });
+
         return {
             success: true,
             message: 'Successfully created tweet',
             status: 200,
-            payload: newTweet,
+            payload: populatedTweet,
         };
     } catch (error) {
         const errorResponse: ErrorResponse = {

@@ -9,69 +9,52 @@ import XmarkIcon from '../icons/XmarkIcon';
 import { useForm } from 'react-hook-form';
 import { createTweet } from '../../api/tweet.api';
 
-interface FormProps {}
+interface FormProps {
+    value: string;
+    textRef: React.RefObject<HTMLTextAreaElement>;
+    imagePreview: string | null;
 
-const FormTweet: FC<FormProps> = ({}) => {
-    const [value, setValue] = useState('');
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const [previewImage, setPreviewImage] = useState<string | null>(null);
-    
-    const textAreaRef = useRef<HTMLTextAreaElement>(null);
-    useAutosizeTextArea(textAreaRef.current, value);
+    onSubmit: (e: React.FormEvent) => void;
+    onImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onChageImage: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    onCancelImagePreview: () => void;
 
-    const handleImageOnChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const val = evt.target?.value;
-        setValue(val);
-    };
+}
 
-    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files && event.target.files[0];
-        if (file) {
-            setSelectedFile(file)
-            const imageUrl = URL.createObjectURL(file);
-            setPreviewImage(imageUrl);
-        }
-    };
+const FormTweet: FC<FormProps> = ({
+    value,
+    textRef,
+    imagePreview,
 
-    const handleCanselPreviewImage = () => {
-        if (previewImage) {
-            setPreviewImage(null);
-          }
-    }
+    onSubmit,
+    onImageUpload,
+    onChageImage,
+    onCancelImagePreview
+}) => {
 
-    const handleSubmitTweet = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const text = textAreaRef.current?.value ? textAreaRef.current?.value : '';
-        const image = selectedFile;
-        console.log(image);
-        await createTweet(text, selectedFile);
-        setSelectedFile(null);
-        setPreviewImage(null);
-        setValue('')
-    };
 
     return (
         <React.Fragment>
-            <form action="" className={styles.container} onSubmit={handleSubmitTweet}>
+            <form action="" className={styles.container} onSubmit={onSubmit}>
                 <textarea
                     className={styles.textarea}
                     id="review-text"
-                    onChange={handleImageOnChange}
+                    onChange={onChageImage}
                     placeholder="What's happening?"
-                    ref={textAreaRef}
+                    ref={textRef}
                     rows={1}
                     value={value}
                 />
-                {previewImage && (
+                {imagePreview && (
                     <div className={styles.previewImage}>
                         <XmarkIcon className={styles.cancelBtn} size={'lg'} 
-                            onClick={handleCanselPreviewImage}/>
-                        <img src={previewImage} alt='preview tweet img' />
+                            onClick={onCancelImagePreview}/>
+                        <img src={imagePreview} alt='preview tweet img' />
                     </div>
                 )}
                 <div className={styles.footer}>
                     <div className={styles.icons}>
-                        <ImageIcon onChange={handleImageUpload} />
+                        <ImageIcon onChange={onImageUpload} />
                         <EmojiIcon />
                         <CalendarIcon />
                     </div>
