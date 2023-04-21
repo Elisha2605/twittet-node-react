@@ -12,7 +12,7 @@ import HeaderTitle from '../components/header/HeaderTitle';
 import HorizontalNavBar from '../components/ui/HorizontalNavBar';
 import { options, icons } from '../data/menuOptions';
 import useAuthUser from '../hooks/userAuth.hook';
-import { getAllTweets } from '../api/tweet.api';
+import { deleteTweet, getAllTweets } from '../api/tweet.api';
 import { getTimeDifference } from '../utils/helpers.utils';
 
 const Home = () => {
@@ -37,12 +37,11 @@ const Home = () => {
     }
     const avatar = require(`../uploads/avatar/${authUser.avatar}`);
 
-    const handleOptionClick = (option: string, tweetId: string) => {
-        // TODO: handle menu option clickes
-        
+    // TWEET MENU
+    const handleOptionClick = async (option: string, tweetId: string) => {
         if (option === 'Delete') {
-            console.log(option);
-            console.log(tweetId);
+            const res = await deleteTweet(tweetId);
+            console.log(res);
         } else if (option === 'Edit') {
             console.log(option);
         }

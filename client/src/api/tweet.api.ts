@@ -1,4 +1,8 @@
-import { GETREQUESTOPTIONS, GETREQUESTOPTIONS_WITH_MULTIFROM, http } from '../config/axios.config';
+import {
+    GETREQUESTOPTIONS,
+    GETREQUESTOPTIONS_WITH_MULTIFROM,
+    http,
+} from '../config/axios.config';
 
 export const getAllTweets = async () => {
     try {
@@ -22,6 +26,19 @@ export const createTweet = async (text: string, image: any) => {
                 tweetImage: image,
             },
             GETREQUESTOPTIONS_WITH_MULTIFROM()
+        );
+        return res.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+export const deleteTweet = async (tweetId: string) => {
+    try {
+        const res = await http.delete(
+            `/tweets/delete/${tweetId}`,
+            GETREQUESTOPTIONS()
         );
         return res.data;
     } catch (error) {
