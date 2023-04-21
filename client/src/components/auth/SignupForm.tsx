@@ -37,6 +37,7 @@ const SignupForm: FC<SignupFormProps> = ({
 
     const handleSubmitForm = handleSubmit(async (data: any) => {         
         setLoading(true);       
+        console.log(data.avatar?.[0]);
         const formData = await singup(
             data.email,
             data.avatar ? data.avatar?.[0] : undefined,

@@ -64,3 +64,34 @@ export const createTweet = async (
         return Promise.reject(errorResponse);
     }
 };
+
+export const deleteTweet = async (
+    tweetId: string
+): Promise<ApiResponse<any>> => {
+    try {
+        const deletedTweet: any = await Tweet.findById(tweetId);
+        if (!deletedTweet) {
+            return {
+                success: true,
+                message: 'Tweet not found!',
+                status: 204,
+                payload: {},
+            };
+        }
+        await deletedTweet.deleteOne();
+        return {
+            success: true,
+            message: 'Successfully created tweet',
+            status: 200,
+            payload: deletedTweet,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};

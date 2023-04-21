@@ -3,12 +3,13 @@ import MenuIcon from '../icons/MenuIcon';
 import styles from './PopUpMenu.module.css';
 
 interface MenuPopUpProps {
+    id: string;
     options: string[];
-    onClick: (option: string) => void;
+    onClick: (option: string, id: string) => void;
     icons?: Record<string,React.ReactNode>;
 }
 
-const MenuPopUp: FC<MenuPopUpProps> = ({ options, onClick, icons }) => {
+const MenuPopUp: FC<MenuPopUpProps> = ({ options, onClick, icons, id }) => {
     
     const [showMenu, setShowMenu] = useState(false);
     const menuRef = useRef<HTMLUListElement>(null);
@@ -17,9 +18,9 @@ const MenuPopUp: FC<MenuPopUpProps> = ({ options, onClick, icons }) => {
         setShowMenu(!showMenu);
     };
 
-    const handleOptionClick = (option: string) => {
+    const handleOptionClick = (option: string, id: string) => {
         setShowMenu(false);
-        onClick(option);
+        onClick(option, id);
     };
 
     useEffect(() => {
@@ -55,7 +56,7 @@ const MenuPopUp: FC<MenuPopUpProps> = ({ options, onClick, icons }) => {
                             <li
                                 key={option}
                                 className={`${styles.menuItemList} ${icons && icons[option] === icons['Delete'] ? styles.delete : ''}`}
-                                onClick={() => handleOptionClick(option)}
+                                onClick={() => handleOptionClick(option, id)}
                             >
                                     {icons && icons[option]}
                                     {option}

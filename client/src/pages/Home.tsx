@@ -37,14 +37,14 @@ const Home = () => {
     }
     const avatar = require(`../uploads/avatar/${authUser.avatar}`);
 
-    const handleOptionClick = (option: string) => {
+    const handleOptionClick = (option: string, tweetId: string) => {
         // TODO: handle menu option clickes
-        if (option === 'Option 1') {
-            console.log('one');
-            // Insert your code to handle when Option 1 is clicked here
-        } else {
-            console.log(`${option} was clicked!`);
-            // Insert your code to handle when an option other than Option 1 is clicked here
+        
+        if (option === 'Delete') {
+            console.log(option);
+            console.log(tweetId);
+        } else if (option === 'Edit') {
+            console.log(option);
         }
     };
 
@@ -75,13 +75,14 @@ const Home = () => {
                         {/* tweets - start */}
                         {tweets.map((tweet: any) => (
                             <Tweet
+                            tweetId={tweet._id}
                             key={tweet._id}
                             avatar={require(`../uploads/avatar/${tweet.user.avatar}`)}
                             firstName={tweet.user.name}
                             username={tweet.user.username}
                             time={getTimeDifference(new Date(tweet.createdAt).getTime())}
                             tweet={tweet.text}
-                            image={require(`../uploads/tweetImage/${tweet.image}`)}
+                            image={tweet.image && require(`../uploads/tweetImage/${tweet.image}`)}
                             isOption={true}
                             comments={'164'}
                             reposts={'924'}

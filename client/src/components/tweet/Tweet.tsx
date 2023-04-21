@@ -5,6 +5,7 @@ import UserInfo from '../ui/UserInfo';
 import styles from './Tweet.module.css';
 
 interface TweetProps {
+    tweetId?: string;
     avatar: string | undefined;
     firstName: string;
     username: string;
@@ -24,6 +25,7 @@ interface TweetProps {
 }
 
 const Tweet: FC<TweetProps> = ({
+    tweetId,
     avatar,
     firstName,
     username,
@@ -46,15 +48,16 @@ const Tweet: FC<TweetProps> = ({
         <React.Fragment>
                 <div className={`${styles.container}`} key={tweetKey}>
                     <UserInfo
-                        avatar={avatar}
-                        firstname={firstName}
-                        username={username}
-                        time={time}
-                        isOption={isOption}
-                        className={styles.userInfo}
-                        options={options}
-                        icons={icons}
-                        onClickOption={onClickOption}
+                    id={tweetId}
+                    avatar={avatar}
+                    firstname={firstName}
+                    username={username}
+                    time={time}
+                    isOption={isOption}
+                    className={styles.userInfo}
+                    options={options}
+                    icons={icons}
+                    onClickOption={onClickOption} 
                     />
                     <NavLink to={'/message'}>
                         <div className={styles.body}>

@@ -1,0 +1,9 @@
+.faCalendar {
+    padding: 0.6rem 0.7rem;
+    border-radius: 50%;
+}
+
+.faCalendar:hover {
+    background: var(--color-primary-lighter);
+    cursor: pointer;
+}

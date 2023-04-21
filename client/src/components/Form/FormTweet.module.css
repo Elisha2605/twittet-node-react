@@ -23,5 +23,27 @@
 
 .icons {
     display: flex;
-    gap: 1rem;
+}
+
+.previewImage {
+    position: relative;
+    width: 100%;
+}
+
+.previewImage img {
+    width: 100%;
+    border-radius: 1rem;
+    margin-top: 1rem;
+}
+.cancelBtn {
+    position: absolute;
+    left: 0.2rem;
+    top: 1.2rem;
+    color: var(--color-white);
+    background-color: var(--color-black-light);
+}
+
+.cancelBtn:hover {
+    background-color: var(--color-black-lighter);
+    transition: 0.1s ease-in-out;
 }

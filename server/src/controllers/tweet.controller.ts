@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
-import { createTweet, getAllTweets } from 'src/services/tweet.service';
+import { createTweet, deleteTweet, getAllTweets } from 'src/services/tweet.service';
 
 export const getAllTweetsController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -19,11 +19,37 @@ export const getAllTweetsController = asyncHandler(
 
 export const createTweetController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
+        console.log('Inside the controller');
         const userId = req.user._id;
         const text = req.body.text;
         const image = req.file ? req.file.filename : null;
         try {
             const response = await createTweet(userId, text, image);
+            const { payload } = response;
+            if (response.success) {
+                res.send({
+                    success: response.success,
+                    message: response.message,
+                    status: response.status,
+                    tweet: payload,
+                });
+            }
+        } catch (error) {
+            res.status(error.status).json({
+                sucess: error.success,
+                message: error.message,
+                status: error.status,
+            });
+            next(error);
+        }
+    }
+);
+
+export const deleteTweetController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const tweetId = req.params.id;
+        try {
+            const response = await deleteTweet(tweetId);
             const { payload } = response;
             if (response.success) {
                 res.send({

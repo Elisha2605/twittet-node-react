@@ -5,6 +5,7 @@ import PopUpMenu from "./PopUpMenu";
 import styles from "./UserInfo.module.css";
 
 interface UserInfoProps {
+    id: any;
     avatar: string | undefined;
     firstname: string;
     username: string;
@@ -19,17 +20,18 @@ interface UserInfoProps {
 }
 
 const UserInfo: FC<UserInfoProps> = ({ 
-     avatar,
-     firstname,
-     username,
-     children,
-     link,
-     className,
-     isOption,
-     options,
-     icons,
-     time,
-     onClickOption
+    id,
+    avatar,
+    firstname,
+    username,
+    children,
+    link,
+    className,
+    isOption,
+    options,
+    icons,
+    time,
+    onClickOption
 }) => {
 
     return (
@@ -45,7 +47,7 @@ const UserInfo: FC<UserInfoProps> = ({
                                 <a href={link}><p className={styles.firstname}>{firstname} <FontAwesomeIcon icon={faCheckCircle} color={'var(--color-primary)'} /></p></a>
                                 <p className={styles.username}>@{username} {time && ` · ${time}`}</p>
                             </div>
-                            <PopUpMenu options={options!} icons={icons} onClick={(option) => onClickOption!(option)} />
+                            <PopUpMenu id={id} options={options!} icons={icons} onClick={(option, id) => onClickOption!(option, id)} />
                         </div>
 
                     ) : (

@@ -40,7 +40,7 @@ const Bookmarks = () => {
                         <Header>
                             <div className={styles.headerWrapper}>
                                 <HeaderTitle title={'Bookmarks'} subTitle={'@Alvin44943'} />
-                                <PopUpMenu options={options} onClick={handleOptionClick} icons={icons} />
+                                <PopUpMenu options={options} onClick={handleOptionClick} icons={icons} id={''} />
                             </div>
                         </Header>
                     {/* Home page - start */}

@@ -45,7 +45,7 @@
     padding: 0.7rem 1rem;
 }
 .tietaryBig:hover {
-    background-color: var(--color-black-lighter) !important;
+    background-color: var(--color-black-light) !important;
     color: var(--color-white);
     padding: 0.7rem 1rem;
 }
