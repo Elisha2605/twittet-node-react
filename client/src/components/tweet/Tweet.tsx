@@ -9,6 +9,7 @@ interface TweetProps {
     avatar: string | undefined;
     firstName: string;
     username: string;
+    isVerfied?: boolean;
     time?: string;
     tweet?: string;
     image?: string | null;
@@ -29,6 +30,7 @@ const Tweet: FC<TweetProps> = ({
     avatar,
     firstName,
     username,
+    isVerfied,
     time,
     tweet,
     image,
@@ -52,6 +54,7 @@ const Tweet: FC<TweetProps> = ({
                     avatar={avatar}
                     firstname={firstName}
                     username={username}
+                    isVerified={isVerfied}
                     time={time}
                     isOption={isOption}
                     className={styles.userInfo}

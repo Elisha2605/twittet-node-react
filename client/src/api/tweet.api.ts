@@ -14,10 +14,7 @@ export const getAllTweets = async () => {
     }
 };
 
-export const createTweet = async (text: string, image: File | null) => {
-    console.log('Inside createTweet');
-    console.log(image);
-
+export const createTweet = async (text: string | null, image: File | null) => {
     try {
         const res = await http.post(
             '/tweets/create',

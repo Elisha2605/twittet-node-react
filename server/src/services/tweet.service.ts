@@ -43,8 +43,8 @@ export const createTweet = async (
             text: text,
             image: image,
         });
-        newTweet.save();
-        if (!newTweet) {
+        const savedTweet = await newTweet.save();
+        if (!savedTweet) {
             throw CustomError('Could not create tweet', 500);
         }
 

@@ -5,6 +5,7 @@ import {
     deleteTweet,
     getAllTweets,
 } from 'src/services/tweet.service';
+import { CustomError } from 'src/utils/helpers';
 
 export const getAllTweetsController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -28,11 +29,23 @@ export const createTweetController = asyncHandler(
         const userId = req.user._id;
         const text = req.body.text;
         const image = req.file ? req.file.filename : null;
+
+        if (!text && !image) {
+            res.status(400).json({ InvalidInput: 'Invalid Input' });
+            return;
+        }
+        if (text.trim().length > 300) {
+            res.status(400).json({
+                InvalidInput: 'Tweet input must be less that 280',
+            });
+            return;
+        }
+
         try {
             const response = await createTweet(userId, text, image);
             const { payload } = response;
             if (response.success) {
-                res.send({
+                res.status(response.status).send({
                     success: response.success,
                     message: response.message,
                     status: response.status,

@@ -1,17 +1,15 @@
-import React, { FC, useRef, useState } from 'react';
-import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
+import React, { FC } from 'react';
 import Button, { ButtonSize, ButtonType } from '../ui/Button';
 import styles from './FormTweet.module.css';
 import EmojiIcon from '../icons/EmojiIcon';
 import ImageIcon from '../icons/ImageIcon';
 import CalendarIcon from '../icons/CalendarIcon';
 import XmarkIcon from '../icons/XmarkIcon';
-import { useForm } from 'react-hook-form';
-import { createTweet } from '../../api/tweet.api';
+import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 
 interface FormProps {
     value: string;
-    textRef: React.RefObject<HTMLTextAreaElement>;
+    tweetTextRef: React.RefObject<HTMLTextAreaElement>;
     imagePreview: string | null;
 
     onSubmit: (e: React.FormEvent) => void;
@@ -23,7 +21,7 @@ interface FormProps {
 
 const FormTweet: FC<FormProps> = ({
     value,
-    textRef,
+    tweetTextRef,
     imagePreview,
 
     onSubmit,
@@ -32,16 +30,18 @@ const FormTweet: FC<FormProps> = ({
     onCancelImagePreview
 }) => {
 
+    // Adjust text erea with input value
+    useAutosizeTextArea(tweetTextRef.current, value)
 
     return (
         <React.Fragment>
-            <form action="" className={styles.container} onSubmit={onSubmit}>
+            <form className={styles.container} onSubmit={onSubmit}>
                 <textarea
                     className={styles.textarea}
                     id="review-text"
                     onChange={onChageImage}
                     placeholder="What's happening?"
-                    ref={textRef}
+                    ref={tweetTextRef}
                     rows={1}
                     value={value}
                 />

@@ -19,10 +19,12 @@ export const tweetModel = {
 
     image: {
         type: String,
+        default: null,
         require: false,
     },
     text: {
         type: String,
+        default: null,
         require: false,
     },
     privacy: {

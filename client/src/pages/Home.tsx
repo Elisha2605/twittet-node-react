@@ -18,7 +18,6 @@ import { options, icons } from '../data/menuOptions';
 import useAuthUser from '../hooks/userAuth.hook';
 import { createTweet, deleteTweet, getAllTweets } from '../api/tweet.api';
 import { getTimeDifference } from '../utils/helpers.utils';
-import useAutosizeTextArea from '../hooks/useAutosizeTextArea';
 
 const Home = () => {
     const [tweets, setTweets] = useState<any[]>([]);
@@ -26,9 +25,7 @@ const Home = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-    // Adjust text erea with input value
-    const textAreaRef = useRef<HTMLTextAreaElement>(null);
-    useAutosizeTextArea(textAreaRef.current, value);
+    const tweetTextRef = useRef<HTMLTextAreaElement>(null);
 
     // fetching Tweets
     useEffect(() => {
@@ -50,7 +47,7 @@ const Home = () => {
     }
 
     // TWEET menu popup
-    const handleOptionClick = async (option: string, tweetId: string) => {
+    const handleMenuOptionClick = async (option: string, tweetId: string) => {
         if (option === 'Delete') {
             const res = await deleteTweet(tweetId);
             setTweets((preveState) =>
@@ -85,9 +82,9 @@ const Home = () => {
 
     const handleSubmitTweet = async (e: React.FormEvent) => {
         e.preventDefault();
-        const text = textAreaRef.current?.value
-            ? textAreaRef.current?.value
-            : '';
+        const text = tweetTextRef.current?.value
+            ? tweetTextRef.current?.value
+            : null;
         const res = await createTweet(text, selectedFile);
         const { tweet }: any = res;
         const newTweet = {
@@ -132,7 +129,7 @@ const Home = () => {
                             />
                             <FormTweet
                                 value={value}
-                                textRef={textAreaRef}
+                                tweetTextRef={tweetTextRef}
                                 imagePreview={previewImage}
                                 onSubmit={handleSubmitTweet}
                                 onImageUpload={handleImageUpload}
@@ -141,7 +138,6 @@ const Home = () => {
                             />
                         </div>
                         {/* TweetForm - end */}
-
                         {/* tweets - start */}
                         {tweets.map((tweet: any) => (
                             <Tweet
@@ -153,6 +149,7 @@ const Home = () => {
                                 }
                                 firstName={tweet.user.name}
                                 username={tweet.user.username}
+                                isVerfied={tweet.user.isVerified}
                                 time={getTimeDifference(
                                     new Date(tweet.createdAt).getTime()
                                 )}
@@ -165,7 +162,7 @@ const Home = () => {
                                 views={'446'}
                                 options={options}
                                 icons={icons}
-                                onClickOption={handleOptionClick}
+                                onClickOption={handleMenuOptionClick}
                             />
                         ))}
                         {/* tweets - end */}
