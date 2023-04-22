@@ -14,7 +14,7 @@ import styles from './Home.module.css';
 import Layout from '../Layout.module.css';
 import HeaderTitle from '../components/header/HeaderTitle';
 import HorizontalNavBar from '../components/ui/HorizontalNavBar';
-import { tweetMenuOptions, tweetMenuIcons } from '../data/menuOptions';
+import { tweetMenuOptions, tweetMenuIcons, tweetPrivacyMenuOptions, tweetPrivacyMenuIcons } from '../data/menuOptions';
 import useAuthUser from '../hooks/userAuth.hook';
 import { createTweet, deleteTweet, getAllTweets } from '../api/tweet.api';
 import { getTimeDifference } from '../utils/helpers.utils';
@@ -25,6 +25,7 @@ const Home = () => {
     const [value, setValue] = useState('');
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
+    const [isFormFocused, setIsFormFocused] = useState(false);
 
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
     
@@ -104,7 +105,12 @@ const Home = () => {
         setPreviewImage(null);
         setValue('');
         setTweets((prevTweets) => [newTweet, ...prevTweets]);
+        setIsFormFocused(false);
     };
+
+    const handleTweetPrivacyOptions = () => {
+
+    }
 
     return (
         <React.Fragment>
@@ -130,10 +136,15 @@ const Home = () => {
                                 value={value}
                                 tweetTextRef={tweetTextRef}
                                 imagePreview={previewImage}
+                                isFocused={isFormFocused}
+                                setIsFocused={setIsFormFocused}
                                 onSubmit={handleSubmitTweet}
                                 onImageUpload={handleImageUpload}
                                 onCancelImagePreview={handleCanselPreviewImage}
-                                onChageImage={handleImageOnChange}
+                                onChageImage={handleImageOnChange} 
+                                tweetPrivacyOptions={tweetPrivacyMenuOptions} 
+                                tweetPrivacyIcons={tweetPrivacyMenuIcons} 
+                                onClickPrivacyMenu={handleTweetPrivacyOptions}                            
                             />
                         </div>
                         {/* TweetForm - end */}
@@ -161,7 +172,7 @@ const Home = () => {
                                 views={'446'}
                                 options={tweetMenuOptions}
                                 icons={tweetMenuIcons}
-                                onClickOption={handleMenuOptionClick}
+                                onClickMenu={handleMenuOptionClick}
                             />
                         ))}
                         {/* tweets - end */}

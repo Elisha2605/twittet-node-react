@@ -82,7 +82,7 @@ const Profile = () => {
                             likes={'21.3'} 
                             views={'446'} 
                             options={tweetMenuOptions}
-                            onClickOption={handleOptionClick}
+                            onClickMenu={handleOptionClick}
                         />
                         {/* TWEETS - END */}
 

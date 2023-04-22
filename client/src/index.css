@@ -43,7 +43,8 @@
     --font-weight-300: 400;
     
     /* border */
-    --border-light: 0.5px solid var(--color-secondary);
+    --border-color: #ececec;
+    --border-light: 1px solid var(--border-color);
 
     /* border-round */
     --border-round: 4rem;

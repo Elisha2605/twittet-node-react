@@ -3,15 +3,28 @@ import MenuIcon from '../icons/MenuIcon';
 import styles from './PopUpMenu.module.css';
 
 interface MenuPopUpProps {
-    id: string;
+    id?: string;
+    title?: string;
     options: string[];
     onClick: (option: string, id: string) => void;
-    icons?: Record<string,React.ReactNode>;
+    icons?: Record<string, React.ReactNode>;
     className?: string;
+    classNamePopUpBox?: string;
+    isMenuIcon?: boolean;
+    children?: React.ReactNode;
 }
 
-const MenuPopUp: FC<MenuPopUpProps> = ({ options, onClick, icons, id, className }) => {
-    
+const MenuPopUp: FC<MenuPopUpProps> = ({
+    id,
+    title,
+    options,
+    onClick,
+    icons,
+    className,
+    classNamePopUpBox,
+    isMenuIcon = true,
+    children,
+}) => {
     const [showMenu, setShowMenu] = useState(false);
     const menuRef = useRef<HTMLUListElement>(null);
 
@@ -43,25 +56,41 @@ const MenuPopUp: FC<MenuPopUpProps> = ({ options, onClick, icons, id, className 
 
     return (
         <div className={styles.container}>
-            <button className={styles.menuBtn} onClick={handleButtonClick}>
-                <MenuIcon />
-            </button>
+            {isMenuIcon && (
+                <button className={styles.menuBtn} onClick={handleButtonClick}>
+                    <MenuIcon />
+                </button>
+            )}
+            {!isMenuIcon && (
+                <button onClick={handleButtonClick}>{children}</button>
+            )}
             {showMenu && (
                 <>
                     <div
                         className={styles.overlay}
                         onClick={() => setShowMenu(false)}
                     />
-                    <div className={className}>    
-                        <ul className={styles.menuList} ref={menuRef}>
+                    <div className={className}>
+                        <ul
+                            className={`${styles.menuList} ${classNamePopUpBox}`}
+                            ref={menuRef}
+                        >
+                            {title && <h1>{title}</h1>}
                             {options.map((option) => (
                                 <li
                                     key={option}
-                                    className={`${styles.menuItemList} ${icons && icons[option] === icons['Delete'] ? styles.delete : ''}`}
-                                    onClick={() => handleOptionClick(option, id)}
+                                    className={`${styles.menuItemList} ${
+                                        icons &&
+                                        icons[option] === icons['Delete']
+                                            ? styles.delete
+                                            : ''
+                                    }`}
+                                    onClick={() =>
+                                        handleOptionClick(option, id!)
+                                    }
                                 >
-                                        {icons && icons[option]}
-                                        {option}
+                                    {icons && icons[option]}
+                                    {option}
                                 </li>
                             ))}
                         </ul>

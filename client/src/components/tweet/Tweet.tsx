@@ -21,7 +21,7 @@ interface TweetProps {
     views: string;
     options: string[];
     icons?: Record<string, React.ReactNode>;
-    onClickOption: Function;
+    onClickMenu: Function;
     tweetKey?: React.Key;
 }
 
@@ -42,7 +42,7 @@ const Tweet: FC<TweetProps> = ({
     views,
     options,
     icons,
-    onClickOption,
+    onClickMenu,
     tweetKey,
 }) => {
     
@@ -60,7 +60,7 @@ const Tweet: FC<TweetProps> = ({
                     className={styles.userInfo}
                     options={options}
                     icons={icons}
-                    onClickOption={onClickOption} 
+                    onClickOption={onClickMenu} 
                     />
                     <NavLink to={'/message'}>
                         <div className={styles.body}>
