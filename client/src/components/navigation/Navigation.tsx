@@ -104,7 +104,7 @@ const Navigation = () => {
                     menuOptions={navUserMenuOptions}
                     menuIcons={navUseMenuIcons}
                     onClickOption={handleMenuOptionClick}
-                    avatar={`${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`}
+                    avatar={authUser?.avatar && `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`}
                     name={authUser?.name}
                     username={authUser?.username}
                 />

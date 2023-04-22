@@ -43,9 +43,6 @@ const Home = () => {
 
     // Get auth user
     const authUser: any = useAuthUser();
-    if (!authUser) {
-        return null;
-    }
 
     // TWEET menu popup
     const handleMenuOptionClick = async (option: string, tweetId: string) => {
@@ -92,10 +89,10 @@ const Home = () => {
             _id: tweet._id,
             text: tweet.text,
             user: {
-                avatar: authUser.avatar,
-                name: authUser.name,
-                username: authUser.username,
-                isVerified: authUser.isVerified,
+                avatar: authUser?.avatar,
+                name: authUser?.name,
+                username: authUser?.username,
+                isVerified: authUser?.isVerified,
             },
             createdAt: tweet.createdAt,
             image: tweet.image,
@@ -125,7 +122,7 @@ const Home = () => {
                         {/* TweetForm - start */}
                         <div className={styles.formSection}>
                             <Avatar
-                                path={`${IMAGE_AVATAR_BASE_URL}/${authUser.avatar}`}
+                                path={authUser?.avatar && `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`}
                                 size={Size.small}
                                 className={''}
                             />
