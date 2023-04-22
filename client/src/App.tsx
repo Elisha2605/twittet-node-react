@@ -42,7 +42,6 @@ function App() {
         )
     }
 
-    
     return (
         <React.Fragment>
             <div className={`${styles.App} ${showBackground ? styles['show-background'] : ''}`}>

@@ -31,6 +31,7 @@ const Navigation = () => {
         setMadalOpen(true);
     };
     
+    // logout
     const handleMenuOptionClick = async (options: string) => {
         if (options === 'Logout') {
             await logout();
