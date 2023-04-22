@@ -71,7 +71,7 @@ const FormTweet: FC<FormProps> = ({
                                 onClickPrivacyMenu!(tweetPrivacyOptions)
                             }} 
                             className={styles.tweetPrivacyOptions}
-                            classNamePopUpBox={styles.privacyPopUpBox}
+                            classNameWithTitle={styles.privacyPopUpBox}
                         >
                             <span>Everyone</span><span><FontAwesomeIcon icon={faChevronDown}/></span>
                         </PopUpMenu>

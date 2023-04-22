@@ -9,7 +9,11 @@
 .tweetPrivacyOptions {
     position: relative;
     top: 0.5rem;
-    left: 4.2rem;
+    left: 9.2rem;
+}
+
+.privacyPopUpBox {
+    width: 20rem;
 }
 
 .privacyOptions, .replyPrivacyOptions {
@@ -57,12 +61,6 @@
 
 .textarea::placeholder {
     color: var(--color-secondary);
-}
-
-.privacyPopUpBox {
-    display: flex;
-    flex-direction: column;
-    padding: 0.5rem 0;
 }
 
 .footer {

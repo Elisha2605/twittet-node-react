@@ -80,6 +80,7 @@ const Home = () => {
     };
 
     const handleSubmitTweet = async (e: React.FormEvent) => {
+        console.log('inside handleSubmitTweet');
         e.preventDefault();
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
@@ -108,8 +109,13 @@ const Home = () => {
         setIsFormFocused(false);
     };
 
-    const handleTweetPrivacyOptions = () => {
-
+    const handleTweetPrivacyOptions = (options: string) => {
+        if (options === 'Everyone') {
+            console.log(options + ': Clicked');
+        }
+        if (options === 'Twitter Circle') {
+            console.log(options + ': Clicked');
+        }
     }
 
     return (

@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faEdit, faArrowRightFromBracket, faEarthAfrica } from '@fortawesome/free-solid-svg-icons';
-import { faHeart } from '@fortawesome/free-regular-svg-icons';
+import { faTrash, faEdit, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import EarthIcon from '../components/icons/EarthIcon';
+import HeartIcon from '../components/icons/HeartIcon';
 
 export const tweetMenuOptions = ['Delete', 'Edit'];
 export const tweetMenuIcons = {
@@ -15,6 +16,6 @@ export const navUseMenuIcons = {
 
 export const tweetPrivacyMenuOptions = ['Everyone', 'Twitter Circle']
 export const tweetPrivacyMenuIcons = {
-   'Everyone': <FontAwesomeIcon icon={faEarthAfrica} />, 
-   'Twitter Circle': <FontAwesomeIcon icon={faHeart} />,
+   'Everyone': <EarthIcon />, 
+   'Twitter Circle': <HeartIcon />,
 };

@@ -9,7 +9,7 @@ interface MenuPopUpProps {
     onClick: (option: string, id: string) => void;
     icons?: Record<string, React.ReactNode>;
     className?: string;
-    classNamePopUpBox?: string;
+    classNameWithTitle?: string;
     isMenuIcon?: boolean;
     children?: React.ReactNode;
 }
@@ -21,7 +21,7 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
     onClick,
     icons,
     className,
-    classNamePopUpBox,
+    classNameWithTitle,
     isMenuIcon = true,
     children,
 }) => {
@@ -62,7 +62,7 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
                 </button>
             )}
             {!isMenuIcon && (
-                <button onClick={handleButtonClick}>{children}</button>
+                <div onClick={handleButtonClick}>{children}</div>
             )}
             {showMenu && (
                 <>
@@ -72,7 +72,7 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
                     />
                     <div className={className}>
                         <ul
-                            className={`${styles.menuList} ${classNamePopUpBox}`}
+                            className={`${styles.menuList} ${title && `${styles.popUpWithTitle} ${classNameWithTitle}`}`}
                             ref={menuRef}
                         >
                             {title && <h1>{title}</h1>}
