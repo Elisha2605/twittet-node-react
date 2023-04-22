@@ -47,7 +47,6 @@ export const createTweet = async (
         if (!savedTweet) {
             throw CustomError('Could not create tweet', 500);
         }
-
         const populatedTweet = await newTweet.populate({
             path: 'user',
             select: 'name username avatar coverImage isVerified isProtected',
@@ -72,7 +71,8 @@ export const createTweet = async (
 };
 
 export const deleteTweet = async (
-    tweetId: string
+    tweetId: string,
+    userId: string
 ): Promise<ApiResponse<any>> => {
     try {
         const deletedTweet: any = await Tweet.findById(tweetId);
@@ -83,6 +83,9 @@ export const deleteTweet = async (
                 status: 204,
                 payload: {},
             };
+        }
+        if (!deletedTweet.user._id.equals(userId)) {
+            throw CustomError('Unauthorized', 403);
         }
         await deletedTweet.deleteOne();
         return {

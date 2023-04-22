@@ -21,6 +21,9 @@
     --color-black-light: #282828;
     --color-black-lighter: #484848;
 
+    /* button color */
+    --color-btn-disabled: #7accff;
+
     /* font-size */
 
     --font-size-2xl: 2rem;

@@ -67,3 +67,8 @@
 .primaryMedium:hover {
     background: var(--color-primary-darker);
 }
+
+.disabled, .disabled:hover {
+    background-color: var(--color-btn-disabled);
+    cursor: auto;
+}

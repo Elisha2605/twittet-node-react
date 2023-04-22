@@ -26,7 +26,7 @@ const Home = () => {
     const [previewImage, setPreviewImage] = useState<string | null>(null);
 
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
-
+    
     // fetching Tweets
     useEffect(() => {
         const fetchTweets = async () => {
@@ -94,6 +94,7 @@ const Home = () => {
                 avatar: authUser.avatar,
                 name: authUser.name,
                 username: authUser.username,
+                isVerified: authUser.isVerified,
             },
             createdAt: tweet.createdAt,
             image: tweet.image,

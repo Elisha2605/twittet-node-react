@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { FC } from 'react';
 import PopUpMenu from './PopUpMenu';
 import styles from './UserInfo.module.css';
+import Certified from '../../assets/certified.svg';
 
 interface UserInfoProps {
     id: any;
@@ -54,10 +55,7 @@ const UserInfo: FC<UserInfoProps> = ({
                                     <p className={styles.firstname}>
                                         {firstname}{' '}
                                         {isVerified && (
-                                            <FontAwesomeIcon
-                                                icon={faCheckCircle}
-                                                color={'var(--color-primary)'}
-                                            />
+                                            <img className={styles.certifiedIcon} src={Certified} alt="" />
                                         )}{' '}
                                     </p>
                                 </a>

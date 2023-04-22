@@ -6,6 +6,7 @@ import ImageIcon from '../icons/ImageIcon';
 import CalendarIcon from '../icons/CalendarIcon';
 import XmarkIcon from '../icons/XmarkIcon';
 import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
+import { isDisabled } from '@testing-library/user-event/dist/utils';
 
 interface FormProps {
     value: string;
@@ -33,9 +34,16 @@ const FormTweet: FC<FormProps> = ({
     // Adjust text erea with input value
     useAutosizeTextArea(tweetTextRef.current, value)
 
+    // submit with by pressing "command + enter"
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter" && e.metaKey) {
+            onSubmit(e);
+        }
+    }
+
     return (
         <React.Fragment>
-            <form className={styles.container} onSubmit={onSubmit}>
+            <form className={styles.container} onSubmit={onSubmit} onKeyDown={handleKeyDown}>
                 <textarea
                     className={styles.textarea}
                     id="review-text"
@@ -62,6 +70,7 @@ const FormTweet: FC<FormProps> = ({
                         value={'Tweet'}
                         type={ButtonType.primary}
                         size={ButtonSize.small}
+                        isDisabled={value.length > 0 || imagePreview ? false : true}
                         onClick={() => {}}
                     />
                 </div>
