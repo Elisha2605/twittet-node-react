@@ -7,7 +7,7 @@ import SearchBar from '../components/ui/SearchBar';
 import Aside from '../components/aside/Aside';
 import WhoToFollow from '../components/ui/WhoToFollow';
 import PopUpMenu from '../components/ui/PopUpMenu';
-import { options, icons } from '../data/menuOptions';
+import { tweetMenuOptions, tweetMenuIcons } from '../data/menuOptions';
 
 
 const Bookmarks = () => {
@@ -40,7 +40,7 @@ const Bookmarks = () => {
                         <Header>
                             <div className={styles.headerWrapper}>
                                 <HeaderTitle title={'Bookmarks'} subTitle={'@Alvin44943'} />
-                                <PopUpMenu options={options} onClick={handleOptionClick} icons={icons} id={''} />
+                                <PopUpMenu options={tweetMenuOptions} onClick={handleOptionClick} icons={tweetMenuIcons} id={''} />
                             </div>
                         </Header>
                     {/* Home page - start */}

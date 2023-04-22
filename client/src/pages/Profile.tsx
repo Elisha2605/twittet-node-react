@@ -12,7 +12,7 @@ import ArrowLeftIcon from '../components/icons/ArrowLeftIcon';
 import Button, { ButtonSize, ButtonType } from '../components/ui/Button';
 import HeaderTitle from '../components/header/HeaderTitle';
 import HorizontalNavBar from '../components/ui/HorizontalNavBar';
-import { options } from '../data/menuOptions';
+import { tweetMenuOptions } from '../data/menuOptions';
 
 
 const Profile = () => {
@@ -81,7 +81,7 @@ const Profile = () => {
                             reposts={'924'} 
                             likes={'21.3'} 
                             views={'446'} 
-                            options={options}
+                            options={tweetMenuOptions}
                             onClickOption={handleOptionClick}
                         />
                         {/* TWEETS - END */}

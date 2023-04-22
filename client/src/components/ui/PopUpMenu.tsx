@@ -7,9 +7,10 @@ interface MenuPopUpProps {
     options: string[];
     onClick: (option: string, id: string) => void;
     icons?: Record<string,React.ReactNode>;
+    className?: string;
 }
 
-const MenuPopUp: FC<MenuPopUpProps> = ({ options, onClick, icons, id }) => {
+const MenuPopUp: FC<MenuPopUpProps> = ({ options, onClick, icons, id, className }) => {
     
     const [showMenu, setShowMenu] = useState(false);
     const menuRef = useRef<HTMLUListElement>(null);
@@ -51,18 +52,20 @@ const MenuPopUp: FC<MenuPopUpProps> = ({ options, onClick, icons, id }) => {
                         className={styles.overlay}
                         onClick={() => setShowMenu(false)}
                     />
-                    <ul className={styles.menuList} ref={menuRef}>
-                        {options.map((option) => (
-                            <li
-                                key={option}
-                                className={`${styles.menuItemList} ${icons && icons[option] === icons['Delete'] ? styles.delete : ''}`}
-                                onClick={() => handleOptionClick(option, id)}
-                            >
-                                    {icons && icons[option]}
-                                    {option}
-                            </li>
-                        ))}
-                    </ul>
+                    <div className={className}>    
+                        <ul className={styles.menuList} ref={menuRef}>
+                            {options.map((option) => (
+                                <li
+                                    key={option}
+                                    className={`${styles.menuItemList} ${icons && icons[option] === icons['Delete'] ? styles.delete : ''}`}
+                                    onClick={() => handleOptionClick(option, id)}
+                                >
+                                        {icons && icons[option]}
+                                        {option}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </>
             )}
         </div>

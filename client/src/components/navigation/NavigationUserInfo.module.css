@@ -1,4 +1,5 @@
 .container {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -43,4 +44,10 @@
 
 .username {
     color: var(--color-secondary);
+}
+
+.menuOption {
+    position: absolute;
+    top: -4.5rem;
+    left: 2rem;
 }

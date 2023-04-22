@@ -14,10 +14,11 @@ import styles from './Home.module.css';
 import Layout from '../Layout.module.css';
 import HeaderTitle from '../components/header/HeaderTitle';
 import HorizontalNavBar from '../components/ui/HorizontalNavBar';
-import { options, icons } from '../data/menuOptions';
+import { tweetMenuOptions, tweetMenuIcons } from '../data/menuOptions';
 import useAuthUser from '../hooks/userAuth.hook';
 import { createTweet, deleteTweet, getAllTweets } from '../api/tweet.api';
 import { getTimeDifference } from '../utils/helpers.utils';
+import { IMAGE_AVATAR_BASE_URL, IMAGE_TWEET_BASE_URL } from '../constants/common.constants';
 
 const Home = () => {
     const [tweets, setTweets] = useState<any[]>([]);
@@ -124,7 +125,7 @@ const Home = () => {
                         {/* TweetForm - start */}
                         <div className={styles.formSection}>
                             <Avatar
-                                path={`http://localhost:4000/avatar/${authUser.avatar}`}
+                                path={`${IMAGE_AVATAR_BASE_URL}/${authUser.avatar}`}
                                 size={Size.small}
                                 className={''}
                             />
@@ -146,7 +147,7 @@ const Home = () => {
                                 key={tweet._id}
                                 avatar={
                                     tweet.user.avatar &&
-                                    `http://localhost:4000/avatar/${tweet.user.avatar}`
+                                    `${IMAGE_AVATAR_BASE_URL}/${tweet.user.avatar}`
                                 }
                                 firstName={tweet.user.name}
                                 username={tweet.user.username}
@@ -155,14 +156,14 @@ const Home = () => {
                                     new Date(tweet.createdAt).getTime()
                                 )}
                                 tweet={tweet.text}
-                                image={tweet.image && `http://localhost:4000/tweetImage/${tweet.image}`}
+                                image={tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`}
                                 isOption={true}
                                 comments={'164'}
                                 reposts={'924'}
                                 likes={'21.3'}
                                 views={'446'}
-                                options={options}
-                                icons={icons}
+                                options={tweetMenuOptions}
+                                icons={tweetMenuIcons}
                                 onClickOption={handleMenuOptionClick}
                             />
                         ))}
