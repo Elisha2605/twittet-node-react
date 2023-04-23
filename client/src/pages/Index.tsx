@@ -1,49 +1,16 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import styles from './Index.module.css';
 import hero from '../assets/hero.png';
 import TwitterIcon from '../components/icons/TwitterIcon';
 import Modal from '../components/ui/Modal';
 import Signup from '../components/auth/Signup';
 import Login from '../components/auth/Login';
+import { ModalContext } from '../context/modal.context';
 
-interface IndexProps {
 
-}
+const Index: FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
 
-const Index: FC<{ onSuccess: () => void }> = ({
-    onSuccess,
-}) => {
-    const [signupModalOpen, setSignupModalOpen] = useState(false);
-    const [loginModalOpen, setLoginModalOpen] = useState(false);
-    const [signupSuccess, setSignupSuccess] = useState(false);
-
-    const signupModalRef = useRef<HTMLDivElement>(null);
-    const loginModalRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        document.addEventListener('mousedown', hadleClikOUtside);
-        return () => {
-            document.removeEventListener('mousedown', hadleClikOUtside);
-        };
-    }, [signupModalRef]);
-
-    const hadleClikOUtside = (e: MouseEvent) => {
-        if (
-            (signupModalRef.current &&
-                !signupModalRef.current.contains(e.target as Node)) ||
-            (loginModalRef.current &&
-                !loginModalRef.current.contains(e.target as Node))
-        ) {
-            setSignupModalOpen(false);
-            setLoginModalOpen(false);
-        }
-    };
-    
-    const handleSignupSuccess = () => {
-        setSignupSuccess(true);
-        setSignupModalOpen(false);
-        setLoginModalOpen(true);
-    }
+    const { openModal } = useContext(ModalContext);
 
     return (
         <React.Fragment>
@@ -61,36 +28,32 @@ const Index: FC<{ onSuccess: () => void }> = ({
                     <h2>Join Twitter today.</h2>
                     <div
                         className={styles.signup}
-                        onClick={() => setSignupModalOpen(true)}
+                        onClick={() => openModal('Signup')}
                     >
                         Signup
                     </div>
                     <div 
                         className={styles.login}
-                        onClick={() => setLoginModalOpen(true)}
+                        onClick={() => openModal('Login')}
                     >Login</div>
                     <Modal
-                        title={'Singup'}
-                        modalRef={signupModalRef}
-                        isOpen={signupModalOpen}
-                        onClose={() => setSignupModalOpen(false)}
+                        title={'Signup'}
+                        modalName={'Signup'}
                         isOverlay={true}
                         logo={true}
                     >
-                        <Signup onSuccess={handleSignupSuccess}/>
+                        <Signup />
                     </Modal>
-                    {(signupSuccess || loginModalOpen) && (
+                    {/* {(signupSuccess || loginModalOpen) && ( */}
                         <Modal
                             title={'Login'}
-                            modalRef={loginModalRef}
-                            isOpen={loginModalOpen}
-                            onClose={() => setLoginModalOpen(false)}
+                            modalName={'Login'}
                             isOverlay={true}
                             logo={true}
                         >
                             <Login onSuccess={onSuccess} />
                         </Modal>
-                    )}
+                    {/* )} */}
                     <div className={styles.termsAndService}>
                         <p>
                             By singing up, you agree to the
