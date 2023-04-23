@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../components/header/Header';
 import styles from './Notifications.module.css';
 import Layout from '../Layout.module.css';
@@ -12,6 +12,13 @@ import WhoToFollow from '../components/ui/WhoToFollow';
 
 
 const Notification = () => {
+
+    const [activeTab, setActiveTab] = useState(localStorage.getItem('activeTab-notification') || 'all');
+
+     // Set active tab in local storage
+    useEffect(() => {
+        localStorage.setItem('activeTab-notification', activeTab);
+    }, [activeTab]);
     
     return (
         <React.Fragment>
@@ -24,14 +31,30 @@ const Notification = () => {
                                 <GearIcon />
                             </div>
                             <HorizontalNavBar className={styles.NotificationNav}>
-                                <div className={styles.active}>All</div>
-                                <div>Mentions</div>
+                                <div className={activeTab === 'all' ? styles.active : ''}
+                                    onClick={() => setActiveTab('all')}
+                                >
+                                    All
+                                </div>
+                                <div className={activeTab === 'mentions' ? styles.active : ''}
+                                    onClick={() => setActiveTab('mentions')}
+                                >
+                                    Mentions
+                                </div>
                             </HorizontalNavBar>
                         </Header>
                     {/* Home page - start */}
-                    <div className={styles.main}>
-                        <PageUnderConstruction message={'Will display - all notificatins and all Mentions'}/>
-                    </div>
+                    {activeTab === 'all' && (
+                        <div className={styles.main}>
+                            <PageUnderConstruction message={'Will display - all notificatins such as logins, follow request, new message'}/>
+                        </div>
+                    )}
+
+                    {activeTab === 'mentions' && (
+                        <div className={styles.main}>
+                            <PageUnderConstruction message={'Will display - all tweet mentions'}/>
+                        </div>
+                    )}
                 </div>
                     {/* Home page - start */}
                 <div>

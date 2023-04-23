@@ -71,6 +71,9 @@ export const logout = async () => {
         });
     if (res.status === 200) {
         localStorage.removeItem('context');
+        localStorage.removeItem('activeTab-home');
+        localStorage.removeItem('activeTab-notification');
+        localStorage.removeItem('activeTab-profile');
         window.location.href = '/';
     }
     return res.data;

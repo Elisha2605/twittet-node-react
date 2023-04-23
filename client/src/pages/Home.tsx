@@ -26,7 +26,7 @@ const Home = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [isFormFocused, setIsFormFocused] = useState(false);
-    const [activeTab, setActiveTab] = useState('for-you');
+    const [activeTab, setActiveTab] = useState(localStorage.getItem('activeTab-home') || 'for-you');
 
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
     
@@ -42,6 +42,11 @@ const Home = () => {
         };
         fetchTweets();
     }, []);
+
+    // Set active tab in local storage
+    useEffect(() => {
+        localStorage.setItem('activeTab-home', activeTab);
+    }, [activeTab]);
 
     // Get auth user
     const authUser: any = useAuthUser();
@@ -127,12 +132,12 @@ const Home = () => {
                     <Header border={true}>
                         <HeaderTitle title={'Home'} className={styles.title} />
                         <HorizontalNavBar className={styles.homeNaveBar}>
-                            <div className={activeTab === "for-you" ? styles.active : ""}
-                                onClick={() => setActiveTab("for-you")}>
+                            <div className={activeTab === 'for-you' ? styles.active : ''}
+                                onClick={() => setActiveTab('for-you')}>
                                 For you
                             </div>
-                            <div className={activeTab === "following" ? styles.active : ""}
-                                onClick={() => setActiveTab("following")}>
+                            <div className={activeTab === "following" ? styles.active : ''}
+                                onClick={() => setActiveTab('following')}>
                                 Following
                             </div>
                         </HorizontalNavBar>
