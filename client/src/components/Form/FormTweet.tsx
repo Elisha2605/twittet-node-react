@@ -58,7 +58,7 @@ const FormTweet: FC<FormProps> = ({
 
     return (
         <React.Fragment>
-            <form className={styles.container} onSubmit={onSubmit} onKeyDown={handleKeyDown}>
+            <form className={styles.container} onSubmit={onSubmit} onKeyDown={handleKeyDown} onClick={() => setIsFocused(true)}>
                 
                 {isFocused || isImageSelected ? (
                     <div className={styles.privacyOptions}>
@@ -85,7 +85,6 @@ const FormTweet: FC<FormProps> = ({
                     ref={tweetTextRef}
                     rows={1}
                     value={value}
-                    onClick={() => setIsFocused(true)}
                 />
                 {isFocused || isImageSelected ? (
                     <>
