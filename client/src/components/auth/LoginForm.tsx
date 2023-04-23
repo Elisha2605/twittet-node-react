@@ -5,50 +5,25 @@ import { login } from "../../api/auth.api";
 import Button, { ButtonSize, ButtonType } from "../ui/Button";
 
 interface LoginFormProps {
-    onSuccess: () => void;
+    onSubmit: React.FormEventHandler<HTMLFormElement>;
+    serverError: string;
+    isLoading: boolean;
+    register: any;
+    errors: any
 }
 
 const LoginForm: FC<LoginFormProps> = ({ 
-    onSuccess,
+    onSubmit,
+    serverError,
+    isLoading,
+    register,
+    errors,
 }) => {
 
-    const [serverError, setServerError] = useState('');
-    const [isLoading, setLoading] = useState(false);
-
-    const { register, handleSubmit, reset, formState: { errors } } = useForm({
-        defaultValues: {
-            email: "",
-            password: "",
-        }
-    });
-
-    const handleSubmitForm = handleSubmit(async (data: any) => {   
-        setLoading(true);       
-        const formData = await login(
-            data.email,
-            data.password,
-        );
-        if (!formData.success) {
-            const { message } = formData;
-            console.log(message);
-            setServerError(message);
-            setLoading(false);
-            return;
-        }
-        onSuccess();
-        console.log(formData);
-        setLoading(false)
-    });
-
-    useEffect(() => {
-        if (serverError.length > 0) {
-            reset({ password: '' }); // clear form input values
-        }
-    }, [serverError]);
 
     return (
         <React.Fragment>
-            <form className={styles.container} onSubmit={handleSubmitForm}>
+            <form className={styles.container} onSubmit={onSubmit}>
             {serverError.length > 0 && (
                         <p className={styles.serverErrorMsg}>{serverError}</p>
                     )} 

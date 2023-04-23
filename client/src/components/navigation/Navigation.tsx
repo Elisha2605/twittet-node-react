@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { faHashtag, faHome } from '@fortawesome/free-solid-svg-icons';
 import {
     faBell,
@@ -19,18 +19,17 @@ import { logout } from '../../api/auth.api';
 import useAuthUser from '../../hooks/userAuth.hook';
 import { navUseMenuIcons, navUserMenuOptions } from '../../data/menuOptions';
 import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
+import { ModalContext } from '../../context/modal.context';
 
 const Navigation = () => {
     const [modalOpen, setMadalOpen] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);
 
+    const { openModal, closeModal } = useContext(ModalContext);
+
     // Get auth user
     const authUser: any = useAuthUser();
 
-    const handleOpenModal = () => {
-        setMadalOpen(true);
-    };
-    
     // logout
     const handleMenuOptionClick = async (options: string) => {
         if (options === 'Logout') {
@@ -87,16 +86,16 @@ const Navigation = () => {
                     value={'Tweet'}
                     type={ButtonType.primary}
                     size={ButtonSize.medium}
-                    onClick={handleOpenModal}
+                    onClick={() => openModal('test1')}
                 />
                 <Modal
-                    modalRef={modalRef}
+                    title={'Write your tweet'}
+                    modalName={'test1'}
                     isOpen={modalOpen}
-                    onClose={() => setMadalOpen(false)}
                     isOverlay={true}
                 >
                     <PageUnderConstruction />
-                    <button onClick={() => setMadalOpen(false)}>
+                    <button onClick={() => closeModal('test1') }>
                         Close Modal
                     </button>
                 </Modal>
