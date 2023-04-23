@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Aside from '../components/aside/Aside';
 import SearchBar from '../components/ui/SearchBar';
 import WhoToFollow from '../components/ui/WhoToFollow';
@@ -13,9 +13,17 @@ import Button, { ButtonSize, ButtonType } from '../components/ui/Button';
 import HeaderTitle from '../components/header/HeaderTitle';
 import HorizontalNavBar from '../components/ui/HorizontalNavBar';
 import { tweetMenuOptions } from '../data/menuOptions';
+import PageUnderConstruction from '../components/ui/PageUnderConstruction';
 
 
 const Profile = () => {
+
+    const [activeTab, setActiveTab] = useState(localStorage.getItem('activeTab-profile') || 'tweets');
+
+    // Set active tab in local storage
+    useEffect(() => {
+        localStorage.setItem('activeTab-profile', activeTab);
+    }, [activeTab]);
 
     const handleOptionClick = (option: string) => {
         // TODO: handle menu option clickes
@@ -33,17 +41,17 @@ const Profile = () => {
             <div className={Layout.mainSectionContainer}>
                 <div className={Layout.mainSection}>
 
-                    {/* HEADER - START */}
+                    {/* *** HEADER - START *** */}
                     <Header border={true}>
                         <div className={styles.headerItems}>
                             <ArrowLeftIcon />
                             <HeaderTitle title={'Aïcha'} subTitle={'1 Tweet'} />
                         </div>
                     </Header>
-                    {/* HEADER - END */}
+                    {/* *** HEADER - END *** */}
 
                     <div className={styles.main}>
-                        {/* MAIN - START */}
+                        {/* *** MAIN - START *** */}
                             <div className={styles.imageWrapper}>
                                 <div className={styles.coverImage}><img src={'https://images.unsplash.com/photo-1595670322505-4de61b9cdf47?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80'} alt="" /></div>
                                 <div className={styles.profileImage}><img src={'https://scontent-cph2-1.xx.fbcdn.net/v/t39.30808-6/337155884_6676092215753622_8028443491988735130_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=VWfgq-NaluQAX9o1CBW&_nc_ht=scontent-cph2-1.xx&oh=00_AfAhYA-IBvju2jtouurcdXRcGbSq17JRB8nHn5lYDurwPQ&oe=643029C8'} alt="" /></div>
@@ -64,29 +72,67 @@ const Profile = () => {
                             </div>
 
                             <HorizontalNavBar className={styles.profileNav}>
-                                <div className={styles.active}>Tweets</div>
-                                <div>Replies</div>
-                                <div>Media</div>
-                                <div>Likes</div>
+                            <div className={activeTab === 'tweets' ? styles.active : ''}
+                                onClick={() => setActiveTab('tweets')}>
+                                Tweets
+                            </div>
+                            <div className={activeTab === 'replies' ? styles.active : ''}
+                                onClick={() => setActiveTab('replies')}>
+                                Replies
+                            </div>
+                            <div className={activeTab === 'media' ? styles.active : ''}
+                                onClick={() => setActiveTab('media')}>
+                                Media
+                            </div>
+                            <div className={activeTab === 'likes' ? styles.active : ''}
+                                onClick={() => setActiveTab('likes')}>
+                                Likes
+                            </div>
                             </HorizontalNavBar>
                         {/* TWEETS - START */}
-                        <Tweet 
-                            avatar={'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80'} 
-                            firstName={'Luis Suárez'} 
-                            username={'LuisSuarez9'} 
-                            tweet={'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,molestiae quas vel sint commodi repudiandae consequuntur'}
-                            image={'https://images.unsplash.com/photo-1534083264897-aeabfc7daf8a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80'}
-                            isOption={true}
-                            comments={'164'} 
-                            reposts={'924'} 
-                            likes={'21.3'} 
-                            views={'446'} 
-                            options={tweetMenuOptions}
-                            onClickMenu={handleOptionClick}
-                        />
+                        {activeTab === 'tweets' && (
+                            <Tweet 
+                                avatar={'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80'} 
+                                firstName={'Luis Suárez'} 
+                                username={'LuisSuarez9'} 
+                                tweet={'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,molestiae quas vel sint commodi repudiandae consequuntur'}
+                                image={'https://images.unsplash.com/photo-1534083264897-aeabfc7daf8a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80'}
+                                isOption={true}
+                                comments={'164'} 
+                                reposts={'924'} 
+                                likes={'21.3'} 
+                                views={'446'} 
+                                options={tweetMenuOptions}
+                                onClickMenu={handleOptionClick}
+                            />
+                        )}
                         {/* TWEETS - END */}
 
-                        {/* MAIN - END */}
+                        {/* REPLIES - START */}
+                        {activeTab === 'replies' && (
+                            <div className={styles.main}>
+                                <PageUnderConstruction message={'Will display - all tweet replies'}/>
+                            </div>
+                        )}
+                        {/* REPLIES - END */}
+
+                        {/* MEDIA - START */}
+                        {activeTab === 'media' && (
+                            <div className={styles.main}>
+                                <PageUnderConstruction message={'Will display - all tweet images'}/>
+                            </div>
+                        )}
+                        {/* MEDIA - END */}
+
+                        {/* LIKES - START */}
+                        {activeTab === 'likes' && (
+                            <div className={styles.main}>
+                                <PageUnderConstruction message={'Will display - all tweet likes'}/>
+                            </div>
+                        )}
+                        {/* LIKES - END */}
+
+                        {/* *** MAIN - END *** */}
                     </div>
                 </div>
                     {/* Home page - start */}

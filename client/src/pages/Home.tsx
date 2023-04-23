@@ -26,6 +26,7 @@ const Home = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [isFormFocused, setIsFormFocused] = useState(false);
+    const [activeTab, setActiveTab] = useState(localStorage.getItem('activeTab-home') || 'for-you');
 
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
     
@@ -41,6 +42,11 @@ const Home = () => {
         };
         fetchTweets();
     }, []);
+
+    // Set active tab in local storage
+    useEffect(() => {
+        localStorage.setItem('activeTab-home', activeTab);
+    }, [activeTab]);
 
     // Get auth user
     const authUser: any = useAuthUser();
@@ -126,63 +132,100 @@ const Home = () => {
                     <Header border={true}>
                         <HeaderTitle title={'Home'} className={styles.title} />
                         <HorizontalNavBar className={styles.homeNaveBar}>
-                            <div className={styles.active}>For you</div>
-                            <div>Following</div>
+                            <div className={activeTab === 'for-you' ? styles.active : ''}
+                                onClick={() => setActiveTab('for-you')}>
+                                For you
+                            </div>
+                            <div className={activeTab === "following" ? styles.active : ''}
+                                onClick={() => setActiveTab('following')}>
+                                Following
+                            </div>
                         </HorizontalNavBar>
                     </Header>
-                    <div className={styles.main}>
-                        {/* TweetForm - start */}
-                        <div className={styles.formSection}>
-                            <Avatar
-                                path={authUser?.avatar && `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`}
-                                size={Size.small}
-                                className={''}
-                            />
-                            <FormTweet
-                                value={value}
-                                tweetTextRef={tweetTextRef}
-                                imagePreview={previewImage}
-                                isFocused={isFormFocused}
-                                setIsFocused={setIsFormFocused}
-                                onSubmit={handleSubmitTweet}
-                                onImageUpload={handleImageUpload}
-                                onCancelImagePreview={handleCanselPreviewImage}
-                                onChageImage={handleImageOnChange} 
-                                tweetPrivacyOptions={tweetPrivacyMenuOptions} 
-                                tweetPrivacyIcons={tweetPrivacyMenuIcons} 
-                                onClickPrivacyMenu={handleTweetPrivacyOptions}                            
-                            />
+
+                    {activeTab === 'for-you' && (
+                        <div className={styles.main}>
+                            {/* TweetForm - start */}
+                            <div className={styles.formSection}>
+                                <Avatar
+                                    path={authUser?.avatar && `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`}
+                                    size={Size.small}
+                                    className={''}
+                                />
+                                <FormTweet
+                                    value={value}
+                                    tweetTextRef={tweetTextRef}
+                                    imagePreview={previewImage}
+                                    isFocused={isFormFocused}
+                                    setIsFocused={setIsFormFocused}
+                                    onSubmit={handleSubmitTweet}
+                                    onImageUpload={handleImageUpload}
+                                    onCancelImagePreview={handleCanselPreviewImage}
+                                    onChageImage={handleImageOnChange} 
+                                    tweetPrivacyOptions={tweetPrivacyMenuOptions} 
+                                    tweetPrivacyIcons={tweetPrivacyMenuIcons} 
+                                    onClickPrivacyMenu={handleTweetPrivacyOptions}                            
+                                />
+                            </div>
+                            {/* TweetForm - end */}
+                            {/* tweets - start */}
+                            {tweets.map((tweet: any) => (
+                                <Tweet
+                                    tweetId={tweet._id}
+                                    key={tweet._id}
+                                    avatar={
+                                        tweet.user.avatar &&
+                                        `${IMAGE_AVATAR_BASE_URL}/${tweet.user.avatar}`
+                                    }
+                                    firstName={tweet.user.name}
+                                    username={tweet.user.username}
+                                    isVerfied={tweet.user.isVerified}
+                                    time={getTimeDifference(
+                                        new Date(tweet.createdAt).getTime()
+                                    )}
+                                    tweet={tweet.text}
+                                    image={tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`}
+                                    isOption={true}
+                                    comments={'164'}
+                                    reposts={'924'}
+                                    likes={'21.3'}
+                                    views={'446'}
+                                    options={tweetMenuOptions}
+                                    icons={tweetMenuIcons}
+                                    onClickMenu={handleMenuOptionClick}
+                                />
+                            ))}
+                            {/* tweets - end */}
                         </div>
-                        {/* TweetForm - end */}
-                        {/* tweets - start */}
-                        {tweets.map((tweet: any) => (
-                            <Tweet
-                                tweetId={tweet._id}
-                                key={tweet._id}
-                                avatar={
-                                    tweet.user.avatar &&
-                                    `${IMAGE_AVATAR_BASE_URL}/${tweet.user.avatar}`
-                                }
-                                firstName={tweet.user.name}
-                                username={tweet.user.username}
-                                isVerfied={tweet.user.isVerified}
-                                time={getTimeDifference(
-                                    new Date(tweet.createdAt).getTime()
-                                )}
-                                tweet={tweet.text}
-                                image={tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`}
-                                isOption={true}
-                                comments={'164'}
-                                reposts={'924'}
-                                likes={'21.3'}
-                                views={'446'}
-                                options={tweetMenuOptions}
-                                icons={tweetMenuIcons}
-                                onClickMenu={handleMenuOptionClick}
-                            />
-                        ))}
-                        {/* tweets - end */}
-                    </div>
+                    )}
+                    {activeTab === 'following' && (
+                        <div className={styles.main}>
+                            {/* TweetForm - start */}
+                            <div className={styles.formSection}>
+                                <Avatar
+                                    path={authUser?.avatar && `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`}
+                                    size={Size.small}
+                                    className={''}
+                                />
+                                <FormTweet
+                                    value={value}
+                                    tweetTextRef={tweetTextRef}
+                                    imagePreview={previewImage}
+                                    isFocused={isFormFocused}
+                                    setIsFocused={setIsFormFocused}
+                                    onSubmit={handleSubmitTweet}
+                                    onImageUpload={handleImageUpload}
+                                    onCancelImagePreview={handleCanselPreviewImage}
+                                    onChageImage={handleImageOnChange} 
+                                    tweetPrivacyOptions={tweetPrivacyMenuOptions} 
+                                    tweetPrivacyIcons={tweetPrivacyMenuIcons} 
+                                    onClickPrivacyMenu={handleTweetPrivacyOptions}                            
+                                />
+                            </div>
+                            {/* TweetForm - end */}
+
+                        </div>
+                    )}
                 </div>
                 {/* Home page - start */}
                 <div>
