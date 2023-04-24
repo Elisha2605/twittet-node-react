@@ -1,65 +1,127 @@
-import { faCalendar, faFaceSmileWink, faImage } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { FC, useRef, useState } from "react";
-import useAutosizeTextArea from "../../hooks/useAutosizeTextArea";
-import Button, { ButtonSize, ButtonType } from "../ui/Button";
-import styles from "./FormTweet.module.css";
-
+import React, { FC } from 'react';
+import Button, { ButtonSize, ButtonType } from '../ui/Button';
+import styles from './FormTweet.module.css';
+import EmojiIcon from '../icons/EmojiIcon';
+import ImageIcon from '../icons/ImageIcon';
+import CalendarIcon from '../icons/CalendarIcon';
+import XmarkIcon from '../icons/XmarkIcon';
+import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown, faEarthAfrica } from '@fortawesome/free-solid-svg-icons';
+import PopUpMenu from '../ui/PopUpMenu';
 
 interface FormProps {
-    
+    value: string;
+    tweetTextRef: React.RefObject<HTMLTextAreaElement>;
+    imagePreview?: string | null;
+    imagePreviewModal?: string | null;
+    isFocused?: boolean;
+    setIsFocused: React.Dispatch<React.SetStateAction<boolean>>;
+
+    tweetPrivacyOptions: string[];
+    tweetPrivacyIcons: Record<string, React.ReactNode>;
+
+    onSubmit: (e: React.FormEvent) => void;
+    onImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onChageImage: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    onCancelImagePreview: () => void;
+    onClickPrivacyMenu: Function;
+
+    classNameTextErea?: string;    
 }
 
 const FormTweet: FC<FormProps> = ({
+    value,
+    tweetTextRef,
+    imagePreview,
+    isFocused = false,
+    setIsFocused,
 
+    tweetPrivacyOptions,
+    tweetPrivacyIcons,
+
+    onSubmit,
+    onImageUpload,
+    onChageImage,
+    onCancelImagePreview,
+    onClickPrivacyMenu,
+
+    classNameTextErea
 }) => {
+    
+    // Adjust text erea with input value
+    useAutosizeTextArea(tweetTextRef.current, value)
 
-    const onClickHanlder = () => {
-        // TODO: You should remove this function on the main component
+    // submit with by pressing "command + enter"
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter" && e.metaKey) {
+            onSubmit(e);
+        }
     }
-    
-    const [value, setValue] = useState("");
-    const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-    useAutosizeTextArea(textAreaRef.current, value);
-
-    const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const val = evt.target?.value;
-    
-        setValue(val);
-    };
+    const isImageSelected = !!imagePreview;
 
     return (
         <React.Fragment>
-            <form action="" className={styles.container}>
-                <textarea className={styles.textarea}
+            <form className={styles.container} onSubmit={onSubmit} onKeyDown={handleKeyDown} onClick={() => setIsFocused(true)}>
+                {isFocused || isImageSelected ? (
+                    <div className={styles.privacyOptions}>
+                        <PopUpMenu 
+                            title={'Choose audience'}
+                            options={tweetPrivacyOptions}
+                            icons={tweetPrivacyIcons}
+                            isMenuIcon={false}
+                            onClick={(tweetPrivacyOptions) => {
+                                onClickPrivacyMenu!(tweetPrivacyOptions)
+                            }} 
+                            className={styles.tweetPrivacyOptions}
+                            classNameWithTitle={styles.privacyPopUpBox}
+                        >
+                            <span>Everyone</span><span><FontAwesomeIcon icon={faChevronDown}/></span>
+                        </PopUpMenu>
+                    </div>
+                ) : null }
+                <textarea
+                    className={`${styles.textarea} ${classNameTextErea}`}
                     id="review-text"
-                    onChange={handleChange}
+                    onChange={onChageImage}
                     placeholder="What's happening?"
-                    ref={textAreaRef}
+                    ref={tweetTextRef}
                     rows={1}
                     value={value}
                 />
+                {isFocused || isImageSelected ? (
+                    <>
+                        <div className={styles.replyPrivacyOptions}>
+                            <span><FontAwesomeIcon icon={faEarthAfrica}/></span><span>Everyone can reply</span>
+                        </div>
+                        <hr className={styles.horizontalLine} />
+                    </>
+                ) : null }
+                {imagePreview && (
+                    <div className={styles.previewImage}>
+                        <XmarkIcon className={styles.cancelBtn} size={'lg'} 
+                            onClick={onCancelImagePreview}/>
+                        <img src={imagePreview} alt='preview tweet img' />
+                    </div>
+                )}
                 <div className={styles.footer}>
                     <div className={styles.icons}>
-                        <FontAwesomeIcon 
-                            icon={faImage}
-                            color={'var(--color-primary)'}
-                        />
-                        <FontAwesomeIcon 
-                            icon={faFaceSmileWink}
-                            color={'var(--color-primary)'}
-                        />
-                        <FontAwesomeIcon 
-                            icon={faCalendar}
-                            color={'var(--color-primary)'}
-                        />
+                        <ImageIcon onChange={onImageUpload} />
+                        <EmojiIcon />
+                        <CalendarIcon />
                     </div>
-                    <Button value={'Tweet'} type={ButtonType.primary} size={ButtonSize.small} onClick={onClickHanlder}  />
+                    <Button
+                        value={'Tweet'}
+                        type={ButtonType.primary}
+                        size={ButtonSize.small}
+                        isDisabled={value.length > 0 || imagePreview ? false : true}
+                        onClick={() => setIsFocused(false)}
+                    />
                 </div>
             </form>
         </React.Fragment>
-    )
-}
+    );
+};
 
 export default FormTweet;

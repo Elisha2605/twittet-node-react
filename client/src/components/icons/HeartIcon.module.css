@@ -1,0 +1,5 @@
+.faHeart {
+    padding: 0.8rem 0.8rem;
+    border-radius: 50%;
+    background-color: var(--color-green);
+}

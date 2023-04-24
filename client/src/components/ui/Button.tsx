@@ -1,10 +1,11 @@
-import React, { FC } from "react";
-import styles from "./Button.module.css";
+import React, { FC } from 'react';
+import styles from './Button.module.css';
+import LoadingRing from './LoadingRing';
 
 export enum ButtonType {
     primary = 'primary',
     secondary = 'secondary',
-    tietary = 'tietary'
+    tietary = 'tietary',
 }
 
 export enum ButtonSize {
@@ -18,44 +19,53 @@ interface ButtonProps {
     type: ButtonType;
     size: ButtonSize;
     loading?: Boolean;
+    isDisabled?: boolean;
     className?: string;
     onClick: Function;
 }
 
-const Button: FC<ButtonProps> = ({ 
+const Button: FC<ButtonProps> = ({
     value,
     type,
     size,
     loading = false,
+    isDisabled = false,
     className,
-    onClick
+    onClick,
 }) => {
-
     let allStyles = styles.primary;
-    
-    if (type === ButtonType.primary && size === ButtonSize.small ) {
-        allStyles = styles.primarySmall
+
+    if (type === ButtonType.primary && size === ButtonSize.small) {
+        allStyles = styles.primarySmall;
     }
 
-    if (type === ButtonType.primary && size === ButtonSize.medium ) {
-        allStyles = styles.primaryMedium
+    if (type === ButtonType.primary && size === ButtonSize.medium) {
+        allStyles = styles.primaryMedium;
     }
 
     if (type === ButtonType.secondary && size === ButtonSize.small) {
-        allStyles = styles.secondarySmall
+        allStyles = styles.secondarySmall;
     }
 
     if (type === ButtonType.tietary && size === ButtonSize.small) {
-        allStyles = styles.tietary
+        allStyles = styles.tietary;
+    }
+    if (type === ButtonType.tietary && size === ButtonSize.big) {
+        allStyles = styles.tietaryBig;
     }
 
     return (
-        <button className={`${className} ${allStyles} ${styles[type]} ${loading ? styles.loading : ''}`}
+        <button
+            className={`${className} ${allStyles} ${styles[type]} ${
+                loading ? styles.loading : ''
+            } ${isDisabled && styles.disabled}`}
             onClick={(e) => onClick(e, value)}
+            disabled={isDisabled}
         >
-            {value}
+            {loading && <LoadingRing size={'small'} />}
+            {!loading && value}
         </button>
-    )
-}
+    );
+};
 
 export default Button;

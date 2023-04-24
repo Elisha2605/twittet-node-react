@@ -1,50 +1,59 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import styles from './Modal.module.css';
+import XmarkIcon from '../icons/XmarkIcon';
+import TwitterIcon from '../icons/TwitterIcon';
+import { ModalContext } from '../../context/modal.context';
 
 interface ModalProps {
-    modalRef: React.RefObject<HTMLDivElement>
-    isOpen: boolean;
+    title?: string;
+    modalName?: string;
+    modalRef?: React.RefObject<HTMLDivElement>;
+    isOpen?: boolean;
     isOverlay?: boolean;
     children: React.ReactNode;
-    onClose: () => void;
+    logo?: boolean;
+    classNameContainer?: string
+    classNameWrapper?: string;
 }
 
 const Modal: FC<ModalProps> = ({
+    title,
+    modalName,
     modalRef,
     isOpen,
     isOverlay = true,
     children,
-    onClose,
+    logo,
+    classNameContainer,
+    classNameWrapper,
 }) => {
 
-    const [modalOpen, setModalOpen] = useState(isOpen);
+    const { modalOpen, closeModal, modalName: currentModal } = useContext(ModalContext);
 
-    useEffect(() => {
-        setModalOpen(isOpen);
-    }, [isOpen]);
-
-    const handleClose = () => {
-        setModalOpen(false);
-        onClose();
-    };
+    if (modalName && currentModal !== modalName) {
+        return null;
+    }
 
     return ReactDOM.createPortal(
         <React.Fragment>
-
             {modalOpen ? (
-                <div className={styles.container}>
-                    {isOverlay && (
-                        <div className={styles.overlay} ></div>
-                    )}
-                    <div className={styles.content} ref={modalRef}>
-                        <button
-                            className={styles.close}
-                            onClick={handleClose}
-                        >
-                            X
+                <div className={`${styles.container}`}>
+                    {isOverlay && <div className={styles.overlay} onClick={() => closeModal(modalName || '')}></div>}
+                    <div className={`${styles.content} ${classNameContainer}`} ref={modalRef}>
+                        <div className={`${styles.wrapper} ${classNameWrapper}`}>
+                            {logo && (
+                                <TwitterIcon
+                                    size={'2xl'}
+                                    color={'var(--color-primary)'}
+                                />
+                            )}
+                            <h1>{title}</h1>
+                            {children}
+                        </div>
+                        <button className={styles.close} onClick={() => closeModal(modalName || '')}>
+                            <XmarkIcon size={'sm'} />
                         </button>
-                        {children}
                     </div>
                 </div>
             ) : null}

@@ -15,16 +15,79 @@ const sessionSchema = new mongoose.Schema({
 
 export interface IUser extends mongoose.Document {
     email: string;
+    name: string;
+    username: string;
+    avatar: string;
+    coverImage: string;
+    bio: string;
+    isActive: boolean;
+    isVerified: boolean;
+    isProtected: boolean;
     refreshToken: mongoose.Types.DocumentArray<ISession>;
     setPassword: any;
     changePassword: any;
-    isActive: boolean;
 }
 
 export const userModel = {
     email: {
         type: String,
-        unique: true,
+        unique: true, // change to true
+        required: true, // change to true
+        validate: {
+            validator: (v: string) => {
+                return v !== undefined;
+            },
+            message: (props: any) => `${props.path} is required.`,
+        },
+    },
+    name: {
+        type: String,
+        unique: false, // change to true
+        required: false, // change to true
+        validate: {
+            validator: (v: string) => {
+                return v !== undefined;
+            },
+            message: (props: any) => `${props.path} is required.`,
+        },
+    },
+    username: {
+        type: String,
+        unique: false, // change to true
+        required: false, // change to true
+        validate: {
+            validator: (v: string) => {
+                return v !== undefined;
+            },
+            message: (props: any) => `${props.path} is required.`,
+        },
+    },
+    avatar: {
+        type: String,
+        default: 'default-avatar.jpg',
+        required: false,
+    },
+    coverImage: {
+        type: String,
+        required: false,
+    },
+    bio: {
+        type: String,
+        required: false,
+    },
+    isActive: {
+        type: Boolean,
+        default: true,
+        require: true,
+    },
+    isVerified: {
+        type: Boolean,
+        default: false,
+        required: true,
+    },
+    isProtected: {
+        type: Boolean,
+        default: false,
         required: true,
     },
     authStrategy: {
@@ -33,10 +96,6 @@ export const userModel = {
     },
     refreshToken: {
         type: [sessionSchema],
-    },
-    isActive: {
-        type: Boolean,
-        require: true,
     },
 };
 

@@ -20,13 +20,16 @@
     background: var(--color-primary-darker);
 }
 
+/* Black btn */
 .secondarySmall {
     background: var(--color-black);
     padding: 0.2rem 1rem;
 }
 
 .secondarySmall:hover {
-    background: var(--color-black-lighter);
+    background: var(--color-white);
+    color: var(--color-black);
+    border: 1px solid var(--color-black)
 }
 
 .tietary {
@@ -35,6 +38,17 @@
     border-radius: var(--border-round);
     font-weight: var(--font-weight-600);
 }  
+
+.tietaryBig {
+    background: var(--color-black);
+    color: var(--color-white);
+    padding: 0.7rem 1rem;
+}
+.tietaryBig:hover {
+    background-color: var(--color-black-light) !important;
+    color: var(--color-white);
+    padding: 0.7rem 1rem;
+}
 
 .tietary:hover {
     background: var(--color-secondary-lighter);
@@ -52,4 +66,9 @@
 
 .primaryMedium:hover {
     background: var(--color-primary-darker);
+}
+
+.disabled, .disabled:hover {
+    background-color: var(--color-btn-disabled);
+    cursor: auto;
 }

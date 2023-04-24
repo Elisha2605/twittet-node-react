@@ -6,6 +6,55 @@
     font-size: var(--font-size-lg);
 }
 
+.tweetPrivacyOptions {
+    position: relative;
+    top: 0.5rem;
+    left: 9.2rem;
+}
+
+.privacyPopUpBox {
+    width: 20rem;
+}
+
+.privacyOptions, .replyPrivacyOptions {
+    display: flex;
+    font-size: 0.9rem;
+    font-weight: var(--font-weight-600);
+    display: inline-block;
+    border-radius: 1rem;
+    color: var(--color-primary);
+    cursor: pointer;
+}
+
+.privacyOptions {
+    border: var(--border-light);
+    margin-bottom: 1rem;
+    padding: 0 0.5rem;
+}
+
+.replyPrivacyOptions {
+    position: relative;
+    margin-top: 0.7rem;
+    right: 0.5rem;
+    padding: 0 0.7rem;    
+}
+
+.privacyOptions span:nth-child(1), 
+.replyPrivacyOptions span:nth-child(1){
+    padding-right: 0.5rem;
+}
+
+.privacyOptions:hover, 
+.replyPrivacyOptions:hover {
+    background-color: var(--color-primary-lighter);
+}
+
+.horizontalLine {
+    border: none;
+    border-top: var(--border-light);
+    margin: 10px 0;
+}
+
 .textarea:focus {
     outline: none;
 }
@@ -23,5 +72,27 @@
 
 .icons {
     display: flex;
-    gap: 1rem;
+}
+
+.previewImage {
+    position: relative;
+    width: 100%;
+}
+
+.previewImage img {
+    width: 100%;
+    border-radius: 1rem;
+    margin-top: 1rem;
+}
+.cancelBtn {
+    position: absolute;
+    left: 0.2rem;
+    top: 1.2rem;
+    color: var(--color-white);
+    background-color: var(--color-black-light);
+}
+
+.cancelBtn:hover {
+    background-color: var(--color-black-lighter);
+    transition: 0.1s ease-in-out;
 }
