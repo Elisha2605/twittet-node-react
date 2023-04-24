@@ -1,7 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styles from './App.module.css';
 import Navigation from './components/navigation/Navigation';
-import HomePage from './pages/Home';
 import Layout from './Layout.module.css';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Profile from './pages/Profile';
@@ -13,10 +12,21 @@ import Index from './pages/Index';
 import AuthContext, { StoredContext } from './context/user.context';
 import TwitterIcon from './components/icons/TwitterIcon';
 import Home from './pages/Home';
+import { ModalContext } from './context/modal.context';
 
 function App() {
 
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [onAddTweet, setOnAddTweets] = useState<any[]>([]);
+    const [value, setValue] = useState('');
+
+    const [selectedFileModal, setSelectedFileModal] = useState<File | null>(null);
+    const [previewImageModal, setPreviewImageModal] = useState<string | null>(null);
+    const [valueModal, setValueModal] = useState('');
+
+
+    const { modalOpen } = useContext(ModalContext);
 
     const context = useContext(AuthContext);
     let ctx: StoredContext = context.getUserContext();
@@ -32,8 +42,57 @@ function App() {
 
     const handleAddTweet = (tweet: any) => {
         setOnAddTweets((prevTweets) => [tweet, ...prevTweets]);
-      };
+    };
+    
+    //// new functions
+    const handleTextAreaOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const val = e.target?.value;
+        console.log(val);
+        if (modalOpen) {
+            setValueModal(val)
+        } else {
+            setValue(val);
+        }
+    };
 
+    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files && event.target.files[0];
+        if (file) {
+            if (modalOpen) {
+                setSelectedFileModal(file);
+                let imageUrl = URL.createObjectURL(file);
+                setPreviewImageModal(imageUrl);
+            } else {
+                setSelectedFile(file);
+                let imageUrl = URL.createObjectURL(file);
+                setPreviewImage(imageUrl);
+            }
+        }
+    };
+
+    const handleCanselPreviewImage = () => {
+        if (modalOpen) {
+            setPreviewImageModal(null);
+            setSelectedFileModal(null);
+        } else {
+            setPreviewImage(null);
+            setSelectedFile(null);
+        }
+        setSelectedFile(null);
+    };
+
+    const clearTweetForm = () => {
+        if (modalOpen) {
+            setSelectedFileModal(null);
+            setPreviewImageModal(null);
+            setValueModal('');
+        }
+        setSelectedFile(null);
+        setPreviewImage(null);
+        setValue('');
+    }
+
+    // Index page
     if (!ctx?.isLoggedIn) {
         return (
             <React.Fragment>
@@ -50,6 +109,7 @@ function App() {
         )
     }
 
+    // Dashboard
     return (
         <React.Fragment>
             <div className={`${styles.App} ${showBackground ? styles['show-background'] : ''}`}>
@@ -61,11 +121,31 @@ function App() {
                 <div>
                     <BrowserRouter>
                         <div className={Layout.navigation}>
-                            <Navigation onAddTweet={handleAddTweet} />
+                            <Navigation 
+                                selectedFile={selectedFileModal}
+                                previewImage={previewImageModal}                                    
+                                value={valueModal}
+                                clearTweetForm={clearTweetForm}
+                                handleTextAreaOnChange={handleTextAreaOnChange}
+                                handleCanselPreviewImage={handleCanselPreviewImage}
+                                handleImageUpload={handleImageUpload}
+                                onAddTweet={handleAddTweet}
+                            />
                         </div>
                         <div className={Layout.page}>
                             <Routes>
-                                <Route path="/" element={<Home onAddTweet={onAddTweet} />} />
+                                <Route path="/" element={
+                                    <Home
+                                        onAddTweet={onAddTweet}
+                                        selectedFile={selectedFile}
+                                        previewImage={previewImage}                                    
+                                        value={value}
+                                        handleTextAreaOnChange={handleTextAreaOnChange}
+                                        handleCanselPreviewImage={handleCanselPreviewImage}
+                                        handleImageUpload={handleImageUpload} 
+                                        clearTweetForm={clearTweetForm}
+                                    />
+                                }/>
                                 <Route path="/explore" element={<Explore />} />
                                 <Route
                                     path="/notification"

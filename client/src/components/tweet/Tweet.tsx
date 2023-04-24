@@ -45,11 +45,10 @@ const Tweet: FC<TweetProps> = ({
     onClickMenu,
     tweetKey,
 }) => {
-    
     return (
         <React.Fragment>
-                <div className={`${styles.container}`} key={tweetKey}>
-                    <UserInfo
+            <div className={`${styles.container}`} key={tweetKey}>
+                <UserInfo
                     id={tweetId}
                     avatar={avatar ? avatar : undefined}
                     firstname={firstName}
@@ -60,25 +59,25 @@ const Tweet: FC<TweetProps> = ({
                     className={styles.userInfo}
                     options={options}
                     icons={icons}
-                    onClickOption={onClickMenu} 
+                    onClickOption={onClickMenu}
+                />
+                <NavLink to={'/message'}>
+                    <div className={styles.body}>
+                        <p className={styles.tweet}>{tweet}</p>
+                        {image && (
+                            <div className={styles.image}>
+                                <img src={image} alt="" />
+                            </div>
+                        )}
+                    </div>
+                    <TweetFooter
+                        comments={comments}
+                        reposts={reposts}
+                        likes={likes}
+                        views={views}
                     />
-                    <NavLink to={'/message'}>
-                        <div className={styles.body}>
-                            <p className={styles.tweet}>{tweet}</p>
-                            {image && (
-                                <div className={styles.image}>
-                                    <img src={image} alt="" />
-                                </div>
-                            )}
-                        </div>
-                        <TweetFooter
-                            comments={comments}
-                            reposts={reposts}
-                            likes={likes}
-                            views={views}
-                        />
-                    </NavLink>
-                </div>
+                </NavLink>
+            </div>
         </React.Fragment>
     );
 };

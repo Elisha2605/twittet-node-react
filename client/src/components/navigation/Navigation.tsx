@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext } from 'react';
 import { faHashtag, faHome } from '@fortawesome/free-solid-svg-icons';
 import {
     faBell,
@@ -21,18 +21,40 @@ import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
 import { ModalContext } from '../../context/modal.context';
 import NavigationTweet from './NavigationTweet';
 
-interface Navigation {
+interface NavigationProps {
+    value: string;
+    
+    selectedFile: File | null
+    previewImage: string | null
+    
+    clearTweetForm: () => void;
+
+    handleTextAreaOnChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    handleCanselPreviewImage: () => void;
+    handleImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
     onAddTweet: (tweet: any) => void;
 }
 
-const Navigation: React.FC<Navigation> = ({ onAddTweet }) => {
+const Navigation: React.FC<NavigationProps> = ({ 
+    value,
+    onAddTweet, 
+    
+    selectedFile,
+    previewImage,
 
-    const { openModal, closeModal } = useContext(ModalContext);
+    clearTweetForm,
+    
+    handleTextAreaOnChange,
+    handleCanselPreviewImage,
+    handleImageUpload, 
+}) => {
+
+    const { openModal } = useContext(ModalContext);
 
     // Get auth user
     const authUser: any = useAuthUser();
 
-    // logout
+    // Logout
     const handleMenuOptionClick = async (options: string) => {
         if (options === 'Logout') {
             await logout();
@@ -90,13 +112,7 @@ const Navigation: React.FC<Navigation> = ({ onAddTweet }) => {
                     size={ButtonSize.medium}
                     onClick={() => openModal('Nav-tweet')}
                 />
-                <Modal
-                    modalName={'Nav-tweet'}
-                    isOverlay={true}
-                    className={styles.modal}
-                >
-                    <NavigationTweet onAddTweet={onAddTweet} />
-                </Modal>
+               
                 <NavigationUserInfo
                     id={authUser?.id}
                     menuOptions={navUserMenuOptions}
@@ -105,6 +121,17 @@ const Navigation: React.FC<Navigation> = ({ onAddTweet }) => {
                     avatar={authUser?.avatar && `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`}
                     name={authUser?.name}
                     username={authUser?.username}
+                />
+                {/* Opens tweet modal */}
+                <NavigationTweet 
+                    selectedFile={selectedFile}
+                    previewImage={previewImage}                                    
+                    value={value}
+                    handleTextAreaOnChange={handleTextAreaOnChange}
+                    handleCanselPreviewImage={handleCanselPreviewImage}
+                    handleImageUpload={handleImageUpload}
+                    onAddTweet={onAddTweet} 
+                    clearTweetForm={clearTweetForm}
                 />
             </div>
         </React.Fragment>

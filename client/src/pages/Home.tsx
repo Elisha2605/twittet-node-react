@@ -21,13 +21,35 @@ import { getTimeDifference } from '../utils/helpers.utils';
 import { IMAGE_AVATAR_BASE_URL, IMAGE_TWEET_BASE_URL } from '../constants/common.constants';
 import PageUnderConstruction from '../components/ui/PageUnderConstruction';
 
+interface HomeProps {
+    value: string;
+    onAddTweet: any, 
+    
+    selectedFile: File | null
+    previewImage: string | null
 
+    handleTextAreaOnChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    handleCanselPreviewImage: () => void;
+    handleImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    clearTweetForm: () => void;
+}
 
-const Home: React.FC<{ onAddTweet: any }> = ({ onAddTweet }) => {
+const Home: React.FC<HomeProps> = ({ 
+    value,
+    onAddTweet, 
+    
+    selectedFile,
+    previewImage,
+    
+    handleTextAreaOnChange,
+    handleCanselPreviewImage,
+    handleImageUpload,
+    clearTweetForm,
+}) => {
+
     const [tweets, setTweets] = useState<any[]>([]);
-    const [value, setValue] = useState('');
-    const [selectedFileModal, setSelectedFileModal] = useState<File | null>(null);
-    const [previewImageModal, setPreviewImageModal] = useState<string | null>(null);
+    
+    
     const [isFormFocused, setIsFormFocused] = useState(false);
     const [activeTab, setActiveTab] = useState(localStorage.getItem('activeTab-home') || 'for-you');
 
@@ -55,7 +77,6 @@ const Home: React.FC<{ onAddTweet: any }> = ({ onAddTweet }) => {
         localStorage.setItem('activeTab-home', activeTab);
     }, [activeTab]);
 
-
     // TWEET menu popup
     const handleMenuOptionClick = async (option: string, tweetId: string) => {
         if (option === 'Delete') {
@@ -69,34 +90,14 @@ const Home: React.FC<{ onAddTweet: any }> = ({ onAddTweet }) => {
         }
     };
 
-    //// new functions
-    const handleImageOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const val = e.target?.value;
-        setValue(val);
-    };
-
-    const handleCanselPreviewImage = () => {
-        if (previewImageModal) {
-            setPreviewImageModal(null);
-        }
-    };
-
-    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files && event.target.files[0];
-        if (file) {
-            setSelectedFileModal(file);
-            const imageUrl = URL.createObjectURL(file);
-            setPreviewImageModal(imageUrl);
-        }
-    };
-
+    
     const handleSubmitTweet = async (e: React.FormEvent) => {
         console.log('inside handleSubmitTweet');
         e.preventDefault();
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
             : null;
-        const res = await createTweet(text, selectedFileModal);
+        const res = await createTweet(text, selectedFile);
         const { tweet }: any = res;
         const newTweet = {
             _id: tweet._id,
@@ -113,26 +114,21 @@ const Home: React.FC<{ onAddTweet: any }> = ({ onAddTweet }) => {
             reposts: [],
             likes: [],
         };
-        setSelectedFileModal(null);
-        setPreviewImageModal(null);
-        setValue('');
         setTweets((prevTweets) => [newTweet, ...prevTweets]);
         setIsFormFocused(false);
-    };
-
-    const handleNewTweet = (value: any) => {
-        // Add new tweet to state
-        if (authUser?.avatar) {
-            console.log('Inside handleNewTweet');
-            setTweets((prevTweets) => [value[0], ...prevTweets]);
-        }
-
+        clearTweetForm();
     };
 
     useEffect(() => {
-            handleNewTweet(onAddTweet);
+        const handleNewTweetFromModal = () => {
+            // Add new tweet from NavigationTweet to state
+            if (authUser?.avatar) {
+                console.log('Inside handleNewTweet');
+                setTweets((prevTweets) => [onAddTweet[0], ...prevTweets]);
+            }
+        };
+        handleNewTweetFromModal();
     }, [onAddTweet])
-
 
     const handleTweetPrivacyOptions = (options: string) => {
         if (options === 'Everyone') {
@@ -142,7 +138,6 @@ const Home: React.FC<{ onAddTweet: any }> = ({ onAddTweet }) => {
             console.log(options + ': Clicked');
         }
     }
-
 
     return (
         <React.Fragment>
@@ -173,13 +168,13 @@ const Home: React.FC<{ onAddTweet: any }> = ({ onAddTweet }) => {
                         <FormTweet
                             value={value}
                             tweetTextRef={tweetTextRef}
-                            imagePreview={previewImageModal}
+                            imagePreview={previewImage}
                             isFocused={isFormFocused}
                             setIsFocused={setIsFormFocused}
                             onSubmit={handleSubmitTweet}
                             onImageUpload={handleImageUpload}
                             onCancelImagePreview={handleCanselPreviewImage}
-                            onChageImage={handleImageOnChange} 
+                            onChageImage={handleTextAreaOnChange} 
                             tweetPrivacyOptions={tweetPrivacyMenuOptions} 
                             tweetPrivacyIcons={tweetPrivacyMenuIcons} 
                             onClickPrivacyMenu={handleTweetPrivacyOptions}                            
@@ -197,7 +192,7 @@ const Home: React.FC<{ onAddTweet: any }> = ({ onAddTweet }) => {
                                     key={tweet._id}
                                     avatar={
                                         tweet.user.avatar ?
-                                        `${IMAGE_AVATAR_BASE_URL}/${tweet.user.avatar}` : undefined
+                                        `${IMAGE_AVATAR_BASE_URL}/${tweet.user.avatar}` : null
                                     }
                                     firstName={tweet.user.name}
                                     username={tweet.user.username}

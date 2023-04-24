@@ -2,22 +2,38 @@ import React, { FC, useContext, useRef, useState } from 'react';
 import styles from './NavigationTweet.module.css';
 import Avatar, { Size } from '../ui/Avatar';
 import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
-import FormTweet from '../form/FormTweet';
 import useAuthUser from '../../hooks/userAuth.hook';
 import { createTweet } from '../../api/tweet.api';
 import { tweetPrivacyMenuIcons, tweetPrivacyMenuOptions } from '../../data/menuOptions';
 import { ModalContext } from '../../context/modal.context';
+import Modal from '../ui/Modal';
+import FormTweet from '../form/FormTweet';
 
 interface NavigationTweetProp {
+    value: string;
+    
+    selectedFile: File | null
+    previewImage: string | null
+
+    handleTextAreaOnChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    handleCanselPreviewImage: () => void;
+    handleImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
     onAddTweet: (tweet: any) => void;
+    clearTweetForm: () => void;
 }
 
-const NavigationTweet: FC<NavigationTweetProp> = ({ onAddTweet }) => {
+const NavigationTweet: FC<NavigationTweetProp> = ({ 
+    value,
+    selectedFile,
+    previewImage,
+    
+    handleTextAreaOnChange,
+    handleCanselPreviewImage,
+    handleImageUpload,
+    onAddTweet, 
+    clearTweetForm,
+}) => {
 
-    const [tweets, setTweets] = useState<any[]>([]);
-    const [value, setValue] = useState('');
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [isFormFocused, setIsFormFocused] = useState(false);
 
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
@@ -27,27 +43,6 @@ const NavigationTweet: FC<NavigationTweetProp> = ({ onAddTweet }) => {
 
         // Get auth user
     const authUser: any = useAuthUser();
-    
-    //// new functions
-    const handleImageOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const val = e.target?.value;
-        setValue(val);
-    };
-
-    const handleCanselPreviewImage = () => {
-        if (previewImage) {
-            setPreviewImage(null);
-        }
-    };
-
-    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files && event.target.files[0];
-        if (file) {
-            setSelectedFile(file);
-            const imageUrl = URL.createObjectURL(file);
-            setPreviewImage(imageUrl);
-        }
-    };  
 
     const handleSubmitTweet = async (e: React.FormEvent) => {
         console.log('inside handleSubmitTweet');
@@ -76,13 +71,10 @@ const NavigationTweet: FC<NavigationTweetProp> = ({ onAddTweet }) => {
                 likes: [],
             };
             onAddTweet(newTweet)
-            setTweets((prevTweets) => [newTweet, ...prevTweets]);
         }
-        setSelectedFile(null);
-        setPreviewImage(null);
-        setValue('');
-        setIsFormFocused(false);
+        // setIsFormFocused(false);
         closeModal('Nav-tweet');
+        clearTweetForm();
     };
 
     const handleTweetPrivacyOptions = (options: string) => {
@@ -96,30 +88,38 @@ const NavigationTweet: FC<NavigationTweetProp> = ({ onAddTweet }) => {
 
     return (
         <React.Fragment>
-            <div className={styles.formSection}>
-                <Avatar
-                    path={
-                        authUser?.avatar ?
-                        `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}` : null
-                    }
-                    size={Size.small}
-                    className={''}
-                />
-                <FormTweet
-                    value={value}
-                    tweetTextRef={tweetTextRef}
-                    imagePreview={previewImage}
-                    isFocused={true}
-                    setIsFocused={setIsFormFocused}
-                    onSubmit={handleSubmitTweet}
-                    onImageUpload={handleImageUpload}
-                    onCancelImagePreview={handleCanselPreviewImage}
-                    onChageImage={handleImageOnChange}
-                    tweetPrivacyOptions={tweetPrivacyMenuOptions}
-                    tweetPrivacyIcons={tweetPrivacyMenuIcons}
-                    onClickPrivacyMenu={handleTweetPrivacyOptions}
-                />
-            </div>
+            <Modal
+                    modalName={'Nav-tweet'}
+                    isOverlay={true}
+                    classNameContainer={styles.modalContainer}
+                    classNameWrapper={styles.modalWrapper}
+                >
+                <div className={styles.formSection}>
+                    <Avatar
+                        path={
+                            authUser?.avatar ?
+                            `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}` : null
+                        }
+                        size={Size.small}
+                        className={''}
+                    />
+                    <FormTweet
+                        value={value}
+                        tweetTextRef={tweetTextRef}
+                        imagePreview={previewImage}
+                        isFocused={true}
+                        setIsFocused={setIsFormFocused}
+                        onSubmit={handleSubmitTweet}
+                        onImageUpload={handleImageUpload}
+                        onCancelImagePreview={handleCanselPreviewImage}
+                        onChageImage={handleTextAreaOnChange}
+                        tweetPrivacyOptions={tweetPrivacyMenuOptions}
+                        tweetPrivacyIcons={tweetPrivacyMenuIcons}
+                        onClickPrivacyMenu={handleTweetPrivacyOptions}
+                        classNameTextErea={styles.classNameTextErea}
+                    />
+                </div>
+            </Modal>
         </React.Fragment>
     );
 };

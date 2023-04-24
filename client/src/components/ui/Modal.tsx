@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useRef, useState } from 'react';
+import React, { FC, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import styles from './Modal.module.css';
 import XmarkIcon from '../icons/XmarkIcon';
@@ -13,7 +13,8 @@ interface ModalProps {
     isOverlay?: boolean;
     children: React.ReactNode;
     logo?: boolean;
-    className?: string;
+    classNameContainer?: string
+    classNameWrapper?: string;
 }
 
 const Modal: FC<ModalProps> = ({
@@ -24,7 +25,8 @@ const Modal: FC<ModalProps> = ({
     isOverlay = true,
     children,
     logo,
-    className,
+    classNameContainer,
+    classNameWrapper,
 }) => {
 
     const { modalOpen, closeModal, modalName: currentModal } = useContext(ModalContext);
@@ -36,10 +38,10 @@ const Modal: FC<ModalProps> = ({
     return ReactDOM.createPortal(
         <React.Fragment>
             {modalOpen ? (
-                <div className={styles.container}>
+                <div className={`${styles.container}`}>
                     {isOverlay && <div className={styles.overlay} onClick={() => closeModal(modalName || '')}></div>}
-                    <div className={styles.content} ref={modalRef}>
-                        <div className={`${styles.wrapper} ${className}`}>
+                    <div className={`${styles.content} ${classNameContainer}`} ref={modalRef}>
+                        <div className={`${styles.wrapper} ${classNameWrapper}`}>
                             {logo && (
                                 <TwitterIcon
                                     size={'2xl'}

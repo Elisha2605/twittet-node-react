@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import Button, { ButtonSize, ButtonType } from '../ui/Button';
 import styles from './FormTweet.module.css';
 import EmojiIcon from '../icons/EmojiIcon';
@@ -13,8 +13,9 @@ import PopUpMenu from '../ui/PopUpMenu';
 interface FormProps {
     value: string;
     tweetTextRef: React.RefObject<HTMLTextAreaElement>;
-    imagePreview: string | null;
-    isFocused: boolean;
+    imagePreview?: string | null;
+    imagePreviewModal?: string | null;
+    isFocused?: boolean;
     setIsFocused: React.Dispatch<React.SetStateAction<boolean>>;
 
     tweetPrivacyOptions: string[];
@@ -25,6 +26,8 @@ interface FormProps {
     onChageImage: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     onCancelImagePreview: () => void;
     onClickPrivacyMenu: Function;
+
+    classNameTextErea?: string;    
 }
 
 const FormTweet: FC<FormProps> = ({
@@ -42,6 +45,8 @@ const FormTweet: FC<FormProps> = ({
     onChageImage,
     onCancelImagePreview,
     onClickPrivacyMenu,
+
+    classNameTextErea
 }) => {
     
     // Adjust text erea with input value
@@ -59,7 +64,6 @@ const FormTweet: FC<FormProps> = ({
     return (
         <React.Fragment>
             <form className={styles.container} onSubmit={onSubmit} onKeyDown={handleKeyDown} onClick={() => setIsFocused(true)}>
-                
                 {isFocused || isImageSelected ? (
                     <div className={styles.privacyOptions}>
                         <PopUpMenu 
@@ -78,7 +82,7 @@ const FormTweet: FC<FormProps> = ({
                     </div>
                 ) : null }
                 <textarea
-                    className={styles.textarea}
+                    className={`${styles.textarea} ${classNameTextErea}`}
                     id="review-text"
                     onChange={onChageImage}
                     placeholder="What's happening?"
