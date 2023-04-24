@@ -16,7 +16,8 @@
     width: 20rem;
 }
 
-.privacyOptions, .replyPrivacyOptions {
+
+.everyone, .twitterCirlce, .replyPrivacyOptions {
     display: flex;
     font-size: 0.9rem;
     font-weight: var(--font-weight-600);
@@ -26,7 +27,16 @@
     cursor: pointer;
 }
 
-.privacyOptions {
+.twitterCirlce {
+    color: var(--color-green);
+    border: 1px solid var(--color-green) !important;
+}
+.twitterCirlce:hover {
+    background-color: hsl(149, 100%, 94%) !important;
+    transition: 0.1s ease-in-out;
+}
+
+.everyone, .twitterCirlce {
     border: var(--border-light);
     margin-bottom: 1rem;
     padding: 0 0.5rem;
@@ -39,14 +49,17 @@
     padding: 0 0.7rem;    
 }
 
-.privacyOptions span:nth-child(1), 
+.everyone span:nth-child(1), 
+.twitterCirlce span:nth-child(1),
 .replyPrivacyOptions span:nth-child(1){
     padding-right: 0.5rem;
 }
 
-.privacyOptions:hover, 
+.everyone:hover, 
+.twitterCirlce:hover, 
 .replyPrivacyOptions:hover {
     background-color: var(--color-primary-lighter);
+    transition: 0.1s ease-in-out;
 }
 
 .horizontalLine {

@@ -3,6 +3,7 @@ import {
     createTweetController,
     deleteTweetController,
     getAllTweetsController,
+    updateAudienceController,
 } from 'src/controllers/tweet.controller';
 import { verifyUser } from 'src/utils/jwt.util';
 import upload from 'src/middleware/multer.middleware';
@@ -19,5 +20,10 @@ tweetRouter.post(
 );
 
 tweetRouter.delete('/delete/:id', verifyUser(), deleteTweetController);
+tweetRouter.patch(
+    '/update-audience/:id',
+    verifyUser(),
+    updateAudienceController
+);
 
 export default tweetRouter;

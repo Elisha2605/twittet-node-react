@@ -1,3 +1,4 @@
+import { TWEET_AUDIENCE } from 'src/constants/tweet.constants';
 import Tweet from 'src/model/tweet.model';
 import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
 import { CustomError } from 'src/utils/helpers';
@@ -35,13 +36,15 @@ export const getAllTweets = async (): Promise<ApiResponse<any>> => {
 export const createTweet = async (
     userId: string,
     text: string,
-    image: string
+    image: string,
+    audience: string,
 ): Promise<ApiResponse<any>> => {
     try {
         const newTweet = new Tweet({
             user: userId,
             text: text,
             image: image,
+            audience: audience,
         });
         const savedTweet = await newTweet.save();
         if (!savedTweet) {
@@ -75,8 +78,8 @@ export const deleteTweet = async (
     userId: string
 ): Promise<ApiResponse<any>> => {
     try {
-        const deletedTweet: any = await Tweet.findById(tweetId);
-        if (!deletedTweet) {
+        const tweetToDelete: any = await Tweet.findById(tweetId);
+        if (!tweetToDelete) {
             return {
                 success: true,
                 message: 'Tweet not found!',
@@ -84,15 +87,53 @@ export const deleteTweet = async (
                 payload: {},
             };
         }
-        if (!deletedTweet.user._id.equals(userId)) {
+        if (!tweetToDelete.user._id.equals(userId)) {
             throw CustomError('Unauthorized', 403);
         }
-        await deletedTweet.deleteOne();
+        await tweetToDelete.deleteOne();
         return {
             success: true,
             message: 'Successfully created tweet',
             status: 200,
-            payload: deletedTweet,
+            payload: tweetToDelete,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};
+
+export const updateTweetAudience = async (
+    userId: string,
+    tweetId: string,
+    audienceOption: string
+): Promise<ApiResponse<any>> => {
+    try {
+        const tweetToUpdate = await Tweet.findOne({
+            _id: tweetId,
+            user: userId,
+        });
+        if (!tweetToUpdate) {
+            throw CustomError('Tweet not found', 404);
+        }
+        if (audienceOption === TWEET_AUDIENCE.everyone) {
+            tweetToUpdate.audience = audienceOption;
+        } else if (audienceOption === TWEET_AUDIENCE.twitterCircle) {
+            tweetToUpdate.audience = audienceOption;
+        } else {
+            throw CustomError('Input Error', 400);
+        }
+        tweetToUpdate.save();
+        return {
+            success: true,
+            message: 'Successfully created tweet',
+            status: 200,
+            payload: tweetToUpdate,
         };
     } catch (error) {
         const errorResponse: ErrorResponse = {

@@ -4,6 +4,7 @@ import {
     createTweet,
     deleteTweet,
     getAllTweets,
+    updateTweetAudience,
 } from 'src/services/tweet.service';
 
 export const getAllTweetsController = asyncHandler(
@@ -26,9 +27,10 @@ export const createTweetController = asyncHandler(
         const userId = req.user._id;
         const text = req.body.text;
         const image = req.file ? req.file.filename : null;
+        const audience = req.body.audience;
 
         if (text === undefined && image === null) {
-            res.status(400).json({ InvalidInput: 'Invalid Input' });
+            res.status(400).json({ InvalidInputError: 'Invalid Input' });
             return;
         }
         if (text !== undefined && text.length >= 300) {
@@ -39,7 +41,7 @@ export const createTweetController = asyncHandler(
         }
 
         try {
-            const response = await createTweet(userId, text, image);
+            const response = await createTweet(userId, text, image, audience);
             const { payload } = response;
             if (response.success) {
                 res.status(response.status).send({
@@ -65,6 +67,42 @@ export const deleteTweetController = asyncHandler(
         const tweetId = req.params.id;
         try {
             const response = await deleteTweet(tweetId, req.user._id);
+            const { payload } = response;
+            if (response.success) {
+                res.send({
+                    success: response.success,
+                    message: response.message,
+                    status: response.status,
+                    tweet: payload,
+                });
+            }
+        } catch (error) {
+            res.status(error.status).json({
+                sucess: error.success,
+                message: error.message,
+                status: error.status,
+            });
+            next(error);
+        }
+    }
+);
+
+export const updateAudienceController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const tweetId = req.params.id;
+        const audienceOption = req.body.audienceOption;
+
+        if (!tweetId || !audienceOption) {
+            res.status(400).json({ InvalidInputError: 'Invalid Input' });
+            return;
+        }
+
+        try {
+            const response = await updateTweetAudience(
+                req.user._id,
+                tweetId,
+                audienceOption
+            );
             const { payload } = response;
             if (response.success) {
                 res.send({

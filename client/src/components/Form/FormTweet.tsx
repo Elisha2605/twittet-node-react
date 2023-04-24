@@ -9,6 +9,7 @@ import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faEarthAfrica } from '@fortawesome/free-solid-svg-icons';
 import PopUpMenu from '../ui/PopUpMenu';
+import { TWEET_AUDIENCE } from '../../constants/common.constants';
 
 interface FormProps {
     value: string;
@@ -16,6 +17,7 @@ interface FormProps {
     imagePreview?: string | null;
     imagePreviewModal?: string | null;
     isFocused?: boolean;
+    tweetAudience: string,
     setIsFocused: React.Dispatch<React.SetStateAction<boolean>>;
 
     tweetPrivacyOptions: string[];
@@ -39,6 +41,7 @@ const FormTweet: FC<FormProps> = ({
 
     tweetPrivacyOptions,
     tweetPrivacyIcons,
+    tweetAudience,
 
     onSubmit,
     onImageUpload,
@@ -65,7 +68,7 @@ const FormTweet: FC<FormProps> = ({
         <React.Fragment>
             <form className={styles.container} onSubmit={onSubmit} onKeyDown={handleKeyDown} onClick={() => setIsFocused(true)}>
                 {isFocused || isImageSelected ? (
-                    <div className={styles.privacyOptions}>
+                    <div className={`${styles.everyone} ${tweetAudience === TWEET_AUDIENCE.twitterCircle ? styles.twitterCirlce : ''}`}>
                         <PopUpMenu 
                             title={'Choose audience'}
                             options={tweetPrivacyOptions}
@@ -77,7 +80,15 @@ const FormTweet: FC<FormProps> = ({
                             className={styles.tweetPrivacyOptions}
                             classNameWithTitle={styles.privacyPopUpBox}
                         >
-                            <span>Everyone</span><span><FontAwesomeIcon icon={faChevronDown}/></span>
+                            {tweetAudience === TWEET_AUDIENCE.everyone ? (
+                                <>
+                                    <span>Everyone</span><span><FontAwesomeIcon icon={faChevronDown}/></span>
+                                </>
+                            ): (
+                                <>
+                                    <span>Twitter Circle</span><span><FontAwesomeIcon icon={faChevronDown}/></span>
+                                </>
+                            )}
                         </PopUpMenu>
                     </div>
                 ) : null }

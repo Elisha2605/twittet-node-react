@@ -1,13 +1,14 @@
 import React, { FC, useContext, useRef, useState } from 'react';
 import styles from './NavigationTweet.module.css';
 import Avatar, { Size } from '../ui/Avatar';
-import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE } from '../../constants/common.constants';
 import useAuthUser from '../../hooks/userAuth.hook';
 import { createTweet } from '../../api/tweet.api';
 import { tweetPrivacyMenuIcons, tweetPrivacyMenuOptions } from '../../data/menuOptions';
 import { ModalContext } from '../../context/modal.context';
 import Modal from '../ui/Modal';
 import FormTweet from '../form/FormTweet';
+import { TweetAudienceType } from '../../types/tweet.types';
 
 interface NavigationTweetProp {
     value: string;
@@ -35,6 +36,8 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
 }) => {
 
     const [isFormFocused, setIsFormFocused] = useState(false);
+    const [tweetAudience, setTweetAudience] = useState<TweetAudienceType>(TWEET_AUDIENCE.everyone);
+
 
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
 
@@ -50,7 +53,7 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
             : null;
-        const res = await createTweet(text, selectedFile);
+        const res = await createTweet(text, selectedFile, tweetAudience);
         const { tweet }: any = res;
         
         
@@ -78,11 +81,11 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
     };
 
     const handleTweetPrivacyOptions = (options: string) => {
-        if (options === 'Everyone') {
-            console.log(options + ': Clicked');
+        if (options === TWEET_AUDIENCE.everyone) {
+            setTweetAudience(TWEET_AUDIENCE.everyone);
         }
-        if (options === 'Twitter Circle') {
-            console.log(options + ': Clicked');
+        if (options === TWEET_AUDIENCE.twitterCircle) {
+            setTweetAudience(TWEET_AUDIENCE.twitterCircle);
         }
     }
 
@@ -115,8 +118,10 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
                         onChageImage={handleTextAreaOnChange}
                         tweetPrivacyOptions={tweetPrivacyMenuOptions}
                         tweetPrivacyIcons={tweetPrivacyMenuIcons}
+                        tweetAudience={tweetAudience}
                         onClickPrivacyMenu={handleTweetPrivacyOptions}
                         classNameTextErea={styles.classNameTextErea}
+                        
                     />
                 </div>
             </Modal>

@@ -1,4 +1,4 @@
-export enum TWEET_PRIVACY {
+export enum TWEET_AUDIENCE {
     everyone = 'Everyone',
     twitterCircle = 'Twitter Circle',
 }

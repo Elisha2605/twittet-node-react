@@ -7,7 +7,7 @@ export interface ITweet extends mongoose.Document {
     user: ObjectId | string;
     image: string;
     text: string;
-    privacy: string; //Create constants (Everyone, Twitter Circle);
+    audience: string; //Create constants (Everyone, Twitter Circle);
 }
 
 export const tweetModel = {
@@ -27,8 +27,9 @@ export const tweetModel = {
         default: null,
         require: false,
     },
-    privacy: {
+    audience: {
         type: String,
+        default: null,
         require: false,
     },
 };

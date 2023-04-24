@@ -14,13 +14,14 @@ export const getAllTweets = async () => {
     }
 };
 
-export const createTweet = async (text: string | null, image: File | null) => {
+export const createTweet = async (text: string | null, image: File | null, audience: string) => {
     try {
         const res = await http.post(
             '/tweets/create',
             {
                 text: text,
                 tweetImage: image,
+                audience: audience,
             },
             GETREQUESTOPTIONS_WITH_MULTIFROM()
         );
@@ -43,3 +44,17 @@ export const deleteTweet = async (tweetId: string) => {
         throw error;
     }
 };
+
+export const updateTweetAudience = async (tweetId: string, audienceOption: string) => {
+    try {
+        const res = await http.patch(
+            `/tweets/update-audience/${tweetId}`,
+            { audienceOption: audienceOption },
+            GETREQUESTOPTIONS(),
+        );
+        return res.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
