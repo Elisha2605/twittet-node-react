@@ -13,6 +13,7 @@ interface ModalProps {
     isOverlay?: boolean;
     children: React.ReactNode;
     logo?: boolean;
+    className?: string;
 }
 
 const Modal: FC<ModalProps> = ({
@@ -23,6 +24,7 @@ const Modal: FC<ModalProps> = ({
     isOverlay = true,
     children,
     logo,
+    className,
 }) => {
 
     const { modalOpen, closeModal, modalName: currentModal } = useContext(ModalContext);
@@ -37,7 +39,7 @@ const Modal: FC<ModalProps> = ({
                 <div className={styles.container}>
                     {isOverlay && <div className={styles.overlay} onClick={() => closeModal(modalName || '')}></div>}
                     <div className={styles.content} ref={modalRef}>
-                        <div className={styles.wrapper}>
+                        <div className={`${styles.wrapper} ${className}`}>
                             {logo && (
                                 <TwitterIcon
                                     size={'2xl'}

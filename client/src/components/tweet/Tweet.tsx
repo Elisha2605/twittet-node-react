@@ -6,7 +6,7 @@ import styles from './Tweet.module.css';
 
 interface TweetProps {
     tweetId?: string;
-    avatar: string | undefined;
+    avatar: string | null | undefined;
     firstName: string;
     username: string;
     isVerfied?: boolean;
@@ -51,7 +51,7 @@ const Tweet: FC<TweetProps> = ({
                 <div className={`${styles.container}`} key={tweetKey}>
                     <UserInfo
                     id={tweetId}
-                    avatar={avatar}
+                    avatar={avatar ? avatar : undefined}
                     firstname={firstName}
                     username={username}
                     isVerified={isVerfied}

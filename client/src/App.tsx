@@ -12,8 +12,12 @@ import Message from './pages/Messages';
 import Index from './pages/Index';
 import AuthContext, { StoredContext } from './context/user.context';
 import TwitterIcon from './components/icons/TwitterIcon';
+import Home from './pages/Home';
 
 function App() {
+
+    const [onAddTweet, setOnAddTweets] = useState<any[]>([]);
+
     const context = useContext(AuthContext);
     let ctx: StoredContext = context.getUserContext();
 
@@ -25,6 +29,10 @@ function App() {
             setShowBackground(false); // Set the showBackground state to false after 1.5 seconds
         }, 1000)
     };
+
+    const handleAddTweet = (tweet: any) => {
+        setOnAddTweets((prevTweets) => [tweet, ...prevTweets]);
+      };
 
     if (!ctx?.isLoggedIn) {
         return (
@@ -53,11 +61,11 @@ function App() {
                 <div>
                     <BrowserRouter>
                         <div className={Layout.navigation}>
-                            <Navigation />
+                            <Navigation onAddTweet={handleAddTweet} />
                         </div>
                         <div className={Layout.page}>
                             <Routes>
-                                <Route path="/" element={<HomePage />} />
+                                <Route path="/" element={<Home onAddTweet={onAddTweet} />} />
                                 <Route path="/explore" element={<Explore />} />
                                 <Route
                                     path="/notification"

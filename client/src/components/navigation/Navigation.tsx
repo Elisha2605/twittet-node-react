@@ -14,16 +14,18 @@ import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import Button, { ButtonSize, ButtonType } from '../ui/Button';
 import NavigationUserInfo from './NavigationUserInfo';
 import Modal from '../ui/Modal';
-import PageUnderConstruction from '../ui/PageUnderConstruction';
 import { logout } from '../../api/auth.api';
 import useAuthUser from '../../hooks/userAuth.hook';
 import { navUseMenuIcons, navUserMenuOptions } from '../../data/menuOptions';
 import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
 import { ModalContext } from '../../context/modal.context';
+import NavigationTweet from './NavigationTweet';
 
-const Navigation = () => {
-    const [modalOpen, setMadalOpen] = useState(false);
-    const modalRef = useRef<HTMLDivElement>(null);
+interface Navigation {
+    onAddTweet: (tweet: any) => void;
+}
+
+const Navigation: React.FC<Navigation> = ({ onAddTweet }) => {
 
     const { openModal, closeModal } = useContext(ModalContext);
 
@@ -86,18 +88,14 @@ const Navigation = () => {
                     value={'Tweet'}
                     type={ButtonType.primary}
                     size={ButtonSize.medium}
-                    onClick={() => openModal('test1')}
+                    onClick={() => openModal('Nav-tweet')}
                 />
                 <Modal
-                    title={'Write your tweet'}
-                    modalName={'test1'}
-                    isOpen={modalOpen}
+                    modalName={'Nav-tweet'}
                     isOverlay={true}
+                    className={styles.modal}
                 >
-                    <PageUnderConstruction />
-                    <button onClick={() => closeModal('test1') }>
-                        Close Modal
-                    </button>
+                    <NavigationTweet onAddTweet={onAddTweet} />
                 </Modal>
                 <NavigationUserInfo
                     id={authUser?.id}
