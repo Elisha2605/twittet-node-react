@@ -19,7 +19,7 @@
 }
 
 
-.everyone, .twitterCirlce, .replyPrivacyOptions {
+.everyone, .twitterCirlce, .replyPrivacyOptions, .onlyTweetCircle {
     display: flex;
     font-size: 0.9rem;
     font-weight: var(--font-weight-600);
@@ -27,6 +27,10 @@
     border-radius: 1rem;
     color: var(--color-primary);
     cursor: pointer;
+}
+
+.onlyTweetCircle {
+    color: var(--color-primary-light);
 }
 
 .twitterCirlce {
@@ -74,8 +78,6 @@
 .tweetReplyPopUpBox {
     width: 22rem;
 }
-
-
 
 .horizontalLine {
     border: none;

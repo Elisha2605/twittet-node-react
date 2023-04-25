@@ -1,14 +1,19 @@
 import React, { FC, useContext, useRef, useState } from 'react';
 import styles from './NavigationTweet.module.css';
 import Avatar, { Size } from '../ui/Avatar';
-import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE } from '../../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
 import useAuthUser from '../../hooks/userAuth.hook';
 import { createTweet } from '../../api/tweet.api';
-import { tweetPrivacyMenuIcons, tweetPrivacyMenuOptions } from '../../data/menuOptions';
+import { 
+    tweetAudienceMenuIcons, 
+    tweetAudienceMenuOptions,
+    tweetReplyOptions,
+    tweetReplyIcons 
+} from '../../data/menuOptions';
 import { ModalContext } from '../../context/modal.context';
 import Modal from '../ui/Modal';
 import FormTweet from '../form/FormTweet';
-import { TweetAudienceType } from '../../types/tweet.types';
+import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
 
 interface NavigationTweetProp {
     value: string;
@@ -37,6 +42,7 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
 
     const [isFormFocused, setIsFormFocused] = useState(false);
     const [tweetAudience, setTweetAudience] = useState<TweetAudienceType>(TWEET_AUDIENCE.everyone);
+    const [tweetReply, setTweetReply] = useState<TweetReplyType>(TWEET_REPLY.everyone);
 
 
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
@@ -53,7 +59,7 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
             : null;
-        const res = await createTweet(text, selectedFile, tweetAudience);
+        const res = await createTweet(text, selectedFile, tweetAudience, tweetReply);
         const { tweet }: any = res;
         
         
@@ -77,15 +83,34 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
         }
         // setIsFormFocused(false);
         closeModal('Nav-tweet');
+        setTweetAudience(TWEET_AUDIENCE.everyone)
+        setTweetReply(TWEET_REPLY.everyone)
         clearTweetForm();
     };
 
-    const handleTweetPrivacyOptions = (options: string) => {
+    const handleTweetAudienceOptions = (options: string) => {
         if (options === TWEET_AUDIENCE.everyone) {
             setTweetAudience(TWEET_AUDIENCE.everyone);
+            setTweetReply(TWEET_REPLY.everyone)
         }
         if (options === TWEET_AUDIENCE.twitterCircle) {
             setTweetAudience(TWEET_AUDIENCE.twitterCircle);
+            setTweetReply(TWEET_REPLY.onlyTwitterCircle)
+        }
+    }
+
+    const handleTweetReyplyOptions = (options: string) => {
+        if (options === TWEET_REPLY.everyone) {
+            console.log(TWEET_REPLY.everyone);
+            setTweetReply(TWEET_REPLY.everyone);
+        }
+        if (options === TWEET_REPLY.peopleYouFollow) {
+            console.log(TWEET_REPLY.peopleYouFollow);
+            setTweetReply(TWEET_REPLY.peopleYouFollow);
+        }
+        if (options === TWEET_REPLY.onlyPeopleYouMention) {
+            console.log(TWEET_REPLY.onlyPeopleYouMention);
+            setTweetReply(TWEET_REPLY.onlyPeopleYouMention);
         }
     }
 
@@ -111,15 +136,19 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
                         tweetTextRef={tweetTextRef}
                         imagePreview={previewImage}
                         isFocused={true}
+                        tweetAudienceOptions={tweetAudienceMenuOptions}
+                        tweetAudienceIcons={tweetAudienceMenuIcons}
+                        tweetReplyOptions={tweetReplyOptions}
+                        tweetReplyIcons={tweetReplyIcons}
+                        tweetReplyValue={tweetReply}
                         setIsFocused={setIsFormFocused}
                         onSubmit={handleSubmitTweet}
                         onImageUpload={handleImageUpload}
                         onCancelImagePreview={handleCanselPreviewImage}
                         onChageImage={handleTextAreaOnChange}
-                        tweetPrivacyOptions={tweetPrivacyMenuOptions}
-                        tweetPrivacyIcons={tweetPrivacyMenuIcons}
-                        tweetAudience={tweetAudience}
-                        onClickPrivacyMenu={handleTweetPrivacyOptions}
+                        tweetAudienceValue={tweetAudience}
+                        onClickAudienceMenu={handleTweetAudienceOptions}
+                        onClickReplyMenu={handleTweetReyplyOptions}
                         classNameTextErea={styles.classNameTextErea}
                         
                     />

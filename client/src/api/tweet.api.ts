@@ -14,7 +14,12 @@ export const getAllTweets = async () => {
     }
 };
 
-export const createTweet = async (text: string | null, image: File | null, audience: string) => {
+export const createTweet = async (
+    text: string | null, 
+    image: File | null, 
+    audience: string,
+    reply: string,
+) => {
     try {
         const res = await http.post(
             '/tweets/create',
@@ -22,6 +27,7 @@ export const createTweet = async (text: string | null, image: File | null, audie
                 text: text,
                 tweetImage: image,
                 audience: audience,
+                reply: reply
             },
             GETREQUESTOPTIONS_WITH_MULTIFROM()
         );

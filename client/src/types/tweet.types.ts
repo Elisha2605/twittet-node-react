@@ -7,4 +7,5 @@ export type TweetAudienceType =
 export type TweetReplyType =
     | TWEET_REPLY.everyone
     | TWEET_REPLY.peopleYouFollow
-    | TWEET_REPLY.onlyPeopleYouMention;
+    | TWEET_REPLY.onlyPeopleYouMention
+    | TWEET_REPLY.onlyTwitterCircle;
