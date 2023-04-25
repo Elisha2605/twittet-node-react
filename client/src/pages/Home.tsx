@@ -69,7 +69,6 @@ const Home: React.FC<HomeProps> = ({
     // Get auth user
     const authUser: any = useAuthUser();
 
-
     // fetching Tweets
     useEffect(() => {
         const fetchTweets = async () => {
@@ -101,35 +100,7 @@ const Home: React.FC<HomeProps> = ({
         }
     };
     
-    const handleSubmitTweet = async (e: React.FormEvent) => {
-        console.log('inside handleSubmitTweet');
-        e.preventDefault();
-        const text = tweetTextRef.current?.value
-            ? tweetTextRef.current?.value
-            : null;
-        const res = await createTweet(text, selectedFile, tweetAudience, tweetReply);
-        const { tweet }: any = res;
-        const newTweet = {
-            _id: tweet._id,
-            text: tweet.text,
-            user: {
-                avatar: authUser?.avatar,   
-                name: authUser?.name,
-                username: authUser?.username,
-                isVerified: authUser?.isVerified,
-            },
-            createdAt: tweet.createdAt,
-            image: tweet.image,
-            comments: [],
-            reposts: [],
-            likes: [],
-        };
-        setTweets((prevTweets) => [newTweet, ...prevTweets]);
-        setIsFormFocused(false);
-        setTweetAudience(TWEET_AUDIENCE.everyone)
-        setTweetReply(TWEET_REPLY.everyone)
-        clearTweetForm();
-    };
+    
 
     useEffect(() => {
         const handleNewTweetFromModal = () => {
@@ -167,6 +138,41 @@ const Home: React.FC<HomeProps> = ({
             setTweetReply(TWEET_REPLY.onlyPeopleYouMention);
         }
     }
+
+    useEffect(() => {
+        console.log(tweets);
+    }, [tweets])
+
+
+    const handleSubmitTweet = async (e: React.FormEvent) => {
+        console.log('inside handleSubmitTweet');
+        e.preventDefault();
+        const text = tweetTextRef.current?.value
+            ? tweetTextRef.current?.value
+            : null;
+        const res = await createTweet(text, selectedFile, tweetAudience, tweetReply);
+        const { tweet }: any = res;
+        const newTweet = {
+            _id: tweet._id,
+            text: tweet.text,
+            user: {
+                avatar: authUser.avatar,   
+                name: authUser.name,
+                username: authUser.username,
+                isVerified: authUser.isVerified,
+            },
+            createdAt: tweet.createdAt,
+            image: tweet.image,
+            comments: [],
+            reposts: [],
+            likes: [],
+        };
+        setTweets((prevTweets) => [newTweet, ...prevTweets]);
+        setIsFormFocused(false);
+        setTweetAudience(TWEET_AUDIENCE.everyone)
+        setTweetReply(TWEET_REPLY.everyone)
+        clearTweetForm();
+    };
 
     return (
         <React.Fragment>
@@ -223,19 +229,20 @@ const Home: React.FC<HomeProps> = ({
                             {tweets.map((tweet: any) => (
                                 <Tweet
                                     tweetId={tweet._id}
+                                    userId={tweet.user._id}
                                     key={tweet._id}
                                     avatar={
                                         tweet.user.avatar ?
                                         `${IMAGE_AVATAR_BASE_URL}/${tweet.user.avatar}` : null
                                     }
-                                    firstName={tweet.user.name}
+                                    name={tweet.user.name}
                                     username={tweet.user.username}
                                     isVerfied={tweet.user.isVerified}
                                     time={getTimeDifference(
                                         new Date(tweet.createdAt).getTime()
                                     )}
-                                    tweet={tweet.text}
-                                    image={tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`}
+                                    tweetText={tweet.text}
+                                    tweetImage={tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`}
                                     isOption={true}
                                     comments={'164'}
                                     reposts={'924'}

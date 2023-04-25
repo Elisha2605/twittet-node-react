@@ -1,15 +1,19 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import AuthContext from '../context/user.context';
 
 function useAuthUser() {
     const [authUser, setAuthUser] = useState(null);
     const { me } = useContext(AuthContext);
 
-    useEffect(() => {
+    const memoizedMe = useCallback(() => {
         if (me) {
-            me().then((user) => setAuthUser(user));
+            me().then((res) => setAuthUser(res.user));
         }
     }, [me]);
+
+    useEffect(() => {
+        memoizedMe();
+    }, [memoizedMe]);
 
     return authUser;
 }

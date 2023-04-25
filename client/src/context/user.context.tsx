@@ -1,6 +1,6 @@
 import { getNewContext } from '../api/auth.api';
 import React, { useCallback, useEffect, useState } from 'react';
-import { getUserInfo } from '../api/user.api';
+import { getAuthUserInfo } from '../api/user.api';
 
 export interface StoredContext {
     isLoggedIn: boolean;
@@ -54,7 +54,7 @@ export const AuthContextProvider = (props: any) => {
     }, [retrieveContextCallback]);
 
     const me = async () => {
-        const res = await getUserInfo();
+        const res = await getAuthUserInfo();
         return res
     };
 

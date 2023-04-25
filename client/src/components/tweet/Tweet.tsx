@@ -6,13 +6,14 @@ import styles from './Tweet.module.css';
 
 interface TweetProps {
     tweetId?: string;
+    userId?: string;
     avatar: string | null | undefined;
-    firstName: string;
+    name: string;
     username: string;
     isVerfied?: boolean;
     time?: string;
-    tweet?: string;
-    image?: string | null;
+    tweetText?: string;
+    tweetImage?: string | null;
     link?: string;
     isOption?: boolean;
     comments: string;
@@ -27,13 +28,14 @@ interface TweetProps {
 
 const Tweet: FC<TweetProps> = ({
     tweetId,
+    userId,
     avatar,
-    firstName,
+    name,
     username,
     isVerfied,
     time,
-    tweet,
-    image,
+    tweetText,
+    tweetImage,
     link,
     isOption,
     comments,
@@ -45,13 +47,15 @@ const Tweet: FC<TweetProps> = ({
     onClickMenu,
     tweetKey,
 }) => {
+
     return (
         <React.Fragment>
             <div className={`${styles.container}`} key={tweetKey}>
                 <UserInfo
-                    id={tweetId}
+                    itemId={tweetId}
+                    userId={userId}
                     avatar={avatar ? avatar : undefined}
-                    firstname={firstName}
+                    name={name}
                     username={username}
                     isVerified={isVerfied}
                     time={time}
@@ -63,10 +67,10 @@ const Tweet: FC<TweetProps> = ({
                 />
                 <NavLink to={'/message'}>
                     <div className={styles.body}>
-                        <p className={styles.tweet}>{tweet}</p>
-                        {image && (
+                        <p className={styles.tweet}>{tweetText}</p>
+                        {tweetImage && (
                             <div className={styles.image}>
-                                <img src={image} alt="" />
+                                <img src={tweetImage} alt="" />
                             </div>
                         )}
                     </div>

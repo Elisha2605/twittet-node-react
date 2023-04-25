@@ -3,7 +3,7 @@ import MenuIcon from '../icons/MenuIcon';
 import styles from './PopUpMenu.module.css';
 
 interface MenuPopUpProps {
-    id?: string;
+    itemId?: string;
     title?: string;
     options: string[];
     icons?: Record<string, React.ReactNode>;
@@ -16,7 +16,7 @@ interface MenuPopUpProps {
 }
 
 const MenuPopUp: FC<MenuPopUpProps> = ({
-    id,
+    itemId,
     title,
     options,
     icons,
@@ -91,7 +91,7 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
                                             : ''
                                     }`}
                                     onClick={() =>
-                                        handleOptionClick(option, id!)
+                                        handleOptionClick(option, itemId!)
                                     }
                                 >
                                     {icons && icons[option]}

@@ -10,9 +10,9 @@ export const getAllUsers = async () => {
     }
 };
 
-export const getUserInfo = async () => {
+export const getAuthUserInfo = async () => {
     try {
-        const res = await http.get('/users/info', GETREQUESTOPTIONS());
+        const res = await http.get('/users/me', GETREQUESTOPTIONS());
         return res.data;
     } catch (error: any) {
         if (error.response && error.response.status === 401) {
@@ -25,5 +25,15 @@ export const getUserInfo = async () => {
             console.error(error);
             throw error;
         }
+    }
+};
+
+export const getUserById = async (userId: string) => {
+    try {
+        const res = await http.get(`/users/info/${userId}`, GETREQUESTOPTIONS());
+        return res.data;
+    } catch (error: any) {
+        console.error(error);
+        throw error;
     }
 };

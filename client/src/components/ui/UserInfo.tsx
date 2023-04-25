@@ -2,11 +2,14 @@ import React, { FC } from 'react';
 import PopUpMenu from './PopUpMenu';
 import styles from './UserInfo.module.css';
 import Certified from '../../assets/certified.svg';
+import { NavLink } from 'react-router-dom';
+import useAuthUser from '../../hooks/userAuth.hook';
 
 interface UserInfoProps {
-    id: any;
+    itemId: any;
+    userId?: string;
     avatar: string | undefined;
-    firstname: string;
+    name: string;
     username: string;
     isVerified?: boolean;
     children?: React.ReactNode;
@@ -20,9 +23,10 @@ interface UserInfoProps {
 }
 
 const UserInfo: FC<UserInfoProps> = ({
-    id,
+    itemId,
+    userId,
     avatar,
-    firstname,
+    name,
     username,
     isVerified = false,
     children,
@@ -34,6 +38,7 @@ const UserInfo: FC<UserInfoProps> = ({
     time,
     onClickOption,
 }) => {
+
 
     return (
         <React.Fragment>
@@ -49,20 +54,20 @@ const UserInfo: FC<UserInfoProps> = ({
                     {isOption ? (
                         <div className={styles.userInfoOptionWrapper}>
                             <div className={styles.userInfo}>
-                                <a href={link}>
+                                <NavLink to={`/user-profile/${userId}`}>
                                     <p className={styles.firstname}>
-                                        {firstname}{' '}
+                                        {name}{' '}
                                         {isVerified && (
                                             <img className={styles.certifiedIcon} src={Certified} alt="" />
                                         )}{' '}
                                     </p>
-                                </a>
+                                </NavLink>
                                 <p className={styles.username}>
-                                    @{username} {time && ` · ${time}`}
+                                <NavLink to={'/user-profile'}>@{username}</NavLink> {time && ` · ${time}`}
                                 </p>
                             </div>
                             <PopUpMenu
-                                id={id}
+                                itemId={itemId}
                                 options={options!}
                                 icons={icons}
                                 onClick={(option, id) =>
@@ -73,12 +78,12 @@ const UserInfo: FC<UserInfoProps> = ({
                     ) : (
                         <>
                             <div className={styles.userInfo}>
-                                <a href={link}>
+                                <NavLink to={'/user-profile'}>
                                     <p className={styles.firstname}>
-                                        {firstname}
+                                    {name}
                                     </p>
-                                </a>
-                                <p className={styles.username}>@{username}</p>
+                                </NavLink>
+                                @{username}
                             </div>
                             {children}
                         </>

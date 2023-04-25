@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Aside from '../components/aside/Aside';
 import SearchBar from '../components/ui/SearchBar';
 import WhoToFollow from '../components/ui/WhoToFollow';
@@ -14,17 +14,28 @@ import HeaderTitle from '../components/header/HeaderTitle';
 import HorizontalNavBar from '../components/ui/HorizontalNavBar';
 import { tweetMenuOptions } from '../data/menuOptions';
 import PageUnderConstruction from '../components/ui/PageUnderConstruction';
-import useAuthUser from '../hooks/userAuth.hook';
+import { getUserById } from '../api/user.api';
+import { useParams } from 'react-router-dom';
 import { IMAGE_AVATAR_BASE_URL, IMAGE_COVER_BASE_URL } from '../constants/common.constants';
 import { getMonthName, getYear } from '../utils/helpers.utils';
 
 
-const Profile = () => {
+const OtherProfile = () => {
 
+    const { id } = useParams<{ id: string }>();
+    const [user, setUser] = useState<any>()
     const [activeTab, setActiveTab] = useState(localStorage.getItem('activeTab-profile') || 'tweets');
 
-    // auth user
-    const authUser: any = useAuthUser();
+    useEffect(() => {
+        const userInfo = async () => {
+            const res = await getUserById(id!);
+            const { user } = res;
+            // console.log(res);
+            setUser(user)
+        }
+        userInfo();
+    }, [id])
+
 
     // Set active tab in local storage
     useEffect(() => {
@@ -51,7 +62,7 @@ const Profile = () => {
                     <Header border={true}>
                         <div className={styles.headerItems}>
                             <ArrowLeftIcon />
-                            <HeaderTitle title={authUser?.name} subTitle={'1 Tweet'} />
+                            <HeaderTitle title={user?.name} subTitle={'1 Tweet'} />
                         </div>
                     </Header>
                     {/* *** HEADER - END *** */}
@@ -59,17 +70,17 @@ const Profile = () => {
                     <div className={styles.main}>
                         {/* *** MAIN - START *** */}
                             <div className={styles.imageWrapper}>
-                                <div className={styles.coverImage}><img src={authUser?.coverImage ? `${IMAGE_COVER_BASE_URL}/${authUser?.coverImage}` : undefined} alt="" /></div>
-                                <div className={styles.profileImage}><img src={authUser?.coverImage ? `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}` : undefined} alt="" /></div>
+                                <div className={styles.coverImage}><img src={user?.coverImage && `${IMAGE_COVER_BASE_URL}/${user.coverImage}`} alt="" /></div>
+                                <div className={styles.profileImage}><img src={user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${user.avatar}`} alt="" /></div>
                                 <Button className={styles.editProfileBtn} value={'Edit profile'} type={ButtonType.tietary} size={ButtonSize.small} onClick={() => {console.log('Edit profile clicked');}} />
                             </div>
                             <div className={styles.userInfo}>
-                                <p className={styles.firstname}>{authUser?.name}</p>
-                                <p className={styles.username}>@{authUser?.username}</p>
+                                <p className={styles.firstname}>{user?.name}</p>
+                                <p className={styles.username}>@{user?.username}</p>
                                 <p className={styles.bio}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,</p>
                                 <div className={styles.joined}>
                                     <FontAwesomeIcon icon={faCalendarDays} />
-                                    <p>Joined {getMonthName(authUser?.createdAt)} {getYear(authUser?.createdAt)}</p>
+                                    <p>Joined {getMonthName(user?.createdAt)} {getYear(user?.createdAt)}</p>
                                 </div>
                                 <div className={styles.followStatus}>
                                     <p>2<span>Following</span></p>
@@ -156,4 +167,4 @@ const Profile = () => {
     );
 };
 
-export default Profile;
+export default OtherProfile;
