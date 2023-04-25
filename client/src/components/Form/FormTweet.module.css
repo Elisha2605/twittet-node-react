@@ -18,7 +18,6 @@
     width: 20rem;
 }
 
-
 .everyone, .twitterCirlce, .replyPrivacyOptions, .onlyTweetCircle {
     display: flex;
     font-size: 0.9rem;
@@ -31,6 +30,9 @@
 
 .onlyTweetCircle {
     color: var(--color-primary-light);
+}
+.onlyTweetCircle:hover {
+    background-color: transparent !important;
 }
 
 .twitterCirlce {
