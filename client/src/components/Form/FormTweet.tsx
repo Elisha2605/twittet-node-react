@@ -7,8 +7,9 @@ import CalendarIcon from '../icons/CalendarIcon';
 import XmarkIcon from '../icons/XmarkIcon';
 import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faEarthAfrica } from '@fortawesome/free-solid-svg-icons';
+import { faAt, faChevronDown, faEarthAfrica, faLock, faUserCheck } from '@fortawesome/free-solid-svg-icons';
 import PopUpMenu from '../ui/PopUpMenu';
+import { TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
 
 interface FormProps {
     value: string;
@@ -18,14 +19,21 @@ interface FormProps {
     isFocused?: boolean;
     setIsFocused: React.Dispatch<React.SetStateAction<boolean>>;
 
-    tweetPrivacyOptions: string[];
-    tweetPrivacyIcons: Record<string, React.ReactNode>;
+    tweetAudienceOptions: string[];
+    tweetAudienceIcons: Record<string, React.ReactNode>;
+    tweetAudienceValue: string,
+
+
+    tweetReplyOptions: string[];
+    tweetReplyIcons: Record<string, React.ReactNode>,
+    tweetReplyValue: string,
 
     onSubmit: (e: React.FormEvent) => void;
     onImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
     onChageImage: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     onCancelImagePreview: () => void;
-    onClickPrivacyMenu: Function;
+    onClickAudienceMenu: Function;
+    onClickReplyMenu: Function;
 
     classNameTextErea?: string;    
 }
@@ -37,14 +45,20 @@ const FormTweet: FC<FormProps> = ({
     isFocused = false,
     setIsFocused,
 
-    tweetPrivacyOptions,
-    tweetPrivacyIcons,
+    tweetAudienceOptions,
+    tweetAudienceIcons,
+    tweetAudienceValue,
+
+    tweetReplyOptions,
+    tweetReplyIcons,
+    tweetReplyValue,
 
     onSubmit,
     onImageUpload,
     onChageImage,
     onCancelImagePreview,
-    onClickPrivacyMenu,
+    onClickAudienceMenu,
+    onClickReplyMenu,
 
     classNameTextErea
 }) => {
@@ -65,19 +79,28 @@ const FormTweet: FC<FormProps> = ({
         <React.Fragment>
             <form className={styles.container} onSubmit={onSubmit} onKeyDown={handleKeyDown} onClick={() => setIsFocused(true)}>
                 {isFocused || isImageSelected ? (
-                    <div className={styles.privacyOptions}>
+                    <div className={`${styles.everyone} ${tweetAudienceValue === TWEET_AUDIENCE.twitterCircle ? styles.twitterCirlce : ''}`}>
                         <PopUpMenu 
                             title={'Choose audience'}
-                            options={tweetPrivacyOptions}
-                            icons={tweetPrivacyIcons}
+                            options={tweetAudienceOptions}
+                            icons={tweetAudienceIcons}
                             isMenuIcon={false}
+                            isDisable={false}
                             onClick={(tweetPrivacyOptions) => {
-                                onClickPrivacyMenu!(tweetPrivacyOptions)
+                                onClickAudienceMenu!(tweetPrivacyOptions)
                             }} 
                             className={styles.tweetPrivacyOptions}
                             classNameWithTitle={styles.privacyPopUpBox}
                         >
-                            <span>Everyone</span><span><FontAwesomeIcon icon={faChevronDown}/></span>
+                            {tweetAudienceValue === TWEET_AUDIENCE.everyone ? (
+                                <>
+                                    <span>Everyone</span><span><FontAwesomeIcon icon={faChevronDown}/></span>
+                                </>
+                            ): (
+                                <>
+                                    <span>Twitter Circle</span><span><FontAwesomeIcon icon={faChevronDown}/></span>
+                                </>
+                            )}
                         </PopUpMenu>
                     </div>
                 ) : null }
@@ -91,16 +114,46 @@ const FormTweet: FC<FormProps> = ({
                     value={value}
                 />
                 {isFocused || isImageSelected ? (
-                    <>
-                        <div className={styles.replyPrivacyOptions}>
-                            <span><FontAwesomeIcon icon={faEarthAfrica}/></span><span>Everyone can reply</span>
+                    <PopUpMenu 
+                            title={'Who can reply?'}
+                            options={tweetReplyOptions}
+                            icons={tweetReplyIcons}
+                            isMenuIcon={false}
+                            isDisable={tweetReplyValue === TWEET_REPLY.onlyTwitterCircle}
+                            onClick={(option) => {
+                                onClickReplyMenu!(option)
+                            }} 
+                            className={styles.tweetReplyOptions}
+                            classNameWithTitle={styles.tweetReplyPopUpBox}
+                        >
+                        {/* {tweetReply} */}
+
+                        <div className={`${styles.replyPrivacyOptions} ${tweetReplyValue === TWEET_REPLY.onlyTwitterCircle ? styles.onlyTweetCircle : 's'}`}>
+                            {tweetReplyValue === TWEET_REPLY.everyone ? (
+                                <>
+                                    <span><FontAwesomeIcon icon={faEarthAfrica}/></span><span>Everyone can reply</span>
+                                </>
+                            ) : (tweetReplyValue === TWEET_REPLY.peopleYouFollow) ? (
+                                <>
+                                    <span><FontAwesomeIcon icon={faUserCheck}/></span><span>People you follow</span>
+                                </>
+                            ) : (tweetReplyValue === TWEET_REPLY.onlyPeopleYouMention) ? (
+                                <>
+                                    <span><FontAwesomeIcon icon={faAt}/></span><span>Only people you mention</span>
+                                </>
+                            ) : (tweetReplyValue === TWEET_REPLY.onlyTwitterCircle) && (
+                                <>
+                                    <span><FontAwesomeIcon icon={faLock}/></span><span>Only your Twitter Circle who follows you can reply</span>
+                                </> 
+                            )}
+                          
                         </div>
                         <hr className={styles.horizontalLine} />
-                    </>
+                    </PopUpMenu>
                 ) : null }
                 {imagePreview && (
                     <div className={styles.previewImage}>
-                        <XmarkIcon className={styles.cancelBtn} size={'lg'} 
+                        <XmarkIcon className={styles.cancelBtn} size={'lg'}
                             onClick={onCancelImagePreview}/>
                         <img src={imagePreview} alt='preview tweet img' />
                     </div>

@@ -14,12 +14,20 @@ import styles from './Home.module.css';
 import Layout from '../Layout.module.css';
 import HeaderTitle from '../components/header/HeaderTitle';
 import HorizontalNavBar from '../components/ui/HorizontalNavBar';
-import { tweetMenuOptions, tweetMenuIcons, tweetPrivacyMenuOptions, tweetPrivacyMenuIcons } from '../data/menuOptions';
+import { 
+    tweetMenuOptions, 
+    tweetMenuIcons, 
+    tweetAudienceMenuOptions, 
+    tweetAudienceMenuIcons,
+    tweetReplyOptions,
+    tweetReplyIcons 
+} from '../data/menuOptions';
 import useAuthUser from '../hooks/userAuth.hook';
 import { createTweet, deleteTweet, getAllTweets } from '../api/tweet.api';
 import { getTimeDifference } from '../utils/helpers.utils';
-import { IMAGE_AVATAR_BASE_URL, IMAGE_TWEET_BASE_URL } from '../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, IMAGE_TWEET_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../constants/common.constants';
 import PageUnderConstruction from '../components/ui/PageUnderConstruction';
+import { TweetAudienceType, TweetReplyType } from '../types/tweet.types';
 
 interface HomeProps {
     value: string;
@@ -52,6 +60,9 @@ const Home: React.FC<HomeProps> = ({
     
     const [isFormFocused, setIsFormFocused] = useState(false);
     const [activeTab, setActiveTab] = useState(localStorage.getItem('activeTab-home') || 'for-you');
+    const [tweetAudience, setTweetAudience] = useState<TweetAudienceType>(TWEET_AUDIENCE.everyone);
+    const [tweetReply, setTweetReply] = useState<TweetReplyType>(TWEET_REPLY.everyone);
+
 
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
     
@@ -89,7 +100,6 @@ const Home: React.FC<HomeProps> = ({
             console.log(option);
         }
     };
-
     
     const handleSubmitTweet = async (e: React.FormEvent) => {
         console.log('inside handleSubmitTweet');
@@ -97,7 +107,7 @@ const Home: React.FC<HomeProps> = ({
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
             : null;
-        const res = await createTweet(text, selectedFile);
+        const res = await createTweet(text, selectedFile, tweetAudience, tweetReply);
         const { tweet }: any = res;
         const newTweet = {
             _id: tweet._id,
@@ -116,6 +126,8 @@ const Home: React.FC<HomeProps> = ({
         };
         setTweets((prevTweets) => [newTweet, ...prevTweets]);
         setIsFormFocused(false);
+        setTweetAudience(TWEET_AUDIENCE.everyone)
+        setTweetReply(TWEET_REPLY.everyone)
         clearTweetForm();
     };
 
@@ -128,14 +140,31 @@ const Home: React.FC<HomeProps> = ({
             }
         };
         handleNewTweetFromModal();
-    }, [onAddTweet])
+    }, [onAddTweet]);
 
-    const handleTweetPrivacyOptions = (options: string) => {
-        if (options === 'Everyone') {
-            console.log(options + ': Clicked');
+    const handleTweetAudienceOptions = (options: string) => {
+        if (options === TWEET_AUDIENCE.everyone) {
+            setTweetAudience(TWEET_AUDIENCE.everyone);
+            setTweetReply(TWEET_REPLY.everyone)
         }
-        if (options === 'Twitter Circle') {
-            console.log(options + ': Clicked');
+        if (options === TWEET_AUDIENCE.twitterCircle) {
+            setTweetAudience(TWEET_AUDIENCE.twitterCircle);
+            setTweetReply(TWEET_REPLY.onlyTwitterCircle)
+        }
+    }
+
+    const handleTweetReyplyOptions = (options: string) => {
+        if (options === TWEET_REPLY.everyone) {
+            console.log(TWEET_REPLY.everyone);
+            setTweetReply(TWEET_REPLY.everyone);
+        }
+        if (options === TWEET_REPLY.peopleYouFollow) {
+            console.log(TWEET_REPLY.peopleYouFollow);
+            setTweetReply(TWEET_REPLY.peopleYouFollow);
+        }
+        if (options === TWEET_REPLY.onlyPeopleYouMention) {
+            console.log(TWEET_REPLY.onlyPeopleYouMention);
+            setTweetReply(TWEET_REPLY.onlyPeopleYouMention);
         }
     }
 
@@ -170,14 +199,19 @@ const Home: React.FC<HomeProps> = ({
                             tweetTextRef={tweetTextRef}
                             imagePreview={previewImage}
                             isFocused={isFormFocused}
+                            tweetAudienceOptions={tweetAudienceMenuOptions} 
+                            tweetAudienceIcons={tweetAudienceMenuIcons}
+                            tweetAudienceValue={tweetAudience}                           
+                            tweetReplyOptions={tweetReplyOptions}
+                            tweetReplyIcons={tweetReplyIcons}
+                            tweetReplyValue={tweetReply}
                             setIsFocused={setIsFormFocused}
                             onSubmit={handleSubmitTweet}
                             onImageUpload={handleImageUpload}
                             onCancelImagePreview={handleCanselPreviewImage}
                             onChageImage={handleTextAreaOnChange} 
-                            tweetPrivacyOptions={tweetPrivacyMenuOptions} 
-                            tweetPrivacyIcons={tweetPrivacyMenuIcons} 
-                            onClickPrivacyMenu={handleTweetPrivacyOptions}                            
+                            onClickAudienceMenu={handleTweetAudienceOptions} 
+                            onClickReplyMenu={handleTweetReyplyOptions} 
                         />
                     </div>
                     {/* TweetForm - end */}   
@@ -214,7 +248,6 @@ const Home: React.FC<HomeProps> = ({
                             ))}
                             {/* tweets - end */}
                             {/* FOR YOU - START */}
-
                         </div>
                     )}
                     {/* FOLLOWING - START */}
