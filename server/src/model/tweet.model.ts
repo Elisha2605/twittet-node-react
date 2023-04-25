@@ -1,4 +1,5 @@
 import mongoose, { Schema, Types, ObjectId, model } from 'mongoose';
+import { TWEET_AUDIENCE, TWEET_REPLY } from 'src/constants/tweet.constants';
 import { handleError } from 'src/utils/db.util';
 
 // SUB DOCUMENTS
@@ -8,6 +9,7 @@ export interface ITweet extends mongoose.Document {
     image: string;
     text: string;
     audience: string; //Create constants (Everyone, Twitter Circle);
+    reply: string;
 }
 
 export const tweetModel = {
@@ -29,7 +31,12 @@ export const tweetModel = {
     },
     audience: {
         type: String,
-        default: null,
+        default: TWEET_AUDIENCE.everyone,
+        require: false,
+    },
+    reply: {
+        type: String,
+        default: TWEET_REPLY.everyone,
         require: false,
     },
 };

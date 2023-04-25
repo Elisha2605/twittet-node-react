@@ -102,12 +102,22 @@ const FormTweet: FC<FormProps> = ({
                     value={value}
                 />
                 {isFocused || isImageSelected ? (
-                    <>
+                    <PopUpMenu 
+                            title={'Choose audience'}
+                            options={tweetPrivacyOptions}
+                            icons={tweetPrivacyIcons}
+                            isMenuIcon={false}
+                            onClick={(tweetPrivacyOptions) => {
+                                onClickPrivacyMenu!(tweetPrivacyOptions)
+                            }} 
+                            className={styles.tweetReplyOptions}
+                            classNameWithTitle={styles.tweetReplyPopUpBox}
+                        >
                         <div className={styles.replyPrivacyOptions}>
                             <span><FontAwesomeIcon icon={faEarthAfrica}/></span><span>Everyone can reply</span>
                         </div>
                         <hr className={styles.horizontalLine} />
-                    </>
+                    </PopUpMenu>
                 ) : null }
                 {imagePreview && (
                     <div className={styles.previewImage}>

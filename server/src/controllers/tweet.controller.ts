@@ -28,6 +28,7 @@ export const createTweetController = asyncHandler(
         const text = req.body.text;
         const image = req.file ? req.file.filename : null;
         const audience = req.body.audience;
+        const reply = req.body.reply;
 
         if (text === undefined && image === null) {
             res.status(400).json({ InvalidInputError: 'Invalid Input' });
@@ -41,7 +42,13 @@ export const createTweetController = asyncHandler(
         }
 
         try {
-            const response = await createTweet(userId, text, image, audience);
+            const response = await createTweet(
+                userId,
+                text,
+                image,
+                audience,
+                reply
+            );
             const { payload } = response;
             if (response.success) {
                 res.status(response.status).send({
@@ -87,6 +94,7 @@ export const deleteTweetController = asyncHandler(
     }
 );
 
+// Not used at the moment -> will be used to update a tweet audience.
 export const updateAudienceController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const tweetId = req.params.id;

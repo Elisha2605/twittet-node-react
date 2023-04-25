@@ -38,6 +38,7 @@ export const createTweet = async (
     text: string,
     image: string,
     audience: string,
+    reply: string
 ): Promise<ApiResponse<any>> => {
     try {
         const newTweet = new Tweet({
@@ -45,6 +46,7 @@ export const createTweet = async (
             text: text,
             image: image,
             audience: audience,
+            reply: reply,
         });
         const savedTweet = await newTweet.save();
         if (!savedTweet) {

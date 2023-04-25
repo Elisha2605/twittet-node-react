@@ -6,6 +6,8 @@
     font-size: var(--font-size-lg);
 }
 
+/* AUDIENCE */
+
 .tweetPrivacyOptions {
     position: relative;
     top: 0.5rem;
@@ -61,6 +63,19 @@
     background-color: var(--color-primary-lighter);
     transition: 0.1s ease-in-out;
 }
+
+/* WHO CAN REPLY BOX */
+.tweetReplyOptions {
+    position: relative;
+    top: -1rem;
+    left: -13.7rem;
+}
+
+.tweetReplyPopUpBox {
+    width: 22rem;
+}
+
+
 
 .horizontalLine {
     border: none;
