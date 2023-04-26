@@ -74,19 +74,3 @@ export const image = asyncHandler(async (req: Request, res: Response) => {
         file: req.file.filename,
     });
 });
-
-export const info = asyncHandler(async (req: Request, res: Response) => {
-    const user = await getUserInfo(req.user._id);
-    res.send(user);
-});
-
-export const image = asyncHandler(async (req: Request, res: Response) => {
-    if (req.file) {
-        console.log(req.file);
-    }
-    console.log(req.body);
-    res.send({
-        body: req.body.name,
-        file: req.file.filename,
-    });
-});
