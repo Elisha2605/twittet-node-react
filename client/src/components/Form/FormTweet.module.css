@@ -6,6 +6,8 @@
     font-size: var(--font-size-lg);
 }
 
+/* AUDIENCE */
+
 .tweetPrivacyOptions {
     position: relative;
     top: 0.5rem;
@@ -16,7 +18,7 @@
     width: 20rem;
 }
 
-.privacyOptions, .replyPrivacyOptions {
+.everyone, .twitterCirlce, .replyPrivacyOptions, .onlyTweetCircle {
     display: flex;
     font-size: 0.9rem;
     font-weight: var(--font-weight-600);
@@ -26,7 +28,23 @@
     cursor: pointer;
 }
 
-.privacyOptions {
+.onlyTweetCircle {
+    color: var(--color-primary-light);
+}
+.onlyTweetCircle:hover {
+    background-color: transparent !important;
+}
+
+.twitterCirlce {
+    color: var(--color-green);
+    border: 1px solid var(--color-green) !important;
+}
+.twitterCirlce:hover {
+    background-color: var(--color-green-lighter) !important;
+    transition: 0.1s ease-in-out;
+}
+
+.everyone, .twitterCirlce {
     border: var(--border-light);
     margin-bottom: 1rem;
     padding: 0 0.5rem;
@@ -39,14 +57,28 @@
     padding: 0 0.7rem;    
 }
 
-.privacyOptions span:nth-child(1), 
+.everyone span:nth-child(1), 
+.twitterCirlce span:nth-child(1),
 .replyPrivacyOptions span:nth-child(1){
     padding-right: 0.5rem;
 }
 
-.privacyOptions:hover, 
+.everyone:hover, 
+.twitterCirlce:hover, 
 .replyPrivacyOptions:hover {
     background-color: var(--color-primary-lighter);
+    transition: 0.1s ease-in-out;
+}
+
+/* WHO CAN REPLY BOX */
+.tweetReplyOptions {
+    position: relative;
+    top: -1rem;
+    left: -13.7rem;
+}
+
+.tweetReplyPopUpBox {
+    width: 22rem;
 }
 
 .horizontalLine {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Aside from '../components/aside/Aside';
 import SearchBar from '../components/ui/SearchBar';
 import WhoToFollow from '../components/ui/WhoToFollow';
@@ -14,11 +14,24 @@ import HeaderTitle from '../components/header/HeaderTitle';
 import HorizontalNavBar from '../components/ui/HorizontalNavBar';
 import { tweetMenuOptions } from '../data/menuOptions';
 import PageUnderConstruction from '../components/ui/PageUnderConstruction';
+import { IMAGE_AVATAR_BASE_URL, IMAGE_COVER_BASE_URL } from '../constants/common.constants';
+import { getMonthName, getYear } from '../utils/helpers.utils';
+import AuthContext from '../context/user.context';
 
 
 const Profile = () => {
 
     const [activeTab, setActiveTab] = useState(localStorage.getItem('activeTab-profile') || 'tweets');
+    const [authUser, setAuthUser] = useState<any>(null);
+
+    const ctx = useContext(AuthContext);
+    useEffect(() => {
+        const getAuthUser = async () => {
+            const { user } = ctx.getUserContext();
+            setAuthUser(user);
+        }
+        getAuthUser();
+    }, [])
 
     // Set active tab in local storage
     useEffect(() => {
@@ -45,7 +58,7 @@ const Profile = () => {
                     <Header border={true}>
                         <div className={styles.headerItems}>
                             <ArrowLeftIcon />
-                            <HeaderTitle title={'Aïcha'} subTitle={'1 Tweet'} />
+                            <HeaderTitle title={authUser?.name} subTitle={'1 Tweet'} />
                         </div>
                     </Header>
                     {/* *** HEADER - END *** */}
@@ -53,17 +66,17 @@ const Profile = () => {
                     <div className={styles.main}>
                         {/* *** MAIN - START *** */}
                             <div className={styles.imageWrapper}>
-                                <div className={styles.coverImage}><img src={'https://images.unsplash.com/photo-1595670322505-4de61b9cdf47?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80'} alt="" /></div>
-                                <div className={styles.profileImage}><img src={'https://scontent-cph2-1.xx.fbcdn.net/v/t39.30808-6/337155884_6676092215753622_8028443491988735130_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=IRPEb8TdpAgAX8zOR2g&_nc_ht=scontent-cph2-1.xx&oh=00_AfCtQZxorTlL7uOnmq7BFVIBBYvDEwBVtfxKU0_p-ENDJg&oe=644BD948'} alt="" /></div>
+                                <div className={styles.coverImage}><img src={authUser?.coverImage ? `${IMAGE_COVER_BASE_URL}/${authUser?.coverImage}` : undefined} alt="" /></div>
+                                <div className={styles.profileImage}><img src={authUser?.coverImage ? `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}` : undefined} alt="" /></div>
                                 <Button className={styles.editProfileBtn} value={'Edit profile'} type={ButtonType.tietary} size={ButtonSize.small} onClick={() => {console.log('Edit profile clicked');}} />
                             </div>
                             <div className={styles.userInfo}>
-                                <p className={styles.firstname}>Aïcha</p>
-                                <p className={styles.username}>@aïchaHaïdara</p>
+                                <p className={styles.firstname}>{authUser?.name}</p>
+                                <p className={styles.username}>@{authUser?.username}</p>
                                 <p className={styles.bio}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,</p>
                                 <div className={styles.joined}>
                                     <FontAwesomeIcon icon={faCalendarDays} />
-                                    <p>Joined October 2018</p>
+                                    <p>Joined {getMonthName(authUser?.createdAt)} {getYear(authUser?.createdAt)}</p>
                                 </div>
                                 <div className={styles.followStatus}>
                                     <p>2<span>Following</span></p>
@@ -90,13 +103,13 @@ const Profile = () => {
                             </div>
                             </HorizontalNavBar>
                         {/* TWEETS - START */}
-                        {activeTab === 'tweets' && (
+                        {/* {activeTab === 'tweets' && (
                             <Tweet 
                                 avatar={'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80'} 
-                                firstName={'Luis Suárez'} 
+                                name={'Luis Suárez'} 
                                 username={'LuisSuarez9'} 
-                                tweet={'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,molestiae quas vel sint commodi repudiandae consequuntur'}
-                                image={'https://images.unsplash.com/photo-1534083264897-aeabfc7daf8a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80'}
+                                tweetText={'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,molestiae quas vel sint commodi repudiandae consequuntur'}
+                                tweetImage={'https://images.unsplash.com/photo-1534083264897-aeabfc7daf8a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80'}
                                 isOption={true}
                                 comments={'164'} 
                                 reposts={'924'} 
@@ -105,7 +118,7 @@ const Profile = () => {
                                 options={tweetMenuOptions}
                                 onClickMenu={handleOptionClick}
                             />
-                        )}
+                        )} */}
                         {/* TWEETS - END */}
 
                         {/* REPLIES - START */}

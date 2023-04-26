@@ -3,32 +3,37 @@ import MenuIcon from '../icons/MenuIcon';
 import styles from './PopUpMenu.module.css';
 
 interface MenuPopUpProps {
-    id?: string;
+    itemId?: string;
     title?: string;
     options: string[];
-    onClick: (option: string, id: string) => void;
     icons?: Record<string, React.ReactNode>;
     className?: string;
     classNameWithTitle?: string;
     isMenuIcon?: boolean;
+    isDisable?: boolean;
     children?: React.ReactNode;
+    onClick: (option: string, id: string) => void;
 }
 
 const MenuPopUp: FC<MenuPopUpProps> = ({
-    id,
+    itemId,
     title,
     options,
-    onClick,
     icons,
     className,
     classNameWithTitle,
     isMenuIcon = true,
+    isDisable,
     children,
+    onClick,
 }) => {
     const [showMenu, setShowMenu] = useState(false);
     const menuRef = useRef<HTMLUListElement>(null);
 
     const handleButtonClick = () => {
+        if (isDisable) {
+            return;
+        }
         setShowMenu(!showMenu);
     };
 
@@ -86,7 +91,7 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
                                             : ''
                                     }`}
                                     onClick={() =>
-                                        handleOptionClick(option, id!)
+                                        handleOptionClick(option, itemId!)
                                     }
                                 >
                                     {icons && icons[option]}

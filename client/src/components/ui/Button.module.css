@@ -1,7 +1,7 @@
 .primarySmall:hover, 
 .primaryMedium:hover, 
 .secondarySmall:hover {
-    transition: .2s;
+    transition: .1s;
 }
 
 .primarySmall, .secondarySmall {
@@ -27,9 +27,9 @@
 }
 
 .secondarySmall:hover {
-    background: var(--color-white);
-    color: var(--color-black);
-    border: 1px solid var(--color-black)
+    background: var(--color-black-light);
+    color: var(--color-white);
+    /* border: 1px solid var(--color-black) */
 }
 
 .tietary {

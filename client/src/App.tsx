@@ -13,6 +13,7 @@ import AuthContext, { StoredContext } from './context/user.context';
 import TwitterIcon from './components/icons/TwitterIcon';
 import Home from './pages/Home';
 import { ModalContext } from './context/modal.context';
+import OtherProfile from './pages/OtherProfile';
 
 function App() {
 
@@ -47,7 +48,6 @@ function App() {
     //// new functions
     const handleTextAreaOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const val = e.target?.value;
-        console.log(val);
         if (modalOpen) {
             setValueModal(val)
         } else {
@@ -155,6 +155,10 @@ function App() {
                                 <Route
                                     path="/bookmarks"
                                     element={<Bookmarks />}
+                                />
+                                <Route
+                                    path="/user-profile/:id"
+                                    element={<OtherProfile />}
                                 />
                                 <Route path="/profile" element={<Profile />} />
                                 <Route
