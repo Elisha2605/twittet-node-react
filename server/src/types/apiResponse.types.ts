@@ -15,5 +15,6 @@ export interface ApiResponse<T> {
     success: boolean;
     message: string;
     status: number;
+    error?: any;
     payload?: T;
 }

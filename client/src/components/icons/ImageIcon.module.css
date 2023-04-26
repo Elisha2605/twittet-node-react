@@ -1,0 +1,13 @@
+.faImage {
+    padding: 0.6rem 0.6rem;
+    border-radius: 50%;
+}
+
+.faImage:hover {
+    background: var(--color-primary-lighter);
+    cursor: pointer;
+}
+
+.hiddenInput {
+    display: none;
+}

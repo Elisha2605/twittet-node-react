@@ -39,6 +39,26 @@
     background-color: var(--color-secondary-light);
 }
 
+.popUpWithTitle {
+    display: flex;
+    flex-direction: column;
+
+    color: var(--color-black);
+    padding: 1rem 0rem;
+}
+
+.popUpWithTitle .menuItemList {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-600);
+}
+.popUpWithTitle h1 {
+    padding-left: 0.7rem;
+}
+.popUpWithTitle .menuItemList {
+    padding: 1rem;
+    
+}
+
 .overlay {
     position: fixed;
     top: 0;

@@ -64,6 +64,7 @@ export const userModel = {
     },
     avatar: {
         type: String,
+        default: 'default-avatar.jpg',
         required: false,
     },
     coverImage: {

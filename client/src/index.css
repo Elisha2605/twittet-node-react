@@ -12,12 +12,21 @@
     --color-white: #ffffff;
     --color-black: #000000;
     --color-error: #fb3b1e;
+    --color-green: #27bb6a;
+    
 
     /* color hover */
     --color-primary-darker: #0d8cce;
+    --color-primary-light: #8ac7e8;
+    --color-primary-lighter: rgb(225, 242, 252);
     --color-secondary-light: #eef0f3;
     --color-secondary-lighter: #f2f4f6;
-    --color-black-lighter: #282828;
+    --color-black-light: #282828;
+    --color-black-lighter: #484848;
+    --color-green-lighter: #e9fff2; 
+
+    /* button color */
+    --color-btn-disabled: #7accff;
 
     /* font-size */
 
@@ -38,30 +47,16 @@
     --font-weight-300: 400;
     
     /* border */
-    --border-light: 0.5px solid var(--color-secondary);
+    --border-color: #ececec;
+    --border-light: 1px solid var(--border-color);
 
     /* border-round */
     --border-round: 4rem;
 }
 
-h1 {
-    font-size: 1.5rem;
-}
 
-h2 {
-    font-size: 1.3rem;
-    font-weight: 400;
-}
 
-button{
-	background: none;
-	color: inherit;
-	border: none;
-	padding: 0;
-	font: inherit;
-	cursor: pointer;
-	outline: inherit;
-}
+
 
 
 /* for dark mode */
@@ -105,7 +100,7 @@ td {
 /* Set font properties */
 body {
     font-family: sans-serif;
-    font-size: 16px;
+    font-size: 1rem;
     line-height: 1.5;
 }
 
@@ -125,4 +120,23 @@ a {
 body {
     background-color: #fff;
     color: #333;
+}
+
+h1 {
+    font-size: 1.5rem;
+}
+
+h2 {
+    font-size: 1.3rem;
+    font-weight: 400;
+}
+
+button{
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
 }

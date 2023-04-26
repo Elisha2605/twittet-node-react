@@ -3,23 +3,43 @@ import MenuIcon from '../icons/MenuIcon';
 import styles from './PopUpMenu.module.css';
 
 interface MenuPopUpProps {
+    itemId?: string;
+    title?: string;
     options: string[];
-    onClick: (option: string) => void;
-    icons?: Record<string,React.ReactNode>;
+    icons?: Record<string, React.ReactNode>;
+    className?: string;
+    classNameWithTitle?: string;
+    isMenuIcon?: boolean;
+    isDisable?: boolean;
+    children?: React.ReactNode;
+    onClick: (option: string, id: string) => void;
 }
 
-const MenuPopUp: FC<MenuPopUpProps> = ({ options, onClick, icons }) => {
-    
+const MenuPopUp: FC<MenuPopUpProps> = ({
+    itemId,
+    title,
+    options,
+    icons,
+    className,
+    classNameWithTitle,
+    isMenuIcon = true,
+    isDisable,
+    children,
+    onClick,
+}) => {
     const [showMenu, setShowMenu] = useState(false);
     const menuRef = useRef<HTMLUListElement>(null);
 
     const handleButtonClick = () => {
+        if (isDisable) {
+            return;
+        }
         setShowMenu(!showMenu);
     };
 
-    const handleOptionClick = (option: string) => {
+    const handleOptionClick = (option: string, id: string) => {
         setShowMenu(false);
-        onClick(option);
+        onClick(option, id);
     };
 
     useEffect(() => {
@@ -41,27 +61,45 @@ const MenuPopUp: FC<MenuPopUpProps> = ({ options, onClick, icons }) => {
 
     return (
         <div className={styles.container}>
-            <button className={styles.menuBtn} onClick={handleButtonClick}>
-                <MenuIcon />
-            </button>
+            {isMenuIcon && (
+                <button className={styles.menuBtn} onClick={handleButtonClick}>
+                    <MenuIcon />
+                </button>
+            )}
+            {!isMenuIcon && (
+                <div onClick={handleButtonClick}>{children}</div>
+            )}
             {showMenu && (
                 <>
                     <div
                         className={styles.overlay}
                         onClick={() => setShowMenu(false)}
                     />
-                    <ul className={styles.menuList} ref={menuRef}>
-                        {options.map((option) => (
-                            <li
-                                key={option}
-                                className={`${styles.menuItemList} ${icons && icons[option] === icons['Delete'] ? styles.delete : ''}`}
-                                onClick={() => handleOptionClick(option)}
-                            >
+                    <div className={className}>
+                        <ul
+                            className={`${styles.menuList} ${title && `${styles.popUpWithTitle} ${classNameWithTitle}`}`}
+                            ref={menuRef}
+                        >
+                            {title && <h1>{title}</h1>}
+                            {options.map((option) => (
+                                <li
+                                    key={option}
+                                    className={`${styles.menuItemList} ${
+                                        icons &&
+                                        icons[option] === icons['Delete']
+                                            ? styles.delete
+                                            : ''
+                                    }`}
+                                    onClick={() =>
+                                        handleOptionClick(option, itemId!)
+                                    }
+                                >
                                     {icons && icons[option]}
                                     {option}
-                            </li>
-                        ))}
-                    </ul>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </>
             )}
         </div>

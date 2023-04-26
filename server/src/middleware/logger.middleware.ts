@@ -25,6 +25,8 @@ export function loggerMiddleware(
         };
         if (statusCode >= 500) {
             logger.error(logMessage);
+        } else if (statusCode === 304) {
+            return '';
         } else {
             logger.info(logMessage);
         }

@@ -6,12 +6,17 @@ const users = [
     {
         _id: new ObjectId(),
         email: 'a@a.com',
+        name: 'Aïcha Haïdara',
+        username: 'aicha_ngoma',
         avatar: 'avatar-1.jpg',
         coverImage: 'cover-1.jpg',
         password: '123',
     },
     {
         _id: new ObjectId(),
+        email: 'e@e.com',
+        name: 'Elisha Ngoma',
+        username: 'e_ngoma26'
         email: 'b@b.com',
         avatar: 'avatar-2.jpg',
         coverImage: 'cover-2.jpg',
@@ -20,6 +25,8 @@ const users = [
     {
         _id: new ObjectId(),
         email: 'c@c.com',
+        name: 'Florence',
+        username: 'floflo',
         avatar: 'avatar-3.jpg',
         coverImage: 'cover-3.jpg',
         password: '123',
@@ -39,6 +46,8 @@ export const seedUsers = async () => {
             const newUser = new User({
                 email: user.email,
                 avatar: user.avatar,
+                name: user.name,
+                username: user.username,
                 coverImage: user.coverImage,
             });
             await User.register(newUser, user.password);

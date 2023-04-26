@@ -53,6 +53,18 @@ export const login = async (email: string, password: string) => {
         const contex = {
             isLoggedIn: res.data.isLoggedIn,
             token: res.data.token,
+            user: {
+                _id: res.data.user._id,
+                name: res.data.user.name,
+                username: res.data.user.username,
+                email: res.data.user.email,
+                avatar: res.data.user.avatar,
+                coverImage: res.data.user.coverImage,
+                isActive: res.data.user.isActive,
+                isVerified: res.data.user.isActive,
+                isProtected: res.data.user.isProtected,
+                createdAt: res.data.user.createdAt,
+            }
         };
         localStorage.setItem('context', JSON.stringify(contex));
         setTimeout(() => {
@@ -71,6 +83,9 @@ export const logout = async () => {
         });
     if (res.status === 200) {
         localStorage.removeItem('context');
+        localStorage.removeItem('activeTab-home');
+        localStorage.removeItem('activeTab-notification');
+        localStorage.removeItem('activeTab-profile');
         window.location.href = '/';
     }
     return res.data;

@@ -36,7 +36,7 @@ export const signup = async (
     email: string,
     name: string,
     // username: string,
-    avatar: string,
+    avatar: string | null,
     coverImage: string,
     bio: string,
     password: string,
@@ -49,6 +49,9 @@ export const signup = async (
             message: 'Incorect Password!',
             status: 400,
         };
+    }
+    if (avatar === null) {
+        avatar = 'default-avatar.jpg';
     }
     try {
         const isUser = await User.findOne({ email: email });
@@ -91,7 +94,7 @@ export const signup = async (
     }
 };
 
-export const login = async (userId: string): Promise<ApiResponse<Tokens>> => {
+export const login = async (userId: string): Promise<ApiResponse<any>> => {
     try {
         const token = getToken({ _id: userId });
         const refreshToken = getRefreshToken({ _id: userId });
@@ -109,6 +112,7 @@ export const login = async (userId: string): Promise<ApiResponse<Tokens>> => {
             payload: {
                 token: token,
                 refreshToken: refreshToken,
+                user: user,
             },
         };
     } catch (error) {
@@ -145,51 +149,6 @@ export const logout = async (
             success: true,
             message: 'User succefully logged out',
             status: 200,
-        };
-    } catch (error) {
-        const errorResponse: ErrorResponse = {
-            success: false,
-            message: error.message || 'Internal server error',
-            status: error.statusCode || 500,
-            error: error,
-        };
-        return Promise.reject(errorResponse);
-    }
-};
-
-export const getUserContext = async (
-    userId: string,
-    refreshToken: string
-): Promise<ApiResponse<NewTokens>> => {
-    if (!userId || !refreshToken) {
-        throw CustomError('Invalid user', 400);
-    }
-    try {
-        const user = await User.findOne({ _id: userId });
-
-        const tokenIndex = user.refreshToken.findIndex(
-            (index) => index.refreshToken === refreshToken
-        );
-
-        if (tokenIndex === -1) {
-            throw CustomError('Refresh token not found!', 404);
-        }
-
-        const newToken = getToken({ _id: userId });
-        const newRefreshToken = getRefreshToken({
-            _id: userId,
-        });
-
-        user.refreshToken[tokenIndex].refreshToken = newRefreshToken;
-        console.log('new refreshToken: ' + refreshToken);
-        return {
-            success: true,
-            message: 'User Context sent successfully',
-            status: 200,
-            payload: {
-                newToken: newToken,
-                newRefreshToken: newRefreshToken,
-            },
         };
     } catch (error) {
         const errorResponse: ErrorResponse = {

@@ -9,7 +9,7 @@ export enum Size {
 
 interface AvatarProps {
     size: Size;
-    path?: string;
+    path?: string | null;
     alt?: string;
     link?: string;
     className: string;
@@ -32,7 +32,7 @@ const Avatar: FC<AvatarProps> = ({
     return (
         <React.Fragment>
             <div className={`${className} ${allSizes} ${styles[size]}`}>
-                <img src={path} alt={alt} />
+                <img src={path ? path : undefined} alt={alt} />
             </div>
         </React.Fragment>
     )

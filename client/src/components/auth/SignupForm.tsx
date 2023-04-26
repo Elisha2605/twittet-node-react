@@ -1,67 +1,33 @@
 import React, { FC, useEffect, useState } from 'react';
 import styles from './SignupForm.module.css';
 import Button, { ButtonSize, ButtonType } from '../ui/Button';
-import { useForm } from 'react-hook-form';
-import { singup } from '../../api/auth.api';
 import { validateFileExtension } from '../../utils/formValidation.utils';
 
 
 interface SignupFormProps {
-    onSuccess: () => void;
+    errors: any;
+    serverError: string;
+    register: any;
+    isLoading: boolean;
+
+    onSubmit: React.FormEventHandler<HTMLFormElement>;
+    passwordMatch: Function;
 }
 
 const SignupForm: FC<SignupFormProps> = ({
-    onSuccess,
+    register,
+    errors,
+    serverError,
+    isLoading,
+
+    onSubmit,
+    passwordMatch,
 }) => {
 
-    const [ form, setForm ] = useState();
-    const [serverError, setServerError] = useState('');
-    const [isLoading, setLoading] = useState(false);
-
-
-    const { register, handleSubmit, reset, getValues, formState: { errors } } = useForm({
-        defaultValues: {
-            name: "",
-            email: "",
-            avatar: null,
-            password: "",
-            passwordConfirm: "",
-        }
-    });
-
-    // Check passwords match
-    const passwordMatch = (value: any) => {
-        const { password, passwordConfirm } = getValues();
-        return password === passwordConfirm || "Passwords do not match";
-    };
-
-    const handleSubmitForm = handleSubmit(async (data: any) => {         
-        setLoading(true);       
-        const formData = await singup(
-            data.email,
-            data.avatar ? data.avatar?.[0] : undefined,
-            data.password,
-            data.passwordConfirm
-        );
-        if (!formData.success) {
-            const { message } = formData
-            console.log(message);
-            setServerError(message);
-            return;
-        }
-        console.log(formData);
-        setForm(formData)
-        onSuccess();
-        setLoading(false)
-    });
-
-    useEffect(() => {
-        reset(); // clear form input values
-    }, [form]);
-
+  
     return (
         <React.Fragment>
-            <form className={styles.container} onSubmit={handleSubmitForm}>
+            <form className={styles.container} onSubmit={onSubmit}>
                 {serverError.length > 0 && (
                     <p className={styles.serverErrorMsg}>{serverError}</p>
                 )} 
