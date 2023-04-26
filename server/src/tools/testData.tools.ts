@@ -16,8 +16,7 @@ const users = [
         _id: new ObjectId(),
         email: 'e@e.com',
         name: 'Elisha Ngoma',
-        username: 'e_ngoma26'
-        email: 'b@b.com',
+        username: 'e_ngoma26',
         avatar: 'avatar-2.jpg',
         coverImage: 'cover-2.jpg',
         password: '123',
