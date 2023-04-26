@@ -40,7 +40,7 @@ const Bookmarks = () => {
                         <Header>
                             <div className={styles.headerWrapper}>
                                 <HeaderTitle title={'Bookmarks'} subTitle={'@Alvin44943'} />
-                                <PopUpMenu options={tweetMenuOptions} onClick={handleOptionClick} icons={tweetMenuIcons} id={''} />
+                                <PopUpMenu options={tweetMenuOptions} onClick={handleOptionClick} icons={tweetMenuIcons} itemId={''} />
                             </div>
                         </Header>
                     {/* Home page - start */}

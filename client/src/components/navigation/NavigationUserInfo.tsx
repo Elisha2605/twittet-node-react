@@ -33,7 +33,7 @@ const NavigationUserInfo: FC<NavigationUserInfoProps> = ({
                         <p className={styles.username}>@{username}</p>
                     </div>
                     <PopUpMenu 
-                        id={id}
+                        itemId={id}
                         options={menuOptions!}
                         icons={menuIcons!}
                         onClick={(menuOptions, id) => 

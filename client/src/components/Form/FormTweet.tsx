@@ -128,7 +128,7 @@ const FormTweet: FC<FormProps> = ({
                         >
                         {/* {tweetReply} */}
 
-                        <div className={`${styles.replyPrivacyOptions} ${tweetReplyValue === TWEET_REPLY.onlyTwitterCircle ? styles.onlyTweetCircle : 's'}`}>
+                        <div className={`${styles.replyPrivacyOptions} ${tweetReplyValue === TWEET_REPLY.onlyTwitterCircle ? styles.onlyTweetCircle : ''}`}>
                             {tweetReplyValue === TWEET_REPLY.everyone ? (
                                 <>
                                     <span><FontAwesomeIcon icon={faEarthAfrica}/></span><span>Everyone can reply</span>

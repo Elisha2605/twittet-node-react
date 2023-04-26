@@ -1,4 +1,5 @@
 import React, {
+    useContext,
     useEffect,
     useRef,
     useState,
@@ -22,12 +23,11 @@ import {
     tweetReplyOptions,
     tweetReplyIcons 
 } from '../data/menuOptions';
-import useAuthUser from '../hooks/userAuth.hook';
 import { createTweet, deleteTweet, getAllTweets } from '../api/tweet.api';
-import { getTimeDifference } from '../utils/helpers.utils';
-import { IMAGE_AVATAR_BASE_URL, IMAGE_TWEET_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../constants/common.constants';
 import PageUnderConstruction from '../components/ui/PageUnderConstruction';
 import { TweetAudienceType, TweetReplyType } from '../types/tweet.types';
+import AuthContext from '../context/user.context';
 
 interface HomeProps {
     value: string;
@@ -56,7 +56,7 @@ const Home: React.FC<HomeProps> = ({
 }) => {
 
     const [tweets, setTweets] = useState<any[]>([]);
-    
+    const [authUser, setAuthUser] = useState<any>(null);
     
     const [isFormFocused, setIsFormFocused] = useState(false);
     const [activeTab, setActiveTab] = useState(localStorage.getItem('activeTab-home') || 'for-you');
@@ -66,9 +66,14 @@ const Home: React.FC<HomeProps> = ({
 
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
     
-    // Get auth user
-    const authUser: any = useAuthUser();
-
+    const ctx = useContext(AuthContext);
+    useEffect(() => {
+        const getAuthUser = async () => {
+            const { user } = ctx.getUserContext();
+            setAuthUser(user);
+        }
+        getAuthUser();
+    }, []);
 
     // fetching Tweets
     useEffect(() => {
@@ -101,36 +106,7 @@ const Home: React.FC<HomeProps> = ({
         }
     };
     
-    const handleSubmitTweet = async (e: React.FormEvent) => {
-        console.log('inside handleSubmitTweet');
-        e.preventDefault();
-        const text = tweetTextRef.current?.value
-            ? tweetTextRef.current?.value
-            : null;
-        const res = await createTweet(text, selectedFile, tweetAudience, tweetReply);
-        const { tweet }: any = res;
-        const newTweet = {
-            _id: tweet._id,
-            text: tweet.text,
-            user: {
-                avatar: authUser?.avatar,   
-                name: authUser?.name,
-                username: authUser?.username,
-                isVerified: authUser?.isVerified,
-            },
-            createdAt: tweet.createdAt,
-            image: tweet.image,
-            comments: [],
-            reposts: [],
-            likes: [],
-        };
-        setTweets((prevTweets) => [newTweet, ...prevTweets]);
-        setIsFormFocused(false);
-        setTweetAudience(TWEET_AUDIENCE.everyone)
-        setTweetReply(TWEET_REPLY.everyone)
-        clearTweetForm();
-    };
-
+    
     useEffect(() => {
         const handleNewTweetFromModal = () => {
             // Add new tweet from NavigationTweet to state
@@ -167,6 +143,39 @@ const Home: React.FC<HomeProps> = ({
             setTweetReply(TWEET_REPLY.onlyPeopleYouMention);
         }
     }
+
+
+    const handleSubmitTweet = async (e: React.FormEvent) => {
+        console.log('inside handleSubmitTweet');
+        e.preventDefault();
+        const text = tweetTextRef.current?.value
+            ? tweetTextRef.current?.value
+            : null;
+        const res = await createTweet(text, selectedFile, tweetAudience, tweetReply);
+        const { tweet }: any = res;
+        const newTweet = {
+            _id: tweet._id,
+            text: tweet.text,
+            user: {
+                avatar: authUser.avatar,   
+                name: authUser.name,
+                username: authUser.username,
+                isVerified: authUser.isVerified,
+            },
+            audience: tweet.audience,
+            reply: tweet.reply,
+            createdAt: tweet.createdAt,
+            image: tweet.image,
+            comments: [],
+            reposts: [],
+            likes: [],
+        };
+        setTweets((prevTweets) => [newTweet, ...prevTweets]);
+        setIsFormFocused(false);
+        setTweetAudience(TWEET_AUDIENCE.everyone)
+        setTweetReply(TWEET_REPLY.everyone)
+        clearTweetForm();
+    };
 
     return (
         <React.Fragment>
@@ -222,25 +231,12 @@ const Home: React.FC<HomeProps> = ({
                             {/* tweets - start */}
                             {tweets.map((tweet: any) => (
                                 <Tweet
-                                    tweetId={tweet._id}
                                     key={tweet._id}
-                                    avatar={
-                                        tweet.user.avatar ?
-                                        `${IMAGE_AVATAR_BASE_URL}/${tweet.user.avatar}` : null
-                                    }
-                                    firstName={tweet.user.name}
-                                    username={tweet.user.username}
-                                    isVerfied={tweet.user.isVerified}
-                                    time={getTimeDifference(
-                                        new Date(tweet.createdAt).getTime()
-                                    )}
-                                    tweet={tweet.text}
-                                    image={tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`}
-                                    isOption={true}
                                     comments={'164'}
                                     reposts={'924'}
                                     likes={'21.3'}
                                     views={'446'}
+                                    tweet={tweet}
                                     options={tweetMenuOptions}
                                     icons={tweetMenuIcons}
                                     onClickMenu={handleMenuOptionClick}

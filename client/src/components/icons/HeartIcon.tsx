@@ -8,13 +8,14 @@ const HeartIcon: FC<{
     className?: string;
     color?: string;
     size?: SizeProp;
+    small?: boolean;
     onClick?: () => void;
-}> = ({ className, size, color, onClick }) => {
+}> = ({ className, size, color, small, onClick }) => {
     return (
         <React.Fragment>
             <FontAwesomeIcon
                 icon={faHeart}
-                className={`${styles.faHeart} ${className}`}
+                className={`${styles.faHeart} ${className} ${small ? styles.small : ''}`}
                 size={size}
                 color={color ? color : '#fff'}
                 onClick={onClick}

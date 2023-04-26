@@ -9,10 +9,6 @@
     cursor: pointer;
 }
 
-.test {
-    background: red;
-}
-
 .container .tweet, 
 .container .image {
     margin-left: 3.7rem;
@@ -42,4 +38,29 @@
     height: 100%;
     object-fit: cover;
     border-radius: 1rem;
+}
+
+.twitterCircle, .tweetReply {
+    display: flex;
+    padding: 0.5rem 0rem 0.2rem 1rem ;
+    border-radius: 0.5rem;
+    font-size: var(--font-size-sm);
+    margin-bottom: 1rem;
+    font-weight: 400;
+    color: var(--color-secondary);
+}
+
+.twitterCircle {
+    background: var(--color-green-lighter);
+    margin-left: 3.7rem;
+}
+
+.tweetReply {
+    margin-left: 2.7rem;
+
+}
+
+.icon {
+    font-size: 0.8rem;
+    padding-right: 0.6rem;
 }
