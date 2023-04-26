@@ -5,11 +5,17 @@ import {
     signup,
     login,
     logout,
-    getUserContext,
+    // getUserContext,
 } from 'src/services/auth.service';
-import { COOKIE_OPTIONS, verifyToken } from 'src/utils/jwt.util';
+import {
+    COOKIE_OPTIONS,
+    getRefreshToken,
+    getToken,
+    verifyToken,
+} from 'src/utils/jwt.util';
 import passport from 'passport';
 import { IVerifyOptions } from 'passport-local';
+import User from 'src/model/user.model';
 
 const router = express.Router();
 
@@ -130,28 +136,47 @@ export const context = asyncHandler(
         const { refreshToken } = signedCookies;
         const userId = verifyToken(refreshToken);
 
-        try {
-            const response = await getUserContext(userId, refreshToken);
+        User.findOne({ _id: userId }).then(
+            (user) => {
+                if (user) {
+                    const tokenIndex = user.refreshToken.findIndex(
+                        (item) => item.refreshToken === refreshToken
+                    );
+                    if (tokenIndex === -1) {
+                        res.statusCode = 401;
+                        res.json('Couldnt find refresh token against user');
+                    } else {
+                        const newRefreshToken = getRefreshToken({
+                            _id: userId,
+                        });
+                        const newToken = getToken({ _id: userId });
 
-            const { payload } = response;
+                        // console.log('New Refresh token: ' + newRefreshToken);
+                        // console.log('New Access token: ' + newToken);
+                        user.refreshToken[tokenIndex].refreshToken =
+                            newRefreshToken;
 
-            if (response.success) {
-                res.status(response.status);
-                res.cookie(
-                    'refreshToken',
-                    payload.newRefreshToken,
-                    COOKIE_OPTIONS
-                );
-                res.json({
-                    isLoggedIn: true,
-                    user: req.user,
-                    success: true,
-                    token: payload.newToken,
-                });
-            }
-        } catch (error) {
-            next(error);
-        }
+                        user.save();
+
+                        res.cookie(
+                            'refreshToken',
+                            newRefreshToken,
+                            COOKIE_OPTIONS
+                        );
+                        res.json({
+                            isLoggedIn: true,
+                            user: req.user,
+                            success: true,
+                            token: newToken,
+                        });
+                    }
+                } else {
+                    res.statusCode = 401;
+                    res.send('Unauthorized');
+                }
+            },
+            (err) => next(err)
+        );
     }
 );
 

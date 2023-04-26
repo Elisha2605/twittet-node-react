@@ -47,7 +47,7 @@ export const AuthContextProvider = (props: any) => {
     );
 
     useEffect(() => {
-        const ctxLoop = setInterval(retrieveContextCallback, 4 * 60 * 1000);
+        const ctxLoop = setInterval(retrieveContextCallback, 30 * 1000);
         return () => {
             clearInterval(ctxLoop);
         };

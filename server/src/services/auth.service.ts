@@ -160,51 +160,6 @@ export const logout = async (
     }
 };
 
-export const getUserContext = async (
-    userId: string,
-    refreshToken: string
-): Promise<ApiResponse<NewTokens>> => {
-    if (!userId || !refreshToken) {
-        throw CustomError('Invalid user', 400);
-    }
-    try {
-        const user = await User.findOne({ _id: userId });
-
-        const tokenIndex = user.refreshToken.findIndex(
-            (index) => index.refreshToken === refreshToken
-        );
-
-        if (tokenIndex === -1) {
-            throw CustomError('Refresh token not found!', 404);
-        }
-
-        const newToken = getToken({ _id: userId });
-        const newRefreshToken = getRefreshToken({
-            _id: userId,
-        });
-
-        user.refreshToken[tokenIndex].refreshToken = newRefreshToken;
-        console.log('new refreshToken: ' + refreshToken);
-        return {
-            success: true,
-            message: 'User Context sent successfully',
-            status: 200,
-            payload: {
-                newToken: newToken,
-                newRefreshToken: newRefreshToken,
-            },
-        };
-    } catch (error) {
-        const errorResponse: ErrorResponse = {
-            success: false,
-            message: error.message || 'Internal server error',
-            status: error.statusCode || 500,
-            error: error,
-        };
-        return Promise.reject(errorResponse);
-    }
-};
-
 export const refreshToken = async (refreshToken: string): Promise<Status> => {
     const userId = verifyToken(refreshToken);
     const user = await User.findById({ userId });
