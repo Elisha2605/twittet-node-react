@@ -96,7 +96,7 @@ const Profile = () => {
                             </div>
                             </HorizontalNavBar>
                         {/* TWEETS - START */}
-                        {activeTab === 'tweets' && (
+                        {/* {activeTab === 'tweets' && (
                             <Tweet 
                                 avatar={'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80'} 
                                 name={'Luis Suárez'} 
@@ -111,7 +111,7 @@ const Profile = () => {
                                 options={tweetMenuOptions}
                                 onClickMenu={handleOptionClick}
                             />
-                        )}
+                        )} */}
                         {/* TWEETS - END */}
 
                         {/* REPLIES - START */}

@@ -3,19 +3,16 @@ import { NavLink } from 'react-router-dom';
 import TweetFooter from '../ui/TweetFooter';
 import UserInfo from '../ui/UserInfo';
 import styles from './Tweet.module.css';
+import { getTimeDifference } from '../../utils/helpers.utils';
+import { IMAGE_AVATAR_BASE_URL, IMAGE_TWEET_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAt, faHeart, faUserCheck } from '@fortawesome/free-solid-svg-icons';
+import HeartIcon from '../icons/HeartIcon';
+import UserIcon from '../icons/UserIcon';
+import AtIcon from '../icons/AtIcon';
 
 interface TweetProps {
-    tweetId?: string;
-    userId?: string;
-    avatar: string | null | undefined;
-    name: string;
-    username: string;
-    isVerfied?: boolean;
-    time?: string;
-    tweetText?: string;
-    tweetImage?: string | null;
-    link?: string;
-    isOption?: boolean;
+    tweet?: any;
     comments: string;
     reposts: string;
     likes: string;
@@ -23,21 +20,10 @@ interface TweetProps {
     options: string[];
     icons?: Record<string, React.ReactNode>;
     onClickMenu: Function;
-    tweetKey?: React.Key;
 }
 
 const Tweet: FC<TweetProps> = ({
-    tweetId,
-    userId,
-    avatar,
-    name,
-    username,
-    isVerfied,
-    time,
-    tweetText,
-    tweetImage,
-    link,
-    isOption,
+    tweet,
     comments,
     reposts,
     likes,
@@ -45,21 +31,32 @@ const Tweet: FC<TweetProps> = ({
     options,
     icons,
     onClickMenu,
-    tweetKey,
 }) => {
+    
+    const tweetId = tweet._id;
+    const createdAt = getTimeDifference(new Date(tweet.createdAt).getTime());
+    const tweetText = tweet.text;
+    const tweetImage = tweet.image;
+    
+    const userId = tweet.user._id;
+    const name = tweet.user.name;
+    const username = tweet.user.username;
+    const isVerfied = tweet.user.isVerified;
+    const avatar = tweet.user.avatar;
+    
 
     return (
         <React.Fragment>
-            <div className={`${styles.container}`} key={tweetKey}>
+            <div className={`${styles.container}`} key={tweetId}>
                 <UserInfo
                     itemId={tweetId}
                     userId={userId}
-                    avatar={avatar ? avatar : undefined}
+                    avatar={avatar ? `${IMAGE_AVATAR_BASE_URL}/${avatar}` : undefined}
                     name={name}
                     username={username}
                     isVerified={isVerfied}
-                    time={time}
-                    isOption={isOption}
+                    time={createdAt}
+                    isOption={true}
                     className={styles.userInfo}
                     options={options}
                     icons={icons}
@@ -70,10 +67,24 @@ const Tweet: FC<TweetProps> = ({
                         <p className={styles.tweet}>{tweetText}</p>
                         {tweetImage && (
                             <div className={styles.image}>
-                                <img src={tweetImage} alt="" />
+                                <img src={tweetImage ? `${IMAGE_TWEET_BASE_URL}/${tweetImage}` : undefined} alt="" />
                             </div>
                         )}
                     </div>
+                    {tweet.audience === TWEET_AUDIENCE.twitterCircle ? (
+                        <div className={styles.twitterCircle}>
+                            <span className={styles.icon}><HeartIcon small={true} /></span> <span>Only people in @{username}'s Twitter Circle can see this Tweet</span>
+                        </div>
+                        
+                    ) : (tweet.reply === TWEET_REPLY.peopleYouFollow) ? (
+                        <div className={styles.tweetReply}>
+                            <span className={styles.icon}><UserIcon small={true} /></span> <span>You can reply to this conversation</span>
+                        </div>
+                    ) : (tweet.reply === TWEET_REPLY.onlyPeopleYouMention) && (
+                        <div className={styles.tweetReply}>
+                            <span className={styles.icon}><AtIcon small={true} /></span> <span>You can reply to this conversation</span>
+                        </div>
+                    )}
                     <TweetFooter
                         comments={comments}
                         reposts={reposts}

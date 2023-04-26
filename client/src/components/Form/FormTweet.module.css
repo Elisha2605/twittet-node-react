@@ -40,7 +40,7 @@
     border: 1px solid var(--color-green) !important;
 }
 .twitterCirlce:hover {
-    background-color: hsl(149, 100%, 94%) !important;
+    background-color: var(--color-green-lighter) !important;
     transition: 0.1s ease-in-out;
 }
 

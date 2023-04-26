@@ -13,6 +13,7 @@
     --color-black: #000000;
     --color-error: #fb3b1e;
     --color-green: #27bb6a;
+    
 
     /* color hover */
     --color-primary-darker: #0d8cce;
@@ -22,6 +23,7 @@
     --color-secondary-lighter: #f2f4f6;
     --color-black-light: #282828;
     --color-black-lighter: #484848;
+    --color-green-lighter: #e9fff2; 
 
     /* button color */
     --color-btn-disabled: #7accff;

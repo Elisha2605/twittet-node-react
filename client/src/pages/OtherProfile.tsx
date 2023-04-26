@@ -72,7 +72,7 @@ const OtherProfile = () => {
                             <div className={styles.imageWrapper}>
                                 <div className={styles.coverImage}><img src={user?.coverImage && `${IMAGE_COVER_BASE_URL}/${user.coverImage}`} alt="" /></div>
                                 <div className={styles.profileImage}><img src={user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${user.avatar}`} alt="" /></div>
-                                <Button className={styles.editProfileBtn} value={'Edit profile'} type={ButtonType.tietary} size={ButtonSize.small} onClick={() => {console.log('Edit profile clicked');}} />
+                                <Button className={styles.editProfileBtn} value={'Follow'} type={ButtonType.secondary} size={ButtonSize.small} onClick={() => {console.log('Edit profile clicked');}} />
                             </div>
                             <div className={styles.userInfo}>
                                 <p className={styles.firstname}>{user?.name}</p>
@@ -107,7 +107,7 @@ const OtherProfile = () => {
                             </div>
                             </HorizontalNavBar>
                         {/* TWEETS - START */}
-                        {activeTab === 'tweets' && (
+                        {/* {activeTab === 'tweets' && (
                             <Tweet 
                                 avatar={'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80'} 
                                 name={'Luis Suárez'} 
@@ -122,7 +122,7 @@ const OtherProfile = () => {
                                 options={tweetMenuOptions}
                                 onClickMenu={handleOptionClick}
                             />
-                        )}
+                        )} */}
                         {/* TWEETS - END */}
 
                         {/* REPLIES - START */}

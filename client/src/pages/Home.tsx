@@ -161,6 +161,8 @@ const Home: React.FC<HomeProps> = ({
                 username: authUser.username,
                 isVerified: authUser.isVerified,
             },
+            audience: tweet.audience,
+            reply: tweet.reply,
             createdAt: tweet.createdAt,
             image: tweet.image,
             comments: [],
@@ -228,26 +230,11 @@ const Home: React.FC<HomeProps> = ({
                             {/* tweets - start */}
                             {tweets.map((tweet: any) => (
                                 <Tweet
-                                    tweetId={tweet._id}
-                                    userId={tweet.user._id}
-                                    key={tweet._id}
-                                    avatar={
-                                        tweet.user.avatar ?
-                                        `${IMAGE_AVATAR_BASE_URL}/${tweet.user.avatar}` : null
-                                    }
-                                    name={tweet.user.name}
-                                    username={tweet.user.username}
-                                    isVerfied={tweet.user.isVerified}
-                                    time={getTimeDifference(
-                                        new Date(tweet.createdAt).getTime()
-                                    )}
-                                    tweetText={tweet.text}
-                                    tweetImage={tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`}
-                                    isOption={true}
                                     comments={'164'}
                                     reposts={'924'}
                                     likes={'21.3'}
                                     views={'446'}
+                                    tweet={tweet}
                                     options={tweetMenuOptions}
                                     icons={tweetMenuIcons}
                                     onClickMenu={handleMenuOptionClick}
