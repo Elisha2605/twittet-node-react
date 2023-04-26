@@ -1,8 +1,7 @@
-import React, { FC, useContext, useRef, useState } from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import styles from './NavigationTweet.module.css';
 import Avatar, { Size } from '../ui/Avatar';
 import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
-import useAuthUser from '../../hooks/userAuth.hook';
 import { createTweet } from '../../api/tweet.api';
 import { 
     tweetAudienceMenuIcons, 
@@ -14,6 +13,7 @@ import { ModalContext } from '../../context/modal.context';
 import Modal from '../ui/Modal';
 import FormTweet from '../form/FormTweet';
 import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
+import AuthContext from '../../context/user.context';
 
 interface NavigationTweetProp {
     value: string;
@@ -43,15 +43,22 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
     const [isFormFocused, setIsFormFocused] = useState(false);
     const [tweetAudience, setTweetAudience] = useState<TweetAudienceType>(TWEET_AUDIENCE.everyone);
     const [tweetReply, setTweetReply] = useState<TweetReplyType>(TWEET_REPLY.everyone);
+    const [authUser, setAuthUser] = useState<any>(null);
+
+    const ctx = useContext(AuthContext);
+    useEffect(() => {
+        const getAuthUser = async () => {
+            const { user } = ctx.getUserContext();
+            setAuthUser(user);
+        }
+        getAuthUser();
+    }, []);
 
 
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
 
     const { closeModal } = useContext(ModalContext);
 
-
-        // Get auth user
-    const authUser: any = useAuthUser();
 
     const handleSubmitTweet = async (e: React.FormEvent) => {
         console.log('inside handleSubmitTweet');
@@ -73,6 +80,8 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
                     username: authUser?.username,
                     isVerified: authUser?.isVerified,
                 },
+                audience: tweet.audience,
+                reply: tweet.reply,
                 createdAt: tweet.createdAt,
                 image: tweet.image,
                 comments: [],

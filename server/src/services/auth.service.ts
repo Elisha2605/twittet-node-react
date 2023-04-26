@@ -94,7 +94,7 @@ export const signup = async (
     }
 };
 
-export const login = async (userId: string): Promise<ApiResponse<Tokens>> => {
+export const login = async (userId: string): Promise<ApiResponse<any>> => {
     try {
         const token = getToken({ _id: userId });
         const refreshToken = getRefreshToken({ _id: userId });
@@ -112,6 +112,7 @@ export const login = async (userId: string): Promise<ApiResponse<Tokens>> => {
             payload: {
                 token: token,
                 refreshToken: refreshToken,
+                user: user,
             },
         };
     } catch (error) {

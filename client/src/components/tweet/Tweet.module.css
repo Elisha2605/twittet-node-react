@@ -42,7 +42,6 @@
 
 .twitterCircle, .tweetReply {
     display: flex;
-    margin-left: 3.7rem;
     padding: 0.5rem 0rem 0.2rem 1rem ;
     border-radius: 0.5rem;
     font-size: var(--font-size-sm);
@@ -53,6 +52,12 @@
 
 .twitterCircle {
     background: var(--color-green-lighter);
+    margin-left: 3.7rem;
+}
+
+.tweetReply {
+    margin-left: 2.7rem;
+
 }
 
 .icon {

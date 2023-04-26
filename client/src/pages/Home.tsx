@@ -1,4 +1,5 @@
 import React, {
+    useContext,
     useEffect,
     useRef,
     useState,
@@ -22,12 +23,11 @@ import {
     tweetReplyOptions,
     tweetReplyIcons 
 } from '../data/menuOptions';
-import useAuthUser from '../hooks/userAuth.hook';
 import { createTweet, deleteTweet, getAllTweets } from '../api/tweet.api';
-import { getTimeDifference } from '../utils/helpers.utils';
-import { IMAGE_AVATAR_BASE_URL, IMAGE_TWEET_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../constants/common.constants';
 import PageUnderConstruction from '../components/ui/PageUnderConstruction';
 import { TweetAudienceType, TweetReplyType } from '../types/tweet.types';
+import AuthContext from '../context/user.context';
 
 interface HomeProps {
     value: string;
@@ -56,7 +56,7 @@ const Home: React.FC<HomeProps> = ({
 }) => {
 
     const [tweets, setTweets] = useState<any[]>([]);
-    
+    const [authUser, setAuthUser] = useState<any>(null);
     
     const [isFormFocused, setIsFormFocused] = useState(false);
     const [activeTab, setActiveTab] = useState(localStorage.getItem('activeTab-home') || 'for-you');
@@ -66,8 +66,14 @@ const Home: React.FC<HomeProps> = ({
 
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
     
-    // Get auth user
-    const authUser: any = useAuthUser();
+    const ctx = useContext(AuthContext);
+    useEffect(() => {
+        const getAuthUser = async () => {
+            const { user } = ctx.getUserContext();
+            setAuthUser(user);
+        }
+        getAuthUser();
+    }, []);
 
     // fetching Tweets
     useEffect(() => {
@@ -101,7 +107,6 @@ const Home: React.FC<HomeProps> = ({
     };
     
     
-
     useEffect(() => {
         const handleNewTweetFromModal = () => {
             // Add new tweet from NavigationTweet to state
@@ -138,10 +143,6 @@ const Home: React.FC<HomeProps> = ({
             setTweetReply(TWEET_REPLY.onlyPeopleYouMention);
         }
     }
-
-    useEffect(() => {
-        console.log(tweets);
-    }, [tweets])
 
 
     const handleSubmitTweet = async (e: React.FormEvent) => {
@@ -230,6 +231,7 @@ const Home: React.FC<HomeProps> = ({
                             {/* tweets - start */}
                             {tweets.map((tweet: any) => (
                                 <Tweet
+                                    key={tweet._id}
                                     comments={'164'}
                                     reposts={'924'}
                                     likes={'21.3'}

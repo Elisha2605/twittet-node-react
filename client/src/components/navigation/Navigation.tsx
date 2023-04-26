@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { faHashtag, faHome } from '@fortawesome/free-solid-svg-icons';
 import {
     faBell,
@@ -13,13 +13,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import Button, { ButtonSize, ButtonType } from '../ui/Button';
 import NavigationUserInfo from './NavigationUserInfo';
-import Modal from '../ui/Modal';
 import { logout } from '../../api/auth.api';
-import useAuthUser from '../../hooks/userAuth.hook';
 import { navUseMenuIcons, navUserMenuOptions } from '../../data/menuOptions';
 import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
 import { ModalContext } from '../../context/modal.context';
 import NavigationTweet from './NavigationTweet';
+import AuthContext from '../../context/user.context';
 
 interface NavigationProps {
     value: string;
@@ -49,10 +48,19 @@ const Navigation: React.FC<NavigationProps> = ({
     handleImageUpload, 
 }) => {
 
+    const [authUser, setAuthUser] = useState<any>(null);
+
+    const ctx = useContext(AuthContext);
+    useEffect(() => {
+        const getAuthUser = async () => {
+            const { user } = ctx.getUserContext();
+            setAuthUser(user);
+        }
+        getAuthUser();
+    }, []);
+
     const { openModal } = useContext(ModalContext);
 
-    // Get auth user
-    const authUser: any = useAuthUser();
 
     // Logout
     const handleMenuOptionClick = async (options: string) => {

@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import PopUpMenu from './PopUpMenu';
 import styles from './UserInfo.module.css';
 import Certified from '../../assets/certified.svg';
 import { NavLink } from 'react-router-dom';
-import useAuthUser from '../../hooks/userAuth.hook';
+import AuthContext from '../../context/user.context';
 
 interface UserInfoProps {
     itemId: any;
@@ -39,6 +39,23 @@ const UserInfo: FC<UserInfoProps> = ({
     onClickOption,
 }) => {
 
+    const [authUser, setAuthUser] = useState<any>(null);
+
+    const ctx = useContext(AuthContext);
+    useEffect(() => {
+        const getAuthUser = async () => {
+            const { user } = ctx.getUserContext();
+            setAuthUser(user);
+        }
+        getAuthUser();
+    }, []);
+
+    let profileLink: string;
+    if (userId === authUser?._id) {
+        profileLink = `/profile`;
+    } else {
+        profileLink = `/user-profile/${userId}`;
+    }
 
     return (
         <React.Fragment>
@@ -54,7 +71,7 @@ const UserInfo: FC<UserInfoProps> = ({
                     {isOption ? (
                         <div className={styles.userInfoOptionWrapper}>
                             <div className={styles.userInfo}>
-                                <NavLink to={`/user-profile/${userId}`}>
+                                <NavLink to={profileLink}>
                                     <p className={styles.firstname}>
                                         {name}{' '}
                                         {isVerified && (

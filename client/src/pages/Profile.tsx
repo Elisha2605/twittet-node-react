@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Aside from '../components/aside/Aside';
 import SearchBar from '../components/ui/SearchBar';
 import WhoToFollow from '../components/ui/WhoToFollow';
@@ -14,17 +14,24 @@ import HeaderTitle from '../components/header/HeaderTitle';
 import HorizontalNavBar from '../components/ui/HorizontalNavBar';
 import { tweetMenuOptions } from '../data/menuOptions';
 import PageUnderConstruction from '../components/ui/PageUnderConstruction';
-import useAuthUser from '../hooks/userAuth.hook';
 import { IMAGE_AVATAR_BASE_URL, IMAGE_COVER_BASE_URL } from '../constants/common.constants';
 import { getMonthName, getYear } from '../utils/helpers.utils';
+import AuthContext from '../context/user.context';
 
 
 const Profile = () => {
 
     const [activeTab, setActiveTab] = useState(localStorage.getItem('activeTab-profile') || 'tweets');
+    const [authUser, setAuthUser] = useState<any>(null);
 
-    // auth user
-    const authUser: any = useAuthUser();
+    const ctx = useContext(AuthContext);
+    useEffect(() => {
+        const getAuthUser = async () => {
+            const { user } = ctx.getUserContext();
+            setAuthUser(user);
+        }
+        getAuthUser();
+    }, [])
 
     // Set active tab in local storage
     useEffect(() => {

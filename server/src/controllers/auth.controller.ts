@@ -91,9 +91,9 @@ export const logIn = async (
                         COOKIE_OPTIONS
                     );
                     res.send({
-                        isLoggedIn: true,
-                        user: req.user,
                         success: true,
+                        isLoggedIn: true,
+                        user: payload.user,
                         token: payload.token,
                     });
                 } else {
