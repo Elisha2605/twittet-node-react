@@ -61,7 +61,7 @@ export const login = async (email: string, password: string) => {
                 avatar: res.data.user.avatar,
                 coverImage: res.data.user.coverImage,
                 isActive: res.data.user.isActive,
-                isVerified: res.data.user.isActive,
+                isVerified: res.data.user.isVerified,
                 isProtected: res.data.user.isProtected,
                 createdAt: res.data.user.createdAt,
             }
