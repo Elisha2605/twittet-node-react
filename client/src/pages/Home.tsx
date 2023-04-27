@@ -157,6 +157,7 @@ const Home: React.FC<HomeProps> = ({
             _id: tweet._id,
             text: tweet.text,
             user: {
+                _id: authUser._id,
                 avatar: authUser.avatar,   
                 name: authUser.name,
                 username: authUser.username,

@@ -17,6 +17,7 @@ import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import tweetRouter from './routes/tweet.routes';
 import path from 'path';
+import followRouter from './routes/follow.routes';
 
 dotenv.config();
 
@@ -74,6 +75,7 @@ app.use(loggerMiddleware);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/tweets', tweetRouter);
+app.use('/api/follows', followRouter);
 
 // SERVING STATIC FILES
 app.use('/avatar', express.static(path.join(__dirname, 'uploads', 'avatar')));

@@ -8,9 +8,14 @@ export const getAllTweets = async () => {
     try {
         const res = await http.get('/tweets', GETREQUESTOPTIONS());
         return res.data;
-    } catch (error) {
-        console.error(error);
-        throw error;
+    } catch (error: any) {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('context');
+            window.location.href = '/';
+        } else {
+            console.error(error);
+            throw error;
+        }
     }
 };
 
@@ -32,9 +37,14 @@ export const createTweet = async (
             GETREQUESTOPTIONS_WITH_MULTIFROM()
         );
         return res.data;
-    } catch (error) {
-        console.error(error);
-        throw error;
+    } catch (error: any) {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('context');
+            window.location.href = '/';
+        } else {
+            console.error(error);
+            throw error;
+        }
     }
 };
 
@@ -45,9 +55,14 @@ export const deleteTweet = async (tweetId: string) => {
             GETREQUESTOPTIONS()
         );
         return res.data;
-    } catch (error) {
-        console.error(error);
-        throw error;
+    } catch (error: any) {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('context');
+            window.location.href = '/';
+        } else {
+            console.error(error);
+            throw error;
+        }
     }
 };
 
@@ -59,8 +74,13 @@ export const updateTweetAudience = async (tweetId: string, audienceOption: strin
             GETREQUESTOPTIONS(),
         );
         return res.data;
-    } catch (error) {
-        console.error(error);
-        throw error;
+    } catch (error: any) {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('context');
+            window.location.href = '/';
+        } else {
+            console.error(error);
+            throw error;
+        }
     }
 }

@@ -75,6 +75,7 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
                 _id: tweet._id,
                 text: tweet.text,
                 user: {
+                    _id: authUser._id,
                     avatar: authUser?.avatar ? authUser?.avatar : null,
                     name: authUser?.name,
                     username: authUser?.username,

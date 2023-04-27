@@ -6,12 +6,15 @@ export interface ISession extends mongoose.Types.Subdocument {
     refreshToken: string;
 }
 
-const sessionSchema = new mongoose.Schema({
-    refreshToken: {
-        type: String,
-        default: '',
+const sessionSchema = new mongoose.Schema(
+    {
+        refreshToken: {
+            type: String,
+            required: true,
+        },
     },
-});
+    { timestamps: true }
+);
 
 export interface IUser extends mongoose.Document {
     email: string;
@@ -31,8 +34,8 @@ export interface IUser extends mongoose.Document {
 export const userModel = {
     email: {
         type: String,
-        unique: true, // change to true
-        required: true, // change to true
+        unique: true,
+        required: true,
         validate: {
             validator: (v: string) => {
                 return v !== undefined;
