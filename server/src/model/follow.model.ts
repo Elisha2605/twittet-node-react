@@ -2,52 +2,47 @@ import mongoose, { ObjectId, Types } from 'mongoose';
 import { handleError } from 'src/utils/db.util';
 
 export interface IFollower extends mongoose.Types.Subdocument {
-    from: ObjectId | string;
+    user: ObjectId | string;
 }
-
 export interface IFollowing extends mongoose.Types.Subdocument {
-    from: {
-        type: Types.ObjectId;
-        ref: 'User';
-    };
+    user: ObjectId | string;
 }
-
 export interface IPending extends mongoose.Types.Subdocument {
-    from: {
-        type: Types.ObjectId;
-        ref: 'User';
-    };
+    user: ObjectId | string;
 }
 
-const followerSchema = new mongoose.Schema(
-    {
-        from: {
-            type: Types.ObjectId,
-            ref: 'User',
-        },
+const followerSchema = new mongoose.Schema({
+    user: {
+        type: Types.ObjectId,
+        ref: 'User',
     },
-    { timestamps: true }
-);
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+});
 
-const followingSchema = new mongoose.Schema(
-    {
-        from: {
-            type: Types.ObjectId,
-            ref: 'User',
-        },
+const followingSchema = new mongoose.Schema({
+    user: {
+        type: Types.ObjectId,
+        ref: 'User',
     },
-    { timestamps: true }
-);
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+});
 
-const pendingSchema = new mongoose.Schema(
-    {
-        from: {
-            type: Types.ObjectId,
-            ref: 'User',
-        },
+const pendingSchema = new mongoose.Schema({
+    user: {
+        type: Types.ObjectId,
+        ref: 'User',
     },
-    { timestamps: true }
-);
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+});
 
 export interface IFollow extends mongoose.Document {
     user: ObjectId | string;

@@ -1,14 +1,18 @@
-import Follow, { IFollow } from 'src/model/follow.model';
+import Follow from 'src/model/follow.model';
 import User, { IUser } from 'src/model/user.model';
 import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
 import { CustomError } from 'src/utils/helpers';
 
 export const getUserFollowers = async (userId: string): Promise<any> => {
     try {
-        const result = await Follow.find({ user: userId })
+        const result = await Follow.findOne({ user: userId })
             .populate({
                 path: 'user',
                 select: 'name',
+            })
+            .populate({
+                path: 'followers.user',
+                select: 'name email',
                 model: 'User',
             })
             .exec();
@@ -19,25 +23,30 @@ export const getUserFollowers = async (userId: string): Promise<any> => {
 };
 
 // Follow Request
+// Follow Request
 export const sendFollowRequest = async (
-    incommingReq: string,
-    receiver: string
+    incommingReqId: string,
+    receiverId: string
 ): Promise<ApiResponse<any>> => {
     try {
-        const user: IUser = await User.findById(receiver);
+        const user: IUser = await User.findById(receiverId);
 
         if (!user) {
             throw CustomError('User not found', 404);
         }
 
-        let follow: any = await Follow.findOne({ user: receiver });
+        const followerUser: IUser = await User.findById(incommingReqId);
 
-        // Handle peding requests
+        if (!followerUser) {
+            throw CustomError('Follower user not found', 404);
+        }
+
+        let follow: any = await Follow.findOne({ user: receiverId });
 
         if (!follow) {
-            follow = new Follow({ user: receiver });
+            follow = new Follow({ user: receiverId });
         }
-        follow.followers.push(incommingReq);
+        follow.followers.push({ user: followerUser._id });
 
         const response = await follow.save();
 
@@ -47,21 +56,6 @@ export const sendFollowRequest = async (
             status: 200,
             payload: response,
         };
-
-        // const follow: any = new Follow({
-        //     user: receiver,
-        // });
-        // follow.followers.push(incommingReq);
-        // const response = await follow.save();
-        // if (!response) {
-        //     throw CustomError('Could not send request', 500);
-        // }
-        // return {
-        //     success: true,
-        //     message: 'Successfully sent follow request!',
-        //     status: 200,
-        //     payload: follow,
-        // };
     } catch (error) {
         const errorResponse: ErrorResponse = {
             success: false,
@@ -72,13 +66,3 @@ export const sendFollowRequest = async (
         return Promise.reject(errorResponse);
     }
 };
-
-// if (user.isProtected) {
-//     if (!follow) {
-//         follow = new Follow({ user: receiver });
-//     }
-//     follow.pendings.push(incommingReq);
-// }
-// // Handle follow requests
-// else {
-// }
