@@ -1,19 +1,21 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styles from './App.module.css';
 import Navigation from './components/navigation/Navigation';
 import Layout from './Layout.module.css';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import Profile from './pages/Profile';
-import Explore from './pages/Explore';
-import Bookmarks from './pages/Bookmarks';
-import Notifications from './pages/Notifications';
-import Message from './pages/Messages';
-import Index from './pages/Index';
+import Profile from './pages/profile/Profile';
+import Explore from './pages/explore/Explore';
+import Bookmarks from './pages/bookmarks/Bookmarks';
+import Notifications from './pages/notification/Notifications';
+import Message from './pages/messages/Messages';
+import Index from './pages/index/Index';
 import AuthContext, { StoredContext } from './context/user.context';
 import TwitterIcon from './components/icons/TwitterIcon';
-import Home from './pages/Home';
+import Home from './pages/home/Home';
 import { ModalContext } from './context/modal.context';
-import OtherProfile from './pages/OtherProfile';
+import OtherProfile from './pages/otherProile/OtherProfile';
+import Following from './pages/follow/Following';
+import Follower from './pages/follow/Follower';
 
 function App() {
 
@@ -161,6 +163,8 @@ function App() {
                                     element={<OtherProfile />}
                                 />
                                 <Route path="/profile" element={<Profile />} />
+                                <Route path="/following" element={<Following />} />
+                                <Route path="/follower" element={<Follower />} />
                                 <Route
                                     path="*"
                                     element={<Navigate to="/" replace={true} />}

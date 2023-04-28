@@ -4,17 +4,17 @@ import React, {
     useRef,
     useState,
 } from 'react';
-import Aside from '../components/aside/Aside';
-import Avatar, { Size } from '../components/ui/Avatar';
-import SearchBar from '../components/ui/SearchBar';
-import WhoToFollow from '../components/ui/WhoToFollow';
-import FormTweet from '../components/form/FormTweet';
-import Header from '../components/header/Header';
-import Tweet from '../components/tweet/Tweet';
+import Aside from '../../components/aside/Aside';
+import Avatar, { Size } from '../../components/ui/Avatar';
+import SearchBar from '../../components/ui/SearchBar';
+import WhoToFollow from '../../components/ui/WhoToFollow';
+import FormTweet from '../../components/form/FormTweet';
+import Header from '../../components/header/Header';
+import Tweet from '../../components/tweet/Tweet';
 import styles from './Home.module.css';
-import Layout from '../Layout.module.css';
-import HeaderTitle from '../components/header/HeaderTitle';
-import HorizontalNavBar from '../components/ui/HorizontalNavBar';
+import Layout from '../../Layout.module.css';
+import HeaderTitle from '../../components/header/HeaderTitle';
+import HorizontalNavBar from '../../components/ui/HorizontalNavBar';
 import { 
     tweetMenuOptions, 
     tweetMenuIcons, 
@@ -22,12 +22,12 @@ import {
     tweetAudienceMenuIcons,
     tweetReplyOptions,
     tweetReplyIcons 
-} from '../data/menuOptions';
-import { createTweet, deleteTweet, getAllTweets } from '../api/tweet.api';
-import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../constants/common.constants';
-import PageUnderConstruction from '../components/ui/PageUnderConstruction';
-import { TweetAudienceType, TweetReplyType } from '../types/tweet.types';
-import AuthContext from '../context/user.context';
+} from '../../data/menuOptions';
+import { createTweet, deleteTweet, getAllTweets } from '../../api/tweet.api';
+import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
+import PageUnderConstruction from '../../components/ui/PageUnderConstruction';
+import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
+import AuthContext from '../../context/user.context';
 
 interface HomeProps {
     value: string;

@@ -1,13 +1,13 @@
 import React from 'react';
-import Header from '../components/header/Header';
+import Header from '../../components/header/Header';
 import styles from './Bookmarks.module.css';
-import Layout from '../Layout.module.css';
-import HeaderTitle from '../components/header/HeaderTitle';
-import SearchBar from '../components/ui/SearchBar';
-import Aside from '../components/aside/Aside';
-import WhoToFollow from '../components/ui/WhoToFollow';
-import PopUpMenu from '../components/ui/PopUpMenu';
-import { tweetMenuOptions, tweetMenuIcons } from '../data/menuOptions';
+import Layout from '../../Layout.module.css';
+import HeaderTitle from '../../components/header/HeaderTitle';
+import SearchBar from '../../components/ui/SearchBar';
+import Aside from '../../components/aside/Aside';
+import WhoToFollow from '../../components/ui/WhoToFollow';
+import PopUpMenu from '../../components/ui/PopUpMenu';
+import { tweetMenuOptions, tweetMenuIcons } from '../../data/menuOptions';
 
 
 const Bookmarks = () => {

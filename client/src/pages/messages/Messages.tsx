@@ -1,14 +1,14 @@
 import React from 'react';
-import Header from '../components/header/Header';
+import Header from '../../components/header/Header';
 import styles from './Messages.module.css';
-import Layout from '../Layout.module.css';
-import HeaderTitle from '../components/header/HeaderTitle';
-import GearIcon from '../components/icons/GearIcon';
-import EnvelopeIcon from '../components/icons/EnvelopeIcon';
-import SearchBar from '../components/ui/SearchBar';
-import Aside from '../components/aside/Aside';
-import DetailIcon from '../components/icons/DetailIcon';
-import Avatar, { Size } from '../components/ui/Avatar';
+import Layout from '../../Layout.module.css';
+import HeaderTitle from '../../components/header/HeaderTitle';
+import GearIcon from '../../components/icons/GearIcon';
+import EnvelopeIcon from '../../components/icons/EnvelopeIcon';
+import SearchBar from '../../components/ui/SearchBar';
+import Aside from '../../components/aside/Aside';
+import DetailIcon from '../../components/icons/DetailIcon';
+import Avatar, { Size } from '../../components/ui/Avatar';
 
 const Message = () => {
     

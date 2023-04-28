@@ -1,23 +1,25 @@
 import React, { useContext, useEffect, useState } from 'react';
-import Aside from '../components/aside/Aside';
-import SearchBar from '../components/ui/SearchBar';
-import WhoToFollow from '../components/ui/WhoToFollow';
-import Header from '../components/header/Header';
-import Tweet from '../components/tweet/Tweet';
-import styles from './Profile.module.css';
-import Layout from '../Layout.module.css';
+import Aside from '../../components/aside/Aside';
+import SearchBar from '../../components/ui/SearchBar';
+import WhoToFollow from '../../components/ui/WhoToFollow';
+import Header from '../../components/header/Header';
+import Tweet from '../../components/tweet/Tweet';
+import styles from './../profile/Profile.module.css';
+import Layout from '../../Layout.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDays } from '@fortawesome/free-regular-svg-icons';
-import ArrowLeftIcon from '../components/icons/ArrowLeftIcon';
-import Button, { ButtonSize, ButtonType } from '../components/ui/Button';
-import HeaderTitle from '../components/header/HeaderTitle';
-import HorizontalNavBar from '../components/ui/HorizontalNavBar';
-import { tweetMenuOptions } from '../data/menuOptions';
-import PageUnderConstruction from '../components/ui/PageUnderConstruction';
-import { getUserById } from '../api/user.api';
+import ArrowLeftIcon from '../../components/icons/ArrowLeftIcon';
+import Button, { ButtonSize, ButtonType } from '../../components/ui/Button';
+import HeaderTitle from '../../components/header/HeaderTitle';
+import HorizontalNavBar from '../../components/ui/HorizontalNavBar';
+import { tweetMenuOptions } from '../../data/menuOptions';
+import PageUnderConstruction from '../../components/ui/PageUnderConstruction';
+import { getUserById } from '../../api/user.api';
 import { useParams } from 'react-router-dom';
-import { IMAGE_AVATAR_BASE_URL, IMAGE_COVER_BASE_URL } from '../constants/common.constants';
-import { getMonthName, getYear } from '../utils/helpers.utils';
+import { IMAGE_AVATAR_BASE_URL, IMAGE_COVER_BASE_URL } from '../../constants/common.constants';
+import { getMonthName, getYear } from '../../utils/helpers.utils';
+import { useNavigate } from 'react-router-dom';
+
 
 
 const OtherProfile = () => {
@@ -25,6 +27,8 @@ const OtherProfile = () => {
     const { id } = useParams<{ id: string }>();
     const [user, setUser] = useState<any>()
     const [activeTab, setActiveTab] = useState(localStorage.getItem('activeTab-profile') || 'tweets');
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const userInfo = async () => {
@@ -61,7 +65,7 @@ const OtherProfile = () => {
                     {/* *** HEADER - START *** */}
                     <Header border={true}>
                         <div className={styles.headerItems}>
-                            <ArrowLeftIcon />
+                            <ArrowLeftIcon onClick={() => {navigate(-1)}} />
                             <HeaderTitle title={user?.name} subTitle={'1 Tweet'} />
                         </div>
                     </Header>

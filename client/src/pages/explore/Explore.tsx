@@ -1,12 +1,12 @@
 import React from 'react';
-import Header from '../components/header/Header';
+import Header from '../../components/header/Header';
 import styles from './Explore.module.css';
-import Layout from '../Layout.module.css';
-import SearchBar from '../components/ui/SearchBar';
-import PageUnderConstruction from '../components/ui/PageUnderConstruction';
-import GearIcon from '../components/icons/GearIcon';
-import Aside from '../components/aside/Aside';
-import WhoToFollow from '../components/ui/WhoToFollow';
+import Layout from '../../Layout.module.css';
+import SearchBar from '../../components/ui/SearchBar';
+import PageUnderConstruction from '../../components/ui/PageUnderConstruction';
+import GearIcon from '../../components/icons/GearIcon';
+import Aside from '../../components/aside/Aside';
+import WhoToFollow from '../../components/ui/WhoToFollow';
 
 const Explore = () => {
     

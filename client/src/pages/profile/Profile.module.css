@@ -91,6 +91,7 @@
     padding-left: 0.4rem;
     font-weight: var(--font-weight-300);
     color: var(--color-secondary);
+    cursor: pointer;
 }
 
 

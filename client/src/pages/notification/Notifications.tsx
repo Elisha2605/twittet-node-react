@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import Header from '../components/header/Header';
+import Header from '../../components/header/Header';
 import styles from './Notifications.module.css';
-import Layout from '../Layout.module.css';
-import HeaderTitle from '../components/header/HeaderTitle';
-import GearIcon from '../components/icons/GearIcon';
-import HorizontalNavBar from '../components/ui/HorizontalNavBar';
-import PageUnderConstruction from '../components/ui/PageUnderConstruction';
-import SearchBar from '../components/ui/SearchBar';
-import Aside from '../components/aside/Aside';
-import WhoToFollow from '../components/ui/WhoToFollow';
+import Layout from '../../Layout.module.css';
+import HeaderTitle from '../../components/header/HeaderTitle';
+import GearIcon from '../../components/icons/GearIcon';
+import HorizontalNavBar from '../../components/ui/HorizontalNavBar';
+import PageUnderConstruction from '../../components/ui/PageUnderConstruction';
+import SearchBar from '../../components/ui/SearchBar';
+import Aside from '../../components/aside/Aside';
+import WhoToFollow from '../../components/ui/WhoToFollow';
 
 
 const Notification = () => {

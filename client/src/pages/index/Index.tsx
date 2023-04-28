@@ -1,11 +1,11 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import styles from './Index.module.css';
-import hero from '../assets/hero.png';
-import TwitterIcon from '../components/icons/TwitterIcon';
-import Modal from '../components/ui/Modal';
-import Signup from '../components/auth/Signup';
-import Login from '../components/auth/Login';
-import { ModalContext } from '../context/modal.context';
+import hero from '../../assets/hero.png';
+import TwitterIcon from '../../components/icons/TwitterIcon';
+import Modal from '../../components/ui/Modal';
+import Signup from '../../components/auth/Signup';
+import Login from '../../components/auth/Login';
+import { ModalContext } from '../../context/modal.context';
 
 
 const Index: FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
