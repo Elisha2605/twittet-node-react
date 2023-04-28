@@ -31,6 +31,45 @@ const handleProtectedFollowRequest = async (
     try {
         let receiver: any = await Follow.findOne({ user: leader._id });
         let sender: any = await Follow.findOne({ user: follower._id });
+
+        /**
+         * Check if follower._id is in receiver.waitings array or leader._id is in sender.pendings array, if yes:
+         *   a. remove both follower._id and leader._id from receiver and sender.
+         *
+         * If not continue with the bellow if statements.
+         */
+        if (
+            (receiver &&
+                receiver.waitings.some(
+                    (item: any) =>
+                        item.user.toString() === follower._id.toString()
+                )) ||
+            (sender &&
+                sender.pendings.some(
+                    (item: any) =>
+                        item.user.toString() === leader._id.toString()
+                ))
+        ) {
+            // Remove follower._id from receiver.waitings array
+            receiver.waitings = receiver.waitings.filter(
+                (item: any) => item.user.toString() !== follower._id.toString()
+            );
+
+            // Remove leader._id from sender.pendings array
+            sender.pendings = sender.pendings.filter(
+                (item: any) => item.user.toString() !== leader._id.toString()
+            );
+
+            // Save the updated documents
+            const result = await Promise.all([receiver.save(), sender.save()]);
+            return {
+                success: true,
+                message: 'Request removed',
+                status: 200,
+                payload: result,
+            };
+        }
+
         if (!receiver && !sender) {
             // Both the receiver and sender do not exist
             // Create new documents for both
@@ -116,12 +155,12 @@ const handleProtectedFollowRequest = async (
 
 // Follow Request
 export const sendFollowRequest = async (
-    incomingReqId: string,
-    receiverId: string
+    followerId: string,
+    leaderId: string
 ): Promise<ApiResponse<any>> => {
     try {
-        const leader: IUser = await User.findById(receiverId);
-        const follower: IUser = await User.findById(incomingReqId);
+        const leader: IUser = await User.findById(leaderId);
+        const follower: IUser = await User.findById(followerId);
 
         if (!leader) {
             throw CustomError('User not found', 404);
@@ -130,7 +169,15 @@ export const sendFollowRequest = async (
             throw CustomError('Follower user not found', 404);
         }
 
-        // Handle follow request if user is protected
+        if (followerId.toString() === leader._id.toString()) {
+            return {
+                success: false,
+                message: 'You can not follow yourself',
+                status: 400,
+                payload: [],
+            };
+        }
+
         if (leader.isProtected) {
             return handleProtectedFollowRequest(leader, follower);
         }
@@ -155,6 +202,36 @@ async function handleUnprotectedFollowRequest(
     // Handle follow request if user is not protected
     let receiver: any = await Follow.findOne({ user: leader._id });
     let sender: any = await Follow.findOne({ user: follower._id });
+
+    if (
+        (receiver &&
+            receiver.followers.some(
+                (item: any) => item.user.toString() === follower._id.toString()
+            )) ||
+        (sender &&
+            sender.followings.some(
+                (item: any) => item.user.toString() === leader._id.toString()
+            ))
+    ) {
+        // Remove follower._id from receiver.waitings array
+        receiver.followers = receiver.followers.filter(
+            (item: any) => item.user.toString() !== follower._id.toString()
+        );
+
+        // Remove leader._id from sender.pendings array
+        sender.followings = sender.followings.filter(
+            (item: any) => item.user.toString() !== leader._id.toString()
+        );
+
+        // Save the updated documents
+        const result = await Promise.all([receiver.save(), sender.save()]);
+        return {
+            success: true,
+            message: 'Request removed',
+            status: 200,
+            payload: result,
+        };
+    }
     if (!receiver && !sender) {
         // Both the receiver and sender do not exist
         // Create new documents for both
