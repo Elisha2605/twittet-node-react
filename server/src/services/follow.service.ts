@@ -1,3 +1,4 @@
+import { response } from 'express';
 import Follow from 'src/model/follow.model';
 import User, { IUser } from 'src/model/user.model';
 import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
@@ -22,85 +23,202 @@ export const getUserFollowers = async (userId: string): Promise<any> => {
     }
 };
 
+const handleProtectedFollowRequest = async (
+    receiver: any,
+    sender: any,
+    leader: any,
+    follower: any
+): Promise<ApiResponse<any>> => {
+    // Code to handle follow request for protected users
+    try {
+        if (!receiver && !sender) {
+            // Both the receiver and sender do not exist
+            // Create new documents for both
+            receiver = new Follow({
+                user: leader._id,
+                waitings: [{ user: follower._id }],
+            });
+            sender = new Follow({
+                user: follower._id,
+                pendings: [{ user: leader._id }],
+            });
+            // Save the new documents
+            const result = await Promise.all([receiver.save(), sender.save()]);
+            return {
+                success: true,
+                message: 'Yuhuuu!',
+                status: 200,
+                payload: result,
+            };
+        } else if (receiver && sender) {
+            // The follow request is not pending, so add it
+            receiver.waitings.push({ user: follower._id });
+            sender.pendings.push({ user: leader._id });
+            const response = await Promise.all([
+                receiver.save(),
+                sender.save(),
+            ]);
+            return {
+                success: true,
+                message: 'Follow request sent',
+                status: 200,
+                payload: response,
+            };
+        } else if (receiver && !sender) {
+            // Only the receiver exists
+            // Update pendings array of the receiver and create a new sender document
+            receiver.waitings.push({ user: follower._id });
+
+            // Create new document for sender
+            sender = new Follow({
+                user: follower._id,
+                pendings: [{ user: leader._id }],
+            });
+
+            // Save the updated receiver and new sender documents
+            const result = await Promise.all([receiver.save(), sender.save()]);
+            return {
+                success: true,
+                message: 'Yuhuuu!',
+                status: 200,
+                payload: result,
+            };
+        } else if (!receiver && sender) {
+            // Only the sender exists
+            // Create new document for receiver and update sender waitings array
+            receiver = new Follow({
+                user: leader._id,
+                waitings: [{ user: follower._id }],
+            });
+
+            // Update waitings array of the sender
+            sender.pendings.push({ user: leader._id });
+
+            // Save the new receiver and updated sender documents
+            const result = await Promise.all([receiver.save(), sender.save()]);
+            return {
+                success: true,
+                message: 'Yuhuuu!',
+                status: 200,
+                payload: result,
+            };
+        }
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};
+
 // Follow Request
 export const sendFollowRequest = async (
-    incommingReqId: string,
+    incomingReqId: string,
     receiverId: string
 ): Promise<ApiResponse<any>> => {
     try {
-        const user: IUser = await User.findById(receiverId);
+        const leader: IUser = await User.findById(receiverId);
+        const follower: IUser = await User.findById(incomingReqId);
 
-        if (!user) {
+        if (!leader) {
             throw CustomError('User not found', 404);
         }
-
-        const followerUser: IUser = await User.findById(incommingReqId);
-
-        if (!followerUser) {
+        if (!follower) {
             throw CustomError('Follower user not found', 404);
         }
 
         let receiver: any = await Follow.findOne({ user: receiverId });
-        let sender: any = await Follow.findOne({ user: incommingReqId });
+        let sender: any = await Follow.findOne({ user: incomingReqId });
 
-        if (user.isProtected) {
-            // Handle pending requests -> if both users doens't exist
-            if (!receiver && !sender) {
-                receiver = new Follow({ user: receiverId });
-                sender = new Follow({ user: incommingReqId });
-                receiver.pendings.push({ user: followerUser._id });
-                sender.waitings.push({ user: receiverId });
-                await sender.save();
-
-                const response = await receiver.save();
-
-                return {
-                    success: true,
-                    message: 'Successfully sent follow request!',
-                    status: 200,
-                    payload: response,
-                };
-                // Handle pending requests -> if both users exist
-            } else if (receiver && sender) {
-                receiver.pendings.push({ user: followerUser._id });
-                sender.waitings.push({ user: receiverId });
-                await sender.save();
-
-                const response = await receiver.save();
-                return {
-                    success: true,
-                    message: 'Successfully sent follow request!',
-                    status: 200,
-                    payload: response,
-                };
-                // Handle pending requests -> if receiver doens't exist, but sender exist
-            } else if (receiver && !sender) {
-                receiver = new Follow({ user: receiverId });
-                sender.waitings.push({ user: receiverId });
-                await sender.save();
-
-                const response = await receiver.save();
-                return {
-                    success: true,
-                    message: 'Successfully sent follow request!',
-                    status: 200,
-                    payload: response,
-                };
-            }
+        // Handle follow request if user is protected
+        if (leader.isProtected) {
+            return handleProtectedFollowRequest(
+                receiver,
+                sender,
+                leader,
+                follower
+            );
         }
 
-        if (!receiver) {
-            receiver = new Follow({ user: receiverId });
-        }
+        // Handle follow request if user is not protected
+        if (!receiver && !sender) {
+            // Both the receiver and sender do not exist
+            // Create new documents for both
+            receiver = new Follow({
+                user: leader._id,
+                followers: [{ user: follower._id }],
+            });
+            sender = new Follow({
+                user: follower._id,
+                followings: [{ user: leader._id }],
+            });
 
-        receiver.followers.push({ user: followerUser._id });
-        const response = await receiver.save();
-        return {
-            success: true,
-            message: 'Successfully sent follow request!',
-            status: 200,
-            payload: response,
-        };
+            // Save the new documents
+            const result = await Promise.all([receiver.save(), sender.save()]);
+            return {
+                success: true,
+                message: 'Yuhuuu!',
+                status: 200,
+                payload: result,
+            };
+        } else if (receiver && sender) {
+            // Both the receiver and sender exist
+
+            // Update followers array of the receiver
+            receiver.followers.push({ user: follower._id });
+            // Update followings array of the sender
+            sender.followings.push({ user: leader._id });
+
+            // Save the updated sender and receiver documents
+            const result = await Promise.all([receiver.save(), sender.save()]);
+            return {
+                success: true,
+                message: 'Yuhuuu!',
+                status: 200,
+                payload: result,
+            };
+        } else if (receiver && !sender) {
+            // Only the receiver exists
+            // Update followers array of the receiver
+            receiver.followers.push({ user: follower._id });
+
+            // Create new document for sender
+            sender = new Follow({
+                user: follower._id,
+                followings: [{ user: leader._id }],
+            });
+
+            // Save the updated receiver and new sender documents
+            const result = await Promise.all([receiver.save(), sender.save()]);
+            return {
+                success: true,
+                message: 'Yuhuuu!',
+                status: 200,
+                payload: result,
+            };
+        } else if (!receiver && sender) {
+            // Only the sender exists
+            // Create new document for receiver
+            receiver = new Follow({
+                user: leader._id,
+                followers: [{ user: follower._id }],
+            });
+
+            // Update followings array of the sender
+            sender.followings.push({ user: leader._id });
+
+            // Save the new receiver and updated sender documents
+            const result = await Promise.all([receiver.save(), sender.save()]);
+            return {
+                success: true,
+                message: 'Yuhuuu!',
+                status: 200,
+                payload: result,
+            };
+        }
     } catch (error) {
         const errorResponse: ErrorResponse = {
             success: false,
