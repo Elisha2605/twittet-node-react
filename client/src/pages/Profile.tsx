@@ -17,21 +17,34 @@ import PageUnderConstruction from '../components/ui/PageUnderConstruction';
 import { IMAGE_AVATAR_BASE_URL, IMAGE_COVER_BASE_URL } from '../constants/common.constants';
 import { getMonthName, getYear } from '../utils/helpers.utils';
 import AuthContext from '../context/user.context';
+import { getAuthUserFollows } from '../api/follow.api';
 
 
 const Profile = () => {
 
     const [activeTab, setActiveTab] = useState(localStorage.getItem('activeTab-profile') || 'tweets');
     const [authUser, setAuthUser] = useState<any>(null);
+    // const [followings, setFollowings] = useState<any>();
 
     const ctx = useContext(AuthContext);
     useEffect(() => {
         const getAuthUser = async () => {
-            const { user } = ctx.getUserContext();
-            setAuthUser(user);
+            const { followings } = ctx.getUserContext();
+            setAuthUser(followings);
         }
         getAuthUser();
     }, [])
+
+    // const getAuthUserFollowStatus = async () => {
+    //     const res = await getAuthUserFollows();
+    //     setFollowings(res);
+    // } 
+
+    // useEffect(() => {
+    //     getAuthUserFollowStatus();
+    // }, [])
+
+
 
     // Set active tab in local storage
     useEffect(() => {

@@ -1,19 +1,33 @@
-import { response } from 'express';
 import Follow from 'src/model/follow.model';
 import User, { IUser } from 'src/model/user.model';
 import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
 import { CustomError } from 'src/utils/helpers';
 
-export const getUserFollowers = async (userId: string): Promise<any> => {
+export const getAuthUserFollows = async (userId: string): Promise<any> => {
     try {
         const result = await Follow.findOne({ user: userId })
             .populate({
                 path: 'user',
-                select: 'name',
+                select: 'name username',
             })
             .populate({
                 path: 'followers.user',
-                select: 'name email',
+                select: '_id name username',
+                model: 'User',
+            })
+            .populate({
+                path: 'followings.user',
+                select: '_id name username',
+                model: 'User',
+            })
+            .populate({
+                path: 'pendings.user',
+                select: '_id name username',
+                model: 'User',
+            })
+            .populate({
+                path: 'waitings.user',
+                select: '_id name username',
                 model: 'User',
             })
             .exec();
