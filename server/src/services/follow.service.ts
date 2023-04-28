@@ -23,7 +23,6 @@ export const getUserFollowers = async (userId: string): Promise<any> => {
 };
 
 // Follow Request
-// Follow Request
 export const sendFollowRequest = async (
     incommingReqId: string,
     receiverId: string
@@ -41,15 +40,61 @@ export const sendFollowRequest = async (
             throw CustomError('Follower user not found', 404);
         }
 
-        let follow: any = await Follow.findOne({ user: receiverId });
+        let receiver: any = await Follow.findOne({ user: receiverId });
+        let sender: any = await Follow.findOne({ user: incommingReqId });
 
-        if (!follow) {
-            follow = new Follow({ user: receiverId });
+        if (user.isProtected) {
+            // Handle pending requests -> if both users doens't exist
+            if (!receiver && !sender) {
+                receiver = new Follow({ user: receiverId });
+                sender = new Follow({ user: incommingReqId });
+                receiver.pendings.push({ user: followerUser._id });
+                sender.waitings.push({ user: receiverId });
+                await sender.save();
+
+                const response = await receiver.save();
+
+                return {
+                    success: true,
+                    message: 'Successfully sent follow request!',
+                    status: 200,
+                    payload: response,
+                };
+                // Handle pending requests -> if both users exist
+            } else if (receiver && sender) {
+                receiver.pendings.push({ user: followerUser._id });
+                sender.waitings.push({ user: receiverId });
+                await sender.save();
+
+                const response = await receiver.save();
+                return {
+                    success: true,
+                    message: 'Successfully sent follow request!',
+                    status: 200,
+                    payload: response,
+                };
+                // Handle pending requests -> if receiver doens't exist, but sender exist
+            } else if (receiver && !sender) {
+                receiver = new Follow({ user: receiverId });
+                sender.waitings.push({ user: receiverId });
+                await sender.save();
+
+                const response = await receiver.save();
+                return {
+                    success: true,
+                    message: 'Successfully sent follow request!',
+                    status: 200,
+                    payload: response,
+                };
+            }
         }
-        follow.followers.push({ user: followerUser._id });
 
-        const response = await follow.save();
+        if (!receiver) {
+            receiver = new Follow({ user: receiverId });
+        }
 
+        receiver.followers.push({ user: followerUser._id });
+        const response = await receiver.save();
         return {
             success: true,
             message: 'Successfully sent follow request!',

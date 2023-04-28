@@ -10,6 +10,9 @@ export interface IFollowing extends mongoose.Types.Subdocument {
 export interface IPending extends mongoose.Types.Subdocument {
     user: ObjectId | string;
 }
+export interface IWaiting extends mongoose.Types.Subdocument {
+    user: ObjectId | string;
+}
 
 const followerSchema = new mongoose.Schema({
     user: {
@@ -44,11 +47,23 @@ const pendingSchema = new mongoose.Schema({
     },
 });
 
+const waitingSchema = new mongoose.Schema({
+    user: {
+        type: Types.ObjectId,
+        ref: 'User',
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+});
+
 export interface IFollow extends mongoose.Document {
     user: ObjectId | string;
     followers: mongoose.Types.DocumentArray<IFollower>;
     followings: mongoose.Types.DocumentArray<IFollowing>;
-    pending: mongoose.Types.DocumentArray<IPending>;
+    pendings: mongoose.Types.DocumentArray<IPending>;
+    waitings: mongoose.Types.DocumentArray<IWaiting>;
 }
 
 const followModel = {
@@ -65,6 +80,9 @@ const followModel = {
     },
     pendings: {
         type: [pendingSchema],
+    },
+    waitings: {
+        type: [waitingSchema],
     },
 };
 

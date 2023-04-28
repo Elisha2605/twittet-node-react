@@ -32,3 +32,78 @@ const followSchema = new Schema({
 const Follow = model('Follow', followSchema);
 
 export default Follow;
+
+
+// Follow Request
+export const sendFollowRequest = async (
+    incommingReqId: string,
+    receiverId: string
+): Promise<ApiResponse<any>> => {
+    try {
+        const user: IUser = await User.findById(receiverId);
+
+        if (!user) {
+            throw CustomError('User not found', 404);
+        }
+
+        const followerUser: IUser = await User.findById(incommingReqId);
+
+        if (!followerUser) {
+            throw CustomError('Follower user not found', 404);
+        }
+
+        let receiver: any = await Follow.findOne({ user: receiverId });
+        let sender: any = await Follow.findOne({ user: receiverId });
+
+        // Handle pending requests
+        if (!receiver && !sender && user.isProtected) {
+            receiver = new Follow({ user: receiverId });
+            sender = new Follow({ user: incommingReqId });
+            receiver.pendings.push({ user: followerUser._id });
+            sender.waitings.push({ user: receiverId });
+            await sender.save();
+
+            const response = await receiver.save();
+
+            return {
+                success: true,
+                message: 'Successfully sent follow request!',
+                status: 200,
+                payload: response,
+            };
+        } else if (receiver && sender && user.isProtected) {
+            receiver.pendings.push({ user: followerUser._id });
+            sender.waitings.push({ user: receiverId });
+            await sender.save();
+
+            const response = await receiver.save();
+            return {
+                success: true,
+                message: 'Successfully sent follow request!',
+                status: 200,
+                payload: response,
+            };
+        }
+
+        if (!receiver) {
+            receiver = new Follow({ user: receiverId });
+        }
+
+        receiver.followers.push({ user: followerUser._id });
+        const response = await receiver.save();
+        return {
+            success: true,
+            message: 'Successfully sent follow request!',
+            status: 200,
+            payload: response,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};
