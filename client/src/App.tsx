@@ -13,7 +13,6 @@ import AuthContext, { StoredContext } from './context/user.context';
 import TwitterIcon from './components/icons/TwitterIcon';
 import Home from './pages/home/Home';
 import { ModalContext } from './context/modal.context';
-import OtherProfile from './pages/otherProile/OtherProfile';
 import Following from './pages/follow/Following';
 import Follower from './pages/follow/Follower';
 
@@ -158,13 +157,9 @@ function App() {
                                     path="/bookmarks"
                                     element={<Bookmarks />}
                                 />
-                                <Route
-                                    path="/user-profile/:id"
-                                    element={<OtherProfile />}
-                                />
-                                <Route path="/profile" element={<Profile />} />
-                                <Route path="/following" element={<Following />} />
-                                <Route path="/follower" element={<Follower />} />
+                                <Route path="/profile/:id" element={<Profile />} />
+                                <Route path="/following/:id" element={<Following />} />
+                                <Route path="/followers/:id" element={<Follower />} />
                                 <Route
                                     path="*"
                                     element={<Navigate to="/" replace={true} />}

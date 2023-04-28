@@ -1,6 +1,4 @@
-import React, {
-    useState,
-} from 'react';
+import React, { useEffect, useState } from 'react';
 import Aside from '../../components/aside/Aside';
 import SearchBar from '../../components/ui/SearchBar';
 import WhoToFollow from '../../components/ui/WhoToFollow';
@@ -8,17 +6,43 @@ import Header from '../../components/header/Header';
 import styles from './Following.module.css';
 import Layout from '../../Layout.module.css';
 import HeaderTitle from '../../components/header/HeaderTitle';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getUserById } from '../../api/user.api';
+import ArrowLeftIcon from '../../components/icons/ArrowLeftIcon';
+import UserInfo from '../../components/ui/UserInfo';
+import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
+import Button, { ButtonSize, ButtonType } from '../../components/ui/Button';
 import HorizontalNavBar from '../../components/ui/HorizontalNavBar';
-import { useNavigate } from 'react-router-dom';
+import { getAuthUserFollows } from '../../api/follow.api';
 
-interface FollowingProps {
-
-}
-
+interface FollowingProps {}
 
 const Following: React.FC<{}> = () => {
-    
+    const { id } = useParams<{ id: string }>();
+    const [user, setUser] = useState<any>();
+    const [followings, setFollowings] = useState<any[]>([]);
+
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const userInfo = async () => {
+            const res = await getUserById(id!);
+            const { user } = res;
+            // console.log(res);
+            setUser(user);
+        };
+        userInfo();
+    }, [id]);
+
+    // get Follow status
+    useEffect(() => {
+        const getAuthUserFollowStatus = async () => {
+            const { followers, followings } = await getAuthUserFollows(id!);
+
+            setFollowings(followings);
+        };
+        getAuthUserFollowStatus();
+    }, [id]);
 
     return (
         <React.Fragment>
@@ -26,22 +50,51 @@ const Following: React.FC<{}> = () => {
                 <div className={Layout.mainSection}>
                     {/* Home page - start */}
                     <Header border={true}>
-                        <HeaderTitle title={'Following'} className={styles.title} />
+                        <div className={styles.headerItems}>
+                            <ArrowLeftIcon
+                                onClick={() => {
+                                    navigate(-1);
+                                }}
+                            />
+                            <HeaderTitle
+                                title={user?.name}
+                                subTitle={`@${user?.username}`}
+                            />
+                        </div>
                         <HorizontalNavBar className={styles.homeNaveBar}>
                             <div className={styles.active}>
                                 Following
                             </div>
-                            <div className={''} onClick={() => navigate('/follower')}>
+                            <div className={''} onClick={() => navigate(`/followers/${id}`)}>
                                 Followers
                             </div>
                         </HorizontalNavBar>
-                    </Header>  
-                    
-                    {/* FOR YOU - START */}
-                        <div className={styles.main}>
-                            Following
-                        </div>
+                    </Header>
 
+                    {/* FOR YOU - START */}
+                    <div className={styles.main}>
+                        {followings.map((follow) => (
+                            <div key={follow._id} className={styles.followingItem} onClick={() => navigate(`/profile/${follow.user._id}`)}>    
+                                <UserInfo
+                                    userId={id}
+                                    avatar={follow.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${follow.user?.avatar}`}
+                                    name={follow.user?.name}
+                                    username={follow.user?.username}
+                                    className={styles.userInfoWrapper}
+                                >
+                                    <Button
+                                        className={styles.editProfileBtn}
+                                        value={'Following'}
+                                        type={ButtonType.tietary}
+                                        size={ButtonSize.small}
+                                        onClick={() => {
+                                            console.log('Edit profile clicked');
+                                        }}
+                                    />
+                                </UserInfo>
+                            </div>
+                        ))}
+                    </div>
                 </div>
                 {/* Home page - start */}
                 <div>

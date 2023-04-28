@@ -3,7 +3,7 @@ import User, { IUser } from 'src/model/user.model';
 import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
 import { CustomError } from 'src/utils/helpers';
 
-export const getAuthUserFollows = async (userId: string): Promise<any> => {
+export const getUserFollows = async (userId: string): Promise<any> => {
     try {
         const result = await Follow.findOne({ user: userId })
             .populate({
@@ -12,22 +12,22 @@ export const getAuthUserFollows = async (userId: string): Promise<any> => {
             })
             .populate({
                 path: 'followers.user',
-                select: '_id name username',
+                select: '_id name username avatar',
                 model: 'User',
             })
             .populate({
                 path: 'followings.user',
-                select: '_id name username',
+                select: '_id name username avatar',
                 model: 'User',
             })
             .populate({
                 path: 'pendings.user',
-                select: '_id name username',
+                select: '_id name username avatar',
                 model: 'User',
             })
             .populate({
                 path: 'waitings.user',
-                select: '_id name username',
+                select: '_id name username avatar',
                 model: 'User',
             })
             .exec();

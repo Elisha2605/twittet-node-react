@@ -64,6 +64,7 @@ const Home: React.FC<HomeProps> = ({
     const [tweetReply, setTweetReply] = useState<TweetReplyType>(TWEET_REPLY.everyone);
 
 
+
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
     
     const ctx = useContext(AuthContext);
@@ -255,7 +256,6 @@ const Home: React.FC<HomeProps> = ({
                         
                     )}
                     {/* FOLLOWING - START */}
-
                 </div>
                 {/* Home page - start */}
                 <div>

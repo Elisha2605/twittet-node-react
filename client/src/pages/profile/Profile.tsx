@@ -21,47 +21,59 @@ import {
 import { getMonthName, getYear } from '../../utils/helpers.utils';
 import AuthContext from '../../context/user.context';
 import { getAuthUserFollows } from '../../api/follow.api';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-
+import { getUserById } from '../../api/user.api';
 
 const Profile = () => {
+    const { id } = useParams<{ id: string }>();
+
     const [activeTab, setActiveTab] = useState(
         localStorage.getItem('activeTab-profile') || 'tweets'
     );
-    const [authUser, setAuthUser] = useState<any>(null);
+
     const [followers, setFollowers] = useState<any[]>([]);
     const [followings, setFollowings] = useState<any[]>([]);
+    const [authUser, setAuthUser] = useState<any>(null);
+    const [user, setUser] = useState<any>();
 
     const navigate = useNavigate();
-    
-    useEffect(() => {
-        const getAuthUserFollowStatus = async () => {
-            const { followers, followings } = await getAuthUserFollows();
-            setFollowers(followers);
-            setFollowings(followings);
-        };
-        getAuthUserFollowStatus();
-    }, []);
 
-    useEffect(() => {
-        console.log(followings);
-    }, [followings]);
-
+    // get Auth user
     const ctx = useContext(AuthContext);
     useEffect(() => {
         const getAuthUser = async () => {
             const { user } = ctx.getUserContext();
             setAuthUser(user);
-        };
+        }
         getAuthUser();
     }, []);
+    
+    // get User by Id
+    useEffect(() => {
+        const userInfo = async () => {
+            const res = await getUserById(id!);
+            const { user } = res;
+            // console.log(res);
+            setUser(user);
+        };
+        userInfo();
+    }, [id]);
+
+    // get Follow status
+    useEffect(() => {
+        const getAuthUserFollowStatus = async () => {
+            const { followers, followings } = await getAuthUserFollows(id!);
+            setFollowers(followers);
+            setFollowings(followings);
+        };
+        getAuthUserFollowStatus();
+    }, [id]);
 
     // Set active tab in local storage
     useEffect(() => {
         localStorage.setItem('activeTab-profile', activeTab);
     }, [activeTab]);
-
 
     const handleOptionClick = (option: string) => {
         // TODO: handle menu option clickes
@@ -81,9 +93,13 @@ const Profile = () => {
                     {/* *** HEADER - START *** */}
                     <Header border={true}>
                         <div className={styles.headerItems}>
-                            <ArrowLeftIcon onClick={() => {navigate(-1)}} />
+                            <ArrowLeftIcon
+                                onClick={() => {
+                                    navigate(-1);
+                                }}
+                            />
                             <HeaderTitle
-                                title={authUser?.name}
+                                title={user?.name}
                                 subTitle={'1 Tweet'}
                             />
                         </div>
@@ -96,8 +112,8 @@ const Profile = () => {
                             <div className={styles.coverImage}>
                                 <img
                                     src={
-                                        authUser?.coverImage
-                                            ? `${IMAGE_COVER_BASE_URL}/${authUser?.coverImage}`
+                                        user?.coverImage
+                                            ? `${IMAGE_COVER_BASE_URL}/${user?.coverImage}`
                                             : undefined
                                     }
                                     alt=""
@@ -106,28 +122,38 @@ const Profile = () => {
                             <div className={styles.profileImage}>
                                 <img
                                     src={
-                                        authUser?.coverImage
-                                            ? `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`
+                                        user?.coverImage
+                                            ? `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`
                                             : undefined
                                     }
                                     alt=""
                                 />
                             </div>
-                            <Button
-                                className={styles.editProfileBtn}
-                                value={'Edit profile'}
-                                type={ButtonType.tietary}
-                                size={ButtonSize.small}
-                                onClick={() => {
-                                    console.log('Edit profile clicked');
-                                }}
-                            />
+                            {authUser?._id === id ? (
+                                <Button
+                                    className={styles.editProfileBtn}
+                                    value={'Edit profile'}
+                                    type={ButtonType.tietary}
+                                    size={ButtonSize.small}
+                                    onClick={() => {
+                                        console.log('Edit profile clicked');
+                                    }}
+                                />
+                            ): (
+                                <Button
+                                    className={styles.editProfileBtn}
+                                    value={'Follow'}
+                                    type={ButtonType.secondary}
+                                    size={ButtonSize.small}
+                                    onClick={() => {
+                                        console.log('Edit profile clicked');
+                                    }}
+                                />
+                            )}
                         </div>
                         <div className={styles.userInfo}>
-                            <p className={styles.firstname}>{authUser?.name}</p>
-                            <p className={styles.username}>
-                                @{authUser?.username}
-                            </p>
+                            <p className={styles.firstname}>{user?.name}</p>
+                            <p className={styles.username}>@{user?.username}</p>
                             <p className={styles.bio}>
                                 Lorem ipsum dolor sit amet consectetur
                                 adipisicing elit. Maxime mollitia,
@@ -135,17 +161,17 @@ const Profile = () => {
                             <div className={styles.joined}>
                                 <FontAwesomeIcon icon={faCalendarDays} />
                                 <p>
-                                    Joined {getMonthName(authUser?.createdAt)}{' '}
-                                    {getYear(authUser?.createdAt)}
+                                    Joined {getMonthName(user?.createdAt)}{' '}
+                                    {getYear(user?.createdAt)}
                                 </p>
                             </div>
                             <div className={styles.followStatus}>
-                                <NavLink to={'/following'}>
+                                <NavLink to={`/following/${id}`}>
                                     <p>
                                         2<span>Following</span>
                                     </p>
                                 </NavLink>
-                                <NavLink to={'/follower'}>
+                                <NavLink to={`/followers/${id}`}>
                                     <p>
                                         1<span>Follower</span>
                                     </p>

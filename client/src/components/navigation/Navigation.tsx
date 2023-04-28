@@ -105,7 +105,7 @@ const Navigation: React.FC<NavigationProps> = ({
                     <NavigationItem
                         icon={faUser}
                         label={'Profile'}
-                        path="/profile"
+                        path={`/profile/${authUser?._id}`}
                     />
                     <NavigationItem
                         icon={faEllipsisH}

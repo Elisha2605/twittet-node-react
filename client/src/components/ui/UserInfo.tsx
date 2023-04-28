@@ -2,11 +2,11 @@ import React, { FC, useContext, useEffect, useState } from 'react';
 import PopUpMenu from './PopUpMenu';
 import styles from './UserInfo.module.css';
 import Certified from '../../assets/certified.svg';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import AuthContext from '../../context/user.context';
 
 interface UserInfoProps {
-    itemId: any;
+    itemId?: any;
     userId?: string;
     avatar: string | undefined;
     name: string;
@@ -50,18 +50,17 @@ const UserInfo: FC<UserInfoProps> = ({
         getAuthUser();
     }, []);
 
-    let profileLink: string;
-    if (userId === authUser?._id) {
-        profileLink = `/profile`;
-    } else {
-        profileLink = `/user-profile/${userId}`;
+    const navigate = useNavigate();
+
+    const onNavigateToProfile = () => {
+            navigate(`/profile/${userId}`)
     }
 
     return (
         <React.Fragment>
             <div className={`${styles.container}`}>
                 {avatar && (
-                    <div className={styles.avatar}>
+                    <div className={styles.avatar} onClick={onNavigateToProfile}>
                         <a href={link}>
                             <img src={avatar} alt="" />
                         </a>
@@ -71,16 +70,14 @@ const UserInfo: FC<UserInfoProps> = ({
                     {isOption ? (
                         <div className={styles.userInfoOptionWrapper}>
                             <div className={styles.userInfo}>
-                                <NavLink to={profileLink}>
-                                    <p className={styles.firstname}>
-                                        {name}{' '}
-                                        {isVerified && (
-                                            <img className={styles.certifiedIcon} src={Certified} alt="" />
-                                        )}{' '}
-                                    </p>
-                                </NavLink>
-                                <p className={styles.username}>
-                                <NavLink to={'/user-profile'}>@{username}</NavLink> {time && ` · ${time}`}
+                                <p className={styles.name} onClick={onNavigateToProfile}>
+                                    {name}{' '}
+                                    {isVerified && (
+                                        <img className={styles.certifiedIcon} src={Certified} alt="" />
+                                    )}{' '}
+                                </p>
+                                <p className={styles.username} onClick={onNavigateToProfile}>
+                                    @{username} {time && ` · ${time}`}
                                 </p>
                             </div>
                             <PopUpMenu
@@ -94,13 +91,16 @@ const UserInfo: FC<UserInfoProps> = ({
                         </div>
                     ) : (
                         <>
-                            <div className={styles.userInfo}>
-                                <NavLink to={'/user-profile'}>
-                                    <p className={styles.firstname}>
-                                    {name}
-                                    </p>
-                                </NavLink>
-                                @{username}
+                            <div className={styles.userInfo} onClick={onNavigateToProfile}>
+                                <p className={styles.name}>
+                                {name}{' '}
+                                {isVerified && (
+                                        <img className={styles.certifiedIcon} src={Certified} alt="" />
+                                )}{' '}
+                                </p>
+                                <p className={styles.username}>
+                                    @{username}
+                                </p>
                             </div>
                             {children}
                         </>

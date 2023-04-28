@@ -1,17 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 
 import asyncHandler from 'express-async-handler';
-import {
-    getAuthUserFollows,
-    sendFollowRequest,
-} from 'src/services/follow.service';
+import { getUserFollows, sendFollowRequest } from 'src/services/follow.service';
 
-export const getAuthUserFollowsController = asyncHandler(
+export const getUserFollowsController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        const userId = req.user._id;
+        const userId = req.params.id;
 
         try {
-            const response = await getAuthUserFollows(userId);
+            const response = await getUserFollows(userId);
             res.status(200).json(response);
         } catch (error) {
             next(error);
