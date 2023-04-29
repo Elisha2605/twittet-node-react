@@ -20,7 +20,7 @@ import {
 } from '../../constants/common.constants';
 import { getMonthName, getYear } from '../../utils/helpers.utils';
 import AuthContext from '../../context/user.context';
-import { getAuthUserFollows } from '../../api/follow.api';
+import { getAuthUserFollows, sendFollowRequest } from '../../api/follow.api';
 import { NavLink, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
@@ -36,8 +36,11 @@ const Profile = () => {
     const [followings, setFollowings] = useState<any[]>([]);
     const [authUser, setAuthUser] = useState<any>(null);
     const [user, setUser] = useState<any>();
+    const [isFollowing, setIsFollowing] = useState<boolean>();
 
     const navigate = useNavigate();
+
+
 
     // get Auth user
     const ctx = useContext(AuthContext);
@@ -48,43 +51,45 @@ const Profile = () => {
         }
         getAuthUser();
     }, []);
-    
+
     // get User by Id
     useEffect(() => {
         const userInfo = async () => {
             const res = await getUserById(id!);
             const { user } = res;
-            // console.log(res);
             setUser(user);
         };
         userInfo();
     }, [id]);
 
-    // get Follow status
+    // get Follow status (consider putting this in the userContext)
+    const getAuthUserFollowStatus = async () => {
+        const { followers, followings } = await getAuthUserFollows(authUser?._id);
+        if (followings && followings.some((following: any) => following.user._id === id)) {
+            setIsFollowing(true);
+        }
+        setFollowers(followers);
+        setFollowings(followings);
+    };
+
     useEffect(() => {
-        const getAuthUserFollowStatus = async () => {
-            const { followers, followings } = await getAuthUserFollows(id!);
-            setFollowers(followers);
-            setFollowings(followings);
-        };
-        getAuthUserFollowStatus();
-    }, [id]);
+        if (authUser) {
+            getAuthUserFollowStatus();
+        }
+    }, [authUser, id]);
 
     // Set active tab in local storage
     useEffect(() => {
         localStorage.setItem('activeTab-profile', activeTab);
     }, [activeTab]);
 
-    const handleOptionClick = (option: string) => {
-        // TODO: handle menu option clickes
-        if (option === 'Option 1') {
-            console.log('one');
-            // Insert your code to handle when Option 1 is clicked here
-        } else {
-            console.log(`${option} was clicked!`);
-            // Insert your code to handle when an option other than Option 1 is clicked here
-        }
-    };
+     // send follow request
+     const handleFollowRequest = async () => {
+        const res = await sendFollowRequest(authUser?._id, id!);
+        console.log(res);
+
+        setIsFollowing(!isFollowing);
+    }
 
     return (
         <React.Fragment>
@@ -142,12 +147,10 @@ const Profile = () => {
                             ): (
                                 <Button
                                     className={styles.editProfileBtn}
-                                    value={'Follow'}
-                                    type={ButtonType.secondary}
+                                    value={isFollowing ? 'Following' : 'Follow'}
+                                    type={isFollowing ? ButtonType.tietary : ButtonType.secondary}
                                     size={ButtonSize.small}
-                                    onClick={() => {
-                                        console.log('Edit profile clicked');
-                                    }}
+                                    onClick={handleFollowRequest}
                                 />
                             )}
                         </div>

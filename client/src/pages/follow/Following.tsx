@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Aside from '../../components/aside/Aside';
 import SearchBar from '../../components/ui/SearchBar';
 import WhoToFollow from '../../components/ui/WhoToFollow';
@@ -13,16 +13,30 @@ import UserInfo from '../../components/ui/UserInfo';
 import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
 import Button, { ButtonSize, ButtonType } from '../../components/ui/Button';
 import HorizontalNavBar from '../../components/ui/HorizontalNavBar';
-import { getAuthUserFollows } from '../../api/follow.api';
+import { getAuthUserFollows, sendFollowRequest } from '../../api/follow.api';
+import AuthContext from '../../context/user.context';
 
 interface FollowingProps {}
 
 const Following: React.FC<{}> = () => {
     const { id } = useParams<{ id: string }>();
     const [user, setUser] = useState<any>();
+    const [authUser, setAuthUser] = useState<any>(null);
     const [followings, setFollowings] = useState<any[]>([]);
+    const [isFollowing, setIsFollowing] = useState<boolean>();
+
 
     const navigate = useNavigate();
+
+    // get Auth user
+    const ctx = useContext(AuthContext);
+    useEffect(() => {
+        const getAuthUser = async () => {
+            const { user } = ctx.getUserContext();
+            setAuthUser(user);
+        }
+        getAuthUser();
+    }, []);
 
     useEffect(() => {
         const userInfo = async () => {
@@ -37,12 +51,22 @@ const Following: React.FC<{}> = () => {
     // get Follow status
     useEffect(() => {
         const getAuthUserFollowStatus = async () => {
-            const { followers, followings } = await getAuthUserFollows(id!);
-
+            const { followings } = await getAuthUserFollows(id!);
+            if (followings && followings.some((following: any) => following.user._id !== id)) {
+                setIsFollowing(true);
+            }
             setFollowings(followings);
         };
         getAuthUserFollowStatus();
     }, [id]);
+
+     // send follow request
+     const handleFollowRequest = async (e: React.MouseEvent<HTMLButtonElement>, userId: string) => {
+        e.stopPropagation();
+        const res = await sendFollowRequest(authUser?._id, userId!);
+        console.log(res);
+        setIsFollowing(!isFollowing);
+    }
 
     return (
         <React.Fragment>
@@ -51,11 +75,7 @@ const Following: React.FC<{}> = () => {
                     {/* Home page - start */}
                     <Header border={true}>
                         <div className={styles.headerItems}>
-                            <ArrowLeftIcon
-                                onClick={() => {
-                                    navigate(-1);
-                                }}
-                            />
+                            <ArrowLeftIcon onClick={() => {navigate(-1)}} />
                             <HeaderTitle
                                 title={user?.name}
                                 subTitle={`@${user?.username}`}
@@ -76,20 +96,18 @@ const Following: React.FC<{}> = () => {
                         {followings.map((follow) => (
                             <div key={follow._id} className={styles.followingItem} onClick={() => navigate(`/profile/${follow.user._id}`)}>    
                                 <UserInfo
-                                    userId={id}
+                                    userId={follow.user._id}
                                     avatar={follow.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${follow.user?.avatar}`}
                                     name={follow.user?.name}
                                     username={follow.user?.username}
                                     className={styles.userInfoWrapper}
                                 >
                                     <Button
-                                        className={styles.editProfileBtn}
-                                        value={'Following'}
-                                        type={ButtonType.tietary}
+                                        className={`${styles.followingBtn} ${isFollowing  && '' }`}
+                                        value={isFollowing ? 'Following' : 'Follow'}
+                                        type={isFollowing ? ButtonType.tietary : ButtonType.secondary}   
                                         size={ButtonSize.small}
-                                        onClick={() => {
-                                            console.log('Edit profile clicked');
-                                        }}
+                                        onClick={(e: any) => handleFollowRequest(e, follow.user._id)}
                                     />
                                 </UserInfo>
                             </div>

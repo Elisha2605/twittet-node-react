@@ -18,8 +18,8 @@ export const getUserFollowsController = asyncHandler(
 
 export const followRequestController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        const incommingReq = req.user._id;
-        const receiver = req.params.id;
+        const incommingReq = req.body.incomingReqId;
+        const receiver = req.body.receiverId;
 
         try {
             const { success, message, payload } = await sendFollowRequest(
@@ -29,6 +29,7 @@ export const followRequestController = asyncHandler(
 
             if (success) {
                 res.status(200).json({
+                    success: success,
                     message: message,
                     response: payload,
                 });

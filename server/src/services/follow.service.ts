@@ -99,7 +99,7 @@ const handleProtectedFollowRequest = async (
             const result = await Promise.all([receiver.save(), sender.save()]);
             return {
                 success: true,
-                message: 'Yuhuuu!',
+                message: 'Successfully sent the Follow request',
                 status: 200,
                 payload: result,
             };

@@ -77,6 +77,7 @@ const Follower: React.FC<{}> = () => {
                         {followers.map((follow) => (
                             <div key={follow._id} className={styles.followingItem} onClick={() => navigate(`/profile/${follow.user._id}`)}>   
                                 <UserInfo
+                                    userId={id}
                                     avatar={follow.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${follow.user?.avatar}`}
                                     name={follow.user?.name}
                                     username={follow.user?.username}

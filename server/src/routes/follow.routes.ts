@@ -8,6 +8,6 @@ import { verifyUser } from 'src/utils/jwt.util';
 const followRouter = Router();
 
 followRouter.get('/:id', verifyUser(), getUserFollowsController);
-followRouter.post('/send/:id', verifyUser(), followRequestController);
+followRouter.post('/send', verifyUser(), followRequestController);
 
 export default followRouter;

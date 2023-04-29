@@ -21,6 +21,8 @@ interface ButtonProps {
     loading?: Boolean;
     isDisabled?: boolean;
     className?: string;
+    onMouseEnter?: React.MouseEventHandler<HTMLButtonElement>;
+    onMouseLeave?: React.MouseEventHandler<HTMLButtonElement>;
     onClick: Function;
 }
 
@@ -31,6 +33,8 @@ const Button: FC<ButtonProps> = ({
     loading = false,
     isDisabled = false,
     className,
+    onMouseEnter,
+    onMouseLeave,
     onClick,
 }) => {
     let allStyles = styles.primary;
@@ -60,10 +64,12 @@ const Button: FC<ButtonProps> = ({
                 loading ? styles.loading : ''
             } ${isDisabled && styles.disabled}`}
             onClick={(e) => onClick(e, value)}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
             disabled={isDisabled}
         >
             {loading && <LoadingRing size={'small'} />}
-            {!loading && value}
+            {!loading && <span>{value}</span>}
         </button>
     );
 };

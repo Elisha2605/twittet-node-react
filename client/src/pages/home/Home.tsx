@@ -1,6 +1,7 @@
 import React, {
     useContext,
     useEffect,
+    useMemo,
     useRef,
     useState,
 } from 'react';
@@ -77,17 +78,16 @@ const Home: React.FC<HomeProps> = ({
     }, []);
 
     // fetching Tweets
+    const fetchTweets = async () => {
+        const { tweets } = await getAllTweets();
+        setTweets(tweets);
+    };
+    const memoizedTweets = useMemo(() => tweets, [tweets]);
     useEffect(() => {
-        const fetchTweets = async () => {
-            try {
-                const { tweets } = await getAllTweets();
-                setTweets(tweets);
-            } catch (error) {
-                console.error(error);
-            }
-        };
         fetchTweets();
     }, []);
+
+    console.log(memoizedTweets);
 
     // Set active tab in local storage
     useEffect(() => {
@@ -231,7 +231,7 @@ const Home: React.FC<HomeProps> = ({
                     {activeTab === 'for-you' && (
                         <div className={styles.main}>
                             {/* tweets - start */}
-                            {tweets.map((tweet: any) => (
+                            {memoizedTweets.map((tweet: any) => (
                                 <Tweet
                                     key={tweet._id}
                                     comments={'164'}
