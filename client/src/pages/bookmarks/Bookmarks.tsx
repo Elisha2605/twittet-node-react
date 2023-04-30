@@ -12,15 +12,6 @@ import { tweetMenuOptions, tweetMenuIcons } from '../../data/menuOptions';
 
 const Bookmarks = () => {
 
-    // const options = ["Delete", "Edit", "Option 3"];
-
-    // const icons={
-    //    "Delete": <FontAwesomeIcon icon={faTrash} />,
-    //    "Edit": <FontAwesomeIcon icon={faEdit} />,
-    //    "Option 3": <FontAwesomeIcon icon={faPizzaSlice} />,
-    // }
-    
-
     const handleOptionClick = (option: string) => {
         // TODO: handle menu option clickes
         if (option === "Option 1") {

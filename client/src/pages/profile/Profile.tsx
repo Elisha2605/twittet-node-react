@@ -127,7 +127,7 @@ const Profile = () => {
                             <div className={styles.profileImage}>
                                 <img
                                     src={
-                                        user?.coverImage
+                                        user?.avatar
                                             ? `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`
                                             : undefined
                                     }

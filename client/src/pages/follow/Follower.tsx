@@ -10,23 +10,20 @@ import HorizontalNavBar from '../../components/ui/HorizontalNavBar';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
 import ArrowLeftIcon from '../../components/icons/ArrowLeftIcon';
-import { getAuthUserFollows, sendFollowRequest } from '../../api/follow.api';
+import { getAuthUserFollows } from '../../api/follow.api';
 import UserInfo from '../../components/ui/UserInfo';
 import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
-import Button, { ButtonSize, ButtonType } from '../../components/ui/Button';
+import { ButtonSize, ButtonType } from '../../components/ui/Button';
 import AuthContext from '../../context/user.context';
-
-interface FollowerProps {
-
-}
+import FollowButton from '../../components/ui/FollowButton';
+import LoadingRing from '../../components/ui/LoadingRing';
 
 const Follower: React.FC<{}> = () => {
 
     const { id } = useParams<{ id: string }>();
     const [user, setUser] = useState<any>();
-    const [authUser, setAuthUser] = useState<any>(null);
     const [followers, setFollowers] = useState<any[]>([]);
-
+    const [isloading, setIsLoading] = useState<boolean>(false);
     
     const navigate = useNavigate();
 
@@ -35,7 +32,6 @@ const Follower: React.FC<{}> = () => {
     useEffect(() => {
         const getAuthUser = async () => {
             const { user } = ctx.getUserContext();
-            setAuthUser(user);
         }
         getAuthUser();
     }, []);
@@ -53,35 +49,18 @@ const Follower: React.FC<{}> = () => {
       // get Follow status
     useEffect(() => {
         const getAuthUserFollowStatus = async () => {
-            const { followers } = await getAuthUserFollows(id!);
-            followers.forEach((follower: any) => {
+            setIsLoading(true);
+            const { followers, followings } = await getAuthUserFollows(id!);
+            followings.forEach((follower: any) => {
                 follower.isFollowing = false; // add the isFollowing property
+
             });
             setFollowers(followers);
+            setIsLoading(false)
         };
         getAuthUserFollowStatus();
     }, [id]);
     
-     // send follow request
-    const handleFollowRequest = async (e: React.MouseEvent<HTMLButtonElement>, userId: string) => {
-        e.stopPropagation();
-        console.log(userId);
-        const res = await sendFollowRequest(authUser?._id, userId!);
-        console.log(res); // delete me
-        // update the follow status for the clicked user
-        const newFollowers = followers.map((follower) => {
-            if (follower.user._id === userId) {
-                return {
-                    ...follower,
-                    isFollower: !follower.isFollower
-                };
-            } else {
-                return follower;
-            }
-        });
-        console.log(newFollowers);
-        setFollowers(newFollowers);
-    }
 
     return (
         <React.Fragment>
@@ -107,29 +86,29 @@ const Follower: React.FC<{}> = () => {
                     </Header>  
                     
                     {/* FOR YOU - START */}
-                    <div className={styles.main}>
-                        {followers.map((follower) => (
-                            <div key={follower._id} className={styles.followingItem} onClick={() => navigate(`/profile/${follower.user._id}`)}>   
-                                <UserInfo
-                                    userId={id}
-                                    avatar={follower.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${follower.user?.avatar}`}
-                                    name={follower.user?.name}
-                                    username={follower.user?.username}
-                                    className={styles.userInfoWrapper}
-                                >
-                                    <Button
-                                        itemId={follower.user._id}
-                                        className={styles.followerBtn}
-                                        value={follower.isFollower ? 'Following' : 'Follow'}
-                                        type={follower.isFollower ? ButtonType.tietary : ButtonType.secondary}
-                                        size={ButtonSize.small}
-                                        onClick={(e: any) => handleFollowRequest(e, follower.user._id)}
-                                    />
-                                </UserInfo>
-                            </div>
-                        ))}
-                    </div>
-
+                        <div className={styles.main}>
+                            {followers.map((follower) => (
+                                <div key={follower._id} className={styles.followingItem} onClick={() => navigate(`/profile/${follower.user._id}`)}>   
+                                {!isloading && (
+                                    <UserInfo
+                                        userId={id}
+                                        avatar={follower.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${follower.user?.avatar}`}
+                                        name={follower.user?.name}
+                                        username={follower.user?.username}
+                                        className={styles.userInfoWrapper}
+                                    >
+                                        <FollowButton
+                                            userId={follower.user._id}
+                                            type={ButtonType.secondary}
+                                            size={ButtonSize.small}
+                                        />
+                                    </UserInfo>
+                                    )}
+                                    {isloading && <LoadingRing size={'small'} />}
+                                </div>
+                            ))}
+                        </div>
+                
                 </div>
                 {/* Home page - start */}
                 <div>

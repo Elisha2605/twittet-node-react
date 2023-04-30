@@ -16,9 +16,7 @@ import HorizontalNavBar from '../../components/ui/HorizontalNavBar';
 import { getAuthUserFollows, sendFollowRequest } from '../../api/follow.api';
 import AuthContext from '../../context/user.context';
 
-interface FollowingProps {}
-
-const Following: React.FC<{}> = () => {
+const Following = () => {
     const { id } = useParams<{ id: string }>();
     const [user, setUser] = useState<any>();
     const [authUser, setAuthUser] = useState<any>(null);
@@ -111,6 +109,7 @@ const Following: React.FC<{}> = () => {
                                     userId={follow.user._id}
                                     avatar={follow.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${follow.user?.avatar}`}
                                     name={follow.user?.name}
+                                    isVerified={follow.user.isVerified}
                                     username={follow.user?.username}
                                     className={styles.userInfoWrapper}
                                 >

@@ -15,6 +15,7 @@ import Home from './pages/home/Home';
 import { ModalContext } from './context/modal.context';
 import Following from './pages/follow/Following';
 import Follower from './pages/follow/Follower';
+import Signup from './components/auth/Signup';
 
 function App() {
 
