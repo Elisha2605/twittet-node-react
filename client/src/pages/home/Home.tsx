@@ -87,8 +87,6 @@ const Home: React.FC<HomeProps> = ({
         fetchTweets();
     }, []);
 
-    console.log(memoizedTweets);
-
     // Set active tab in local storage
     useEffect(() => {
         localStorage.setItem('activeTab-home', activeTab);

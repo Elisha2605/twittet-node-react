@@ -23,7 +23,6 @@ const Following: React.FC<{}> = () => {
     const [user, setUser] = useState<any>();
     const [authUser, setAuthUser] = useState<any>(null);
     const [followings, setFollowings] = useState<any[]>([]);
-    const [isFollowing, setIsFollowing] = useState<boolean>();
 
 
     const navigate = useNavigate();
@@ -52,20 +51,33 @@ const Following: React.FC<{}> = () => {
     useEffect(() => {
         const getAuthUserFollowStatus = async () => {
             const { followings } = await getAuthUserFollows(id!);
-            if (followings && followings.some((following: any) => following.user._id !== id)) {
-                setIsFollowing(true);
-            }
+            followings.forEach((following: any) => {
+                following.isFollowing = true; // add the isFollowing property
+            });
             setFollowings(followings);
         };
         getAuthUserFollowStatus();
     }, [id]);
 
      // send follow request
-     const handleFollowRequest = async (e: React.MouseEvent<HTMLButtonElement>, userId: string) => {
+    const handleFollowRequest = async (e: React.MouseEvent<HTMLButtonElement>, userId: string) => {
         e.stopPropagation();
+        console.log(userId);
         const res = await sendFollowRequest(authUser?._id, userId!);
-        console.log(res);
-        setIsFollowing(!isFollowing);
+        console.log(res); // delete me
+        // update the follow status for the clicked user
+        const newFollowings = followings.map((following) => {
+            if (following.user._id === userId) {
+                return {
+                    ...following,
+                    isFollowing: !following.isFollowing
+                };
+            } else {
+                return following;
+            }
+        });
+        console.log(newFollowings);
+        setFollowings(newFollowings);
     }
 
     return (
@@ -103,9 +115,10 @@ const Following: React.FC<{}> = () => {
                                     className={styles.userInfoWrapper}
                                 >
                                     <Button
-                                        className={`${styles.followingBtn} ${isFollowing  && '' }`}
-                                        value={isFollowing ? 'Following' : 'Follow'}
-                                        type={isFollowing ? ButtonType.tietary : ButtonType.secondary}   
+                                        itemId={follow.user._id}
+                                        className={styles.followingBtn}
+                                        value={follow.isFollowing ? 'Following' : 'Follow'}
+                                        type={follow.isFollowing ? ButtonType.tietary : ButtonType.secondary}   
                                         size={ButtonSize.small}
                                         onClick={(e: any) => handleFollowRequest(e, follow.user._id)}
                                     />

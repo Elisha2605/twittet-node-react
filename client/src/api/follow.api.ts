@@ -10,11 +10,11 @@ export const getAuthUserFollows = async (userId: string) => {
     }
 };
 
-export const sendFollowRequest = async (incomingReqId: string, receiverId: string) => {
+export const sendFollowRequest = async (senderId: string, receiverId: string) => {
     try {
         const res = await http.post(
             `/follows/send`,
-            { incomingReqId: incomingReqId, receiverId: receiverId },
+            { senderId: senderId, receiverId: receiverId },
             GETREQUESTOPTIONS(),
         );
         return res.data;

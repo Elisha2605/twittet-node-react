@@ -15,6 +15,7 @@ export enum ButtonSize {
 }
 
 interface ButtonProps {
+    itemId?: string,
     value: any;
     type: ButtonType;
     size: ButtonSize;
@@ -27,6 +28,7 @@ interface ButtonProps {
 }
 
 const Button: FC<ButtonProps> = ({
+    itemId,
     value,
     type,
     size,
@@ -63,7 +65,7 @@ const Button: FC<ButtonProps> = ({
             className={`${className} ${allStyles} ${styles[type]} ${
                 loading ? styles.loading : ''
             } ${isDisabled && styles.disabled}`}
-            onClick={(e) => onClick(e, value)}
+            onClick={(e) => onClick(e, itemId)}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
             disabled={isDisabled}

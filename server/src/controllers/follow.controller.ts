@@ -18,12 +18,12 @@ export const getUserFollowsController = asyncHandler(
 
 export const followRequestController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        const incommingReq = req.body.incomingReqId;
+        const sender = req.body.senderId;
         const receiver = req.body.receiverId;
 
         try {
             const { success, message, payload } = await sendFollowRequest(
-                incommingReq,
+                sender,
                 receiver
             );
 

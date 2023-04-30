@@ -227,12 +227,12 @@ async function handleUnprotectedFollowRequest(
                 (item: any) => item.user.toString() === leader._id.toString()
             ))
     ) {
-        // Remove follower._id from receiver.waitings array
+        // Remove follower._id from receiver.followers array
         receiver.followers = receiver.followers.filter(
             (item: any) => item.user.toString() !== follower._id.toString()
         );
 
-        // Remove leader._id from sender.pendings array
+        // Remove leader._id from sender.followings array
         sender.followings = sender.followings.filter(
             (item: any) => item.user.toString() !== leader._id.toString()
         );
