@@ -1,10 +1,10 @@
 .faUserCheck {
-    padding: 0.8rem 0.8rem;
+    padding: 0.8rem 0.7rem;
     border-radius: 50%;
     background-color: var(--color-primary);
 }
 
 .small {
-    font-size: 0.6rem;
+    font-size: 0.5rem;
     padding: 0.3rem 0.3rem;
 }

@@ -1,4 +1,5 @@
 import { TWEET_AUDIENCE } from 'src/constants/tweet.constants';
+import Follow from 'src/model/follow.model';
 import Tweet from 'src/model/tweet.model';
 import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
 import { CustomError } from 'src/utils/helpers';
@@ -53,6 +54,54 @@ export const getUserTweets = async (
             message: 'Successfully fetched tweets',
             status: 200,
             payload: tweet,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};
+
+export const getFollowTweets = async (
+    userId: string
+): Promise<ApiResponse<any>> => {
+    try {
+        const follow = await Follow.findOne({ user: userId }).populate(
+            'followings.user'
+        );
+        // Extract the user IDs from the followings array
+        const followingIds = follow.followings.map(
+            (following: any) => following.user._id
+        );
+
+        // Find all tweets from users in the followings array
+        const tweets = await Tweet.find({ user: { $in: followingIds } })
+            .populate({
+                path: 'user',
+                select: 'name username avatar coverImage isVerified isProtected',
+                model: 'User',
+            })
+            .sort({ createdAt: -1 })
+            .exec();
+
+        // To consider in the feature ( additional query criteria to filter the tweets based on their audience or reply)
+        // const tweets = await Tweet.find({
+        //     user: { $in: followingIds },
+        //     audience: {
+        //         $in: [TWEET_AUDIENCE.everyone, TWEET_AUDIENCE.followers],
+        //     },
+        //     reply: { $in: [TWEET_REPLY.everyone, TWEET_REPLY.followers] },
+        // });
+
+        return {
+            success: true,
+            message: 'Successfully fetched tweets',
+            status: 200,
+            payload: tweets,
         };
     } catch (error) {
         const errorResponse: ErrorResponse = {

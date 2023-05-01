@@ -5,8 +5,6 @@ import UserInfo from '../ui/UserInfo';
 import styles from './Tweet.module.css';
 import { getTimeDifference } from '../../utils/helpers.utils';
 import { IMAGE_AVATAR_BASE_URL, IMAGE_TWEET_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAt, faHeart, faUserCheck } from '@fortawesome/free-solid-svg-icons';
 import HeartIcon from '../icons/HeartIcon';
 import UserIcon from '../icons/UserIcon';
 import AtIcon from '../icons/AtIcon';
@@ -43,11 +41,8 @@ const Tweet: FC<TweetProps> = ({
     const username = tweet.user.username;
     const isVerfied = tweet.user.isVerified;
     const avatar = tweet.user.avatar;
-    
 
-    useEffect(() => {
-        console.log(avatar);
-    }, [avatar])
+    
     return (
         <React.Fragment>
             <div className={`${styles.container}`} key={tweetId}>

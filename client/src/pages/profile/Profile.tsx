@@ -27,7 +27,7 @@ import { getUserById } from '../../api/user.api';
 import { deleteTweet, getUserTweets } from '../../api/tweet.api';
 
 interface ProfileProps {
-    onAddTweet: any
+    onAddTweet: any;
 }
 
 const Profile: FC<ProfileProps> = ({ onAddTweet }) => {
@@ -43,10 +43,9 @@ const Profile: FC<ProfileProps> = ({ onAddTweet }) => {
     const [user, setUser] = useState<any>();
     const [isFollowing, setIsFollowing] = useState<boolean>();
     const [userTweets, setUserTweets] = useState<any[]>([]);
+    const [userTweetsMedia, setUserTweetsMedia] = useState<any[]>([]);
 
     const navigate = useNavigate();
-
-
 
     // get Auth user
     const ctx = useContext(AuthContext);
@@ -54,7 +53,7 @@ const Profile: FC<ProfileProps> = ({ onAddTweet }) => {
         const getAuthUser = async () => {
             const { user } = ctx.getUserContext();
             setAuthUser(user);
-        }
+        };
         getAuthUser();
     }, []);
 
@@ -72,8 +71,15 @@ const Profile: FC<ProfileProps> = ({ onAddTweet }) => {
     useEffect(() => {
         if (authUser) {
             const getAuthUserFollowStatus = async () => {
-                const { followers, followings } = await getAuthUserFollows(authUser?._id);
-                if (followings && followings.some((following: any) => following.user._id === id)) {
+                const { followers, followings } = await getAuthUserFollows(
+                    authUser?._id
+                );
+                if (
+                    followings &&
+                    followings.some(
+                        (following: any) => following.user._id === id
+                    )
+                ) {
                     setIsFollowing(true);
                 }
                 setFollowers(followers);
@@ -88,20 +94,28 @@ const Profile: FC<ProfileProps> = ({ onAddTweet }) => {
         localStorage.setItem('activeTab-profile', activeTab);
     }, [activeTab]);
 
-     // send follow request
-     const handleFollowRequest = async () => {
+    // send follow request
+    const handleFollowRequest = async () => {
         const res = await sendFollowRequest(authUser?._id, id!);
         console.log(res);
 
         setIsFollowing(!isFollowing);
-    }
+    };
 
+    // fetch user tweets
     useEffect(() => {
         const fetchUserTweets = async () => {
-            const res = await getUserTweets(id!)
+            const res = await getUserTweets(id!);
             const { tweets } = res;
+
+            const medias = tweets
+                .filter((tweet: any) => tweet.image !== null)
+                .map((tweet: any) => {
+                    return tweet;
+                });
             setUserTweets(tweets);
-        }
+            setUserTweetsMedia(medias)
+        };
         fetchUserTweets();
     }, []);
 
@@ -116,8 +130,8 @@ const Profile: FC<ProfileProps> = ({ onAddTweet }) => {
         handleNewTweetFromModal();
     }, [onAddTweet]);
 
-     // TWEET menu popup
-     const handleMenuOptionClick = async (option: string, tweetId: string) => {
+    // TWEET menu popup
+    const handleMenuOptionClick = async (option: string, tweetId: string) => {
         if (option === 'Delete') {
             const res = await deleteTweet(tweetId);
             setUserTweets((preveState) =>
@@ -143,7 +157,19 @@ const Profile: FC<ProfileProps> = ({ onAddTweet }) => {
                             />
                             <HeaderTitle
                                 title={user?.name}
-                                subTitle={'1 Tweet'}
+                                subTitle={
+                                    (activeTab === 'tweets' ||
+                                        activeTab === 'replies') &&
+                                    userTweets.length === 1
+                                        ? userTweets.length + ' tweet'
+                                        : (activeTab === 'tweets' ||
+                                              activeTab === 'replies') &&
+                                          userTweets.length > 1
+                                        ? userTweets.length + ' tweets'
+                                        : activeTab === 'media'
+                                        ? userTweetsMedia.length + ' photos'
+                                        : '1 like'
+                                }
                             />
                         </div>
                     </Header>
@@ -182,11 +208,15 @@ const Profile: FC<ProfileProps> = ({ onAddTweet }) => {
                                         console.log('Edit profile clicked');
                                     }}
                                 />
-                            ): (
+                            ) : (
                                 <Button
                                     className={styles.editProfileBtn}
                                     value={isFollowing ? 'Following' : 'Follow'}
-                                    type={isFollowing ? ButtonType.tietary : ButtonType.secondary}
+                                    type={
+                                        isFollowing
+                                            ? ButtonType.tietary
+                                            : ButtonType.secondary
+                                    }
                                     size={ButtonSize.small}
                                     onClick={handleFollowRequest}
                                 />
@@ -214,7 +244,7 @@ const Profile: FC<ProfileProps> = ({ onAddTweet }) => {
                                 </NavLink>
                                 <NavLink to={`/followers/${id}`}>
                                     <p>
-                                        1<span>Follower</span>
+                                        1<span>Followers</span>
                                     </p>
                                 </NavLink>
                             </div>
@@ -256,22 +286,22 @@ const Profile: FC<ProfileProps> = ({ onAddTweet }) => {
                         </HorizontalNavBar>
                         {activeTab === 'tweets' && (
                             <div className={styles.tweets}>
-                            {/* tweets - start */}
-                            {userTweets.map((tweet: any) => (
-                                <Tweet
-                                    key={tweet._id}
-                                    comments={'164'}
-                                    reposts={'924'}
-                                    likes={'21.3'}
-                                    views={'446'}
-                                    tweet={tweet}
-                                    options={tweetMenuOptions}
-                                    icons={tweetMenuIcons}
-                                    onClickMenu={handleMenuOptionClick}
-                                />
-                            ))}
-                            {/* tweets - end */}
-                        </div>
+                                {/* tweets - start */}
+                                {userTweets.map((tweet: any) => (
+                                    <Tweet
+                                        key={tweet._id}
+                                        comments={'164'}
+                                        reposts={'924'}
+                                        likes={'21.3'}
+                                        views={'446'}
+                                        tweet={tweet}
+                                        options={tweetMenuOptions}
+                                        icons={tweetMenuIcons}
+                                        onClickMenu={handleMenuOptionClick}
+                                    />
+                                ))}
+                                {/* tweets - end */}
+                            </div>
                         )}
                         {/* REPLIES - START */}
                         {activeTab === 'replies' && (
@@ -286,9 +316,19 @@ const Profile: FC<ProfileProps> = ({ onAddTweet }) => {
                         {/* MEDIA - START */}
                         {activeTab === 'media' && (
                             <div className={styles.main}>
-                                <PageUnderConstruction
-                                    message={'Will display - all tweet images'}
-                                />
+                                {userTweetsMedia.map((tweet: any) => (
+                                    <Tweet
+                                        key={tweet._id}
+                                        comments={'164'}
+                                        reposts={'924'}
+                                        likes={'21.3'}
+                                        views={'446'}
+                                        tweet={tweet}
+                                        options={tweetMenuOptions}
+                                        icons={tweetMenuIcons}
+                                        onClickMenu={handleMenuOptionClick}
+                                    />
+                                ))}
                             </div>
                         )}
                         {/* MEDIA - END */}

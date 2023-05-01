@@ -24,9 +24,8 @@ import {
     tweetReplyOptions,
     tweetReplyIcons 
 } from '../../data/menuOptions';
-import { createTweet, deleteTweet, getAllTweets } from '../../api/tweet.api';
+import { createTweet, deleteTweet, getAllTweets, getFollowTweets } from '../../api/tweet.api';
 import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
-import PageUnderConstruction from '../../components/ui/PageUnderConstruction';
 import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
 import AuthContext from '../../context/user.context';
 
@@ -57,14 +56,13 @@ const Home: React.FC<HomeProps> = ({
 }) => {
 
     const [tweets, setTweets] = useState<any[]>([]);
+    const [followingTweets, setFollowingTweets] = useState<any[]>([]);
     const [authUser, setAuthUser] = useState<any>(null);
     
     const [isFormFocused, setIsFormFocused] = useState(false);
     const [activeTab, setActiveTab] = useState(localStorage.getItem('activeTab-home') || 'for-you');
     const [tweetAudience, setTweetAudience] = useState<TweetAudienceType>(TWEET_AUDIENCE.everyone);
     const [tweetReply, setTweetReply] = useState<TweetReplyType>(TWEET_REPLY.everyone);
-
-
 
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
     
@@ -78,19 +76,27 @@ const Home: React.FC<HomeProps> = ({
     }, []);
 
     // fetching Tweets
-    const fetchTweets = async () => {
-        const { tweets } = await getAllTweets();
-        setTweets(tweets);
-    };
-    const memoizedTweets = useMemo(() => tweets, [tweets]);
     useEffect(() => {
+        const fetchTweets = async () => {
+            const { tweets } = await getAllTweets();
+            setTweets(tweets);
+        };
         fetchTweets();
     }, []);
+    const memoizedTweets = useMemo(() => tweets, [tweets]);
 
-    // Set active tab in local storage
+
+    // fetching Tweets
     useEffect(() => {
-        localStorage.setItem('activeTab-home', activeTab);
-    }, [activeTab]);
+        if (authUser) {
+            const fetchFollowingTweets = async () => {
+                const { tweets } = await getFollowTweets(authUser?._id);
+                setFollowingTweets(tweets);
+            };
+            fetchFollowingTweets();
+        }
+    }, [authUser]);
+    const memoizedFollowTweets = useMemo(() => followingTweets, [followingTweets]);
 
     // TWEET menu popup
     const handleMenuOptionClick = async (option: string, tweetId: string) => {
@@ -142,7 +148,6 @@ const Home: React.FC<HomeProps> = ({
             setTweetReply(TWEET_REPLY.onlyPeopleYouMention);
         }
     }
-
 
     const handleSubmitTweet = async (e: React.FormEvent) => {
         console.log('inside handleSubmitTweet');
@@ -249,7 +254,21 @@ const Home: React.FC<HomeProps> = ({
                     {/* FOLLOWING - START */}
                     {activeTab === 'following' && (
                         <div className={styles.main}>
-                            <PageUnderConstruction />
+                            {/* tweets - start */}
+                            {memoizedFollowTweets.map((tweet: any) => (
+                                <Tweet
+                                    key={tweet._id}
+                                    comments={'164'}
+                                    reposts={'924'}
+                                    likes={'21.3'}
+                                    views={'446'}
+                                    tweet={tweet}
+                                    options={tweetMenuOptions}
+                                    icons={tweetMenuIcons}
+                                    onClickMenu={handleMenuOptionClick}
+                                />
+                            ))}
+                            {/* tweets - end */}
                         </div>
                         
                     )}

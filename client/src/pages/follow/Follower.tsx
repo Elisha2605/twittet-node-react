@@ -16,14 +16,13 @@ import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
 import { ButtonSize, ButtonType } from '../../components/ui/Button';
 import AuthContext from '../../context/user.context';
 import FollowButton from '../../components/ui/FollowButton';
-import LoadingRing from '../../components/ui/LoadingRing';
 
 const Follower: React.FC<{}> = () => {
 
     const { id } = useParams<{ id: string }>();
     const [user, setUser] = useState<any>();
+    const [authUser, setAuthUser] = useState<any>(null);
     const [followers, setFollowers] = useState<any[]>([]);
-    const [isloading, setIsLoading] = useState<boolean>(false);
     
     const navigate = useNavigate();
 
@@ -32,6 +31,7 @@ const Follower: React.FC<{}> = () => {
     useEffect(() => {
         const getAuthUser = async () => {
             const { user } = ctx.getUserContext();
+            setAuthUser(user);
         }
         getAuthUser();
     }, []);
@@ -49,14 +49,12 @@ const Follower: React.FC<{}> = () => {
       // get Follow status
     useEffect(() => {
         const getAuthUserFollowStatus = async () => {
-            setIsLoading(true);
             const { followers, followings } = await getAuthUserFollows(id!);
             followings.forEach((follower: any) => {
                 follower.isFollowing = false; // add the isFollowing property
 
             });
             setFollowers(followers);
-            setIsLoading(false)
         };
         getAuthUserFollowStatus();
     }, [id]);
@@ -89,7 +87,6 @@ const Follower: React.FC<{}> = () => {
                         <div className={styles.main}>
                             {followers.map((follower) => (
                                 <div key={follower._id} className={styles.followingItem} onClick={() => navigate(`/profile/${follower.user._id}`)}>   
-                                {!isloading && (
                                     <UserInfo
                                         userId={id}
                                         avatar={follower.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${follower.user?.avatar}`}
@@ -97,14 +94,15 @@ const Follower: React.FC<{}> = () => {
                                         username={follower.user?.username}
                                         className={styles.userInfoWrapper}
                                     >
+                                    {authUser?._id !== follower.user._id && (
+
                                         <FollowButton
                                             userId={follower.user._id}
                                             type={ButtonType.secondary}
                                             size={ButtonSize.small}
                                         />
-                                    </UserInfo>
                                     )}
-                                    {isloading && <LoadingRing size={'small'} />}
+                                    </UserInfo>
                                 </div>
                             ))}
                         </div>
