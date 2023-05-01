@@ -3,6 +3,7 @@ import {
     createTweetController,
     deleteTweetController,
     getAllTweetsController,
+    getUserTweetsController,
     updateAudienceController,
 } from 'src/controllers/tweet.controller';
 import { verifyUser } from 'src/utils/jwt.util';
@@ -11,6 +12,8 @@ import upload from 'src/middleware/multer.middleware';
 const tweetRouter = Router();
 
 tweetRouter.get('', verifyUser(), getAllTweetsController);
+
+tweetRouter.get('/:id', verifyUser(), getUserTweetsController);
 
 tweetRouter.post(
     '/create',

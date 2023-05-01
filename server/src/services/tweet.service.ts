@@ -33,6 +33,38 @@ export const getAllTweets = async (): Promise<ApiResponse<any>> => {
     }
 };
 
+export const getUserTweets = async (
+    userId: string
+): Promise<ApiResponse<any>> => {
+    try {
+        const tweet = await Tweet.find({ user: userId })
+            .populate({
+                path: 'user',
+                select: 'name username avatar coverImage isVerified isProtected',
+                model: 'User',
+            })
+            .sort({ createdAt: -1 })
+            .exec();
+        if (tweet.length < 0) {
+            throw CustomError('Tweets not found', 204);
+        }
+        return {
+            success: true,
+            message: 'Successfully fetched tweets',
+            status: 200,
+            payload: tweet,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};
+
 export const createTweet = async (
     userId: string,
     text: string,

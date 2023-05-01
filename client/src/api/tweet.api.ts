@@ -19,6 +19,21 @@ export const getAllTweets = async () => {
     }
 };
 
+export const getUserTweets = async (userId: string) => {
+    try {
+        const res = await http.get(`/tweets/${userId}`, GETREQUESTOPTIONS());
+        return res.data;
+    } catch (error: any) {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('context');
+            window.location.href = '/';
+        } else {
+            console.error(error);
+            throw error;
+        }
+    }
+}
+
 export const createTweet = async (
     text: string | null, 
     image: File | null, 

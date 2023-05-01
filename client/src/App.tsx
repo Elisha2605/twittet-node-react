@@ -158,7 +158,7 @@ function App() {
                                     path="/bookmarks"
                                     element={<Bookmarks />}
                                 />
-                                <Route path="/profile/:id" element={<Profile />} />
+                                <Route path="/profile/:id" element={<Profile onAddTweet={onAddTweet} />} />
                                 <Route path="/following/:id" element={<Following />} />
                                 <Route path="/followers/:id" element={<Follower />} />
                                 <Route

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import Aside from '../../components/aside/Aside';
 import SearchBar from '../../components/ui/SearchBar';
 import WhoToFollow from '../../components/ui/WhoToFollow';
@@ -12,7 +12,7 @@ import ArrowLeftIcon from '../../components/icons/ArrowLeftIcon';
 import Button, { ButtonSize, ButtonType } from '../../components/ui/Button';
 import HeaderTitle from '../../components/header/HeaderTitle';
 import HorizontalNavBar from '../../components/ui/HorizontalNavBar';
-import { tweetMenuOptions } from '../../data/menuOptions';
+import { tweetMenuIcons, tweetMenuOptions } from '../../data/menuOptions';
 import PageUnderConstruction from '../../components/ui/PageUnderConstruction';
 import {
     IMAGE_AVATAR_BASE_URL,
@@ -24,8 +24,13 @@ import { getAuthUserFollows, sendFollowRequest } from '../../api/follow.api';
 import { NavLink, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
+import { deleteTweet, getUserTweets } from '../../api/tweet.api';
 
-const Profile = () => {
+interface ProfileProps {
+    onAddTweet: any
+}
+
+const Profile: FC<ProfileProps> = ({ onAddTweet }) => {
     const { id } = useParams<{ id: string }>();
 
     const [activeTab, setActiveTab] = useState(
@@ -37,6 +42,7 @@ const Profile = () => {
     const [authUser, setAuthUser] = useState<any>(null);
     const [user, setUser] = useState<any>();
     const [isFollowing, setIsFollowing] = useState<boolean>();
+    const [userTweets, setUserTweets] = useState<any[]>([]);
 
     const navigate = useNavigate();
 
@@ -63,17 +69,16 @@ const Profile = () => {
     }, [id]);
 
     // get Follow status (consider putting this in the userContext)
-    const getAuthUserFollowStatus = async () => {
-        const { followers, followings } = await getAuthUserFollows(authUser?._id);
-        if (followings && followings.some((following: any) => following.user._id === id)) {
-            setIsFollowing(true);
-        }
-        setFollowers(followers);
-        setFollowings(followings);
-    };
-
     useEffect(() => {
         if (authUser) {
+            const getAuthUserFollowStatus = async () => {
+                const { followers, followings } = await getAuthUserFollows(authUser?._id);
+                if (followings && followings.some((following: any) => following.user._id === id)) {
+                    setIsFollowing(true);
+                }
+                setFollowers(followers);
+                setFollowings(followings);
+            };
             getAuthUserFollowStatus();
         }
     }, [authUser, id]);
@@ -90,6 +95,39 @@ const Profile = () => {
 
         setIsFollowing(!isFollowing);
     }
+
+    useEffect(() => {
+        const fetchUserTweets = async () => {
+            const res = await getUserTweets(id!)
+            const { tweets } = res;
+            setUserTweets(tweets);
+        }
+        fetchUserTweets();
+    }, []);
+
+    useEffect(() => {
+        const handleNewTweetFromModal = () => {
+            // Add new tweet from NavigationTweet to state
+            if (authUser?.avatar) {
+                console.log('Inside handleNewTweet');
+                setUserTweets((prevTweets) => [onAddTweet[0], ...prevTweets]);
+            }
+        };
+        handleNewTweetFromModal();
+    }, [onAddTweet]);
+
+     // TWEET menu popup
+     const handleMenuOptionClick = async (option: string, tweetId: string) => {
+        if (option === 'Delete') {
+            const res = await deleteTweet(tweetId);
+            setUserTweets((preveState) =>
+                preveState.filter((tweet) => tweet._id !== tweetId)
+            );
+            console.log(res);
+        } else if (option === 'Edit') {
+            console.log(option);
+        }
+    };
 
     return (
         <React.Fragment>
@@ -216,25 +254,25 @@ const Profile = () => {
                                 Likes
                             </div>
                         </HorizontalNavBar>
-                        {/* TWEETS - START */}
-                        {/* {activeTab === 'tweets' && (
-                            <Tweet 
-                                avatar={'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80'} 
-                                name={'Luis Suárez'} 
-                                username={'LuisSuarez9'} 
-                                tweetText={'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,molestiae quas vel sint commodi repudiandae consequuntur'}
-                                tweetImage={'https://images.unsplash.com/photo-1534083264897-aeabfc7daf8a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80'}
-                                isOption={true}
-                                comments={'164'} 
-                                reposts={'924'} 
-                                likes={'21.3'} 
-                                views={'446'} 
-                                options={tweetMenuOptions}
-                                onClickMenu={handleOptionClick}
-                            />
-                        )} */}
-                        {/* TWEETS - END */}
-
+                        {activeTab === 'tweets' && (
+                            <div className={styles.tweets}>
+                            {/* tweets - start */}
+                            {userTweets.map((tweet: any) => (
+                                <Tweet
+                                    key={tweet._id}
+                                    comments={'164'}
+                                    reposts={'924'}
+                                    likes={'21.3'}
+                                    views={'446'}
+                                    tweet={tweet}
+                                    options={tweetMenuOptions}
+                                    icons={tweetMenuIcons}
+                                    onClickMenu={handleMenuOptionClick}
+                                />
+                            ))}
+                            {/* tweets - end */}
+                        </div>
+                        )}
                         {/* REPLIES - START */}
                         {activeTab === 'replies' && (
                             <div className={styles.main}>

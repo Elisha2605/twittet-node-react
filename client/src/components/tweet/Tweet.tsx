@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import TweetFooter from '../ui/TweetFooter';
 import UserInfo from '../ui/UserInfo';
@@ -45,6 +45,9 @@ const Tweet: FC<TweetProps> = ({
     const avatar = tweet.user.avatar;
     
 
+    useEffect(() => {
+        console.log(avatar);
+    }, [avatar])
     return (
         <React.Fragment>
             <div className={`${styles.container}`} key={tweetId}>
