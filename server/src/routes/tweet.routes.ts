@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
     createTweetController,
     deleteTweetController,
+    editTweetController,
     getAllTweetsController,
     getFollowTweetsController,
     getUserTweetsController,
@@ -21,11 +22,19 @@ tweetRouter.post(
     verifyUser(),
     createTweetController
 );
-tweetRouter.delete('/delete/:id', verifyUser(), deleteTweetController);
+
+tweetRouter.put(
+    '/edit/:id',
+    verifyUser(),
+    upload.single('tweetImage'),
+    editTweetController
+);
+
 tweetRouter.patch(
     '/update-audience/:id',
     verifyUser(),
     updateAudienceController
 );
+tweetRouter.delete('/delete/:id', verifyUser(), deleteTweetController);
 
 export default tweetRouter;

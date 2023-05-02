@@ -1,5 +1,12 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import Button, { ButtonSize, ButtonType } from '../ui/Button';
+import { 
+    tweetAudienceMenuOptions, 
+    tweetAudienceMenuIcons,
+    tweetReplyOptions,
+    tweetReplyIcons 
+    
+} from '../../data/menuOptions';
 import styles from './FormTweet.module.css';
 import EmojiIcon from '../icons/EmojiIcon';
 import ImageIcon from '../icons/ImageIcon';
@@ -19,13 +26,7 @@ interface FormProps {
     isFocused?: boolean;
     setIsFocused: React.Dispatch<React.SetStateAction<boolean>>;
 
-    tweetAudienceOptions: string[];
-    tweetAudienceIcons: Record<string, React.ReactNode>;
     tweetAudienceValue: string,
-
-
-    tweetReplyOptions: string[];
-    tweetReplyIcons: Record<string, React.ReactNode>,
     tweetReplyValue: string,
 
     onSubmit: (e: React.FormEvent) => void;
@@ -45,12 +46,7 @@ const FormTweet: FC<FormProps> = ({
     isFocused = false,
     setIsFocused,
 
-    tweetAudienceOptions,
-    tweetAudienceIcons,
     tweetAudienceValue,
-
-    tweetReplyOptions,
-    tweetReplyIcons,
     tweetReplyValue,
 
     onSubmit,
@@ -66,12 +62,13 @@ const FormTweet: FC<FormProps> = ({
     // Adjust text erea with input value
     useAutosizeTextArea(tweetTextRef.current, value)
 
-    // submit with by pressing "command + enter"
+    // ubmit with by pressing "command + enter"
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === "Enter" && e.metaKey) {
             onSubmit(e);
         }
     }
+
 
     const isImageSelected = !!imagePreview;
 
@@ -82,8 +79,8 @@ const FormTweet: FC<FormProps> = ({
                     <div className={`${styles.everyone} ${tweetAudienceValue === TWEET_AUDIENCE.twitterCircle ? styles.twitterCirlce : ''}`}>
                         <PopUpMenu 
                             title={'Choose audience'}
-                            options={tweetAudienceOptions}
-                            icons={tweetAudienceIcons}
+                            options={tweetAudienceMenuOptions}
+                            icons={tweetAudienceMenuIcons}
                             isMenuIcon={false}
                             isDisable={false}
                             onClick={(tweetPrivacyOptions) => {

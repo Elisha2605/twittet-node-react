@@ -2,11 +2,11 @@ import React, { FC, useContext, useEffect, useState } from 'react';
 import PopUpMenu from './PopUpMenu';
 import styles from './UserInfo.module.css';
 import Certified from '../../assets/certified.svg';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../context/user.context';
 
 interface UserInfoProps {
-    itemId?: any;
+    tweet?: any;
     userId?: string;
     avatar: string | undefined;
     name: string;
@@ -22,8 +22,10 @@ interface UserInfoProps {
     onClickOption?: Function;
 }
 
+
+
 const UserInfo: FC<UserInfoProps> = ({
-    itemId,
+    tweet,
     userId,
     avatar,
     name,
@@ -81,11 +83,12 @@ const UserInfo: FC<UserInfoProps> = ({
                                 </p>
                             </div>
                             <PopUpMenu
-                                itemId={itemId}
+                                itemId={tweet._id}
                                 options={options!}
+                                value={tweet}
                                 icons={icons}
-                                onClick={(option, id) =>
-                                    onClickOption!(option, id)
+                                onClick={(option, id, tweet) =>
+                                    onClickOption!(option, id, tweet)
                                 }
                             />
                         </div>

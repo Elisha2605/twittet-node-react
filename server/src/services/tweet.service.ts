@@ -156,6 +156,56 @@ export const createTweet = async (
     }
 };
 
+export const editTweet = async (
+    tweetId: string,
+    userId: string,
+    text: string,
+    image: string,
+    audience: string,
+    reply: string
+): Promise<ApiResponse<any>> => {
+    try {
+        const updatedTweet = await Tweet.findOneAndUpdate(
+            {
+                _id: tweetId,
+                user: userId,
+            },
+            {
+                text: text,
+                image: image,
+                audience: audience,
+                reply: reply,
+            },
+            {
+                new: true,
+            }
+        );
+        if (!updatedTweet) {
+            return {
+                success: true,
+                message: 'Tweet not found or unauthorized!',
+                status: 404,
+                payload: {},
+            };
+        }
+
+        return {
+            success: true,
+            message: 'Successfully edited tweet',
+            status: 200,
+            payload: updatedTweet,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};
+
 export const deleteTweet = async (
     tweetId: string,
     userId: string

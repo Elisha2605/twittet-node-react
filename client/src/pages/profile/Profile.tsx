@@ -290,13 +290,7 @@ const Profile: FC<ProfileProps> = ({ onAddTweet }) => {
                                 {userTweets.map((tweet: any) => (
                                     <Tweet
                                         key={tweet._id}
-                                        comments={'164'}
-                                        reposts={'924'}
-                                        likes={'21.3'}
-                                        views={'446'}
                                         tweet={tweet}
-                                        options={tweetMenuOptions}
-                                        icons={tweetMenuIcons}
                                         onClickMenu={handleMenuOptionClick}
                                     />
                                 ))}
@@ -319,13 +313,7 @@ const Profile: FC<ProfileProps> = ({ onAddTweet }) => {
                                 {userTweetsMedia.map((tweet: any) => (
                                     <Tweet
                                         key={tweet._id}
-                                        comments={'164'}
-                                        reposts={'924'}
-                                        likes={'21.3'}
-                                        views={'446'}
                                         tweet={tweet}
-                                        options={tweetMenuOptions}
-                                        icons={tweetMenuIcons}
                                         onClickMenu={handleMenuOptionClick}
                                     />
                                 ))}

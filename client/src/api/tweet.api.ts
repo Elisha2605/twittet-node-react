@@ -78,6 +78,37 @@ export const createTweet = async (
     }
 };
 
+export const editTweet = async (
+    tweetId: string, 
+    text: string | null, 
+    image: File | null, 
+    audience: string, 
+    reply: string) => {
+        console.log('From tweet.api :');
+        console.log(image);
+    try {
+        const res = await http.put(
+            `/tweets/edit/${tweetId}`,
+            {
+                text: text,
+                tweetImage: image,
+                audience: audience,
+                reply: reply
+            },
+            GETREQUESTOPTIONS_WITH_MULTIFROM()
+        );
+        return res.data;
+    } catch (error: any) {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('context');
+            window.location.href = '/';
+        } else {
+            console.error(error);
+            throw error;
+        }
+    }
+};
+
 export const deleteTweet = async (tweetId: string) => {
     try {
         const res = await http.delete(

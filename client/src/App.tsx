@@ -15,21 +15,27 @@ import Home from './pages/home/Home';
 import { ModalContext } from './context/modal.context';
 import Following from './pages/follow/Following';
 import Follower from './pages/follow/Follower';
-import Signup from './components/auth/Signup';
+import { deleteTweet } from './api/tweet.api';
+import { IMAGE_TWEET_BASE_URL, TWEET_MENU } from './constants/common.constants';
 
 function App() {
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [onAddTweet, setOnAddTweets] = useState<any[]>([]);
+    const [onDeleteTweet, setOnDeleteTweet] = useState<any[]>([]);
     const [value, setValue] = useState('');
 
+    // Modal
     const [selectedFileModal, setSelectedFileModal] = useState<File | null>(null);
     const [previewImageModal, setPreviewImageModal] = useState<string | null>(null);
     const [valueModal, setValueModal] = useState('');
+    const [editTweetModal, setEditTweetModal] = useState('');
+    
+    const [isEdit, setIsEdit] = useState(false);
 
 
-    const { modalOpen } = useContext(ModalContext);
+    const { modalOpen, openModal } = useContext(ModalContext);
 
     const context = useContext(AuthContext);
     let ctx: StoredContext = context.getUserContext();
@@ -94,6 +100,22 @@ function App() {
         setValue('');
     }
 
+    const handleMenuOptionClick = async (option: string, tweetId: string, tweet: any) => {
+        if (option === TWEET_MENU.delete) {
+            const res = await deleteTweet(tweetId);
+            const { tweet } = res;
+            setOnDeleteTweet(tweet);
+        } else if (option === TWEET_MENU.edit) {
+            setIsEdit(true);
+            setEditTweetModal(tweet);
+            openModal('Nav-tweet');
+            setValueModal(tweet.text);
+            const image = tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`;
+            setPreviewImageModal(image);
+            setSelectedFileModal(null);
+        }
+    };
+
     // Index page
     if (!ctx?.isLoggedIn) {
         return (
@@ -132,12 +154,17 @@ function App() {
                                 handleCanselPreviewImage={handleCanselPreviewImage}
                                 handleImageUpload={handleImageUpload}
                                 onAddTweet={handleAddTweet}
+                                
+                                editTweetModal={editTweetModal}
+                                isEdit={isEdit}
                             />
                         </div>
                         <div className={Layout.page}>
                             <Routes>
                                 <Route path="/" element={
                                     <Home
+                                        onClickTweetMenu={handleMenuOptionClick}
+                                        onDeleteTweet={onDeleteTweet}
                                         onAddTweet={onAddTweet}
                                         selectedFile={selectedFile}
                                         previewImage={previewImage}                                    

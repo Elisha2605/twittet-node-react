@@ -8,26 +8,18 @@ import { IMAGE_AVATAR_BASE_URL, IMAGE_TWEET_BASE_URL, TWEET_AUDIENCE, TWEET_REPL
 import HeartIcon from '../icons/HeartIcon';
 import UserIcon from '../icons/UserIcon';
 import AtIcon from '../icons/AtIcon';
+import { 
+    tweetMenuOptions, 
+    tweetMenuIcons, 
+} from '../../data/menuOptions';
 
 interface TweetProps {
     tweet?: any;
-    comments: string;
-    reposts: string;
-    likes: string;
-    views: string;
-    options: string[];
-    icons?: Record<string, React.ReactNode>;
     onClickMenu: Function;
 }
 
 const Tweet: FC<TweetProps> = ({
     tweet,
-    comments,
-    reposts,
-    likes,
-    views,
-    options,
-    icons,
     onClickMenu,
 }) => {
     
@@ -47,8 +39,8 @@ const Tweet: FC<TweetProps> = ({
         <React.Fragment>
             <div className={`${styles.container}`} key={tweetId}>
                 <UserInfo
-                    itemId={tweetId}
                     userId={userId}
+                    tweet={tweet}
                     avatar={avatar ? `${IMAGE_AVATAR_BASE_URL}/${avatar}` : undefined}
                     name={name}
                     username={username}
@@ -56,12 +48,12 @@ const Tweet: FC<TweetProps> = ({
                     time={createdAt}
                     isOption={true}
                     className={styles.userInfo}
-                    options={options}
-                    icons={icons}
+                    options={tweetMenuOptions}
+                    icons={tweetMenuIcons}
                     onClickOption={onClickMenu}
                 />
                 <NavLink to={'/message'}>
-                    <div className={styles.body}>
+                    <div className={styles.body} key={tweet._id}>
                         <p className={styles.tweet}>{tweetText}</p>
                         {tweetImage && (
                             <div className={styles.image}>
@@ -84,10 +76,10 @@ const Tweet: FC<TweetProps> = ({
                         </div>
                     )}
                     <TweetFooter
-                        comments={comments}
-                        reposts={reposts}
-                        likes={likes}
-                        views={views}
+                        comments={'164'}
+                        reposts={'923'}
+                        likes={'21.3'}
+                        views={'466'}
                     />
                 </NavLink>
             </div>

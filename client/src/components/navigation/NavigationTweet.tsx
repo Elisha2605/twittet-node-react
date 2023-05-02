@@ -2,13 +2,7 @@ import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import styles from './NavigationTweet.module.css';
 import Avatar, { Size } from '../ui/Avatar';
 import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
-import { createTweet } from '../../api/tweet.api';
-import { 
-    tweetAudienceMenuIcons, 
-    tweetAudienceMenuOptions,
-    tweetReplyOptions,
-    tweetReplyIcons 
-} from '../../data/menuOptions';
+import { createTweet, editTweet } from '../../api/tweet.api';
 import { ModalContext } from '../../context/modal.context';
 import Modal from '../ui/Modal';
 import FormTweet from '../form/FormTweet';
@@ -26,6 +20,9 @@ interface NavigationTweetProp {
     handleImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
     onAddTweet: (tweet: any) => void;
     clearTweetForm: () => void;
+
+    editTweetModal: any,
+    isEdit: boolean;
 }
 
 const NavigationTweet: FC<NavigationTweetProp> = ({ 
@@ -38,7 +35,11 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
     handleImageUpload,
     onAddTweet, 
     clearTweetForm,
+
+    editTweetModal,
+    isEdit,
 }) => {
+
 
     const [isFormFocused, setIsFormFocused] = useState(false);
     const [tweetAudience, setTweetAudience] = useState<TweetAudienceType>(TWEET_AUDIENCE.everyone);
@@ -61,41 +62,84 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
 
 
     const handleSubmitTweet = async (e: React.FormEvent) => {
-        console.log('inside handleSubmitTweet');
-        e.preventDefault();
-        const text = tweetTextRef.current?.value
-            ? tweetTextRef.current?.value
-            : null;
-        const res = await createTweet(text, selectedFile, tweetAudience, tweetReply);
-        const { tweet }: any = res;
-        
-        
-        if (authUser) {
-            const newTweet = {
-                _id: tweet._id,
-                text: tweet.text,
-                user: {
-                    _id: authUser._id,
-                    avatar: authUser?.avatar ? authUser?.avatar : null,
-                    name: authUser?.name,
-                    username: authUser?.username,
-                    isVerified: authUser?.isVerified,
-                },
-                audience: tweet.audience,
-                reply: tweet.reply,
-                createdAt: tweet.createdAt,
-                image: tweet.image,
-                comments: [],
-                reposts: [],
-                likes: [],
-            };
-            onAddTweet(newTweet)
+        if (!isEdit) {
+
+            console.log('inside handleSubmitTweet');
+            e.preventDefault();
+            const text = tweetTextRef.current?.value
+                ? tweetTextRef.current?.value
+                : null;
+            const res = await createTweet(text, selectedFile, tweetAudience, tweetReply);
+            const { tweet }: any = res;
+            
+            if (authUser) {
+                const newTweet = {
+                    _id: tweet._id,
+                    text: tweet.text,
+                    user: {
+                        _id: authUser._id,
+                        avatar: authUser?.avatar ? authUser?.avatar : null,
+                        name: authUser?.name,
+                        username: authUser?.username,
+                        isVerified: authUser?.isVerified,
+                    },
+                    audience: tweet.audience,
+                    reply: tweet.reply,
+                    createdAt: tweet.createdAt,
+                    image: tweet.image,
+                    comments: [],
+                    reposts: [],
+                    likes: [],
+                };
+                onAddTweet(newTweet)
+            }
+            // setIsFormFocused(false);
+            closeModal('Nav-tweet');
+            setTweetAudience(TWEET_AUDIENCE.everyone)
+            setTweetReply(TWEET_REPLY.everyone)
+            clearTweetForm();
+        } else {
+            // Edit
+            // console.log({hello: editTweetModal});
+
+            console.log('inside Edit Tweet handle');
+            e.preventDefault();
+            const text = tweetTextRef.current?.value
+                ? tweetTextRef.current?.value
+                : null;
+            const res = await editTweet(editTweetModal._id, text, selectedFile, tweetAudience, tweetReply);
+            console.log(res);
+            const { tweet }: any = res;
+            
+            if (authUser) {
+                const newTweet = {
+                    _id: tweet._id,
+                    text: tweet.text,
+                    user: {
+                        _id: authUser._id,
+                        avatar: authUser?.avatar ? authUser?.avatar : null,
+                        name: authUser?.name,
+                        username: authUser?.username,
+                        isVerified: authUser?.isVerified,
+                    },
+                    audience: tweet.audience,
+                    reply: tweet.reply,
+                    createdAt: tweet.createdAt,
+                    image: editTweetModal.image,
+                    comments: [],
+                    reposts: [],
+                    likes: [],
+                };
+                // onAddTweet(newTweet)
+                // console.log('***********');
+                // console.log(newTweet);
+            }
+            // setIsFormFocused(false);
+            closeModal('Nav-tweet');
+            setTweetAudience(TWEET_AUDIENCE.everyone)
+            setTweetReply(TWEET_REPLY.everyone)
+            clearTweetForm();
         }
-        // setIsFormFocused(false);
-        closeModal('Nav-tweet');
-        setTweetAudience(TWEET_AUDIENCE.everyone)
-        setTweetReply(TWEET_REPLY.everyone)
-        clearTweetForm();
     };
 
     const handleTweetAudienceOptions = (options: string) => {
@@ -146,10 +190,6 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
                         tweetTextRef={tweetTextRef}
                         imagePreview={previewImage}
                         isFocused={true}
-                        tweetAudienceOptions={tweetAudienceMenuOptions}
-                        tweetAudienceIcons={tweetAudienceMenuIcons}
-                        tweetReplyOptions={tweetReplyOptions}
-                        tweetReplyIcons={tweetReplyIcons}
                         tweetReplyValue={tweetReply}
                         setIsFocused={setIsFormFocused}
                         onSubmit={handleSubmitTweet}

@@ -4,6 +4,7 @@ import styles from './PopUpMenu.module.css';
 
 interface MenuPopUpProps {
     itemId?: string;
+    value?: any;
     title?: string;
     options: string[];
     icons?: Record<string, React.ReactNode>;
@@ -12,11 +13,12 @@ interface MenuPopUpProps {
     isMenuIcon?: boolean;
     isDisable?: boolean;
     children?: React.ReactNode;
-    onClick: (option: string, id: string) => void;
+    onClick: (option: string, id: string, value?: any) => void;
 }
 
 const MenuPopUp: FC<MenuPopUpProps> = ({
     itemId,
+    value,
     title,
     options,
     icons,
@@ -37,9 +39,9 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
         setShowMenu(!showMenu);
     };
 
-    const handleOptionClick = (option: string, id: string) => {
+    const handleOptionClick = (option: string, id: string, value?: any) => {
         setShowMenu(false);
-        onClick(option, id);
+        onClick(option, id, value);
     };
 
     useEffect(() => {
@@ -91,7 +93,7 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
                                             : ''
                                     }`}
                                     onClick={() =>
-                                        handleOptionClick(option, itemId!)
+                                        handleOptionClick(option, itemId!, value!)
                                     }
                                 >
                                     {icons && icons[option]}

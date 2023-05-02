@@ -32,6 +32,9 @@ interface NavigationProps {
     handleCanselPreviewImage: () => void;
     handleImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
     onAddTweet: (tweet: any) => void;
+
+    editTweetModal: any,
+    isEdit: boolean;
 }
 
 const Navigation: React.FC<NavigationProps> = ({ 
@@ -46,6 +49,9 @@ const Navigation: React.FC<NavigationProps> = ({
     handleTextAreaOnChange,
     handleCanselPreviewImage,
     handleImageUpload, 
+    
+    editTweetModal,
+    isEdit,
 }) => {
 
     const [authUser, setAuthUser] = useState<any>(null);
@@ -140,6 +146,9 @@ const Navigation: React.FC<NavigationProps> = ({
                     handleImageUpload={handleImageUpload}
                     onAddTweet={onAddTweet} 
                     clearTweetForm={clearTweetForm}
+
+                    editTweetModal={editTweetModal}
+                    isEdit={isEdit}
                 />
             </div>
         </React.Fragment>

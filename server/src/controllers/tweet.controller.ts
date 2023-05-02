@@ -3,6 +3,7 @@ import asyncHandler from 'express-async-handler';
 import {
     createTweet,
     deleteTweet,
+    editTweet,
     getAllTweets,
     getFollowTweets,
     getUserTweets,
@@ -109,11 +110,52 @@ export const createTweetController = asyncHandler(
     }
 );
 
+export const editTweetController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const tweetId = req.params.id;
+        const userId = req.user._id;
+        const text = req.body.text;
+        const image = req.file ? req.file.filename : null;
+        const audience = req.body.audience;
+        const reply = req.body.reply;
+
+        console.log(image);
+
+        try {
+            const response = await editTweet(
+                tweetId,
+                userId,
+                text,
+                image,
+                audience,
+                reply
+            );
+            const { payload } = response;
+            if (response.success) {
+                res.send({
+                    success: response.success,
+                    message: response.message,
+                    status: response.status,
+                    tweet: payload,
+                });
+            }
+        } catch (error) {
+            res.status(error.status).json({
+                sucess: error.success,
+                message: error.message,
+                status: error.status,
+            });
+            next(error);
+        }
+    }
+);
+
 export const deleteTweetController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const tweetId = req.params.id;
+        const userId = req.user._id;
         try {
-            const response = await deleteTweet(tweetId, req.user._id);
+            const response = await deleteTweet(tweetId, userId);
             const { payload } = response;
             if (response.success) {
                 res.send({

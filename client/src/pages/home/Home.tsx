@@ -16,43 +16,43 @@ import styles from './Home.module.css';
 import Layout from '../../Layout.module.css';
 import HeaderTitle from '../../components/header/HeaderTitle';
 import HorizontalNavBar from '../../components/ui/HorizontalNavBar';
-import { 
-    tweetMenuOptions, 
-    tweetMenuIcons, 
-    tweetAudienceMenuOptions, 
-    tweetAudienceMenuIcons,
-    tweetReplyOptions,
-    tweetReplyIcons 
-} from '../../data/menuOptions';
 import { createTweet, deleteTweet, getAllTweets, getFollowTweets } from '../../api/tweet.api';
-import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_MENU, TWEET_REPLY } from '../../constants/common.constants';
 import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
 import AuthContext from '../../context/user.context';
+import { ModalContext } from '../../context/modal.context';
 
 interface HomeProps {
     value: string;
     onAddTweet: any, 
+    onDeleteTweet: any,
     
     selectedFile: File | null
     previewImage: string | null
+
+    // setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
 
     handleTextAreaOnChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     handleCanselPreviewImage: () => void;
     handleImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
     clearTweetForm: () => void;
+    onClickTweetMenu: Function;
+    
 }
 
 const Home: React.FC<HomeProps> = ({ 
     value,
     onAddTweet, 
+    onDeleteTweet,
     
     selectedFile,
     previewImage,
-    
+
     handleTextAreaOnChange,
     handleCanselPreviewImage,
     handleImageUpload,
     clearTweetForm,
+    onClickTweetMenu,
 }) => {
 
     const [tweets, setTweets] = useState<any[]>([]);
@@ -64,7 +64,12 @@ const Home: React.FC<HomeProps> = ({
     const [tweetAudience, setTweetAudience] = useState<TweetAudienceType>(TWEET_AUDIENCE.everyone);
     const [tweetReply, setTweetReply] = useState<TweetReplyType>(TWEET_REPLY.everyone);
 
+    //new 
+
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
+
+    const { openModal } = useContext(ModalContext);
+
     
     const ctx = useContext(AuthContext);
     useEffect(() => {
@@ -86,7 +91,6 @@ const Home: React.FC<HomeProps> = ({
     const memoizedTweets = useMemo(() => tweets, [tweets]);
 
 
-    // fetching Tweets
     useEffect(() => {
         if (authUser) {
             const fetchFollowingTweets = async () => {
@@ -98,20 +102,6 @@ const Home: React.FC<HomeProps> = ({
     }, [authUser]);
     const memoizedFollowTweets = useMemo(() => followingTweets, [followingTweets]);
 
-    // TWEET menu popup
-    const handleMenuOptionClick = async (option: string, tweetId: string) => {
-        if (option === 'Delete') {
-            const res = await deleteTweet(tweetId);
-            setTweets((preveState) =>
-                preveState.filter((tweet) => tweet._id !== tweetId)
-            );
-            console.log(res);
-        } else if (option === 'Edit') {
-            console.log(option);
-        }
-    };
-    
-    
     useEffect(() => {
         const handleNewTweetFromModal = () => {
             // Add new tweet from NavigationTweet to state
@@ -122,6 +112,12 @@ const Home: React.FC<HomeProps> = ({
         };
         handleNewTweetFromModal();
     }, [onAddTweet]);
+
+    useEffect(() => {
+        setTweets((preveState) =>
+                preveState.filter((tweet) => tweet._id !== onDeleteTweet._id)
+            );
+    }, [onDeleteTweet])
 
     const handleTweetAudienceOptions = (options: string) => {
         if (options === TWEET_AUDIENCE.everyone) {
@@ -182,6 +178,8 @@ const Home: React.FC<HomeProps> = ({
         clearTweetForm();
     };
 
+   
+
     return (
         <React.Fragment>
             <div className={Layout.mainSectionContainer}>
@@ -200,8 +198,6 @@ const Home: React.FC<HomeProps> = ({
                             </div>
                         </HorizontalNavBar>
                     </Header>
-
-                    {/* TweetForm - start */}
                     <div className={styles.formSection}>
                         <Avatar
                             path={authUser?.avatar ? `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}` : undefined}
@@ -213,11 +209,7 @@ const Home: React.FC<HomeProps> = ({
                             tweetTextRef={tweetTextRef}
                             imagePreview={previewImage}
                             isFocused={isFormFocused}
-                            tweetAudienceOptions={tweetAudienceMenuOptions} 
-                            tweetAudienceIcons={tweetAudienceMenuIcons}
                             tweetAudienceValue={tweetAudience}                           
-                            tweetReplyOptions={tweetReplyOptions}
-                            tweetReplyIcons={tweetReplyIcons}
                             tweetReplyValue={tweetReply}
                             setIsFocused={setIsFormFocused}
                             onSubmit={handleSubmitTweet}
@@ -228,53 +220,29 @@ const Home: React.FC<HomeProps> = ({
                             onClickReplyMenu={handleTweetReyplyOptions} 
                         />
                     </div>
-                    {/* TweetForm - end */}   
-                    
-                    {/* FOR YOU - START */}
                     {activeTab === 'for-you' && (
                         <div className={styles.main}>
-                            {/* tweets - start */}
                             {memoizedTweets.map((tweet: any) => (
                                 <Tweet
                                     key={tweet._id}
-                                    comments={'164'}
-                                    reposts={'924'}
-                                    likes={'21.3'}
-                                    views={'446'}
                                     tweet={tweet}
-                                    options={tweetMenuOptions}
-                                    icons={tweetMenuIcons}
-                                    onClickMenu={handleMenuOptionClick}
+                                    onClickMenu={onClickTweetMenu}
                                 />
                             ))}
-                            {/* tweets - end */}
-                            {/* FOR YOU - START */}
                         </div>
                     )}
-                    {/* FOLLOWING - START */}
                     {activeTab === 'following' && (
                         <div className={styles.main}>
-                            {/* tweets - start */}
                             {memoizedFollowTweets.map((tweet: any) => (
                                 <Tweet
-                                    key={tweet._id}
-                                    comments={'164'}
-                                    reposts={'924'}
-                                    likes={'21.3'}
-                                    views={'446'}
                                     tweet={tweet}
-                                    options={tweetMenuOptions}
-                                    icons={tweetMenuIcons}
-                                    onClickMenu={handleMenuOptionClick}
+                                    onClickMenu={onClickTweetMenu!}
                                 />
                             ))}
-                            {/* tweets - end */}
                         </div>
                         
                     )}
-                    {/* FOLLOWING - START */}
                 </div>
-                {/* Home page - start */}
                 <div>
                     <Header border={false}>
                         <SearchBar width={74} />
