@@ -6,7 +6,6 @@ import { createTweet, editTweet } from '../../api/tweet.api';
 import { ModalContext } from '../../context/modal.context';
 import Modal from '../ui/Modal';
 import FormTweet from '../form/FormTweet';
-import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
 import AuthContext from '../../context/user.context';
 
 interface NavigationTweetProp {
@@ -21,8 +20,6 @@ interface NavigationTweetProp {
     onAddTweet: (tweet: any) => void;
     clearTweetForm: () => void;
 
-    tweetEditAudienceModal: string;
-    tweetEditReplyModal: string;
     editTweetModal: any,
     isEdit: boolean;
 }
@@ -38,8 +35,6 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
     onAddTweet, 
     clearTweetForm,
 
-    tweetEditAudienceModal,
-    tweetEditReplyModal,
     editTweetModal,
     isEdit,
 }) => {
@@ -65,9 +60,8 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
     const { closeModal } = useContext(ModalContext);
 
     useEffect(() => {
-        console.log(editTweetModal);
-            setTweetAudience(editTweetModal.audience)
-            setTweetReply(editTweetModal.reply)
+        setTweetAudience(editTweetModal.audience)
+        setTweetReply(editTweetModal.reply)
     }, [editTweetModal])
 
     const handleSubmitTweet = async (e: React.FormEvent) => {

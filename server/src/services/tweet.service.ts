@@ -165,21 +165,23 @@ export const editTweet = async (
     reply: string
 ): Promise<ApiResponse<any>> => {
     try {
-        const updatedTweet = await Tweet.findOneAndUpdate(
-            {
-                _id: tweetId,
-                user: userId,
-            },
-            {
-                text: text,
-                image: image,
-                audience: audience,
-                reply: reply,
-            },
-            {
-                new: true,
-            }
-        );
+        const query = {
+            _id: tweetId,
+            user: userId,
+        };
+
+        const update: { [key: string]: any } = {
+            text: text,
+            audience: audience,
+            reply: reply,
+        };
+
+        if (image) {
+            update.image = image;
+        }
+
+        const updatedTweet = await Tweet.findOneAndUpdate(query, update, { new: true });
+
         if (!updatedTweet) {
             return {
                 success: true,

@@ -16,8 +16,7 @@ import { ModalContext } from './context/modal.context';
 import Following from './pages/follow/Following';
 import Follower from './pages/follow/Follower';
 import { deleteTweet } from './api/tweet.api';
-import { IMAGE_TWEET_BASE_URL, TWEET_AUDIENCE, TWEET_MENU, TWEET_REPLY } from './constants/common.constants';
-import { TweetAudienceType, TweetReplyType } from './types/tweet.types';
+import { IMAGE_TWEET_BASE_URL, TWEET_MENU } from './constants/common.constants';
 
 function App() {
 
@@ -32,9 +31,6 @@ function App() {
     const [previewImageModal, setPreviewImageModal] = useState<string | null>(null);
     const [valueModal, setValueModal] = useState('');
     const [editTweetModal, setEditTweetModal] = useState('');
-
-    const [tweetEditAudienceModal, setTweetEditAudienceModal] = useState<TweetAudienceType>(TWEET_AUDIENCE.everyone);
-    const [tweetEditReplyModal, setTweetEditReplyModal] = useState<TweetReplyType>(TWEET_REPLY.everyone);
     
     const [isEdit, setIsEdit] = useState(false);
 
@@ -84,7 +80,7 @@ function App() {
 
     const handleCanselPreviewImage = () => {
         if (modalOpen) {
-            setPreviewImageModal(null);
+            setPreviewImageModal('');
             setSelectedFileModal(null);
         } else {
             setPreviewImage(null);
@@ -104,7 +100,7 @@ function App() {
         setValue('');
     }
 
-    const handleMenuOptionClick = async (option: string, tweetId: string, tweet: any) => {
+    const handleTweetMenuOptionClick = async (option: string, tweetId: string, tweet: any) => {
         if (option === TWEET_MENU.delete) {
             const res = await deleteTweet(tweetId);
             const { tweet } = res;
@@ -159,8 +155,6 @@ function App() {
                                 handleImageUpload={handleImageUpload}
                                 onAddTweet={handleAddTweet}
                                 
-                                tweetEditAudienceModal={tweetEditAudienceModal}
-                                tweetEditReplyModal={tweetEditReplyModal}
                                 editTweetModal={editTweetModal}
                                 isEdit={isEdit}
                             />
@@ -169,7 +163,7 @@ function App() {
                             <Routes>
                                 <Route path="/" element={
                                     <Home
-                                        onClickTweetMenu={handleMenuOptionClick}
+                                        onClickTweetMenu={handleTweetMenuOptionClick}
                                         onDeleteTweet={onDeleteTweet}
                                         onAddTweet={onAddTweet}
                                         selectedFile={selectedFile}
@@ -191,7 +185,7 @@ function App() {
                                     path="/bookmarks"
                                     element={<Bookmarks />}
                                 />
-                                <Route path="/profile/:id" element={<Profile onAddTweet={onAddTweet} />} />
+                                <Route path="/profile/:id" element={<Profile onAddTweet={onAddTweet} onClickTweetMenu={handleTweetMenuOptionClick} />} />
                                 <Route path="/following/:id" element={<Following />} />
                                 <Route path="/followers/:id" element={<Follower />} />
                                 <Route

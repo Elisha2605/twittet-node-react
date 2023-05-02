@@ -12,7 +12,6 @@ import ArrowLeftIcon from '../../components/icons/ArrowLeftIcon';
 import Button, { ButtonSize, ButtonType } from '../../components/ui/Button';
 import HeaderTitle from '../../components/header/HeaderTitle';
 import HorizontalNavBar from '../../components/ui/HorizontalNavBar';
-import { tweetMenuIcons, tweetMenuOptions } from '../../data/menuOptions';
 import PageUnderConstruction from '../../components/ui/PageUnderConstruction';
 import {
     IMAGE_AVATAR_BASE_URL,
@@ -28,9 +27,10 @@ import { deleteTweet, getUserTweets } from '../../api/tweet.api';
 
 interface ProfileProps {
     onAddTweet: any;
+    onClickTweetMenu: Function;
 }
 
-const Profile: FC<ProfileProps> = ({ onAddTweet }) => {
+const Profile: FC<ProfileProps> = ({ onAddTweet, onClickTweetMenu }) => {
     const { id } = useParams<{ id: string }>();
 
     const [activeTab, setActiveTab] = useState(
@@ -291,7 +291,7 @@ const Profile: FC<ProfileProps> = ({ onAddTweet }) => {
                                     <Tweet
                                         key={tweet._id}
                                         tweet={tweet}
-                                        onClickMenu={handleMenuOptionClick}
+                                        onClickMenu={onClickTweetMenu}
                                     />
                                 ))}
                                 {/* tweets - end */}
@@ -314,7 +314,7 @@ const Profile: FC<ProfileProps> = ({ onAddTweet }) => {
                                     <Tweet
                                         key={tweet._id}
                                         tweet={tweet}
-                                        onClickMenu={handleMenuOptionClick}
+                                        onClickMenu={onClickTweetMenu}
                                     />
                                 ))}
                             </div>
