@@ -21,6 +21,8 @@ interface NavigationTweetProp {
     onAddTweet: (tweet: any) => void;
     clearTweetForm: () => void;
 
+    tweetEditAudienceModal: string;
+    tweetEditReplyModal: string;
     editTweetModal: any,
     isEdit: boolean;
 }
@@ -36,14 +38,16 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
     onAddTweet, 
     clearTweetForm,
 
+    tweetEditAudienceModal,
+    tweetEditReplyModal,
     editTweetModal,
     isEdit,
 }) => {
 
 
     const [isFormFocused, setIsFormFocused] = useState(false);
-    const [tweetAudience, setTweetAudience] = useState<TweetAudienceType>(TWEET_AUDIENCE.everyone);
-    const [tweetReply, setTweetReply] = useState<TweetReplyType>(TWEET_REPLY.everyone);
+    const [tweetAudience, setTweetAudience] = useState<any>(TWEET_AUDIENCE.everyone);
+    const [tweetReply, setTweetReply] = useState<any>(TWEET_REPLY.everyone);
     const [authUser, setAuthUser] = useState<any>(null);
 
     const ctx = useContext(AuthContext);
@@ -60,6 +64,11 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
 
     const { closeModal } = useContext(ModalContext);
 
+    useEffect(() => {
+        console.log(editTweetModal);
+            setTweetAudience(editTweetModal.audience)
+            setTweetReply(editTweetModal.reply)
+    }, [editTweetModal])
 
     const handleSubmitTweet = async (e: React.FormEvent) => {
         if (!isEdit) {
@@ -101,7 +110,7 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
         } else {
             // Edit
             // console.log({hello: editTweetModal});
-
+            console.log(editTweetModal);
             console.log('inside Edit Tweet handle');
             e.preventDefault();
             const text = tweetTextRef.current?.value

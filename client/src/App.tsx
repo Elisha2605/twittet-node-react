@@ -16,7 +16,8 @@ import { ModalContext } from './context/modal.context';
 import Following from './pages/follow/Following';
 import Follower from './pages/follow/Follower';
 import { deleteTweet } from './api/tweet.api';
-import { IMAGE_TWEET_BASE_URL, TWEET_MENU } from './constants/common.constants';
+import { IMAGE_TWEET_BASE_URL, TWEET_AUDIENCE, TWEET_MENU, TWEET_REPLY } from './constants/common.constants';
+import { TweetAudienceType, TweetReplyType } from './types/tweet.types';
 
 function App() {
 
@@ -31,6 +32,9 @@ function App() {
     const [previewImageModal, setPreviewImageModal] = useState<string | null>(null);
     const [valueModal, setValueModal] = useState('');
     const [editTweetModal, setEditTweetModal] = useState('');
+
+    const [tweetEditAudienceModal, setTweetEditAudienceModal] = useState<TweetAudienceType>(TWEET_AUDIENCE.everyone);
+    const [tweetEditReplyModal, setTweetEditReplyModal] = useState<TweetReplyType>(TWEET_REPLY.everyone);
     
     const [isEdit, setIsEdit] = useState(false);
 
@@ -155,6 +159,8 @@ function App() {
                                 handleImageUpload={handleImageUpload}
                                 onAddTweet={handleAddTweet}
                                 
+                                tweetEditAudienceModal={tweetEditAudienceModal}
+                                tweetEditReplyModal={tweetEditReplyModal}
                                 editTweetModal={editTweetModal}
                                 isEdit={isEdit}
                             />

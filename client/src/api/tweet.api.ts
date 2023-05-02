@@ -84,8 +84,6 @@ export const editTweet = async (
     image: File | null, 
     audience: string, 
     reply: string) => {
-        console.log('From tweet.api :');
-        console.log(image);
     try {
         const res = await http.put(
             `/tweets/edit/${tweetId}`,

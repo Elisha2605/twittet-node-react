@@ -33,7 +33,9 @@ interface NavigationProps {
     handleImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
     onAddTweet: (tweet: any) => void;
 
-    editTweetModal: any,
+    tweetEditAudienceModal: string;
+    tweetEditReplyModal: string;
+    editTweetModal: any;
     isEdit: boolean;
 }
 
@@ -50,6 +52,8 @@ const Navigation: React.FC<NavigationProps> = ({
     handleCanselPreviewImage,
     handleImageUpload, 
     
+    tweetEditAudienceModal,
+    tweetEditReplyModal,
     editTweetModal,
     isEdit,
 }) => {
@@ -147,6 +151,8 @@ const Navigation: React.FC<NavigationProps> = ({
                     onAddTweet={onAddTweet} 
                     clearTweetForm={clearTweetForm}
 
+                    tweetEditAudienceModal={tweetEditAudienceModal}
+                    tweetEditReplyModal={tweetEditReplyModal}
                     editTweetModal={editTweetModal}
                     isEdit={isEdit}
                 />
