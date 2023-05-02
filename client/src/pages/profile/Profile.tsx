@@ -43,6 +43,9 @@ const Profile: FC<ProfileProps> = ({ onAddTweet, onClickTweetMenu }) => {
     const [userTweets, setUserTweets] = useState<any[]>([]);
     const [userTweetsMedia, setUserTweetsMedia] = useState<any[]>([]);
 
+    const [followings, setFollowings] = useState<any[]>([]);
+    const [followers, setFollowers] = useState<any[]>([]);
+
     const navigate = useNavigate();
 
     // get Auth user
@@ -69,9 +72,7 @@ const Profile: FC<ProfileProps> = ({ onAddTweet, onClickTweetMenu }) => {
     useEffect(() => {
         if (authUser) {
             const getAuthUserFollowStatus = async () => {
-                const { followers, followings } = await getAuthUserFollows(
-                    authUser?._id
-                );
+                const { followers, followings } = await getAuthUserFollows(id!);
                 if (
                     followings &&
                     followings.some(
@@ -80,6 +81,8 @@ const Profile: FC<ProfileProps> = ({ onAddTweet, onClickTweetMenu }) => {
                 ) {
                     setIsFollowing(true);
                 }
+                setFollowings(followings)
+                setFollowers(followers)
             };
             getAuthUserFollowStatus();
         }
@@ -235,12 +238,12 @@ const Profile: FC<ProfileProps> = ({ onAddTweet, onClickTweetMenu }) => {
                             <div className={styles.followStatus}>
                                 <NavLink to={`/following/${id}`}>
                                     <p>
-                                        2<span>Following</span>
+                                        {followings.length}<span>Following</span>
                                     </p>
                                 </NavLink>
                                 <NavLink to={`/followers/${id}`}>
                                     <p>
-                                        1<span>Followers</span>
+                                        {followers.length}<span>Followers</span>
                                     </p>
                                 </NavLink>
                             </div>
