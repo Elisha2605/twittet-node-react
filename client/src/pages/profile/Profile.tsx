@@ -37,8 +37,6 @@ const Profile: FC<ProfileProps> = ({ onAddTweet, onClickTweetMenu }) => {
         localStorage.getItem('activeTab-profile') || 'tweets'
     );
 
-    const [followers, setFollowers] = useState<any[]>([]);
-    const [followings, setFollowings] = useState<any[]>([]);
     const [authUser, setAuthUser] = useState<any>(null);
     const [user, setUser] = useState<any>();
     const [isFollowing, setIsFollowing] = useState<boolean>();
@@ -82,8 +80,6 @@ const Profile: FC<ProfileProps> = ({ onAddTweet, onClickTweetMenu }) => {
                 ) {
                     setIsFollowing(true);
                 }
-                setFollowers(followers);
-                setFollowings(followings);
             };
             getAuthUserFollowStatus();
         }

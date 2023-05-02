@@ -18,6 +18,7 @@ interface NavigationTweetProp {
     handleCanselPreviewImage: () => void;
     handleImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
     onAddTweet: (tweet: any) => void;
+    onEditTweet: (tweet: any) => void;
     clearTweetForm: () => void;
 
     editTweetModal: any,
@@ -33,6 +34,7 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
     handleCanselPreviewImage,
     handleImageUpload,
     onAddTweet, 
+    onEditTweet,
     clearTweetForm,
 
     editTweetModal,
@@ -104,14 +106,12 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
         } else {
             // Edit
             // console.log({hello: editTweetModal});
-            console.log(editTweetModal);
             console.log('inside Edit Tweet handle');
             e.preventDefault();
             const text = tweetTextRef.current?.value
                 ? tweetTextRef.current?.value
                 : null;
             const res = await editTweet(editTweetModal._id, text, selectedFile, tweetAudience, tweetReply);
-            console.log(res);
             const { tweet }: any = res;
             
             if (authUser) {
@@ -128,14 +128,12 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
                     audience: tweet.audience,
                     reply: tweet.reply,
                     createdAt: tweet.createdAt,
-                    image: editTweetModal.image,
+                    image: tweet.image,
                     comments: [],
                     reposts: [],
                     likes: [],
                 };
-                // onAddTweet(newTweet)
-                // console.log('***********');
-                // console.log(newTweet);
+                onEditTweet(newTweet)
             }
             // setIsFormFocused(false);
             closeModal('Nav-tweet');

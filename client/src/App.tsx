@@ -30,10 +30,11 @@ function App() {
     const [selectedFileModal, setSelectedFileModal] = useState<File | null>(null);
     const [previewImageModal, setPreviewImageModal] = useState<string | null>(null);
     const [valueModal, setValueModal] = useState('');
-    const [editTweetModal, setEditTweetModal] = useState('');
+    const [editTweetModal, setEditTweetModal] = useState<any>('');
+    const [onEditTweet, setOnEditTweets] = useState<any[]>([]);
+
     
     const [isEdit, setIsEdit] = useState(false);
-
 
     const { modalOpen, openModal } = useContext(ModalContext);
 
@@ -52,6 +53,11 @@ function App() {
     const handleAddTweet = (tweet: any) => {
         setOnAddTweets((prevTweets) => [tweet, ...prevTweets]);
     };
+
+    const handleEditTweet = (editedTweet: any) => {
+        setOnEditTweets(editedTweet)
+    }
+
     
     //// new functions
     const handleTextAreaOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -154,6 +160,7 @@ function App() {
                                 handleCanselPreviewImage={handleCanselPreviewImage}
                                 handleImageUpload={handleImageUpload}
                                 onAddTweet={handleAddTweet}
+                                onEditTweet={handleEditTweet}
                                 
                                 editTweetModal={editTweetModal}
                                 isEdit={isEdit}
@@ -166,6 +173,8 @@ function App() {
                                         onClickTweetMenu={handleTweetMenuOptionClick}
                                         onDeleteTweet={onDeleteTweet}
                                         onAddTweet={onAddTweet}
+                                        onEditTweet={onEditTweet}
+                                        editTweetModal={editTweetModal}
                                         selectedFile={selectedFile}
                                         previewImage={previewImage}                                    
                                         value={value}

@@ -20,11 +20,12 @@ import { createTweet, deleteTweet, getAllTweets, getFollowTweets } from '../../a
 import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_MENU, TWEET_REPLY } from '../../constants/common.constants';
 import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
 import AuthContext from '../../context/user.context';
-import { ModalContext } from '../../context/modal.context';
 
 interface HomeProps {
     value: string;
     onAddTweet: any, 
+    onEditTweet: any,
+    editTweetModal: any,
     onDeleteTweet: any,
     
     selectedFile: File | null
@@ -43,6 +44,8 @@ interface HomeProps {
 const Home: React.FC<HomeProps> = ({ 
     value,
     onAddTweet, 
+    onEditTweet,
+    editTweetModal,
     onDeleteTweet,
     
     selectedFile,
@@ -65,11 +68,7 @@ const Home: React.FC<HomeProps> = ({
     const [tweetReply, setTweetReply] = useState<TweetReplyType>(TWEET_REPLY.everyone);
 
     //new 
-
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
-
-    const { openModal } = useContext(ModalContext);
-
     
     const ctx = useContext(AuthContext);
     useEffect(() => {
@@ -106,12 +105,28 @@ const Home: React.FC<HomeProps> = ({
         const handleNewTweetFromModal = () => {
             // Add new tweet from NavigationTweet to state
             if (authUser?.avatar) {
-                console.log('Inside handleNewTweet');
                 setTweets((prevTweets) => [onAddTweet[0], ...prevTweets]);
             }
         };
         handleNewTweetFromModal();
     }, [onAddTweet]);
+
+    useEffect(() => {
+        const handleEditTweetFromModal = () => {
+            if (authUser?.avatar) {
+                setTweets((prevTweets) => 
+                    prevTweets.map((tweet) => 
+                        tweet._id === onEditTweet._id
+                            ? { ...tweet, ...onEditTweet }
+                            : tweet
+                    )
+                )
+            }
+        }
+        handleEditTweetFromModal()
+    }, [onEditTweet])
+    
+
 
     useEffect(() => {
         setTweets((preveState) =>
