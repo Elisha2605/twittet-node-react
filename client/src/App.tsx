@@ -36,7 +36,7 @@ function App() {
     
     const [isEdit, setIsEdit] = useState(false);
 
-    const { modalOpen, openModal } = useContext(ModalContext);
+    const { modalOpen, openModal, closeModal } = useContext(ModalContext);
 
     const context = useContext(AuthContext);
     let ctx: StoredContext = context.getUserContext();
@@ -118,8 +118,7 @@ function App() {
             setValueModal(tweet.text);
             const image = tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`;
             setPreviewImageModal(image);
-            setSelectedFileModal(null);
-        }
+        } 
     };
 
     // Index page
@@ -174,7 +173,6 @@ function App() {
                                         onDeleteTweet={onDeleteTweet}
                                         onAddTweet={onAddTweet}
                                         onEditTweet={onEditTweet}
-                                        editTweetModal={editTweetModal}
                                         selectedFile={selectedFile}
                                         previewImage={previewImage}                                    
                                         value={value}
@@ -194,7 +192,12 @@ function App() {
                                     path="/bookmarks"
                                     element={<Bookmarks />}
                                 />
-                                <Route path="/profile/:id" element={<Profile onAddTweet={onAddTweet} onClickTweetMenu={handleTweetMenuOptionClick} />} />
+                                <Route path="/profile/:id" element={<Profile 
+                                    onAddTweet={onAddTweet} 
+                                    onDeleteTweet={onDeleteTweet} 
+                                    onEditTweet={onEditTweet}
+                                    onClickTweetMenu={handleTweetMenuOptionClick} />} 
+                                />
                                 <Route path="/following/:id" element={<Following />} />
                                 <Route path="/followers/:id" element={<Follower />} />
                                 <Route

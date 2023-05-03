@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useContext, useEffect } from 'react';
 import Button, { ButtonSize, ButtonType } from '../ui/Button';
 import { 
     tweetAudienceMenuOptions, 
@@ -17,6 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAt, faChevronDown, faEarthAfrica, faLock, faUserCheck } from '@fortawesome/free-solid-svg-icons';
 import PopUpMenu from '../ui/PopUpMenu';
 import { TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
+import { ModalContext } from '../../context/modal.context';
 
 interface FormProps {
     value: string;
@@ -68,7 +69,6 @@ const FormTweet: FC<FormProps> = ({
             onSubmit(e);
         }
     }
-
 
     const isImageSelected = !!imagePreview;
 

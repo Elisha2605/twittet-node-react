@@ -20,12 +20,12 @@ import { createTweet, deleteTweet, getAllTweets, getFollowTweets } from '../../a
 import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_MENU, TWEET_REPLY } from '../../constants/common.constants';
 import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
 import AuthContext from '../../context/user.context';
+import { ModalContext } from '../../context/modal.context';
 
 interface HomeProps {
     value: string;
     onAddTweet: any, 
     onEditTweet: any,
-    editTweetModal: any,
     onDeleteTweet: any,
     
     selectedFile: File | null
@@ -45,7 +45,6 @@ const Home: React.FC<HomeProps> = ({
     value,
     onAddTweet, 
     onEditTweet,
-    editTweetModal,
     onDeleteTweet,
     
     selectedFile,
@@ -121,13 +120,13 @@ const Home: React.FC<HomeProps> = ({
                             : tweet
                     )
                 )
+
             }
         }
         handleEditTweetFromModal()
     }, [onEditTweet])
-    
 
-
+    // On delete tweet
     useEffect(() => {
         setTweets((preveState) =>
                 preveState.filter((tweet) => tweet._id !== onDeleteTweet._id)

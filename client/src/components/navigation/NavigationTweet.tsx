@@ -7,6 +7,7 @@ import { ModalContext } from '../../context/modal.context';
 import Modal from '../ui/Modal';
 import FormTweet from '../form/FormTweet';
 import AuthContext from '../../context/user.context';
+import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
 
 interface NavigationTweetProp {
     value: string;
@@ -43,8 +44,8 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
 
 
     const [isFormFocused, setIsFormFocused] = useState(false);
-    const [tweetAudience, setTweetAudience] = useState<any>(TWEET_AUDIENCE.everyone);
-    const [tweetReply, setTweetReply] = useState<any>(TWEET_REPLY.everyone);
+    const [tweetAudience, setTweetAudience] = useState<TweetAudienceType>(TWEET_AUDIENCE.everyone);
+    const [tweetReply, setTweetReply] = useState<TweetReplyType>(TWEET_REPLY.everyone);
     const [authUser, setAuthUser] = useState<any>(null);
 
     const ctx = useContext(AuthContext);
@@ -55,15 +56,19 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
         }
         getAuthUser();
     }, []);
-
+    
 
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
 
-    const { closeModal } = useContext(ModalContext);
+    const { closeModal, modalOpen, } = useContext(ModalContext);
+    
 
+    // Set audience and reply on Edit
     useEffect(() => {
-        setTweetAudience(editTweetModal.audience)
-        setTweetReply(editTweetModal.reply)
+        if (isEdit) {
+            setTweetAudience(editTweetModal.audience)
+            setTweetReply(editTweetModal.reply)
+        } 
     }, [editTweetModal])
 
     const handleSubmitTweet = async (e: React.FormEvent) => {
@@ -135,12 +140,13 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
                 };
                 onEditTweet(newTweet)
             }
-            // setIsFormFocused(false);
+            setIsFormFocused(false);
             closeModal('Nav-tweet');
             setTweetAudience(TWEET_AUDIENCE.everyone)
             setTweetReply(TWEET_REPLY.everyone)
             clearTweetForm();
         }
+       
     };
 
     const handleTweetAudienceOptions = (options: string) => {
@@ -169,6 +175,12 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
         }
     }
 
+    useEffect(() => {
+        if (!modalOpen && !isEdit) {
+            clearTweetForm();
+        } 
+    }, [isEdit])
+    
     return (
         <React.Fragment>
             <Modal
@@ -201,7 +213,6 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
                         onClickAudienceMenu={handleTweetAudienceOptions}
                         onClickReplyMenu={handleTweetReyplyOptions}
                         classNameTextErea={styles.classNameTextErea}
-                        
                     />
                 </div>
             </Modal>

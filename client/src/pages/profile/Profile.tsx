@@ -27,10 +27,17 @@ import { deleteTweet, getUserTweets } from '../../api/tweet.api';
 
 interface ProfileProps {
     onAddTweet: any;
+    onDeleteTweet: any;
+    onEditTweet: any;
     onClickTweetMenu: Function;
 }
 
-const Profile: FC<ProfileProps> = ({ onAddTweet, onClickTweetMenu }) => {
+const Profile: FC<ProfileProps> = ({
+    onAddTweet,
+    onDeleteTweet,
+    onEditTweet,
+    onClickTweetMenu,
+}) => {
     const { id } = useParams<{ id: string }>();
 
     const [activeTab, setActiveTab] = useState(
@@ -81,8 +88,8 @@ const Profile: FC<ProfileProps> = ({ onAddTweet, onClickTweetMenu }) => {
                 ) {
                     setIsFollowing(true);
                 }
-                setFollowings(followings)
-                setFollowers(followers)
+                setFollowings(followings);
+                setFollowers(followers);
             };
             getAuthUserFollowStatus();
         }
@@ -93,7 +100,7 @@ const Profile: FC<ProfileProps> = ({ onAddTweet, onClickTweetMenu }) => {
         localStorage.setItem('activeTab-profile', activeTab);
     }, [activeTab]);
 
-    // send follow request
+    // Send follow request
     const handleFollowRequest = async () => {
         const res = await sendFollowRequest(authUser?._id, id!);
         console.log(res);
@@ -113,34 +120,56 @@ const Profile: FC<ProfileProps> = ({ onAddTweet, onClickTweetMenu }) => {
                     return tweet;
                 });
             setUserTweets(tweets);
-            setUserTweetsMedia(medias)
+            setUserTweetsMedia(medias);
         };
         fetchUserTweets();
     }, []);
 
+    // On create tweet
     useEffect(() => {
         const handleNewTweetFromModal = () => {
             // Add new tweet from NavigationTweet to state
             if (authUser?.avatar) {
                 console.log('Inside handleNewTweet');
                 setUserTweets((prevTweets) => [onAddTweet[0], ...prevTweets]);
+                setUserTweetsMedia((prevTweets) => [onAddTweet[0], ...prevTweets]);
             }
         };
         handleNewTweetFromModal();
     }, [onAddTweet]);
 
-    // TWEET menu popup
-    const handleMenuOptionClick = async (option: string, tweetId: string) => {
-        if (option === 'Delete') {
-            const res = await deleteTweet(tweetId);
-            setUserTweets((preveState) =>
-                preveState.filter((tweet) => tweet._id !== tweetId)
-            );
-            console.log(res);
-        } else if (option === 'Edit') {
-            console.log(option);
+    // On edit tweet
+    useEffect(() => {
+        const handleEditTweetFromModal = () => {
+            if (authUser?.avatar) {
+                setUserTweets((prevTweets) => 
+                    prevTweets.map((tweet) => 
+                        tweet._id === onEditTweet._id
+                            ? { ...tweet, ...onEditTweet }
+                            : tweet
+                    )
+                )
+                setUserTweetsMedia((prevTweets) => 
+                    prevTweets.map((tweet) => 
+                        tweet._id === onEditTweet._id
+                            ? { ...tweet, ...onEditTweet }
+                            : tweet
+                    )
+                )
+            }
         }
-    };
+        handleEditTweetFromModal()
+    }, [onEditTweet])
+
+    // On delete tweet
+    useEffect(() => {
+        setUserTweets((preveState) =>
+            preveState.filter((tweet) => tweet._id !== onDeleteTweet._id)
+        );
+        setUserTweetsMedia((preveState) =>
+            preveState.filter((tweet) => tweet._id !== onDeleteTweet._id)
+        );
+    }, [onDeleteTweet]);
 
     return (
         <React.Fragment>
@@ -238,12 +267,14 @@ const Profile: FC<ProfileProps> = ({ onAddTweet, onClickTweetMenu }) => {
                             <div className={styles.followStatus}>
                                 <NavLink to={`/following/${id}`}>
                                     <p>
-                                        {followings.length}<span>Following</span>
+                                        {followings.length}
+                                        <span>Following</span>
                                     </p>
                                 </NavLink>
                                 <NavLink to={`/followers/${id}`}>
                                     <p>
-                                        {followers.length}<span>Followers</span>
+                                        {followers.length}
+                                        <span>Followers</span>
                                     </p>
                                 </NavLink>
                             </div>
