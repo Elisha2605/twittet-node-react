@@ -128,6 +128,7 @@ const Home: React.FC<HomeProps> = ({
 
     // On delete tweet
     useEffect(() => {
+        console.log(onDeleteTweet);
         setTweets((preveState) =>
                 preveState.filter((tweet) => tweet._id !== onDeleteTweet._id)
             );

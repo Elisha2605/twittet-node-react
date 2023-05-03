@@ -60,7 +60,7 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
 
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
 
-    const { closeModal, modalOpen, } = useContext(ModalContext);
+    const { closeModal, modalOpen } = useContext(ModalContext);
     
 
     // Set audience and reply on Edit

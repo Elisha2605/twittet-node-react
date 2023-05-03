@@ -1,19 +1,63 @@
+import mongoose from 'mongoose';
 import { TWEET_AUDIENCE } from 'src/constants/tweet.constants';
 import Follow from 'src/model/follow.model';
+import Like from 'src/model/like.model';
 import Tweet from 'src/model/tweet.model';
 import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
 import { CustomError } from 'src/utils/helpers';
 
 export const getAllTweets = async (): Promise<ApiResponse<any>> => {
     try {
-        const tweets = await Tweet.find({})
-            .populate({
-                path: 'user',
-                select: 'name username avatar coverImage isVerified isProtected',
-                model: 'User',
-            })
-            .sort({ createdAt: -1 })
-            .exec();
+        const tweets = await Tweet.aggregate([
+            {
+                $lookup: {
+                    from: 'User',
+                    localField: 'user',
+                    foreignField: '_id',
+                    as: 'user',
+                },
+            },
+            {
+                $unwind: '$user',
+            },
+            {
+                $lookup: {
+                    from: 'Like',
+                    localField: '_id',
+                    foreignField: 'tweet',
+                    as: 'likes',
+                },
+            },
+            {
+                $unwind: { path: '$likes', preserveNullAndEmptyArrays: true },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    user: {
+                        _id: '$user._id',
+                        name: '$user.name',
+                        username: '$user.username',
+                        avatar: '$user.avatar',
+                        coverImage: '$user.coverImage',
+                        isVerified: '$user.isVerified',
+                        isProtected: '$user.isProtected',
+                    },
+                    image: 1,
+                    text: 1,
+                    audience: 1,
+                    reply: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                    likes: '$likes.likes',
+                },
+            },
+            {
+                $sort: {
+                    createdAt: -1,
+                },
+            },
+        ]).exec();
         if (tweets.length === 0) {
             return { success: false, message: 'No tweet found!', status: 200 };
         }
@@ -38,14 +82,61 @@ export const getUserTweets = async (
     userId: string
 ): Promise<ApiResponse<any>> => {
     try {
-        const tweet = await Tweet.find({ user: userId })
-            .populate({
-                path: 'user',
-                select: 'name username avatar coverImage isVerified isProtected',
-                model: 'User',
-            })
-            .sort({ createdAt: -1 })
-            .exec();
+        const tweet = await Tweet.aggregate([
+            {
+                $match: {
+                    user: new mongoose.Types.ObjectId(userId),
+                },
+            },
+            {
+                $lookup: {
+                    from: 'User',
+                    localField: 'user',
+                    foreignField: '_id',
+                    as: 'user',
+                },
+            },
+            {
+                $unwind: '$user',
+            },
+            {
+                $lookup: {
+                    from: 'Like',
+                    localField: '_id',
+                    foreignField: 'tweet',
+                    as: 'likes',
+                },
+            },
+            {
+                $unwind: { path: '$likes', preserveNullAndEmptyArrays: true },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    user: {
+                        _id: '$user._id',
+                        name: '$user.name',
+                        username: '$user.username',
+                        avatar: '$user.avatar',
+                        coverImage: '$user.coverImage',
+                        isVerified: '$user.isVerified',
+                        isProtected: '$user.isProtected',
+                    },
+                    image: 1,
+                    text: 1,
+                    audience: 1,
+                    reply: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                    likes: '$likes.likes',
+                },
+            },
+            {
+                $sort: {
+                    createdAt: -1,
+                },
+            },
+        ]).exec();
         if (tweet.length < 0) {
             throw CustomError('Tweets not found', 204);
         }
@@ -79,14 +170,61 @@ export const getFollowTweets = async (
         );
 
         // Find all tweets from users in the followings array
-        const tweets = await Tweet.find({ user: { $in: followingIds } })
-            .populate({
-                path: 'user',
-                select: 'name username avatar coverImage isVerified isProtected',
-                model: 'User',
-            })
-            .sort({ createdAt: -1 })
-            .exec();
+        const tweets = await Tweet.aggregate([
+            {
+                $lookup: {
+                    from: 'User',
+                    localField: 'user',
+                    foreignField: '_id',
+                    as: 'user',
+                },
+            },
+            {
+                $unwind: '$user',
+            },
+            {
+                $lookup: {
+                    from: 'Like',
+                    localField: '_id',
+                    foreignField: 'tweet',
+                    as: 'likes',
+                },
+            },
+            {
+                $unwind: { path: '$likes', preserveNullAndEmptyArrays: true },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    user: {
+                        _id: '$user._id',
+                        name: '$user.name',
+                        username: '$user.username',
+                        avatar: '$user.avatar',
+                        coverImage: '$user.coverImage',
+                        isVerified: '$user.isVerified',
+                        isProtected: '$user.isProtected',
+                    },
+                    image: 1,
+                    text: 1,
+                    audience: 1,
+                    reply: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                    likes: '$likes.likes',
+                },
+            },
+            {
+                $match: {
+                    'user._id': { $in: followingIds },
+                },
+            },
+            {
+                $sort: {
+                    createdAt: -1,
+                },
+            },
+        ]).exec();
 
         // To consider in the feature ( additional query criteria to filter the tweets based on their audience or reply)
         // const tweets = await Tweet.find({
@@ -180,7 +318,9 @@ export const editTweet = async (
             update.image = image;
         }
 
-        const updatedTweet = await Tweet.findOneAndUpdate(query, update, { new: true });
+        const updatedTweet = await Tweet.findOneAndUpdate(query, update, {
+            new: true,
+        });
 
         if (!updatedTweet) {
             return {
@@ -196,41 +336,6 @@ export const editTweet = async (
             message: 'Successfully edited tweet',
             status: 200,
             payload: updatedTweet,
-        };
-    } catch (error) {
-        const errorResponse: ErrorResponse = {
-            success: false,
-            message: error.message || 'Internal server error',
-            status: error.statusCode || 500,
-            error: error,
-        };
-        return Promise.reject(errorResponse);
-    }
-};
-
-export const deleteTweet = async (
-    tweetId: string,
-    userId: string
-): Promise<ApiResponse<any>> => {
-    try {
-        const tweetToDelete: any = await Tweet.findById(tweetId);
-        if (!tweetToDelete) {
-            return {
-                success: true,
-                message: 'Tweet not found!',
-                status: 204,
-                payload: {},
-            };
-        }
-        if (!tweetToDelete.user._id.equals(userId)) {
-            throw CustomError('Unauthorized', 403);
-        }
-        await tweetToDelete.deleteOne();
-        return {
-            success: true,
-            message: 'Successfully created tweet',
-            status: 200,
-            payload: tweetToDelete,
         };
     } catch (error) {
         const errorResponse: ErrorResponse = {
@@ -271,6 +376,62 @@ export const updateTweetAudience = async (
             payload: tweetToUpdate,
         };
     } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};
+
+export const deleteTweet = async (
+    tweetId: string,
+    userId: string
+): Promise<ApiResponse<any>> => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        const tweetToDelete: any = await Tweet.findById(tweetId).session(
+            session
+        );
+        const tweetLikes: any = await Like.findOne({ tweet: tweetId }).session(
+            session
+        );
+        if (!tweetToDelete) {
+            return {
+                success: true,
+                message: 'Tweet not found!',
+                status: 204,
+                payload: {},
+            };
+        }
+        if (!tweetToDelete.user._id.equals(userId)) {
+            throw CustomError('Unauthorized', 403);
+        }
+        // Delete tweetLikes and tweetToDelete if both exist
+        if (tweetLikes) {
+            await Promise.all([
+                tweetLikes.deleteOne({ session }),
+                tweetToDelete.deleteOne({ session }),
+            ]);
+        } else {
+            await tweetToDelete.deleteOne({ session });
+        }
+
+        await session.commitTransaction();
+        session.endSession();
+
+        return {
+            success: true,
+            message: 'Successfully deleted tweet',
+            status: 200,
+            payload: tweetToDelete,
+        };
+    } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
         const errorResponse: ErrorResponse = {
             success: false,
             message: error.message || 'Internal server error',

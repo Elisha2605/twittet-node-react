@@ -24,6 +24,7 @@ import { NavLink, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
 import { deleteTweet, getUserTweets } from '../../api/tweet.api';
+import FollowButton from '../../components/ui/FollowButton';
 
 interface ProfileProps {
     onAddTweet: any;
@@ -132,7 +133,10 @@ const Profile: FC<ProfileProps> = ({
             if (authUser?.avatar) {
                 console.log('Inside handleNewTweet');
                 setUserTweets((prevTweets) => [onAddTweet[0], ...prevTweets]);
-                setUserTweetsMedia((prevTweets) => [onAddTweet[0], ...prevTweets]);
+                setUserTweetsMedia((prevTweets) => [
+                    onAddTweet[0],
+                    ...prevTweets,
+                ]);
             }
         };
         handleNewTweetFromModal();
@@ -142,24 +146,24 @@ const Profile: FC<ProfileProps> = ({
     useEffect(() => {
         const handleEditTweetFromModal = () => {
             if (authUser?.avatar) {
-                setUserTweets((prevTweets) => 
-                    prevTweets.map((tweet) => 
+                setUserTweets((prevTweets) =>
+                    prevTweets.map((tweet) =>
                         tweet._id === onEditTweet._id
                             ? { ...tweet, ...onEditTweet }
                             : tweet
                     )
-                )
-                setUserTweetsMedia((prevTweets) => 
-                    prevTweets.map((tweet) => 
+                );
+                setUserTweetsMedia((prevTweets) =>
+                    prevTweets.map((tweet) =>
                         tweet._id === onEditTweet._id
                             ? { ...tweet, ...onEditTweet }
                             : tweet
                     )
-                )
+                );
             }
-        }
-        handleEditTweetFromModal()
-    }, [onEditTweet])
+        };
+        handleEditTweetFromModal();
+    }, [onEditTweet]);
 
     // On delete tweet
     useEffect(() => {
@@ -237,16 +241,11 @@ const Profile: FC<ProfileProps> = ({
                                     }}
                                 />
                             ) : (
-                                <Button
-                                    className={styles.editProfileBtn}
-                                    value={isFollowing ? 'Following' : 'Follow'}
-                                    type={
-                                        isFollowing
-                                            ? ButtonType.tietary
-                                            : ButtonType.secondary
-                                    }
+                                <FollowButton
+                                    userId={id}
+                                    type={ButtonType.secondary}
                                     size={ButtonSize.small}
-                                    onClick={handleFollowRequest}
+                                    className={styles.editProfileBtn}
                                 />
                             )}
                         </div>
