@@ -153,13 +153,3 @@ export const updateTweetAudience = async (
         }
     }
 };
-
-export const likeTweet = async (tweetId: string) => {
-    try {
-        const res = await http.post(`/likes/${tweetId}`, {}, GETREQUESTOPTIONS());
-        return res.data;
-    } catch (error: any) {
-        console.error(error);
-        throw error;
-    }
-};

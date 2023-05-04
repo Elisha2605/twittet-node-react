@@ -23,8 +23,9 @@ import { getAuthUserFollows, sendFollowRequest } from '../../api/follow.api';
 import { NavLink, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
-import { deleteTweet, getUserTweets } from '../../api/tweet.api';
+import { getUserTweets } from '../../api/tweet.api';
 import FollowButton from '../../components/ui/FollowButton';
+import { getUserLikedTweets, likeTweet } from '../../api/like.api';
 
 interface ProfileProps {
     onAddTweet: any;
@@ -50,9 +51,12 @@ const Profile: FC<ProfileProps> = ({
     const [isFollowing, setIsFollowing] = useState<boolean>();
     const [userTweets, setUserTweets] = useState<any[]>([]);
     const [userTweetsMedia, setUserTweetsMedia] = useState<any[]>([]);
+    const [userLikedTweets, setUserLikedTweets] = useState<any[]>([]);
 
     const [followings, setFollowings] = useState<any[]>([]);
     const [followers, setFollowers] = useState<any[]>([]);
+
+    const [likedTweet, setLikedTweet] = useState<any>();
 
     const navigate = useNavigate();
 
@@ -174,6 +178,54 @@ const Profile: FC<ProfileProps> = ({
             preveState.filter((tweet) => tweet._id !== onDeleteTweet._id)
         );
     }, [onDeleteTweet]);
+
+    // On like tweet
+    const onClickLike = async (tweet: any) => {
+        const res: any = await likeTweet(tweet._id);
+        const { likedTweet } = res;
+        setLikedTweet(likedTweet)
+        setUserLikedTweets((prevTweets: any) => 
+                prevTweets.map((tweet: any) =>
+                    tweet._id === likedTweet.tweet
+                        ? { ...tweet, likedTweet}
+                        : tweet
+                )
+        )
+    }
+
+    // get liked tweets
+    useEffect(() => {
+        const getLikedTweet = async () => {
+            const res: any = await getUserLikedTweets(id!);
+            const { tweets } = res;
+            setUserLikedTweets(tweets);
+        }
+        getLikedTweet();
+    }, [])
+
+    useEffect(() => {
+            setUserTweets((prevTweets: any) => 
+                prevTweets.map((tweet: any) =>
+                    tweet._id === likedTweet.tweet
+                        ? { ...tweet, totalLikes: likedTweet.likesCount}
+                        : tweet
+                )
+            )
+            setUserTweetsMedia((prevTweets: any) => 
+                prevTweets.map((tweet: any) =>
+                    tweet._id === likedTweet.tweet
+                        ? { ...tweet, totalLikes: likedTweet.likesCount}
+                        : tweet
+                )
+            )
+            setUserLikedTweets((prevTweets: any) => 
+                prevTweets.map((tweet: any) =>
+                    tweet._id === likedTweet.tweet
+                        ? { ...tweet, totalLikes: likedTweet.likesCount}
+                        : tweet
+                )
+            )
+    }, [likedTweet])
 
     return (
         <React.Fragment>
@@ -321,7 +373,7 @@ const Profile: FC<ProfileProps> = ({
                                         key={tweet._id}
                                         tweet={tweet}
                                         onClickMenu={onClickTweetMenu}
-                                        onClickLike={() => {}}
+                                        onClickLike={onClickLike}
                                     />
                                 ))}
                                 {/* tweets - end */}
@@ -345,7 +397,7 @@ const Profile: FC<ProfileProps> = ({
                                         key={tweet._id}
                                         tweet={tweet}
                                         onClickMenu={onClickTweetMenu}
-                                        onClickLike={() => {}}
+                                        onClickLike={onClickLike}
                                     />
                                 ))}
                             </div>
@@ -355,10 +407,15 @@ const Profile: FC<ProfileProps> = ({
                         {/* LIKES - START */}
                         {activeTab === 'likes' && (
                             <div className={styles.main}>
-                                <PageUnderConstruction
-                                    message={'Will display - all tweet likes'}
-                                />
-                            </div>
+                                {userLikedTweets.map((tweet: any) => (
+                                    <Tweet
+                                        key={tweet._id}
+                                        tweet={tweet}
+                                        onClickMenu={onClickTweetMenu}
+                                        onClickLike={onClickLike}
+                                    />
+                                ))}
+                        </div>
                         )}
                         {/* LIKES - END */}
 

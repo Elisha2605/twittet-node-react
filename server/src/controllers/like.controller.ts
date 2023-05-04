@@ -1,13 +1,34 @@
 import { NextFunction, Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
-import { likeTweet } from 'src/services/like.service';
+import { getUserLikedTweet, likeTweet } from 'src/services/like.service';
 
-export const likeTweetController = asyncHandler(
+export const getUserLikedTweetsController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req.params.id;
+        try {
+            const { success, message, payload, status } =
+                await getUserLikedTweet(userId);
+
+            if (success) {
+                res.status(200).json({
+                    success: success,
+                    status: status,
+                    message: message,
+                    tweets: payload,
+                });
+            } else {
+                res.status(500).json({ success, message });
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+export const likeController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const tweetId = req.params.id;
         const userId = req.user._id;
-
-        console.log();
         try {
             const { success, message, payload, status } = await likeTweet(
                 tweetId,
@@ -19,7 +40,7 @@ export const likeTweetController = asyncHandler(
                     success: success,
                     status: status,
                     message: message,
-                    response: payload,
+                    likedTweet: payload,
                 });
             } else {
                 res.status(500).json({ success, message });

@@ -16,10 +16,11 @@ import styles from './Home.module.css';
 import Layout from '../../Layout.module.css';
 import HeaderTitle from '../../components/header/HeaderTitle';
 import HorizontalNavBar from '../../components/ui/HorizontalNavBar';
-import { createTweet, getAllTweets, getFollowTweets, likeTweet } from '../../api/tweet.api';
+import { createTweet, getAllTweets, getFollowTweets } from '../../api/tweet.api';
 import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
 import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
 import AuthContext from '../../context/user.context';
+import { likeTweet } from '../../api/like.api';
 
 interface HomeProps {
     value: string;
@@ -161,7 +162,6 @@ const Home: React.FC<HomeProps> = ({
     }
 
     const handleSubmitTweet = async (e: React.FormEvent) => {
-        console.log('inside handleSubmitTweet');
         e.preventDefault();
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
@@ -195,8 +195,8 @@ const Home: React.FC<HomeProps> = ({
 
     const onClickLike = async (tweet: any) => {
         const res: any = await likeTweet(tweet._id);
-        setLikedTweet(res.response)
-        console.log(res.response.likesCount);
+        const { likedTweet } = res;
+        setLikedTweet(likedTweet)
     }
 
 
@@ -208,8 +208,15 @@ const Home: React.FC<HomeProps> = ({
                         : tweet
                 )
             )
+            setFollowingTweets((prevTweets: any) => 
+                prevTweets.map((tweet: any) =>
+                    tweet._id === likedTweet.tweet
+                        ? { ...tweet, totalLikes: likedTweet.likesCount}
+                        : tweet
+                )
+            )
     }, [likedTweet])
-    
+
 
     return (
         <React.Fragment>
@@ -267,6 +274,7 @@ const Home: React.FC<HomeProps> = ({
                         <div className={styles.main}>
                             {memoizedFollowTweets.map((tweet: any) => (
                                 <Tweet
+                                    key={tweet._id}
                                     tweet={tweet}
                                     onClickMenu={onClickTweetMenu!}
                                     onClickLike={onClickLike}

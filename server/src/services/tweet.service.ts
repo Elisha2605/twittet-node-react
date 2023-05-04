@@ -144,6 +144,17 @@ export const getUserTweets = async (
                     createdAt: 1,
                     updatedAt: 1,
                     likes: '$likes.likes',
+                    totalLikes: {
+                        $cond: {
+                            if: {
+                                $isArray: '$likes.likes',
+                            },
+                            then: {
+                                $size: '$likes.likes',
+                            },
+                            else: 0,
+                        },
+                    },
                 },
             },
             {
@@ -227,6 +238,17 @@ export const getFollowTweets = async (
                     createdAt: 1,
                     updatedAt: 1,
                     likes: '$likes.likes',
+                    totalLikes: {
+                        $cond: {
+                            if: {
+                                $isArray: '$likes.likes',
+                            },
+                            then: {
+                                $size: '$likes.likes',
+                            },
+                            else: 0,
+                        },
+                    },
                 },
             },
             {

@@ -111,7 +111,6 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
         } else {
             // Edit
             // console.log({hello: editTweetModal});
-            console.log('inside Edit Tweet handle');
             e.preventDefault();
             const text = tweetTextRef.current?.value
                 ? tweetTextRef.current?.value

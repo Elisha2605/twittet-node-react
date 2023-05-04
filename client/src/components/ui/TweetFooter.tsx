@@ -22,7 +22,6 @@ const TweetFooter: FC<TweetFooterProps> = ({
 }) => {
 
     const handleLike = (tweet: any) => {
-        console.log(tweet.target.value);
         onClick!(tweet);
     };
 
@@ -39,7 +38,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
                 </div>
                 {likes ? (
                     <div className={`${styles.item} ${styles.liked}`} onClick={handleLike} >
-                        <FontAwesomeIcon icon={faHeartSolid} color={'#fb3b1e'} />
+                        <FontAwesomeIcon icon={faHeartSolid} color={'#F91980'} />
                         <p>{likes}</p>
                     </div>
                 ): (
