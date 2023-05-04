@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import { NavLink } from 'react-router-dom';
 import TweetFooter from '../ui/TweetFooter';
 import UserInfo from '../ui/UserInfo';
@@ -79,7 +79,6 @@ const Tweet: FC<TweetProps> = ({
                     )}
                 </NavLink>
                     <TweetFooter
-                        tweet={tweet}
                         comments={'164'}
                         reposts={'923'}
                         likes={tweet.totalLikes > 0 ? tweet.totalLikes: '' }

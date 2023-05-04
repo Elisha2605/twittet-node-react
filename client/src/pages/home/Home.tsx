@@ -16,11 +16,10 @@ import styles from './Home.module.css';
 import Layout from '../../Layout.module.css';
 import HeaderTitle from '../../components/header/HeaderTitle';
 import HorizontalNavBar from '../../components/ui/HorizontalNavBar';
-import { createTweet, deleteTweet, getAllTweets, getFollowTweets, likeTweet } from '../../api/tweet.api';
-import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_MENU, TWEET_REPLY } from '../../constants/common.constants';
+import { createTweet, getAllTweets, getFollowTweets, likeTweet } from '../../api/tweet.api';
+import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
 import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
 import AuthContext from '../../context/user.context';
-import { ModalContext } from '../../context/modal.context';
 
 interface HomeProps {
     value: string;
@@ -30,8 +29,6 @@ interface HomeProps {
     
     selectedFile: File | null
     previewImage: string | null
-
-    // setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
 
     handleTextAreaOnChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     handleCanselPreviewImage: () => void;
