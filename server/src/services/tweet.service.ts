@@ -29,7 +29,10 @@ export const getAllTweets = async (): Promise<ApiResponse<any>> => {
                 },
             },
             {
-                $unwind: { path: '$likes', preserveNullAndEmptyArrays: true },
+                $unwind: {
+                    path: '$likes',
+                    preserveNullAndEmptyArrays: true,
+                },
             },
             {
                 $project: {
@@ -50,6 +53,17 @@ export const getAllTweets = async (): Promise<ApiResponse<any>> => {
                     createdAt: 1,
                     updatedAt: 1,
                     likes: '$likes.likes',
+                    totalLikes: {
+                        $cond: {
+                            if: {
+                                $isArray: '$likes.likes',
+                            },
+                            then: {
+                                $size: '$likes.likes',
+                            },
+                            else: 0,
+                        },
+                    },
                 },
             },
             {
@@ -58,6 +72,7 @@ export const getAllTweets = async (): Promise<ApiResponse<any>> => {
                 },
             },
         ]).exec();
+
         if (tweets.length === 0) {
             return { success: false, message: 'No tweet found!', status: 200 };
         }

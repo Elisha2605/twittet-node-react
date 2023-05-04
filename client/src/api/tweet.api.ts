@@ -21,7 +21,10 @@ export const getAllTweets = async () => {
 
 export const getUserTweets = async (userId: string) => {
     try {
-        const res = await http.get(`/tweets/user/${userId}`, GETREQUESTOPTIONS());
+        const res = await http.get(
+            `/tweets/user/${userId}`,
+            GETREQUESTOPTIONS()
+        );
         return res.data;
     } catch (error: any) {
         if (error.response && error.response.status === 401) {
@@ -32,11 +35,14 @@ export const getUserTweets = async (userId: string) => {
             throw error;
         }
     }
-}
+};
 
 export const getFollowTweets = async (userId: string) => {
     try {
-        const res = await http.get(`/tweets/follow/${userId}`, GETREQUESTOPTIONS());
+        const res = await http.get(
+            `/tweets/follow/${userId}`,
+            GETREQUESTOPTIONS()
+        );
         return res.data;
     } catch (error: any) {
         if (error.response && error.response.status === 401) {
@@ -47,13 +53,13 @@ export const getFollowTweets = async (userId: string) => {
             throw error;
         }
     }
-}
+};
 
 export const createTweet = async (
-    text: string | null, 
-    image: File | null, 
+    text: string | null,
+    image: File | null,
     audience: string,
-    reply: string,
+    reply: string
 ) => {
     try {
         const res = await http.post(
@@ -62,7 +68,7 @@ export const createTweet = async (
                 text: text,
                 tweetImage: image,
                 audience: audience,
-                reply: reply
+                reply: reply,
             },
             GETREQUESTOPTIONS_WITH_MULTIFROM()
         );
@@ -79,11 +85,12 @@ export const createTweet = async (
 };
 
 export const editTweet = async (
-    tweetId: string, 
-    text: string | null, 
-    image: File | null, 
-    audience: string, 
-    reply: string) => {
+    tweetId: string,
+    text: string | null,
+    image: File | null,
+    audience: string,
+    reply: string
+) => {
     try {
         const res = await http.put(
             `/tweets/edit/${tweetId}`,
@@ -91,7 +98,7 @@ export const editTweet = async (
                 text: text,
                 tweetImage: image,
                 audience: audience,
-                reply: reply
+                reply: reply,
             },
             GETREQUESTOPTIONS_WITH_MULTIFROM()
         );
@@ -125,12 +132,15 @@ export const deleteTweet = async (tweetId: string) => {
     }
 };
 
-export const updateTweetAudience = async (tweetId: string, audienceOption: string) => {
+export const updateTweetAudience = async (
+    tweetId: string,
+    audienceOption: string
+) => {
     try {
         const res = await http.patch(
             `/tweets/update-audience/${tweetId}`,
             { audienceOption: audienceOption },
-            GETREQUESTOPTIONS(),
+            GETREQUESTOPTIONS()
         );
         return res.data;
     } catch (error: any) {
@@ -142,4 +152,14 @@ export const updateTweetAudience = async (tweetId: string, audienceOption: strin
             throw error;
         }
     }
-}
+};
+
+export const likeTweet = async (tweetId: string) => {
+    try {
+        const res = await http.post(`/likes/${tweetId}`, {}, GETREQUESTOPTIONS());
+        return res.data;
+    } catch (error: any) {
+        console.error(error);
+        throw error;
+    }
+};

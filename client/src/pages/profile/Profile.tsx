@@ -321,6 +321,7 @@ const Profile: FC<ProfileProps> = ({
                                         key={tweet._id}
                                         tweet={tweet}
                                         onClickMenu={onClickTweetMenu}
+                                        onClickLike={() => {}}
                                     />
                                 ))}
                                 {/* tweets - end */}
@@ -344,6 +345,7 @@ const Profile: FC<ProfileProps> = ({
                                         key={tweet._id}
                                         tweet={tweet}
                                         onClickMenu={onClickTweetMenu}
+                                        onClickLike={() => {}}
                                     />
                                 ))}
                             </div>

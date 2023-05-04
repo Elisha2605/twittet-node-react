@@ -1,22 +1,32 @@
 import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faChartSimple, faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import styles from "./TweetFooter.module.css";
+import { likeTweet } from "../../api/tweet.api";
 
 interface TweetFooterProps {
+    tweet: any,
     comments: string;
     reposts: string;
     likes: string;
     views: string;
+    onClick?: (tweet: string) => void;
 }
 
 const TweetFooter: FC<TweetFooterProps> = ({ 
+    tweet,
     comments,
     reposts,
     likes,
-    views
+    views,
+    onClick,
 }) => {
+
+    
+    const handleLike = (tweet: any) => {
+        onClick!(tweet);
+    };
 
     return (
         <React.Fragment>
@@ -29,7 +39,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
                     <FontAwesomeIcon icon={faRepeat} />
                     <p>{reposts}</p>
                 </div>
-                <div className={styles.item}>
+                <div className={styles.item} onClick={handleLike} >
                     <FontAwesomeIcon icon={faHeart} />
                     <p>{likes}</p>
                 </div>

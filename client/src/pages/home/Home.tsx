@@ -16,7 +16,7 @@ import styles from './Home.module.css';
 import Layout from '../../Layout.module.css';
 import HeaderTitle from '../../components/header/HeaderTitle';
 import HorizontalNavBar from '../../components/ui/HorizontalNavBar';
-import { createTweet, deleteTweet, getAllTweets, getFollowTweets } from '../../api/tweet.api';
+import { createTweet, deleteTweet, getAllTweets, getFollowTweets, likeTweet } from '../../api/tweet.api';
 import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_MENU, TWEET_REPLY } from '../../constants/common.constants';
 import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
 import AuthContext from '../../context/user.context';
@@ -66,6 +66,8 @@ const Home: React.FC<HomeProps> = ({
     const [tweetAudience, setTweetAudience] = useState<TweetAudienceType>(TWEET_AUDIENCE.everyone);
     const [tweetReply, setTweetReply] = useState<TweetReplyType>(TWEET_REPLY.everyone);
 
+    const [likedTweet, setLikedTweet] = useState<any>();
+
     //new 
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
     
@@ -77,6 +79,8 @@ const Home: React.FC<HomeProps> = ({
         }
         getAuthUser();
     }, []);
+
+
 
     // fetching Tweets
     useEffect(() => {
@@ -128,7 +132,6 @@ const Home: React.FC<HomeProps> = ({
 
     // On delete tweet
     useEffect(() => {
-        console.log(onDeleteTweet);
         setTweets((preveState) =>
                 preveState.filter((tweet) => tweet._id !== onDeleteTweet._id)
             );
@@ -193,7 +196,23 @@ const Home: React.FC<HomeProps> = ({
         clearTweetForm();
     };
 
-   
+    const onClickLike = async (tweet: any) => {
+        const res: any = await likeTweet(tweet._id);
+        setLikedTweet(res.response)
+        console.log(res.response.likesCount);
+    }
+
+
+    useEffect(() => {
+            setTweets((prevTweets: any) => 
+                prevTweets.map((tweet: any) =>
+                    tweet._id === likedTweet.tweet
+                        ? { ...tweet, totalLikes: likedTweet.likesCount}
+                        : tweet
+                )
+            )
+    }, [likedTweet])
+    
 
     return (
         <React.Fragment>
@@ -242,6 +261,7 @@ const Home: React.FC<HomeProps> = ({
                                     key={tweet._id}
                                     tweet={tweet}
                                     onClickMenu={onClickTweetMenu}
+                                    onClickLike={onClickLike}
                                 />
                             ))}
                         </div>
@@ -252,6 +272,7 @@ const Home: React.FC<HomeProps> = ({
                                 <Tweet
                                     tweet={tweet}
                                     onClickMenu={onClickTweetMenu!}
+                                    onClickLike={onClickLike}
                                 />
                             ))}
                         </div>

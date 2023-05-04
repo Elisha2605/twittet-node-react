@@ -16,23 +16,25 @@ import {
 interface TweetProps {
     tweet?: any;
     onClickMenu: Function;
+    onClickLike: (tweet: any) => void;
 }
 
 const Tweet: FC<TweetProps> = ({
     tweet,
     onClickMenu,
+    onClickLike,
 }) => {
     
-    const tweetId = tweet._id;
-    const createdAt = getTimeDifference(new Date(tweet.createdAt).getTime());
-    const tweetText = tweet.text;
-    const tweetImage = tweet.image;
+    const tweetId = tweet?._id;
+    const createdAt = getTimeDifference(new Date(tweet?.createdAt).getTime());
+    const tweetText = tweet?.text;
+    const tweetImage = tweet?.image;
     
-    const userId = tweet.user._id;
-    const name = tweet.user.name;
-    const username = tweet.user.username;
-    const isVerfied = tweet.user.isVerified;
-    const avatar = tweet.user.avatar;
+    const userId = tweet?.user?._id;
+    const name = tweet?.user?.name;
+    const username = tweet?.user?.username;
+    const isVerfied = tweet?.user?.isVerified;
+    const avatar = tweet?.user?.avatar;
 
     
     return (
@@ -75,13 +77,15 @@ const Tweet: FC<TweetProps> = ({
                             <span className={styles.icon}><AtIcon small={true} /></span> <span>You can reply to this conversation</span>
                         </div>
                     )}
+                </NavLink>
                     <TweetFooter
+                        tweet={tweet}
                         comments={'164'}
                         reposts={'923'}
-                        likes={'21.3'}
+                        likes={tweet.totalLikes > 0 ? tweet.totalLikes: '' }
                         views={'466'}
+                        onClick={() => onClickLike(tweet)}
                     />
-                </NavLink>
             </div>
         </React.Fragment>
     );

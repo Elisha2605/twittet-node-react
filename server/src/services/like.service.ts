@@ -28,6 +28,7 @@ export const likeTweet = async (
             const LikedTweet = new Like({
                 tweet: tweetId,
                 likes: [user._id],
+                likesCount: 1,
             });
             const result = await LikedTweet.save();
             return {
@@ -48,6 +49,7 @@ export const likeTweet = async (
             tweetToLike.likes = tweetToLike.likes.filter(
                 (like: any) => like.toString() !== user._id.toString()
             );
+            tweetToLike.likesCount = tweetToLike.likes.length;
             const result = await tweetToLike.save();
             return {
                 success: true,
@@ -59,6 +61,7 @@ export const likeTweet = async (
 
         // if tweet in Like collection => just update the likes array.
         tweetToLike.likes.push(user._id);
+        tweetToLike.likesCount = tweetToLike.likes.length;
         const result = await tweetToLike.save();
 
         return {

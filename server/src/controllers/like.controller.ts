@@ -7,6 +7,7 @@ export const likeTweetController = asyncHandler(
         const tweetId = req.params.id;
         const userId = req.user._id;
 
+        console.log();
         try {
             const { success, message, payload, status } = await likeTweet(
                 tweetId,

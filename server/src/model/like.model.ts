@@ -4,6 +4,7 @@ import { handleError } from 'src/utils/db.util';
 export interface Ilike extends mongoose.Document {
     tweet: ObjectId | string;
     likes: (ObjectId | string)[];
+    likesCount: number;
 }
 
 const likeModel = {
@@ -16,6 +17,10 @@ const likeModel = {
         type: [Types.ObjectId],
         ref: 'User',
         require: true,
+    },
+    likesCount: {
+        type: Number,
+        default: 0,
     },
 };
 
