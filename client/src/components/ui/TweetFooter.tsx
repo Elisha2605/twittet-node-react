@@ -1,4 +1,5 @@
 import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
+import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons'
 import { faChartSimple, faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { FC } from "react";
@@ -9,14 +10,20 @@ interface TweetFooterProps {
     reposts: string;
     likes: string;
     views: string;
+    onClick?: (tweet: string) => void;
 }
 
 const TweetFooter: FC<TweetFooterProps> = ({ 
     comments,
     reposts,
     likes,
-    views
+    views,
+    onClick,
 }) => {
+
+    const handleLike = (tweet: any) => {
+        onClick!(tweet);
+    };
 
     return (
         <React.Fragment>
@@ -29,10 +36,18 @@ const TweetFooter: FC<TweetFooterProps> = ({
                     <FontAwesomeIcon icon={faRepeat} />
                     <p>{reposts}</p>
                 </div>
-                <div className={styles.item}>
-                    <FontAwesomeIcon icon={faHeart} />
-                    <p>{likes}</p>
-                </div>
+                {likes ? (
+                    <div className={`${styles.item} ${styles.liked}`} onClick={handleLike} >
+                        <FontAwesomeIcon icon={faHeartSolid} color={'#F91980'} />
+                        <p>{likes}</p>
+                    </div>
+                ): (
+                    <div className={styles.item} onClick={handleLike} >
+                        <FontAwesomeIcon icon={faHeart} />
+                        <p>{likes}</p>
+                    </div>  
+                )}
+                
                 <div className={styles.item}>
                     <FontAwesomeIcon icon={faChartSimple} />
                     <p>{views}</p>

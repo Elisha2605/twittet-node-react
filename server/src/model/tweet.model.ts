@@ -1,6 +1,7 @@
 import mongoose, { Types, ObjectId } from 'mongoose';
 import { TWEET_AUDIENCE, TWEET_REPLY } from 'src/constants/tweet.constants';
 import { handleError } from 'src/utils/db.util';
+import Like from './like.model';
 
 // SUB DOCUMENTS
 
@@ -16,7 +17,7 @@ export const tweetModel = {
     user: {
         type: Types.ObjectId,
         ref: 'User',
-        // require: true,
+        require: true,
     },
 
     image: {
@@ -44,6 +45,7 @@ export const tweetModel = {
 const tweetSchema = new mongoose.Schema<ITweet>(tweetModel, {
     timestamps: true,
 });
+
 const Tweet = mongoose.model<ITweet>('Tweet', tweetSchema, 'Tweet');
 Tweet.on('error', handleError);
 

@@ -39,7 +39,7 @@ const Modal: FC<ModalProps> = ({
         <React.Fragment>
             {modalOpen ? (
                 <div className={`${styles.container}`}>
-                    {isOverlay && <div className={styles.overlay} onClick={() => closeModal(modalName || '')}></div>}
+                    {isOverlay && <div className={styles.overlay} onClick={() => closeModal('')}></div>}
                     <div className={`${styles.content} ${classNameContainer}`} ref={modalRef}>
                         <div className={`${styles.wrapper} ${classNameWrapper}`}>
                             {logo && (
@@ -51,7 +51,7 @@ const Modal: FC<ModalProps> = ({
                             <h1>{title}</h1>
                             {children}
                         </div>
-                        <button className={styles.close} onClick={() => closeModal(modalName || '')}>
+                        <button className={styles.close} onClick={() => closeModal('')}>
                             <XmarkIcon size={'sm'} />
                         </button>
                     </div>

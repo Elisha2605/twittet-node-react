@@ -15,21 +15,28 @@ import Home from './pages/home/Home';
 import { ModalContext } from './context/modal.context';
 import Following from './pages/follow/Following';
 import Follower from './pages/follow/Follower';
-import Signup from './components/auth/Signup';
+import { deleteTweet } from './api/tweet.api';
+import { IMAGE_TWEET_BASE_URL, TWEET_MENU } from './constants/common.constants';
 
 function App() {
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [onAddTweet, setOnAddTweets] = useState<any[]>([]);
+    const [onDeleteTweet, setOnDeleteTweet] = useState<any[]>([]);
     const [value, setValue] = useState('');
 
+    // Modal
     const [selectedFileModal, setSelectedFileModal] = useState<File | null>(null);
     const [previewImageModal, setPreviewImageModal] = useState<string | null>(null);
     const [valueModal, setValueModal] = useState('');
+    const [editTweetModal, setEditTweetModal] = useState<any>('');
+    const [onEditTweet, setOnEditTweets] = useState<any[]>([]);
 
+    
+    const [isEdit, setIsEdit] = useState(false);
 
-    const { modalOpen } = useContext(ModalContext);
+    const { modalOpen, openModal, closeModal } = useContext(ModalContext);
 
     const context = useContext(AuthContext);
     let ctx: StoredContext = context.getUserContext();
@@ -46,6 +53,11 @@ function App() {
     const handleAddTweet = (tweet: any) => {
         setOnAddTweets((prevTweets) => [tweet, ...prevTweets]);
     };
+
+    const handleEditTweet = (editedTweet: any) => {
+        setOnEditTweets(editedTweet)
+    }
+
     
     //// new functions
     const handleTextAreaOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -74,7 +86,7 @@ function App() {
 
     const handleCanselPreviewImage = () => {
         if (modalOpen) {
-            setPreviewImageModal(null);
+            setPreviewImageModal('');
             setSelectedFileModal(null);
         } else {
             setPreviewImage(null);
@@ -93,6 +105,21 @@ function App() {
         setPreviewImage(null);
         setValue('');
     }
+
+    const handleTweetMenuOptionClick = async (option: string, tweetId: string, tweet: any) => {
+        if (option === TWEET_MENU.delete) {
+            const res = await deleteTweet(tweetId);
+            const { tweet } = res;
+            setOnDeleteTweet(tweet);
+        } else if (option === TWEET_MENU.edit) {
+            setIsEdit(true);
+            setEditTweetModal(tweet);
+            openModal('Nav-tweet');
+            setValueModal(tweet.text);
+            const image = tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`;
+            setPreviewImageModal(image);
+        } 
+    };
 
     // Index page
     if (!ctx?.isLoggedIn) {
@@ -132,13 +159,20 @@ function App() {
                                 handleCanselPreviewImage={handleCanselPreviewImage}
                                 handleImageUpload={handleImageUpload}
                                 onAddTweet={handleAddTweet}
+                                onEditTweet={handleEditTweet}
+                                
+                                editTweetModal={editTweetModal}
+                                isEdit={isEdit}
                             />
                         </div>
                         <div className={Layout.page}>
                             <Routes>
                                 <Route path="/" element={
                                     <Home
+                                        onClickTweetMenu={handleTweetMenuOptionClick}
+                                        onDeleteTweet={onDeleteTweet}
                                         onAddTweet={onAddTweet}
+                                        onEditTweet={onEditTweet}
                                         selectedFile={selectedFile}
                                         previewImage={previewImage}                                    
                                         value={value}
@@ -158,7 +192,12 @@ function App() {
                                     path="/bookmarks"
                                     element={<Bookmarks />}
                                 />
-                                <Route path="/profile/:id" element={<Profile />} />
+                                <Route path="/profile/:id" element={<Profile 
+                                    onAddTweet={onAddTweet} 
+                                    onDeleteTweet={onDeleteTweet} 
+                                    onEditTweet={onEditTweet}
+                                    onClickTweetMenu={handleTweetMenuOptionClick} />} 
+                                />
                                 <Route path="/following/:id" element={<Following />} />
                                 <Route path="/followers/:id" element={<Follower />} />
                                 <Route

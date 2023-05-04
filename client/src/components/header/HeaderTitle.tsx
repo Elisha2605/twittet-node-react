@@ -3,7 +3,7 @@ import styles from "./HeaderTitle.module.css";
 
 interface HeaderTitleProps {
     title: string | undefined;
-    subTitle?: string | undefined;
+    subTitle?: string | number | undefined;
     className?: string;
 }
 

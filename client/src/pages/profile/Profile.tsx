@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import Aside from '../../components/aside/Aside';
 import SearchBar from '../../components/ui/SearchBar';
 import WhoToFollow from '../../components/ui/WhoToFollow';
@@ -12,7 +12,6 @@ import ArrowLeftIcon from '../../components/icons/ArrowLeftIcon';
 import Button, { ButtonSize, ButtonType } from '../../components/ui/Button';
 import HeaderTitle from '../../components/header/HeaderTitle';
 import HorizontalNavBar from '../../components/ui/HorizontalNavBar';
-import { tweetMenuOptions } from '../../data/menuOptions';
 import PageUnderConstruction from '../../components/ui/PageUnderConstruction';
 import {
     IMAGE_AVATAR_BASE_URL,
@@ -24,23 +23,42 @@ import { getAuthUserFollows, sendFollowRequest } from '../../api/follow.api';
 import { NavLink, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
+import { getUserTweets } from '../../api/tweet.api';
+import FollowButton from '../../components/ui/FollowButton';
+import { getUserLikedTweets, likeTweet } from '../../api/like.api';
 
-const Profile = () => {
+interface ProfileProps {
+    onAddTweet: any;
+    onDeleteTweet: any;
+    onEditTweet: any;
+    onClickTweetMenu: Function;
+}
+
+const Profile: FC<ProfileProps> = ({
+    onAddTweet,
+    onDeleteTweet,
+    onEditTweet,
+    onClickTweetMenu,
+}) => {
     const { id } = useParams<{ id: string }>();
 
     const [activeTab, setActiveTab] = useState(
         localStorage.getItem('activeTab-profile') || 'tweets'
     );
 
-    const [followers, setFollowers] = useState<any[]>([]);
-    const [followings, setFollowings] = useState<any[]>([]);
     const [authUser, setAuthUser] = useState<any>(null);
     const [user, setUser] = useState<any>();
     const [isFollowing, setIsFollowing] = useState<boolean>();
+    const [userTweets, setUserTweets] = useState<any[]>([]);
+    const [userTweetsMedia, setUserTweetsMedia] = useState<any[]>([]);
+    const [userLikedTweets, setUserLikedTweets] = useState<any[]>([]);
+
+    const [followings, setFollowings] = useState<any[]>([]);
+    const [followers, setFollowers] = useState<any[]>([]);
+
+    const [likedTweet, setLikedTweet] = useState<any>();
 
     const navigate = useNavigate();
-
-
 
     // get Auth user
     const ctx = useContext(AuthContext);
@@ -48,7 +66,7 @@ const Profile = () => {
         const getAuthUser = async () => {
             const { user } = ctx.getUserContext();
             setAuthUser(user);
-        }
+        };
         getAuthUser();
     }, []);
 
@@ -63,17 +81,21 @@ const Profile = () => {
     }, [id]);
 
     // get Follow status (consider putting this in the userContext)
-    const getAuthUserFollowStatus = async () => {
-        const { followers, followings } = await getAuthUserFollows(authUser?._id);
-        if (followings && followings.some((following: any) => following.user._id === id)) {
-            setIsFollowing(true);
-        }
-        setFollowers(followers);
-        setFollowings(followings);
-    };
-
     useEffect(() => {
         if (authUser) {
+            const getAuthUserFollowStatus = async () => {
+                const { followers, followings } = await getAuthUserFollows(id!);
+                if (
+                    followings &&
+                    followings.some(
+                        (following: any) => following.user._id === id
+                    )
+                ) {
+                    setIsFollowing(true);
+                }
+                setFollowings(followings);
+                setFollowers(followers);
+            };
             getAuthUserFollowStatus();
         }
     }, [authUser, id]);
@@ -83,13 +105,127 @@ const Profile = () => {
         localStorage.setItem('activeTab-profile', activeTab);
     }, [activeTab]);
 
-     // send follow request
-     const handleFollowRequest = async () => {
+    // Send follow request
+    const handleFollowRequest = async () => {
         const res = await sendFollowRequest(authUser?._id, id!);
         console.log(res);
 
         setIsFollowing(!isFollowing);
+    };
+
+    // fetch user tweets
+    useEffect(() => {
+        const fetchUserTweets = async () => {
+            const res = await getUserTweets(id!);
+            const { tweets } = res;
+
+            const medias = tweets
+                .filter((tweet: any) => tweet.image !== null)
+                .map((tweet: any) => {
+                    return tweet;
+                });
+            setUserTweets(tweets);
+            setUserTweetsMedia(medias);
+        };
+        fetchUserTweets();
+    }, []);
+
+    // On create tweet
+    useEffect(() => {
+        const handleNewTweetFromModal = () => {
+            // Add new tweet from NavigationTweet to state
+            if (authUser?.avatar) {
+                console.log('Inside handleNewTweet');
+                setUserTweets((prevTweets) => [onAddTweet[0], ...prevTweets]);
+                setUserTweetsMedia((prevTweets) => [
+                    onAddTweet[0],
+                    ...prevTweets,
+                ]);
+            }
+        };
+        handleNewTweetFromModal();
+    }, [onAddTweet]);
+
+    // On edit tweet
+    useEffect(() => {
+        const handleEditTweetFromModal = () => {
+            if (authUser?.avatar) {
+                setUserTweets((prevTweets) =>
+                    prevTweets.map((tweet) =>
+                        tweet._id === onEditTweet._id
+                            ? { ...tweet, ...onEditTweet }
+                            : tweet
+                    )
+                );
+                setUserTweetsMedia((prevTweets) =>
+                    prevTweets.map((tweet) =>
+                        tweet._id === onEditTweet._id
+                            ? { ...tweet, ...onEditTweet }
+                            : tweet
+                    )
+                );
+            }
+        };
+        handleEditTweetFromModal();
+    }, [onEditTweet]);
+
+    // On delete tweet
+    useEffect(() => {
+        setUserTweets((preveState) =>
+            preveState.filter((tweet) => tweet._id !== onDeleteTweet._id)
+        );
+        setUserTweetsMedia((preveState) =>
+            preveState.filter((tweet) => tweet._id !== onDeleteTweet._id)
+        );
+    }, [onDeleteTweet]);
+
+    // On like tweet
+    const onClickLike = async (tweet: any) => {
+        const res: any = await likeTweet(tweet._id);
+        const { likedTweet } = res;
+        setLikedTweet(likedTweet)
+        setUserLikedTweets((prevTweets: any) => 
+                prevTweets.map((tweet: any) =>
+                    tweet._id === likedTweet.tweet
+                        ? { ...tweet, likedTweet}
+                        : tweet
+                )
+        )
     }
+
+    // get liked tweets
+    useEffect(() => {
+        const getLikedTweet = async () => {
+            const res: any = await getUserLikedTweets(id!);
+            const { tweets } = res;
+            setUserLikedTweets(tweets);
+        }
+        getLikedTweet();
+    }, [])
+
+    useEffect(() => {
+            setUserTweets((prevTweets: any) => 
+                prevTweets.map((tweet: any) =>
+                    tweet._id === likedTweet.tweet
+                        ? { ...tweet, totalLikes: likedTweet.likesCount}
+                        : tweet
+                )
+            )
+            setUserTweetsMedia((prevTweets: any) => 
+                prevTweets.map((tweet: any) =>
+                    tweet._id === likedTweet.tweet
+                        ? { ...tweet, totalLikes: likedTweet.likesCount}
+                        : tweet
+                )
+            )
+            setUserLikedTweets((prevTweets: any) => 
+                prevTweets.map((tweet: any) =>
+                    tweet._id === likedTweet.tweet
+                        ? { ...tweet, totalLikes: likedTweet.likesCount}
+                        : tweet
+                )
+            )
+    }, [likedTweet])
 
     return (
         <React.Fragment>
@@ -105,7 +241,19 @@ const Profile = () => {
                             />
                             <HeaderTitle
                                 title={user?.name}
-                                subTitle={'1 Tweet'}
+                                subTitle={
+                                    (activeTab === 'tweets' ||
+                                        activeTab === 'replies') &&
+                                    userTweets.length === 1
+                                        ? userTweets.length + ' tweet'
+                                        : (activeTab === 'tweets' ||
+                                              activeTab === 'replies') &&
+                                          userTweets.length > 1
+                                        ? userTweets.length + ' tweets'
+                                        : activeTab === 'media'
+                                        ? userTweetsMedia.length + ' photos'
+                                        : '1 like'
+                                }
                             />
                         </div>
                     </Header>
@@ -144,13 +292,12 @@ const Profile = () => {
                                         console.log('Edit profile clicked');
                                     }}
                                 />
-                            ): (
-                                <Button
-                                    className={styles.editProfileBtn}
-                                    value={isFollowing ? 'Following' : 'Follow'}
-                                    type={isFollowing ? ButtonType.tietary : ButtonType.secondary}
+                            ) : (
+                                <FollowButton
+                                    userId={id}
+                                    type={ButtonType.secondary}
                                     size={ButtonSize.small}
-                                    onClick={handleFollowRequest}
+                                    className={styles.editProfileBtn}
                                 />
                             )}
                         </div>
@@ -171,12 +318,14 @@ const Profile = () => {
                             <div className={styles.followStatus}>
                                 <NavLink to={`/following/${id}`}>
                                     <p>
-                                        2<span>Following</span>
+                                        {followings.length}
+                                        <span>Following</span>
                                     </p>
                                 </NavLink>
                                 <NavLink to={`/followers/${id}`}>
                                     <p>
-                                        1<span>Follower</span>
+                                        {followers.length}
+                                        <span>Followers</span>
                                     </p>
                                 </NavLink>
                             </div>
@@ -216,25 +365,20 @@ const Profile = () => {
                                 Likes
                             </div>
                         </HorizontalNavBar>
-                        {/* TWEETS - START */}
-                        {/* {activeTab === 'tweets' && (
-                            <Tweet 
-                                avatar={'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=723&q=80'} 
-                                name={'Luis Suárez'} 
-                                username={'LuisSuarez9'} 
-                                tweetText={'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,molestiae quas vel sint commodi repudiandae consequuntur'}
-                                tweetImage={'https://images.unsplash.com/photo-1534083264897-aeabfc7daf8a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80'}
-                                isOption={true}
-                                comments={'164'} 
-                                reposts={'924'} 
-                                likes={'21.3'} 
-                                views={'446'} 
-                                options={tweetMenuOptions}
-                                onClickMenu={handleOptionClick}
-                            />
-                        )} */}
-                        {/* TWEETS - END */}
-
+                        {activeTab === 'tweets' && (
+                            <div className={styles.tweets}>
+                                {/* tweets - start */}
+                                {userTweets.map((tweet: any) => (
+                                    <Tweet
+                                        key={tweet._id}
+                                        tweet={tweet}
+                                        onClickMenu={onClickTweetMenu}
+                                        onClickLike={onClickLike}
+                                    />
+                                ))}
+                                {/* tweets - end */}
+                            </div>
+                        )}
                         {/* REPLIES - START */}
                         {activeTab === 'replies' && (
                             <div className={styles.main}>
@@ -248,9 +392,14 @@ const Profile = () => {
                         {/* MEDIA - START */}
                         {activeTab === 'media' && (
                             <div className={styles.main}>
-                                <PageUnderConstruction
-                                    message={'Will display - all tweet images'}
-                                />
+                                {userTweetsMedia.map((tweet: any) => (
+                                    <Tweet
+                                        key={tweet._id}
+                                        tweet={tweet}
+                                        onClickMenu={onClickTweetMenu}
+                                        onClickLike={onClickLike}
+                                    />
+                                ))}
                             </div>
                         )}
                         {/* MEDIA - END */}
@@ -258,10 +407,15 @@ const Profile = () => {
                         {/* LIKES - START */}
                         {activeTab === 'likes' && (
                             <div className={styles.main}>
-                                <PageUnderConstruction
-                                    message={'Will display - all tweet likes'}
-                                />
-                            </div>
+                                {userLikedTweets.map((tweet: any) => (
+                                    <Tweet
+                                        key={tweet._id}
+                                        tweet={tweet}
+                                        onClickMenu={onClickTweetMenu}
+                                        onClickLike={onClickLike}
+                                    />
+                                ))}
+                        </div>
                         )}
                         {/* LIKES - END */}
 

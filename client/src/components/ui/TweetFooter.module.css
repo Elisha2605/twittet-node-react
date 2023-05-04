@@ -12,3 +12,7 @@
 .item p {
     font-size: .8rem;
 }
+
+.liked {
+    color: var(--color-error);
+}
