@@ -36,7 +36,6 @@ interface HomeProps {
     handleImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
     clearTweetForm: () => void;
     onClickTweetMenu: Function;
-    
 }
 
 const Home: React.FC<HomeProps> = ({ 
@@ -216,7 +215,6 @@ const Home: React.FC<HomeProps> = ({
                 )
             )
     }, [likedTweet])
-
 
     return (
         <React.Fragment>

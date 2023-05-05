@@ -19,6 +19,7 @@ import { deleteTweet } from './api/tweet.api';
 import { IMAGE_TWEET_BASE_URL, TWEET_MENU } from './constants/common.constants';
 import MainTweet from './pages/tweet-modals/MainTweetModal';
 import EditTweetModal from './pages/tweet-modals/EditTweetModal';
+import TweetPage from './pages/tweet/TweetPage';
 
 function App() {
 
@@ -37,10 +38,10 @@ function App() {
     
     const [valueEditModal, setValueEditModal] = useState('');
     const [previewEditImageModal, setPreviewEditImageModal] = useState<string | null>(null);
-    
-    const [isEdit, setIsEdit] = useState(false);
 
-    const { modalOpen, openModal, closeModal } = useContext(ModalContext);
+    const [flashMessage, setflashMessage] = useState(null);
+
+    const { modalOpen, openModal } = useContext(ModalContext);
 
     const context = useContext(AuthContext);
     let ctx: StoredContext = context.getUserContext();
@@ -81,6 +82,7 @@ function App() {
                 setSelectedFileModal(file);
                 let imageUrl = URL.createObjectURL(file);
                 setPreviewImageModal(imageUrl);
+                setPreviewEditImageModal(imageUrl);
             } else {
                 setSelectedFile(file);
                 let imageUrl = URL.createObjectURL(file);
@@ -93,12 +95,12 @@ function App() {
         if (modalOpen) {
             setPreviewImageModal('');
             setSelectedFileModal(null);
+            setPreviewEditImageModal('');
         } else {
-            setPreviewImage(null);
+            setPreviewImage('');
             setSelectedFile(null);
         }
-        setSelectedFile(null);
-    };
+      };
 
     const clearTweetForm = () => {
         if (modalOpen) {
@@ -109,6 +111,7 @@ function App() {
         setSelectedFile(null);
         setPreviewImage(null);
         setValue('');
+        
     }
 
     const handleTweetMenuOptionClick = async (option: string, tweetId: string, tweet: any) => {
@@ -118,11 +121,11 @@ function App() {
             setOnDeleteTweet(tweet);
         } else if (option === TWEET_MENU.edit) {
             openModal('edit-tweet-modal');
-            setIsEdit(true);
             setEditTweetModal(tweet);
             setValueEditModal(tweet.text);
             const image = tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`;
             setPreviewEditImageModal(image);
+            console.log(image);
         } 
     };
 
@@ -178,7 +181,6 @@ function App() {
                                 onEditTweet={handleEditTweet}
                                 
                                 editTweetModal={editTweetModal}
-                                isEdit={isEdit}
                             />
                         </div>
                         <div className={Layout.page}>
@@ -206,7 +208,7 @@ function App() {
                                 <Route path="/message" element={<Message />} />
                                 <Route
                                     path="/bookmarks"
-                                    element={<Bookmarks />}
+                                    element={<Bookmarks onClickTweetMenu={handleTweetMenuOptionClick} />}
                                 />
                                 <Route path="/profile/:id" element={<Profile 
                                     onAddTweet={onAddTweet} 
@@ -216,6 +218,7 @@ function App() {
                                 />
                                 <Route path="/following/:id" element={<Following />} />
                                 <Route path="/followers/:id" element={<Follower />} />
+                                <Route path="/tweet/:id" element={<TweetPage />} />
                                 <Route
                                     path="*"
                                     element={<Navigate to="/" replace={true} />}

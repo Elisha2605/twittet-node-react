@@ -22,8 +22,6 @@ interface UserInfoProps {
     onClickOption?: Function;
 }
 
-
-
 const UserInfo: FC<UserInfoProps> = ({
     tweet,
     userId,
@@ -82,15 +80,17 @@ const UserInfo: FC<UserInfoProps> = ({
                                     @{username} {time && ` · ${time}`}
                                 </p>
                             </div>
-                            <PopUpMenu
-                                itemId={tweet._id}
-                                options={options!}
-                                value={tweet}
-                                icons={icons}
-                                onClick={(option, id, tweet) =>
-                                    onClickOption!(option, id, tweet)
-                                }
-                            />
+                            {authUser?._id === tweet.user._id && (
+                                <PopUpMenu
+                                    itemId={tweet._id}
+                                    options={options!}
+                                    value={tweet}
+                                    icons={icons}
+                                    onClick={(option, id, tweet) =>
+                                        onClickOption!(option, id, tweet)
+                                    }
+                                />
+                            )}
                         </div>
                     ) : (
                         <>

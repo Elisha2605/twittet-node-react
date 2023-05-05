@@ -19,6 +19,7 @@ import tweetRouter from './routes/tweet.routes';
 import path from 'path';
 import followRouter from './routes/follow.routes';
 import likeRouter from './routes/like.routes';
+import bookmarkRouter from './routes/bookmark.routes';
 
 dotenv.config();
 
@@ -78,6 +79,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/tweets', tweetRouter);
 app.use('/api/follows', followRouter);
 app.use('/api/likes', likeRouter);
+app.use('/api/bookmarks', bookmarkRouter);
 
 // SERVING STATIC FILES
 app.use('/avatar', express.static(path.join(__dirname, 'uploads', 'avatar')));

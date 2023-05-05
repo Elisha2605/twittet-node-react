@@ -70,6 +70,7 @@ const FormTweet: FC<FormProps> = ({
         }
     }
 
+
     const isImageSelected = !!imagePreview;
 
     return (
@@ -152,7 +153,7 @@ const FormTweet: FC<FormProps> = ({
                     <div className={styles.previewImage}>
                         <XmarkIcon className={styles.cancelBtn} size={'lg'}
                             onClick={onCancelImagePreview}/>
-                        <img src={imagePreview} alt='preview tweet img' />
+                        <img id={imagePreview} src={imagePreview} alt='preview tweet img' />
                     </div>
                 )}
                 <div className={styles.footer}>

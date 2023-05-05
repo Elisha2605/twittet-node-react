@@ -22,7 +22,6 @@ interface EditTweetProp {
     clearTweetForm: () => void;
 
     editTweetModal: any,
-    isEdit: boolean;
 }
 
 const EditTweetModal: FC<EditTweetProp> = ({ 
@@ -37,7 +36,6 @@ const EditTweetModal: FC<EditTweetProp> = ({
     clearTweetForm,
 
     editTweetModal,
-    isEdit,
 }) => {
 
     const [isFormFocused, setIsFormFocused] = useState(false);
@@ -60,10 +58,8 @@ const EditTweetModal: FC<EditTweetProp> = ({
 
     // Set audience and reply on Edit
     useEffect(() => {
-        if (isEdit) {
-            setTweetAudience(editTweetModal.audience)
-            setTweetReply(editTweetModal.reply)
-        } 
+        setTweetAudience(editTweetModal.audience)
+        setTweetReply(editTweetModal.reply)
     }, [editTweetModal])
 
     const handleSubmitTweet = async (e: React.FormEvent) => {
@@ -128,7 +124,6 @@ const EditTweetModal: FC<EditTweetProp> = ({
             setTweetReply(TWEET_REPLY.onlyPeopleYouMention);
         }
     }
-
     
     return (
         <React.Fragment>
