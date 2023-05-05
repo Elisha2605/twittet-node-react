@@ -55,7 +55,7 @@ const Tweet: FC<TweetProps> = ({
                     icons={tweetMenuIcons}
                     onClickOption={onClickMenu}
                 />
-                <NavLink to={'/message'}>
+                <NavLink to={`/tweet/${tweet._id}`}>
                     <div className={styles.body} key={tweet._id}>
                         <p className={styles.tweet}>{tweetText}</p>
                         {tweetImage && (

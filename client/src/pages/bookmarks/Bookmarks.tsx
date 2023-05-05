@@ -21,7 +21,6 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
     const [savedTweets, setSavedTweets] = useState<any[]>([]);
     const [likedTweet, setLikedTweet] = useState<any>();
 
-
     useEffect(() => {
         const getSavedTweets = async () => {
             const { tweets } = await getUserSavedTweets();

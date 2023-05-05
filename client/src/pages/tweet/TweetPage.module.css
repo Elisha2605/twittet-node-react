@@ -1,0 +1,65 @@
+.container {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* first column takes up 3/4 of screen width, second column takes up 1/4 */
+    height: 100vh;
+  }
+  
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 75%; /* overlay takes up 3/4 of screen width */
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.932); /* add your desired color here */
+    z-index: 1; /* set higher than comments to ensure overlay is visible */
+  }
+  
+  .image {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    right: 11rem;
+  }
+  
+  .image img {
+    width: auto;
+    height: 90vh; /* image should occupy 3/4 of height */
+    max-height: 100%;
+    object-fit: cover; /* ensure image fills its container */
+    z-index: 1;
+  }
+  
+  .footer {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px; /* adjust to your liking */
+    background-color: rgba(0, 0, 0, 0.5); /* add your desired color here */
+    color: #fff; /* add your desired color here */
+    z-index: 1;
+  }
+  
+  .comments {
+    padding: 0.5rem;
+    overflow-y: auto; /* add scrolling */
+    z-index: 0; /* set lower than overlay to ensure comments are behind overlay */
+  }
+  
+  .canselBtn {
+    position: absolute;
+    left: 1rem;
+    top: 1.2rem;
+    color: var(--color-white);
+    background-color: var(--color-black-light);
+    z-index: 1;
+  }
+  
+  .canselBtn:hover {
+    background-color: var(--color-black-lighter);
+    transition: 0.1s ease-in-out;
+  }
+  

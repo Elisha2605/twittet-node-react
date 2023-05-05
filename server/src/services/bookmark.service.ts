@@ -60,8 +60,8 @@ export const getUserSavedTweets = async (
                     text: '$tweet.text',
                     audience: '$tweet.audience',
                     reply: '$tweet.reply',
-                    createdAt: '$tweet.createdAt',
-                    updatedAt: '$tweet.updatedAt',
+                    createdAt: '$createdAt',
+                    updatedAt: '$updatedAt',
                     likes: {
                         $ifNull: [{ $size: '$likes.likes' }, 0],
                     },
