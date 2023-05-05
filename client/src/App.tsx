@@ -17,6 +17,8 @@ import Following from './pages/follow/Following';
 import Follower from './pages/follow/Follower';
 import { deleteTweet } from './api/tweet.api';
 import { IMAGE_TWEET_BASE_URL, TWEET_MENU } from './constants/common.constants';
+import MainTweet from './pages/tweet-modals/MainTweetModal';
+import EditTweetModal from './pages/tweet-modals/EditTweetModal';
 
 function App() {
 
@@ -32,7 +34,9 @@ function App() {
     const [valueModal, setValueModal] = useState('');
     const [editTweetModal, setEditTweetModal] = useState<any>('');
     const [onEditTweet, setOnEditTweets] = useState<any[]>([]);
-
+    
+    const [valueEditModal, setValueEditModal] = useState('');
+    const [previewEditImageModal, setPreviewEditImageModal] = useState<string | null>(null);
     
     const [isEdit, setIsEdit] = useState(false);
 
@@ -64,6 +68,7 @@ function App() {
         const val = e.target?.value;
         if (modalOpen) {
             setValueModal(val)
+            setValueEditModal(val)
         } else {
             setValue(val);
         }
@@ -112,12 +117,12 @@ function App() {
             const { tweet } = res;
             setOnDeleteTweet(tweet);
         } else if (option === TWEET_MENU.edit) {
+            openModal('edit-tweet-modal');
             setIsEdit(true);
             setEditTweetModal(tweet);
-            openModal('Nav-tweet');
-            setValueModal(tweet.text);
+            setValueEditModal(tweet.text);
             const image = tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`;
-            setPreviewImageModal(image);
+            setPreviewEditImageModal(image);
         } 
     };
 
@@ -150,7 +155,8 @@ function App() {
                 <div>
                     <BrowserRouter>
                         <div className={Layout.navigation}>
-                            <Navigation 
+                            <Navigation />
+                            <MainTweet 
                                 selectedFile={selectedFileModal}
                                 previewImage={previewImageModal}                                    
                                 value={valueModal}
@@ -159,6 +165,16 @@ function App() {
                                 handleCanselPreviewImage={handleCanselPreviewImage}
                                 handleImageUpload={handleImageUpload}
                                 onAddTweet={handleAddTweet}
+                                onEditTweet={handleEditTweet}
+                            />
+                            <EditTweetModal 
+                                selectedFile={selectedFileModal}
+                                previewImage={previewEditImageModal}                                    
+                                value={valueEditModal}
+                                clearTweetForm={clearTweetForm}
+                                handleTextAreaOnChange={handleTextAreaOnChange}
+                                handleCanselPreviewImage={handleCanselPreviewImage}
+                                handleImageUpload={handleImageUpload}
                                 onEditTweet={handleEditTweet}
                                 
                                 editTweetModal={editTweetModal}

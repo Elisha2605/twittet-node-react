@@ -1,15 +1,15 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
-import styles from './NavigationTweet.module.css';
-import Avatar, { Size } from '../ui/Avatar';
+import styles from './MainTweetModal.module.css';
+import Avatar, { Size } from '../../components/ui/Avatar';
 import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
-import { createTweet, editTweet } from '../../api/tweet.api';
 import { ModalContext } from '../../context/modal.context';
-import Modal from '../ui/Modal';
-import FormTweet from '../form/FormTweet';
+import Modal from '../../components/ui/Modal';
+import FormTweet from '../../components/form/FormTweet';
 import AuthContext from '../../context/user.context';
 import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
+import { createTweet } from '../../api/tweet.api';
 
-interface NavigationTweetProp {
+interface MainTweetProp {
     value: string;
     
     selectedFile: File | null
@@ -21,12 +21,9 @@ interface NavigationTweetProp {
     onAddTweet: (tweet: any) => void;
     onEditTweet: (tweet: any) => void;
     clearTweetForm: () => void;
-
-    editTweetModal: any,
-    isEdit: boolean;
 }
 
-const NavigationTweet: FC<NavigationTweetProp> = ({ 
+const MainTweet: FC<MainTweetProp> = ({ 
     value,
     selectedFile,
     previewImage,
@@ -35,11 +32,7 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
     handleCanselPreviewImage,
     handleImageUpload,
     onAddTweet, 
-    onEditTweet,
     clearTweetForm,
-
-    editTweetModal,
-    isEdit,
 }) => {
 
 
@@ -60,92 +53,43 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
 
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
 
-    const { closeModal, modalOpen } = useContext(ModalContext);
+    const { closeModal } = useContext(ModalContext);
     
-
-    // Set audience and reply on Edit
-    useEffect(() => {
-        if (isEdit) {
-            setTweetAudience(editTweetModal.audience)
-            setTweetReply(editTweetModal.reply)
-        } 
-    }, [editTweetModal])
-
     const handleSubmitTweet = async (e: React.FormEvent) => {
-        if (!isEdit) {
-
-            console.log('inside handleSubmitTweet');
-            e.preventDefault();
-            const text = tweetTextRef.current?.value
-                ? tweetTextRef.current?.value
-                : null;
-            const res = await createTweet(text, selectedFile, tweetAudience, tweetReply);
-            const { tweet }: any = res;
-            
-            if (authUser) {
-                const newTweet = {
-                    _id: tweet._id,
-                    text: tweet.text,
-                    user: {
-                        _id: authUser._id,
-                        avatar: authUser?.avatar ? authUser?.avatar : null,
-                        name: authUser?.name,
-                        username: authUser?.username,
-                        isVerified: authUser?.isVerified,
-                    },
-                    audience: tweet.audience,
-                    reply: tweet.reply,
-                    createdAt: tweet.createdAt,
-                    image: tweet.image,
-                    comments: [],
-                    reposts: [],
-                    likes: [],
-                };
-                onAddTweet(newTweet)
-            }
-            // setIsFormFocused(false);
-            closeModal('Nav-tweet');
-            setTweetAudience(TWEET_AUDIENCE.everyone)
-            setTweetReply(TWEET_REPLY.everyone)
-            clearTweetForm();
-        } else {
-            // Edit
-            // console.log({hello: editTweetModal});
-            e.preventDefault();
-            const text = tweetTextRef.current?.value
-                ? tweetTextRef.current?.value
-                : null;
-            const res = await editTweet(editTweetModal._id, text, selectedFile, tweetAudience, tweetReply);
-            const { tweet }: any = res;
-            
-            if (authUser) {
-                const newTweet = {
-                    _id: tweet._id,
-                    text: tweet.text,
-                    user: {
-                        _id: authUser._id,
-                        avatar: authUser?.avatar ? authUser?.avatar : null,
-                        name: authUser?.name,
-                        username: authUser?.username,
-                        isVerified: authUser?.isVerified,
-                    },
-                    audience: tweet.audience,
-                    reply: tweet.reply,
-                    createdAt: tweet.createdAt,
-                    image: tweet.image,
-                    comments: [],
-                    reposts: [],
-                    likes: [],
-                };
-                onEditTweet(newTweet)
-            }
-            setIsFormFocused(false);
-            closeModal('Nav-tweet');
-            setTweetAudience(TWEET_AUDIENCE.everyone)
-            setTweetReply(TWEET_REPLY.everyone)
-            clearTweetForm();
+        console.log('inside handleSubmitTweet');
+        e.preventDefault();
+        const text = tweetTextRef.current?.value
+            ? tweetTextRef.current?.value
+            : null;
+        const res = await createTweet(text, selectedFile, tweetAudience, tweetReply);
+        const { tweet }: any = res;
+        
+        if (authUser) {
+            const newTweet = {
+                _id: tweet._id,
+                text: tweet.text,
+                user: {
+                    _id: authUser._id,
+                    avatar: authUser?.avatar ? authUser?.avatar : null,
+                    name: authUser?.name,
+                    username: authUser?.username,
+                    isVerified: authUser?.isVerified,
+                },
+                audience: tweet.audience,
+                reply: tweet.reply,
+                createdAt: tweet.createdAt,
+                image: tweet.image,
+                comments: [],
+                reposts: [],
+                likes: [],
+            };
+            onAddTweet(newTweet)
         }
-       
+        // setIsFormFocused(false);
+        closeModal('main-tweet-modal');
+        setTweetAudience(TWEET_AUDIENCE.everyone)
+        setTweetReply(TWEET_REPLY.everyone)
+        clearTweetForm();
     };
 
     const handleTweetAudienceOptions = (options: string) => {
@@ -174,16 +118,10 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
         }
     }
 
-    useEffect(() => {
-        if (!modalOpen && !isEdit) {
-            clearTweetForm();
-        } 
-    }, [isEdit])
-    
     return (
         <React.Fragment>
             <Modal
-                    modalName={'Nav-tweet'}
+                    modalName={'main-tweet-modal'}
                     isOverlay={true}
                     classNameContainer={styles.modalContainer}
                     classNameWrapper={styles.modalWrapper}
@@ -219,4 +157,4 @@ const NavigationTweet: FC<NavigationTweetProp> = ({
     );
 };
 
-export default NavigationTweet;
+export default MainTweet;

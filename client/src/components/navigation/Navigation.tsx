@@ -17,44 +17,13 @@ import { logout } from '../../api/auth.api';
 import { navUseMenuIcons, navUserMenuOptions } from '../../data/menuOptions';
 import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
 import { ModalContext } from '../../context/modal.context';
-import NavigationTweet from './NavigationTweet';
 import AuthContext from '../../context/user.context';
 
 interface NavigationProps {
-    value: string;
-    
-    selectedFile: File | null
-    previewImage: string | null
-    
-    clearTweetForm: () => void;
 
-    handleTextAreaOnChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-    handleCanselPreviewImage: () => void;
-    handleImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    onAddTweet: (tweet: any) => void;
-    onEditTweet: (tweet: any) => void;
-
-    editTweetModal: any;
-    isEdit: boolean;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ 
-    value,
-    onAddTweet, 
-    onEditTweet,
-    
-    selectedFile,
-    previewImage,
-
-    clearTweetForm,
-    
-    handleTextAreaOnChange,
-    handleCanselPreviewImage,
-    handleImageUpload, 
-    
-    editTweetModal,
-    isEdit,
-}) => {
+const Navigation: React.FC<NavigationProps> = ({}) => {
 
     const [authUser, setAuthUser] = useState<any>(null);
 
@@ -126,7 +95,7 @@ const Navigation: React.FC<NavigationProps> = ({
                     value={'Tweet'}
                     type={ButtonType.primary}
                     size={ButtonSize.medium}
-                    onClick={() => openModal('Nav-tweet')}
+                    onClick={() => openModal('main-tweet-modal')}
                 />
                
                 <NavigationUserInfo
@@ -137,21 +106,6 @@ const Navigation: React.FC<NavigationProps> = ({
                     avatar={authUser?.avatar && `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`}
                     name={authUser?.name}
                     username={authUser?.username}
-                />
-                {/* Opens tweet modal */}
-                <NavigationTweet 
-                    selectedFile={selectedFile}
-                    previewImage={previewImage}                                    
-                    value={value}
-                    handleTextAreaOnChange={handleTextAreaOnChange}
-                    handleCanselPreviewImage={handleCanselPreviewImage}
-                    handleImageUpload={handleImageUpload}
-                    onAddTweet={onAddTweet} 
-                    onEditTweet={onEditTweet}
-                    clearTweetForm={clearTweetForm}
-
-                    editTweetModal={editTweetModal}
-                    isEdit={isEdit}
                 />
             </div>
         </React.Fragment>

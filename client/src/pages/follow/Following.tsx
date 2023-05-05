@@ -50,9 +50,6 @@ const Following = () => {
     useEffect(() => {
         const getAuthUserFollowStatus = async () => {
             const { followings } = await getAuthUserFollows(id!);
-            followings.forEach((following: any) => {
-                following.isFollowing = true; // add the isFollowing property
-            });
             setFollowings(followings);
         };
         getAuthUserFollowStatus();

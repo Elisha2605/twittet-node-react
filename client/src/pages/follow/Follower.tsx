@@ -40,7 +40,6 @@ const Follower: React.FC<{}> = () => {
         const userInfo = async () => {
             const res = await getUserById(id!);
             const { user } = res;
-            // console.log(res);
             setUser(user)
         }
         userInfo();
@@ -49,11 +48,7 @@ const Follower: React.FC<{}> = () => {
       // get Follow status
     useEffect(() => {
         const getAuthUserFollowStatus = async () => {
-            const { followers, followings } = await getAuthUserFollows(id!);
-            followings.forEach((follower: any) => {
-                follower.isFollowing = false; // add the isFollowing property
-
-            });
+            const { followers } = await getAuthUserFollows(id!);
             setFollowers(followers);
         };
         getAuthUserFollowStatus();
