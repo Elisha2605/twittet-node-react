@@ -12,6 +12,7 @@ import {
     tweetMenuOptions, 
     tweetMenuIcons, 
 } from '../../data/menuOptions';
+import PopUpMenu from '../ui/PopUpMenu';
 
 interface TweetProps {
     tweet?: any;
@@ -79,6 +80,7 @@ const Tweet: FC<TweetProps> = ({
                     )}
                 </NavLink>
                     <TweetFooter
+                        tweet={tweet}
                         comments={'164'}
                         reposts={'923'}
                         likes={tweet.totalLikes > 0 ? tweet.totalLikes: '' }

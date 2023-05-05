@@ -5,6 +5,7 @@ import HeartIcon from '../components/icons/HeartIcon';
 import { TWEET_AUDIENCE, TWEET_MENU, TWEET_REPLY } from '../constants/common.constants';
 import UserIcon from '../components/icons/UserIcon';
 import AtIcon from '../components/icons/AtIcon';
+import BookmarkIcon from '../components/icons/BookmarkIcon';
 
 // eslint-disable-next-line no-undef
 export const tweetMenuOptions = [TWEET_MENU.delete, TWEET_MENU.edit];
@@ -35,4 +36,11 @@ export const tweetReplyIcons = {
    'Everyone': <EarthIcon />,
    'People you follow': <UserIcon />,
    'Only people you mention': <AtIcon />,
+}
+
+export const shareOptions = [
+   'Bookmark'
+]
+export const shareIcon = {
+   'Bookmark': <BookmarkIcon />
 }

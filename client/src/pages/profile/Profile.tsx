@@ -105,13 +105,6 @@ const Profile: FC<ProfileProps> = ({
         localStorage.setItem('activeTab-profile', activeTab);
     }, [activeTab]);
 
-    // Send follow request
-    const handleFollowRequest = async () => {
-        const res = await sendFollowRequest(authUser?._id, id!);
-        console.log(res);
-
-        setIsFollowing(!isFollowing);
-    };
 
     // fetch user tweets
     useEffect(() => {
@@ -183,14 +176,7 @@ const Profile: FC<ProfileProps> = ({
     const onClickLike = async (tweet: any) => {
         const res: any = await likeTweet(tweet._id);
         const { likedTweet } = res;
-        setLikedTweet(likedTweet)
-        setUserLikedTweets((prevTweets: any) => 
-                prevTweets.map((tweet: any) =>
-                    tweet._id === likedTweet.tweet
-                        ? { ...tweet, likedTweet}
-                        : tweet
-                )
-        )
+        setLikedTweet(likedTweet);
     }
 
     // get liked tweets

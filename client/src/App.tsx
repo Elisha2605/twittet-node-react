@@ -40,7 +40,7 @@ function App() {
     
     const [isEdit, setIsEdit] = useState(false);
 
-    const { modalOpen, openModal, closeModal } = useContext(ModalContext);
+    const { modalOpen, openModal } = useContext(ModalContext);
 
     const context = useContext(AuthContext);
     let ctx: StoredContext = context.getUserContext();
@@ -206,7 +206,7 @@ function App() {
                                 <Route path="/message" element={<Message />} />
                                 <Route
                                     path="/bookmarks"
-                                    element={<Bookmarks />}
+                                    element={<Bookmarks onClickTweetMenu={handleTweetMenuOptionClick} />}
                                 />
                                 <Route path="/profile/:id" element={<Profile 
                                     onAddTweet={onAddTweet} 
