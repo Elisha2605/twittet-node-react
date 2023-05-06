@@ -5,6 +5,7 @@ import {
     editTweetController,
     getAllTweetsController,
     getFollowTweetsController,
+    getTweetByIdController,
     getUserTweetsController,
     updateAudienceController,
 } from 'src/controllers/tweet.controller';
@@ -16,6 +17,7 @@ const tweetRouter = Router();
 tweetRouter.get('', verifyUser(), getAllTweetsController);
 tweetRouter.get('/user/:id', verifyUser(), getUserTweetsController);
 tweetRouter.get('/follow/:id', verifyUser(), getFollowTweetsController);
+tweetRouter.get('/tweet/:id', verifyUser(), getTweetByIdController);
 tweetRouter.post(
     '/create',
     upload.single('tweetImage'),

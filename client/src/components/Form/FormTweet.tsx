@@ -27,17 +27,18 @@ interface FormProps {
     isFocused?: boolean;
     setIsFocused: React.Dispatch<React.SetStateAction<boolean>>;
 
-    tweetAudienceValue: string,
-    tweetReplyValue: string,
+    tweetAudienceValue?: string,
+    tweetReplyValue?: string,
 
     onSubmit: (e: React.FormEvent) => void;
     onImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
     onChageImage: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     onCancelImagePreview: () => void;
-    onClickAudienceMenu: Function;
-    onClickReplyMenu: Function;
+    onClickAudienceMenu?: Function;
+    onClickReplyMenu?: Function;
 
-    classNameTextErea?: string;    
+    classNameTextErea?: string;
+    isReplay?: boolean;    
 }
 
 const FormTweet: FC<FormProps> = ({
@@ -57,7 +58,8 @@ const FormTweet: FC<FormProps> = ({
     onClickAudienceMenu,
     onClickReplyMenu,
 
-    classNameTextErea
+    classNameTextErea,
+    isReplay
 }) => {
     
     // Adjust text erea with input value

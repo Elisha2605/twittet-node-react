@@ -12,7 +12,6 @@ import {
     tweetMenuOptions, 
     tweetMenuIcons, 
 } from '../../data/menuOptions';
-import PopUpMenu from '../ui/PopUpMenu';
 
 interface TweetProps {
     tweet?: any;

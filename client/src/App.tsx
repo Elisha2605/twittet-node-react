@@ -23,30 +23,37 @@ import TweetPage from './pages/tweet/TweetPage';
 
 function App() {
 
+    const [showBackground, setShowBackground] = useState(false); // Add state to control whether to show the blue background
+
+    // Home Form states
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [onAddTweet, setOnAddTweets] = useState<any[]>([]);
     const [onDeleteTweet, setOnDeleteTweet] = useState<any[]>([]);
     const [value, setValue] = useState('');
 
-    // Modal
+    // Modal Form states
     const [selectedFileModal, setSelectedFileModal] = useState<File | null>(null);
     const [previewImageModal, setPreviewImageModal] = useState<string | null>(null);
     const [valueModal, setValueModal] = useState('');
     const [editTweetModal, setEditTweetModal] = useState<any>('');
     const [onEditTweet, setOnEditTweets] = useState<any[]>([]);
-    
+
+    // Tweet Edit modal
     const [valueEditModal, setValueEditModal] = useState('');
     const [previewEditImageModal, setPreviewEditImageModal] = useState<string | null>(null);
 
-    const [flashMessage, setflashMessage] = useState(null);
+    // Reply form states
+    const [valueReply, setValueReply] = useState('');
+    const [selectedFileReply, setSelectedFileReply] = useState<File | null>(null);
+    const [previewImageReply, setPreviewImageReply] = useState<string | null>(null);
 
+
+    // useContexts
     const { modalOpen, openModal } = useContext(ModalContext);
-
     const context = useContext(AuthContext);
     let ctx: StoredContext = context.getUserContext();
 
-    const [showBackground, setShowBackground] = useState(false); // Add state to control whether to show the blue background
 
     const handleLoginSuccess = () => {
         setShowBackground(true); // Set the showBackground state to true when login is successful
@@ -74,6 +81,11 @@ function App() {
             setValue(val);
         }
     };
+    
+    const handleReplyTextAreaOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const val = e.target?.value;
+        setValueReply(val);
+    }
 
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files && event.target.files[0];
@@ -87,6 +99,7 @@ function App() {
                 setSelectedFile(file);
                 let imageUrl = URL.createObjectURL(file);
                 setPreviewImage(imageUrl);
+                setPreviewImageReply(imageUrl);
             }
         }
     };
@@ -99,6 +112,8 @@ function App() {
         } else {
             setPreviewImage('');
             setSelectedFile(null);
+            setPreviewImageReply('');
+            setSelectedFileReply(null);
         }
       };
 
@@ -218,7 +233,18 @@ function App() {
                                 />
                                 <Route path="/following/:id" element={<Following />} />
                                 <Route path="/followers/:id" element={<Follower />} />
-                                <Route path="/tweet/:id" element={<TweetPage />} />
+                                <Route path="/tweet/:id" element={
+                                    <TweetPage 
+                                        value={valueReply}
+                                        selectedFile={selectedFileReply}
+                                        previewImage={previewImageReply}
+                                        handleTextAreaOnChange={handleReplyTextAreaOnChange}
+                                        handleCanselPreviewImage={handleCanselPreviewImage}
+                                        handleImageUpload={handleImageUpload}
+                                        clearTweetForm={clearTweetForm}
+                                        onClickTweetMenu={() => {}}
+                                    />
+                                } />
                                 <Route
                                     path="*"
                                     element={<Navigate to="/" replace={true} />}

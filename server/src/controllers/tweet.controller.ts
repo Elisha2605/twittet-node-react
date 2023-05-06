@@ -6,6 +6,7 @@ import {
     editTweet,
     getAllTweets,
     getFollowTweets,
+    getTweetById,
     getUserTweets,
     updateTweetAudience,
 } from 'src/services/tweet.service';
@@ -158,10 +159,37 @@ export const deleteTweetController = asyncHandler(
             const response = await deleteTweet(tweetId, userId);
             const { payload } = response;
             if (response.success) {
-                res.send({
+                res.status(200).send({
                     success: response.success,
                     message: response.message,
                     status: response.status,
+                    tweet: payload,
+                });
+            }
+        } catch (error) {
+            res.status(error.status).json({
+                sucess: error.success,
+                message: error.message,
+                status: error.status,
+            });
+            next(error);
+        }
+    }
+);
+
+export const getTweetByIdController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const tweetId = req.params.id;
+
+        if (!tweetId) {
+            res.status(400).json({ InvalidInputError: 'Invalid Input' });
+            return;
+        }
+
+        try {
+            const { success, payload } = await getTweetById(tweetId);
+            if (success) {
+                res.status(200).send({
                     tweet: payload,
                 });
             }

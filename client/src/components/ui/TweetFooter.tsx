@@ -54,7 +54,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
                 </div>
                 {likes ? (
                     <div className={`${styles.item} ${styles.liked}`} onClick={handleLike} >
-                        <FontAwesomeIcon icon={faHeartSolid} color={'#F91980'} />
+                        <FontAwesomeIcon icon={faHeartSolid} color={'var(--color-pink)'} />
                         <p>{likes}</p>
                     </div>
                 ): (

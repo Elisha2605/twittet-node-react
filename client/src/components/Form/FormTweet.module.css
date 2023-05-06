@@ -5,6 +5,13 @@
     font-family: inherit;
     font-size: var(--font-size-lg);
 }
+.textarea:focus {
+    outline: none;
+}
+
+.textarea::placeholder {
+    color: var(--color-secondary);
+}
 
 /* AUDIENCE */
 
@@ -85,14 +92,6 @@
     border: none;
     border-top: var(--border-light);
     margin: 10px 0;
-}
-
-.textarea:focus {
-    outline: none;
-}
-
-.textarea::placeholder {
-    color: var(--color-secondary);
 }
 
 .footer {
