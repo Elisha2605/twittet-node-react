@@ -1,28 +1,37 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
-import styles from './TweetPage.module.css';
-import { useNavigate, useParams } from 'react-router-dom';
-import XmarkIcon from '../../components/icons/XmarkIcon';
-import { getTweetById, getUserTweets } from '../../api/tweet.api';
+import Aside from '../../components/aside/Aside';
+import SearchBar from '../../components/ui/SearchBar';
+import WhoToFollow from '../../components/ui/WhoToFollow';
+import Header from '../../components/header/Header';
+import styles from './TweetPageNoImage.module.css';
+import Layout from '../../Layout.module.css';
+import ArrowLeftIcon from '../../components/icons/ArrowLeftIcon';
+import HeaderTitle from '../../components/header/HeaderTitle';
 import {
     IMAGE_AVATAR_BASE_URL,
-    IMAGE_TWEET_BASE_URL,
+    IMAGE_COVER_BASE_URL,
     TWEET_MENU,
 } from '../../constants/common.constants';
-import TweetFooter from '../../components/ui/TweetFooter';
-import { likeTweet } from '../../api/like.api';
-import UserInfo from '../../components/ui/UserInfo';
-import { tweetMenuIcons, tweetMenuOptions } from '../../data/menuOptions';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookmark, faComment, faHeart } from '@fortawesome/free-regular-svg-icons';
-import { faArrowUpFromBracket, faRepeat } from '@fortawesome/free-solid-svg-icons';
-import Avatar, { Size } from '../../components/ui/Avatar';
 import AuthContext from '../../context/user.context';
+import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { getUserById } from '../../api/user.api';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {  faBookmark, faComment, faHeart } from '@fortawesome/free-regular-svg-icons';
+import { faArrowUpFromBracket,  faRepeat } from '@fortawesome/free-solid-svg-icons';
+import UserInfo from '../../components/ui/UserInfo';
+import { getTweetById, getUserTweets } from '../../api/tweet.api';
+import { tweetMenuIcons, tweetMenuOptions } from '../../data/menuOptions';
+import Avatar, { Size } from '../../components/ui/Avatar';
 import FormReply from '../../components/form/FormReply';
 import TweetReply from '../../components/tweet/TweetReply';
+import { likeTweet } from '../../api/like.api';
 
-interface TweetPageProps {}
+interface TweetPageNoImageProps {}
 
-const TweetPage: FC<TweetPageProps> = ({}) => {
+const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
+    const { id } = useParams<{ id: string }>();
+
     const [tweet, setTweet] = useState<any>();
     const [likedTweet, setLikedTweet] = useState<any>();
     const [authUser, setAuthUser] = useState<any>(null);
@@ -35,58 +44,42 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
 
     const [userTweets, setUserTweets] = useState<any[]>([]);
 
-    const previousPath = localStorage.getItem('active-nav');
-    const goBack = () => {
-        navigate(`/${previousPath}`)
-    }
-
-
-    const { id } = useParams<{ id: string }>();
-
-
 
     const navigate = useNavigate();
 
-
+    
     // get Auth user
     const ctx = useContext(AuthContext);
+    useEffect(() => {
         const getAuthUserAndTweets = async () => {
-            const { user } = ctx.getUserContext();
-            setAuthUser(user);
-            
-            if (user) {
-                const res = await getUserTweets(user._id);
-                const { tweets } = res;
-                setUserTweets(tweets);
-            }
+          const { user } = ctx.getUserContext();
+          setAuthUser(user);
+          
+          if (user) {
+            const res = await getUserTweets(user._id);
+            const { tweets } = res;
+            setUserTweets(tweets);
+          }
         };
-    useEffect(() => {
+        
         getAuthUserAndTweets();
-    }, [id]);
+    }, []);
 
-    // get Tweet by ID
-    useEffect(() => {
+     // get Tweet by ID
+     useEffect(() => {
         const getTweet = async () => {
             const { tweet } = await getTweetById(id!);
             setTweet(tweet[0]);
         };
         getTweet();
     }, [id]);
-
+    
     // On like tweet
     const onClickLike = async () => {
         const res: any = await likeTweet(tweet?._id);
         const { likedTweet } = res;
         setLikedTweet(likedTweet);
     };
-
-    // Update Likes state
-    useEffect(() => {
-        setTweet((prev: any) => ({
-            ...prev,
-            totalLikes: likedTweet?.likesCount,
-        }));
-    }, [likedTweet]);
 
     const handleTweetMenuOptionClick = async (option: string, tweetId: string, tweet: any) => {
         if (option === TWEET_MENU.delete) {
@@ -152,46 +145,27 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
         clearTweetForm();
     };
 
-
     return (
         <React.Fragment>
-            <div className={styles.container}>
-                <div
-                    className={styles.overlay}
-                    onClick={() => {
-                        goBack();
-                        clearTweetForm();   
-                    }}
-                ></div>
-                <XmarkIcon
-                    className={styles.canselBtn}
-                    size={'xl'}
-                    onClick={() => {
-                        goBack();
-                        clearTweetForm();
-                    }}
-                />
-                <div className={styles.image}>
-                    <img
-                        src={
-                            tweet?.image &&
-                            `${IMAGE_TWEET_BASE_URL}/${tweet?.image}`
-                        }
-                        alt=""
-                    />
-                    <div className={styles.footer}>
-                        <TweetFooter
-                            comments={'123'}
-                            reposts={'123'}
-                            likes={
-                                tweet?.totalLikes > 0 ? tweet?.totalLikes : ''
-                            }
-                            views={'453'}
-                            onClick={onClickLike}
-                        />
-                    </div>
-                </div>
-                <div className={styles.aside}>
+            <div className={Layout.mainSectionContainer}>
+                <div className={Layout.mainSection}>
+                    {/* *** HEADER - START *** */}
+                    <Header border={true}>
+                        <div className={styles.headerItems}>
+                            <ArrowLeftIcon
+                                onClick={() => {
+                                    navigate(-1);
+                                }}
+                                className={styles.arrowLeftIcon}
+                            />
+                            <HeaderTitle title={'Tweet'} className={styles.title} />
+                        </div>
+                    </Header>
+                    {/* *** HEADER - END *** */}
+
+                    <div className={styles.main}>
+                        {/* *** MAIN - START *** */}
+                        <div className={styles.aside}>
                     <div className={styles.asideUpperSectionWrapper}>
                         <UserInfo
                             userId={tweet?.user?._id}
@@ -213,10 +187,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                                 <span>9:15 PM</span> · <span>May 5, 2023</span> · <p><span>1.2M </span>Views</p>  
                             </div>
                             <div className={styles.stats}>
-                                <p><span>332</span>Retweets</p> <p><span>61</span>Quotes</p> <p><span>{tweet?.totalLikes > 0 ? tweet?.totalLikes : ''}</span>Likes</p>
-                            </div>
-                            <div className={styles.bookmarks}>
-                                <p><span>332</span>Bookmarks</p>
+                                <p><span>332</span>Retweets</p> <p><span>61</span>Quotes</p> <p><span>{tweet?.totalLikes > 0 ? tweet?.totalLikes : ''}</span>Likes</p> <p><span>332</span>Bookmarks</p>
                             </div>
                             <div className={styles.icons}>
                                 <FontAwesomeIcon icon={faComment} className={styles.faComment} />
@@ -249,18 +220,30 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                     {userTweets.map((tweet: any) => (
                         <div className={styles.asideReplySection} key={tweet?._id}>
                             <TweetReply
-                                key={tweet?._id}
+                                key={tweet._id}
                                 tweet={tweet}
                                 onClickMenu={() => {}}
                                 onClickLike={onClickLike}
-                                isReply={true}
+                                classNameNoImage={styles.image}
                             />
                         </div>
                     ))}
+                </div>
+                        {/* *** MAIN - END *** */}
+                    </div>
+                </div>
+                {/* Home page - start */}
+                <div>
+                    <Header border={false}>
+                        <SearchBar width={74} />
+                    </Header>
+                    <Aside className={styles.aside}>
+                        <WhoToFollow />
+                    </Aside>
                 </div>
             </div>
         </React.Fragment>
     );
 };
 
-export default TweetPage;
+export default TweetPageNoImage;

@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import TweetFooter from '../ui/TweetFooter';
 import UserInfo from '../ui/UserInfo';
 import styles from './Tweet.module.css';
@@ -36,6 +36,15 @@ const Tweet: FC<TweetProps> = ({
     const isVerfied = tweet?.user?.isVerified;
     const avatar = tweet?.user?.avatar;
 
+    let navigate = useNavigate();
+    
+    const goToTweetPage = () => {
+        if (tweet?.image) {
+            navigate(`/tweet/image/${tweet._id}`)
+        } else {
+            navigate(`/tweet/${tweet._id}`)
+        }
+    }
     
     return (
         <React.Fragment>
@@ -54,8 +63,8 @@ const Tweet: FC<TweetProps> = ({
                     icons={tweetMenuIcons}
                     onClickOption={onClickMenu}
                 />
-                <NavLink to={`/tweet/${tweet._id}`}>
-                    <div className={styles.body} key={tweet._id}>
+                {/* <NavLink to={tweet?.image ? `/tweet/image/${tweet._id}` : `/tweet/${tweet._id}`}> */}
+                    <div className={styles.body} key={tweet._id} onClick={goToTweetPage}>
                         <p className={styles.tweet}>{tweetText}</p>
                         {tweetImage && (
                             <div className={styles.image}>
@@ -77,7 +86,7 @@ const Tweet: FC<TweetProps> = ({
                             <span className={styles.icon}><AtIcon small={true} /></span> <span>You can reply to this conversation</span>
                         </div>
                     )}
-                </NavLink>
+                {/* </NavLink> */}
                     <TweetFooter
                         tweet={tweet}
                         comments={'164'}

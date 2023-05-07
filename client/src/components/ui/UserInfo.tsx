@@ -20,6 +20,7 @@ interface UserInfoProps {
     icons?: Record<string, React.ReactNode>;
     time?: string;
     onClickOption?: Function;
+    isReply?: boolean;
 }
 
 const UserInfo: FC<UserInfoProps> = ({
@@ -37,6 +38,7 @@ const UserInfo: FC<UserInfoProps> = ({
     icons,
     time,
     onClickOption,
+    isReply = false,
 }) => {
 
     const [authUser, setAuthUser] = useState<any>(null);
@@ -71,13 +73,14 @@ const UserInfo: FC<UserInfoProps> = ({
                         <div className={styles.userInfoOptionWrapper}>
                             <div className={styles.userInfo}>
                                 <p className={styles.name} onClick={onNavigateToProfile}>
-                                    {name}{' '}
+                                    {/* this is for TweetReply */}
+                                    {isReply && name.length > 6 ? name.substring(0, 6) + '...' : name}{' '}
                                     {isVerified && (
                                         <img className={styles.certifiedIcon} src={Certified} alt="" />
-                                    )}{' '}
+                                    )}
                                 </p>
                                 <p className={styles.username} onClick={onNavigateToProfile}>
-                                    @{username} {time && ` · ${time}`}
+                                    @{isReply && username.length > 6 ? username.substring(0, 6) + '...' : username} {time && ` · ${time}`}{' '}
                                 </p>
                             </div>
                             {authUser?._id === tweet.user._id && (

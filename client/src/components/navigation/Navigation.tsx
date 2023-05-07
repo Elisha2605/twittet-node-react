@@ -19,32 +19,35 @@ import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
 import { ModalContext } from '../../context/modal.context';
 import AuthContext from '../../context/user.context';
 
-interface NavigationProps {
-
-}
+interface NavigationProps {}
 
 const Navigation: React.FC<NavigationProps> = ({}) => {
-
     const [authUser, setAuthUser] = useState<any>(null);
+    const [activeNav, setActiveNav] = useState(
+        localStorage.getItem('active-nav') || 'home'
+    );
+
+    useEffect(() => {
+        localStorage.setItem('active-nav', activeNav);
+    }, [activeNav]);
 
     const ctx = useContext(AuthContext);
     useEffect(() => {
         const getAuthUser = async () => {
             const { user } = ctx.getUserContext();
             setAuthUser(user);
-        }
+        };
         getAuthUser();
     }, []);
 
     const { openModal } = useContext(ModalContext);
-
 
     // Logout
     const handleMenuOptionClick = async (options: string) => {
         if (options === 'Logout') {
             await logout();
         }
-    }
+    };
 
     return (
         <React.Fragment>
@@ -57,39 +60,109 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                     />
                 </div>
                 <div className={styles.naviItems}>
-                    <NavigationItem icon={faHome} label={'Home'} path="/" />
-                    <NavigationItem
-                        icon={faHashtag}
-                        label={'Explore'}
-                        path="/explore"
-                    />
-                    <NavigationItem
-                        icon={faBell}
-                        label={'Notifications'}
-                        path="/notification"
-                    />
-                    <NavigationItem
-                        icon={faEnvelope}
-                        label={'Message'}
-                        path="/message"
-                    />
-                    <NavigationItem
-                        icon={faBookmark}
-                        label={'Bookmarks'}
-                        path="/bookmarks"
-                        className={styles.bookmarks}
-                    />
-                    <NavigationItem
-                        icon={faUser}
-                        label={'Profile'}
-                        path={`/profile/${authUser?._id}`}
-                    />
-                    <NavigationItem
-                        icon={faEllipsisH}
-                        label={'More'}
-                        path="#"
-                        className={styles.ellipsis}
-                    />
+                    <div
+                        onClick={() => {
+                            setActiveNav('home');
+                        }}
+                        className={
+                            activeNav === 'home' ? styles.active : ''
+                        }
+                    >
+                        <NavigationItem icon={faHome} label={'Home'} path="/" />
+                    </div>
+
+                    <div
+                        onClick={() => {
+                            setActiveNav('explore');
+                        }}
+                        className={
+                            activeNav === 'explore' ? styles.active : ''
+                        }
+                    >
+                        <NavigationItem
+                            icon={faHashtag}
+                            label={'Explore'}
+                            path="/explore"
+                        />
+                    </div>
+
+                    <div
+                        onClick={() => {
+                            setActiveNav('notification');
+                        }}
+                        className={
+                            activeNav === 'notification' ? styles.active : ''
+                        }
+                    >
+                        <NavigationItem
+                            icon={faBell}
+                            label={'Notifications'}
+                            path="/notification"
+                        />
+                    </div>
+
+                    <div
+                        onClick={() => {
+                            setActiveNav('message');
+                        }}
+                        className={
+                            activeNav === 'message' ? styles.active : ''
+                        }
+                    >
+                        <NavigationItem
+                            icon={faEnvelope}
+                            label={'Message'}
+                            path="/message"
+                        />
+                    </div>
+
+                    <div
+                        onClick={() => {
+                            setActiveNav('bookmarks');
+                        }}
+                        className={
+                            activeNav === 'bookmarks' ? styles.active : ''
+                        }
+                    >
+                        <NavigationItem
+                            icon={faBookmark}
+                            label={'Bookmarks'}
+                            path="/bookmarks"
+                            className={styles.bookmarks}
+                        />
+                    </div>
+
+                    <div
+                        onClick={() => {
+                            setActiveNav('profile');
+                        }}
+                        className={
+                            activeNav === 'profile' ? styles.active : ''
+                        }
+                    >
+                        <NavigationItem
+                            icon={faUser}
+                            label={'Profile'}
+                            path={`/profile/${authUser?._id}`}
+                        />
+                    </div>
+
+                    <div
+                        onClick={() => {
+                            setActiveNav('#');
+                        }}
+                        className={
+                            activeNav === '#' ? styles.active : ''
+                        }
+                    >
+                        <NavigationItem
+                            icon={faEllipsisH}
+                            label={'More'}
+                            path="#"
+                            className={styles.ellipsis}
+                        />
+                    </div>
+                    
                 </div>
                 <Button
                     value={'Tweet'}
@@ -97,13 +170,16 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                     size={ButtonSize.medium}
                     onClick={() => openModal('main-tweet-modal')}
                 />
-               
+
                 <NavigationUserInfo
                     id={authUser?.id}
                     menuOptions={navUserMenuOptions}
                     menuIcons={navUseMenuIcons}
                     onClickOption={handleMenuOptionClick}
-                    avatar={authUser?.avatar && `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`}
+                    avatar={
+                        authUser?.avatar &&
+                        `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`
+                    }
                     name={authUser?.name}
                     username={authUser?.username}
                 />

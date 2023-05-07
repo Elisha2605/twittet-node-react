@@ -25,8 +25,7 @@ interface FormProps {
     onClickAudienceMenu?: Function;
     onClickReplyMenu?: Function;
 
-    classNameTextErea?: string;
-    isReplay?: boolean;    
+    classNameTextErea?: string;   
 }
 
 const FormTweet: FC<FormProps> = ({
@@ -42,7 +41,6 @@ const FormTweet: FC<FormProps> = ({
     onCancelImagePreview,
 
     classNameTextErea,
-    isReplay
 }) => {
     
     // Adjust text erea with input value
@@ -54,8 +52,6 @@ const FormTweet: FC<FormProps> = ({
             onSubmit(e);
         }
     }
-
-console.log(value);
 
     return (
         <React.Fragment>
