@@ -1,10 +1,10 @@
-import React, { FC, useEffect } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import React, { FC, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import TweetFooter from '../ui/TweetFooter';
 import UserInfo from '../ui/UserInfo';
 import styles from './TweetReply.module.css';
 import { getTimeDifference } from '../../utils/helpers.utils';
-import { IMAGE_AVATAR_BASE_URL, IMAGE_TWEET_BASE_URL } from '../../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, IMAGE_TWEET_REPLY_BASE_URL } from '../../constants/common.constants';
 import { 
     tweetMenuOptions, 
     tweetMenuIcons, 
@@ -25,7 +25,8 @@ const Tweet: FC<TweetProps> = ({
     isReply = false,
     classNameNoImage,
 }) => {
-    
+
+
     const tweetId = tweet?._id;
     const createdAt = getTimeDifference(new Date(tweet?.createdAt).getTime());
     const tweetText = tweet?.text;
@@ -41,11 +42,12 @@ const Tweet: FC<TweetProps> = ({
 
     const goToTweetPage = () => {
         if (tweet?.image) {
-            navigate(`/tweet/image/${tweet._id}`)
+            navigate(`/tweet/image/${tweetId}`)
         } else {
-            navigate(`/tweet/${tweet._id}`)
+            navigate(`/tweet/${tweetId}`)
         }
     }
+    
     
     return (
         <React.Fragment>
@@ -70,7 +72,7 @@ const Tweet: FC<TweetProps> = ({
                         <p className={styles.tweet}>{tweetText}</p>
                         {tweetImage && (
                             <div className={`${styles.image} ${!isReply ? classNameNoImage : ''}`}>
-                                <img src={tweetImage ? `${IMAGE_TWEET_BASE_URL}/${tweetImage}` : undefined} alt="" />
+                                <img src={tweetImage ? `${IMAGE_TWEET_REPLY_BASE_URL}/${tweetImage}` : undefined} alt="" />
                             </div>
                         )}
                     </div>

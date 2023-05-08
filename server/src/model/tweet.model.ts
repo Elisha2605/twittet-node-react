@@ -2,8 +2,6 @@ import mongoose, { Types, ObjectId } from 'mongoose';
 import { TWEET_AUDIENCE, TWEET_REPLY } from 'src/constants/tweet.constants';
 import { handleError } from 'src/utils/db.util';
 
-// SUB DOCUMENTS
-
 export interface ITweet extends mongoose.Document {
     user: ObjectId | string;
     image: string;

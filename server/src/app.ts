@@ -20,6 +20,7 @@ import path from 'path';
 import followRouter from './routes/follow.routes';
 import likeRouter from './routes/like.routes';
 import bookmarkRouter from './routes/bookmark.routes';
+import replyRouter from './routes/reply.routes';
 
 dotenv.config();
 
@@ -80,6 +81,7 @@ app.use('/api/tweets', tweetRouter);
 app.use('/api/follows', followRouter);
 app.use('/api/likes', likeRouter);
 app.use('/api/bookmarks', bookmarkRouter);
+app.use('/api/replies', replyRouter);
 
 // SERVING STATIC FILES
 app.use('/avatar', express.static(path.join(__dirname, 'uploads', 'avatar')));
@@ -87,6 +89,10 @@ app.use('/cover', express.static(path.join(__dirname, 'uploads', 'cover')));
 app.use(
     '/tweetImage',
     express.static(path.join(__dirname, 'uploads', 'tweetImage'))
+);
+app.use(
+    '/replyImage',
+    express.static(path.join(__dirname, 'uploads', 'replyImage'))
 );
 
 // ERROR - REQUEST HANDLING
