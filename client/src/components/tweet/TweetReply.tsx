@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TweetFooter from '../ui/TweetFooter';
 import UserInfo from '../ui/UserInfo';
@@ -12,7 +12,6 @@ import {
 
 interface TweetProps {
     tweet?: any;
-    reply?: any;
     onClickMenu: Function;
     onClickLike: (tweet: any) => void;
     isReply?: boolean;
@@ -21,13 +20,13 @@ interface TweetProps {
 
 const Tweet: FC<TweetProps> = ({
     tweet,
-    reply,
     onClickMenu,
     onClickLike,
     isReply = false,
     classNameNoImage,
 }) => {
-    
+
+
     const tweetId = tweet?._id;
     const createdAt = getTimeDifference(new Date(tweet?.createdAt).getTime());
     const tweetText = tweet?.text;
@@ -48,10 +47,6 @@ const Tweet: FC<TweetProps> = ({
             navigate(`/tweet/${tweetId}`)
         }
     }
-
-    useEffect(() => {
-        console.log(tweet);
-    }, [tweet])
     
     
     return (

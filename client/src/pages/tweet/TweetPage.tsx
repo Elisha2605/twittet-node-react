@@ -65,6 +65,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
             setTweetReplies(tweets);
         }
     };
+
     useEffect(() => {
         getTweetReplies();
     }, [id]);
