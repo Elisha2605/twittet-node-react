@@ -97,7 +97,7 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
                     </Header>
                     {/* Home page - start */}
                     <div className={styles.main}>
-                        {savedTweets.length < 0 && (
+                        {savedTweets.length === 0 && (
                             <div className={styles.emptyBookmarksWrapper}>
                                 <div className={styles.emptyBookmarksImage}>
                                     <img
