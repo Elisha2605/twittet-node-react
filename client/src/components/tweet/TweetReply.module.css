@@ -1,0 +1,50 @@
+.container {
+    border-bottom: 1px solid var(--color-secondary-light);
+    padding-bottom: 0.7rem;
+}
+
+.container:hover {
+    background: var(--color-secondary-lighter);
+    transition: 0.1s ease-in;
+    cursor: pointer;
+}
+
+.container .tweet, 
+.container .image {
+    margin-left: 3.7rem;
+}
+
+.contentWrapper {
+    padding: 0rem 1rem;
+}
+
+.userInfo {
+    margin-top: -1rem;
+}
+
+.body {
+    margin-top: -1.5rem;
+}
+
+.tweet {
+    margin-bottom: 0.5rem;
+    /* TODO: change the font-familly */
+}
+
+.image {
+    height: 10rem; /*Consider removing this or increasing it*/
+    margin-bottom: 1rem;
+    border-radius: 1rem;
+}
+
+.image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 1rem;
+}
+
+.icon {
+    font-size: 0.8rem;
+    padding-right: 0.6rem;
+}

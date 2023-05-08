@@ -24,3 +24,7 @@
 .ellipsis svg {
     font-size: 23px;
 }
+
+.active h2 {
+    font-weight: var(--font-weight-800);
+}

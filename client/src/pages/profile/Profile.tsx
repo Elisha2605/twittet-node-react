@@ -19,7 +19,7 @@ import {
 } from '../../constants/common.constants';
 import { getMonthName, getYear } from '../../utils/helpers.utils';
 import AuthContext from '../../context/user.context';
-import { getAuthUserFollows, sendFollowRequest } from '../../api/follow.api';
+import { getAuthUserFollows } from '../../api/follow.api';
 import { NavLink, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
@@ -105,7 +105,6 @@ const Profile: FC<ProfileProps> = ({
         localStorage.setItem('activeTab-profile', activeTab);
     }, [activeTab]);
 
-
     // fetch user tweets
     useEffect(() => {
         const fetchUserTweets = async () => {
@@ -177,7 +176,7 @@ const Profile: FC<ProfileProps> = ({
         const res: any = await likeTweet(tweet._id);
         const { likedTweet } = res;
         setLikedTweet(likedTweet);
-    }
+    };
 
     // get liked tweets
     useEffect(() => {
@@ -185,33 +184,45 @@ const Profile: FC<ProfileProps> = ({
             const res: any = await getUserLikedTweets(id!);
             const { tweets } = res;
             setUserLikedTweets(tweets);
-        }
+        };
         getLikedTweet();
-    }, [])
+    }, []);
 
     useEffect(() => {
-            setUserTweets((prevTweets: any) => 
-                prevTweets.map((tweet: any) =>
-                    tweet._id === likedTweet.tweet
-                        ? { ...tweet, totalLikes: likedTweet.likesCount}
-                        : tweet
-                )
+        setUserTweets((prevTweets: any) =>
+            prevTweets.map((tweet: any) =>
+                tweet._id === likedTweet.tweet
+                    ? {
+                          ...tweet,
+                          totalLikes: likedTweet.likesCount,
+                          likes: likedTweet?.likes,
+                      }
+                    : tweet
             )
-            setUserTweetsMedia((prevTweets: any) => 
-                prevTweets.map((tweet: any) =>
-                    tweet._id === likedTweet.tweet
-                        ? { ...tweet, totalLikes: likedTweet.likesCount}
-                        : tweet
-                )
+        );
+        setUserTweetsMedia((prevTweets: any) =>
+            prevTweets.map((tweet: any) =>
+                tweet._id === likedTweet.tweet
+                    ? {
+                          ...tweet,
+                          totalLikes: likedTweet.likesCount,
+                          likes: likedTweet?.likes,
+                      }
+                    : tweet
             )
-            setUserLikedTweets((prevTweets: any) => 
-                prevTweets.map((tweet: any) =>
-                    tweet._id === likedTweet.tweet
-                        ? { ...tweet, totalLikes: likedTweet.likesCount}
-                        : tweet
-                )
+        );
+        setUserLikedTweets((prevTweets: any) =>
+            prevTweets.map((tweet: any) =>
+                tweet._id === likedTweet?.tweet
+                    ? {
+                          ...tweet,
+                          totalLikes: likedTweet?.likesCount,
+                          likes: likedTweet?.likes,
+                      }
+                    : tweet
             )
-    }, [likedTweet])
+        );
+    }, [likedTweet]);
 
     return (
         <React.Fragment>
@@ -356,10 +367,13 @@ const Profile: FC<ProfileProps> = ({
                                 {/* tweets - start */}
                                 {userTweets.map((tweet: any) => (
                                     <Tweet
-                                        key={tweet._id}
+                                        key={tweet?._id}
                                         tweet={tweet}
                                         onClickMenu={onClickTweetMenu}
                                         onClickLike={onClickLike}
+                                        isLiked={tweet?.likes?.includes(
+                                            authUser?._id
+                                        )}
                                     />
                                 ))}
                                 {/* tweets - end */}
@@ -384,6 +398,9 @@ const Profile: FC<ProfileProps> = ({
                                         tweet={tweet}
                                         onClickMenu={onClickTweetMenu}
                                         onClickLike={onClickLike}
+                                        isLiked={tweet?.likes?.includes(
+                                            authUser?._id
+                                        )}
                                     />
                                 ))}
                             </div>
@@ -399,9 +416,12 @@ const Profile: FC<ProfileProps> = ({
                                         tweet={tweet}
                                         onClickMenu={onClickTweetMenu}
                                         onClickLike={onClickLike}
+                                        isLiked={tweet?.likes?.includes(
+                                            authUser?._id
+                                        )}
                                     />
                                 ))}
-                        </div>
+                            </div>
                         )}
                         {/* LIKES - END */}
 

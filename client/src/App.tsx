@@ -20,40 +20,36 @@ import { IMAGE_TWEET_BASE_URL, TWEET_MENU } from './constants/common.constants';
 import MainTweet from './pages/tweet-modals/MainTweetModal';
 import EditTweetModal from './pages/tweet-modals/EditTweetModal';
 import TweetPage from './pages/tweet/TweetPage';
+import TweetPageNoImage from './pages/tweet/TweetPageNoImage';
 
 function App() {
 
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const [previewImage, setPreviewImage] = useState<string | null>(null);
-    const [onAddTweet, setOnAddTweets] = useState<any[]>([]);
-    const [onDeleteTweet, setOnDeleteTweet] = useState<any[]>([]);
-    const [value, setValue] = useState('');
+    const [showBackground, setShowBackground] = useState(false); // Add state to control whether to show the blue background
 
-    // Modal
+    // Home Form states
+    const [selectedFileHome, setSelectedFileHome] = useState<File | null>(null);
+    const [previewImageHome, setPreviewImageHome] = useState<string | null>(null);
+    const [valueHome, setValueHome] = useState('');
+
+    // Modal Form states
     const [selectedFileModal, setSelectedFileModal] = useState<File | null>(null);
     const [previewImageModal, setPreviewImageModal] = useState<string | null>(null);
     const [valueModal, setValueModal] = useState('');
-    const [editTweetModal, setEditTweetModal] = useState<any>('');
     const [onEditTweet, setOnEditTweets] = useState<any[]>([]);
-    
+
+    // cross-components states
+    const [onAddTweet, setOnAddTweets] = useState<any[]>([]);
+    const [onDeleteTweet, setOnDeleteTweet] = useState<any[]>([]);
+    const [editTweetModal, setEditTweetModal] = useState<any>('');
+
+    // Tweet Edit modal
     const [valueEditModal, setValueEditModal] = useState('');
     const [previewEditImageModal, setPreviewEditImageModal] = useState<string | null>(null);
 
-    const [flashMessage, setflashMessage] = useState(null);
-
+    // useContexts
     const { modalOpen, openModal } = useContext(ModalContext);
-
     const context = useContext(AuthContext);
     let ctx: StoredContext = context.getUserContext();
-
-    const [showBackground, setShowBackground] = useState(false); // Add state to control whether to show the blue background
-
-    const handleLoginSuccess = () => {
-        setShowBackground(true); // Set the showBackground state to true when login is successful
-        setTimeout(() => {
-            setShowBackground(false); // Set the showBackground state to false after 1.5 seconds
-        }, 1000)
-    };
 
     const handleAddTweet = (tweet: any) => {
         setOnAddTweets((prevTweets) => [tweet, ...prevTweets]);
@@ -63,18 +59,27 @@ function App() {
         setOnEditTweets(editedTweet)
     }
 
+
+    // On Login blue background
+    const handleLoginSuccess = () => {
+        setShowBackground(true); // Set the showBackground state to true when login is successful
+        setTimeout(() => {
+            setShowBackground(false); // Set the showBackground state to false after 1.5 seconds
+        }, 1000)
+    };
+
     
-    //// new functions
+    //// Temp functions - start //
     const handleTextAreaOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const val = e.target?.value;
         if (modalOpen) {
             setValueModal(val)
             setValueEditModal(val)
         } else {
-            setValue(val);
+            setValueHome(val);
         }
     };
-
+    
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files && event.target.files[0];
         if (file) {
@@ -84,9 +89,9 @@ function App() {
                 setPreviewImageModal(imageUrl);
                 setPreviewEditImageModal(imageUrl);
             } else {
-                setSelectedFile(file);
+                setSelectedFileHome(file);
                 let imageUrl = URL.createObjectURL(file);
-                setPreviewImage(imageUrl);
+                setPreviewImageHome(imageUrl);
             }
         }
     };
@@ -97,8 +102,8 @@ function App() {
             setSelectedFileModal(null);
             setPreviewEditImageModal('');
         } else {
-            setPreviewImage('');
-            setSelectedFile(null);
+            setPreviewImageHome('');
+            setSelectedFileHome(null);
         }
       };
 
@@ -108,10 +113,9 @@ function App() {
             setPreviewImageModal(null);
             setValueModal('');
         }
-        setSelectedFile(null);
-        setPreviewImage(null);
-        setValue('');
-        
+        setSelectedFileHome(null);
+        setPreviewImageHome(null);
+        setValueHome('');
     }
 
     const handleTweetMenuOptionClick = async (option: string, tweetId: string, tweet: any) => {
@@ -128,6 +132,7 @@ function App() {
             console.log(image);
         } 
     };
+    //// Temp functions - end ///
 
     // Index page
     if (!ctx?.isLoggedIn) {
@@ -191,9 +196,9 @@ function App() {
                                         onDeleteTweet={onDeleteTweet}
                                         onAddTweet={onAddTweet}
                                         onEditTweet={onEditTweet}
-                                        selectedFile={selectedFile}
-                                        previewImage={previewImage}                                    
-                                        value={value}
+                                        selectedFile={selectedFileHome}
+                                        previewImage={previewImageHome}                                    
+                                        value={valueHome}
                                         handleTextAreaOnChange={handleTextAreaOnChange}
                                         handleCanselPreviewImage={handleCanselPreviewImage}
                                         handleImageUpload={handleImageUpload} 
@@ -218,7 +223,8 @@ function App() {
                                 />
                                 <Route path="/following/:id" element={<Following />} />
                                 <Route path="/followers/:id" element={<Follower />} />
-                                <Route path="/tweet/:id" element={<TweetPage />} />
+                                <Route path="/tweet/image/:id" element={ <TweetPage />} />
+                                <Route path="/tweet/:id" element={ <TweetPageNoImage />} />
                                 <Route
                                     path="*"
                                     element={<Navigate to="/" replace={true} />}

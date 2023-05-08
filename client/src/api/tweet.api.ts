@@ -19,6 +19,21 @@ export const getAllTweets = async () => {
     }
 };
 
+export const getTweetById = async (tweetId: string) => {
+    try {
+        const res = await http.get(`/tweets/tweet/${tweetId}`, GETREQUESTOPTIONS());
+        return res.data;
+    } catch (error: any) {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('context');
+            window.location.href = '/';
+        } else {
+            console.error(error);
+            throw error;
+        }
+    }
+};
+
 export const getUserTweets = async (userId: string) => {
     try {
         const res = await http.get(

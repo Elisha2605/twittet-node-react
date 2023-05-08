@@ -2,7 +2,7 @@ import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faArrowUpFromBracket, faBookmark, faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons'
 import { faChartSimple, faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import styles from "./TweetFooter.module.css";
 import PopUpMenu from "./PopUpMenu";
 import { shareIcon, shareOptions } from "../../data/menuOptions";
@@ -13,19 +13,23 @@ interface TweetFooterProps {
     tweet?: any;
     comments: string;
     reposts: string;
-    likes: string;
+    likesCount: string;
     views: string;
     onClick?: (tweet: string) => void;
     // onClickShare?: ()
+    isTweetReply?: boolean;
+    isLiked?: boolean;
 }
 
 const TweetFooter: FC<TweetFooterProps> = ({ 
     tweet,
     comments,
     reposts,
-    likes,
+    likesCount,
     views,
     onClick,
+    isTweetReply,
+    isLiked
 }) => {
 
     const location = useLocation();
@@ -41,34 +45,35 @@ const TweetFooter: FC<TweetFooterProps> = ({
         }
     }
 
+   
     return (
         <React.Fragment>
-            <div className={styles.container}>
-                <div className={styles.item}>
-                    <FontAwesomeIcon icon={faComment} />
+            <div className={`${styles.container} ${isTweetReply ? styles.containerOnTweetReply : ''}`}>
+                <div className={`${styles.item} ${styles.hoverBlue} ${isTweetReply ? styles.itemOnTweetReply   : ''}`}>
+                    <FontAwesomeIcon icon={faComment} className={styles.faComment} />
                     <p>{comments}</p>
                 </div>
-                <div className={styles.item}>
-                    <FontAwesomeIcon icon={faRepeat} />
+                <div className={`${styles.item} ${styles.hoverGreen} ${isTweetReply ? styles.itemOnTweetReply : ''}`}>
+                    <FontAwesomeIcon icon={faRepeat} className={styles.faRepeat} />
                     <p>{reposts}</p>
                 </div>
-                {likes ? (
-                    <div className={`${styles.item} ${styles.liked}`} onClick={handleLike} >
-                        <FontAwesomeIcon icon={faHeartSolid} color={'#F91980'} />
-                        <p>{likes}</p>
+                {isLiked ? (
+                    <div className={`${styles.item} ${styles.liked} ${styles.hoverPink} ${isTweetReply ? styles.itemOnTweetReply : ''}`} onClick={handleLike} >
+                        <FontAwesomeIcon icon={faHeartSolid} color={'var(--color-pink)'} className={styles.faHeart} />
+                        <p>{likesCount}</p>
                     </div>
                 ): (
-                    <div className={styles.item} onClick={handleLike} >
-                        <FontAwesomeIcon icon={faHeart} />
-                        <p>{likes}</p>
+                    <div className={`${styles.item} ${styles.hoverPink} ${isTweetReply ? styles.itemOnTweetReply : ''}`} onClick={handleLike} >
+                        <FontAwesomeIcon icon={faHeart} className={styles.faHeart} />
+                        <p>{likesCount}</p>
                     </div>  
                 )}
                 
-                <div className={styles.item}>
-                    <FontAwesomeIcon icon={faChartSimple} />
+                <div className={`${styles.item} ${styles.hoverBlue} ${isTweetReply ? styles.itemOnTweetReply : ''}`}>
+                    <FontAwesomeIcon icon={faChartSimple} className={styles.faChartSimple}  />
                     <p>{views}</p>
                 </div>
-                    <div className={styles.item}>
+                    <div className={`${styles.item} ${isTweetReply ? styles.itemOnTweetReply : ''}`}>
                         {location.pathname === '/bookmarks' ? (
                             <PopUpMenu
                                 value={tweet}
@@ -77,7 +82,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
                                 icons={{'Remove tweet': <FontAwesomeIcon icon={faBookmark} />}}
                                 onClick={onClickShare}
                             > 
-                                <FontAwesomeIcon icon={faArrowUpFromBracket} />
+                                <FontAwesomeIcon icon={faArrowUpFromBracket} className={`${styles.faArrowUpFromBracket} ${styles.hoverBlue}`} />
                             </PopUpMenu>
                         ): (
                             <PopUpMenu
@@ -87,7 +92,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
                                 icons={shareIcon}
                                 onClick={onClickShare}
                             > 
-                                <FontAwesomeIcon icon={faArrowUpFromBracket} />
+                                <FontAwesomeIcon icon={faArrowUpFromBracket} className={`${styles.faArrowUpFromBracket} ${styles.hoverBlue}`} />
                             </PopUpMenu>
                         )}
                     </div>

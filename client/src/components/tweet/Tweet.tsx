@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { FC, useEffect, useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import TweetFooter from '../ui/TweetFooter';
 import UserInfo from '../ui/UserInfo';
 import styles from './Tweet.module.css';
@@ -12,18 +12,19 @@ import {
     tweetMenuOptions, 
     tweetMenuIcons, 
 } from '../../data/menuOptions';
-import PopUpMenu from '../ui/PopUpMenu';
 
 interface TweetProps {
     tweet?: any;
     onClickMenu: Function;
     onClickLike: (tweet: any) => void;
+    isLiked?: boolean;
 }
 
 const Tweet: FC<TweetProps> = ({
     tweet,
     onClickMenu,
     onClickLike,
+    isLiked,
 }) => {
     
     const tweetId = tweet?._id;
@@ -37,7 +38,16 @@ const Tweet: FC<TweetProps> = ({
     const isVerfied = tweet?.user?.isVerified;
     const avatar = tweet?.user?.avatar;
 
+    let navigate = useNavigate();
     
+    const goToTweetPage = () => {
+        if (tweet?.image) {
+            navigate(`/tweet/image/${tweet._id}`)
+        } else {
+            navigate(`/tweet/${tweet._id}`)
+        }
+    }
+
     return (
         <React.Fragment>
             <div className={`${styles.container}`} key={tweetId}>
@@ -55,8 +65,7 @@ const Tweet: FC<TweetProps> = ({
                     icons={tweetMenuIcons}
                     onClickOption={onClickMenu}
                 />
-                <NavLink to={`/tweet/${tweet._id}`}>
-                    <div className={styles.body} key={tweet._id}>
+                    <div className={styles.body} key={tweet._id} onClick={goToTweetPage}>
                         <p className={styles.tweet}>{tweetText}</p>
                         {tweetImage && (
                             <div className={styles.image}>
@@ -78,14 +87,14 @@ const Tweet: FC<TweetProps> = ({
                             <span className={styles.icon}><AtIcon small={true} /></span> <span>You can reply to this conversation</span>
                         </div>
                     )}
-                </NavLink>
                     <TweetFooter
                         tweet={tweet}
                         comments={'164'}
                         reposts={'923'}
-                        likes={tweet.totalLikes > 0 ? tweet.totalLikes: '' }
+                        likesCount={tweet.totalLikes > 0 ? tweet.totalLikes: '' }
                         views={'466'}
                         onClick={() => onClickLike(tweet)}
+                        isLiked={isLiked}
                     />
             </div>
         </React.Fragment>
