@@ -27,6 +27,7 @@ import Avatar, { Size } from '../../components/ui/Avatar';
 import AuthContext from '../../context/user.context';
 import FormReply from '../../components/form/FormReply';
 import TweetReply from '../../components/tweet/TweetReply';
+import { createTweetReply, getAllTweetReplies } from '../../api/reply.api';
 
 interface TweetPageProps {}
 
@@ -41,7 +42,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
 
-    const [userTweets, setUserTweets] = useState<any[]>([]);
+    const [tweetReplies, setTweetReplies] = useState<any[]>([]);
 
     const previousPath = localStorage.getItem('active-nav');
     const goBack = () => {
@@ -54,18 +55,18 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
 
     // get Auth user
     const ctx = useContext(AuthContext);
-    const getAuthUserAndTweets = async () => {
+    const getTweetReplies = async () => {
         const { user } = ctx.getUserContext();
         setAuthUser(user);
 
         if (user) {
-            const res = await getUserTweets(user._id);
+            const res = await getAllTweetReplies(id!);
             const { tweets } = res;
-            setUserTweets(tweets);
+            setTweetReplies(tweets);
         }
     };
     useEffect(() => {
-        getAuthUserAndTweets();
+        getTweetReplies();
     }, [id]);
 
     // get Tweet by ID
@@ -140,8 +141,8 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
 
         console.log(text);
         console.log(selectedFile);
-        // const res = await createTweet(text, selectedFile, tweetAudience, tweetReply);
-        // const { tweet }: any = res;
+        const res = await createTweetReply(id!, text!, selectedFile);
+        const { tweet }: any = res;
         const newTweet = {
             _id: tweet._id,
             text: tweet.text,
@@ -160,7 +161,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
             reposts: [],
             likes: [],
         };
-        // setTweets((prevTweets) => [newTweet, ...prevTweets]);
+        setTweetReplies((prevTweets) => [newTweet, ...prevTweets]);
         clearTweetForm();
     };
 
@@ -323,7 +324,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                             </div>
                         </div>
                     </div>
-                    {userTweets.map((tweet: any) => (
+                    {tweetReplies.map((tweet: any) => (
                         <div
                             className={styles.asideReplySection}
                             key={tweet?._id}
