@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import TweetFooter from '../ui/TweetFooter';
 import UserInfo from '../ui/UserInfo';
@@ -17,12 +17,14 @@ interface TweetProps {
     tweet?: any;
     onClickMenu: Function;
     onClickLike: (tweet: any) => void;
+    isLiked?: boolean;
 }
 
 const Tweet: FC<TweetProps> = ({
     tweet,
     onClickMenu,
     onClickLike,
+    isLiked,
 }) => {
     
     const tweetId = tweet?._id;
@@ -45,7 +47,7 @@ const Tweet: FC<TweetProps> = ({
             navigate(`/tweet/${tweet._id}`)
         }
     }
-    
+
     return (
         <React.Fragment>
             <div className={`${styles.container}`} key={tweetId}>
@@ -63,7 +65,6 @@ const Tweet: FC<TweetProps> = ({
                     icons={tweetMenuIcons}
                     onClickOption={onClickMenu}
                 />
-                {/* <NavLink to={tweet?.image ? `/tweet/image/${tweet._id}` : `/tweet/${tweet._id}`}> */}
                     <div className={styles.body} key={tweet._id} onClick={goToTweetPage}>
                         <p className={styles.tweet}>{tweetText}</p>
                         {tweetImage && (
@@ -86,14 +87,14 @@ const Tweet: FC<TweetProps> = ({
                             <span className={styles.icon}><AtIcon small={true} /></span> <span>You can reply to this conversation</span>
                         </div>
                     )}
-                {/* </NavLink> */}
                     <TweetFooter
                         tweet={tweet}
                         comments={'164'}
                         reposts={'923'}
-                        likes={tweet.totalLikes > 0 ? tweet.totalLikes: '' }
+                        likesCount={tweet.totalLikes > 0 ? tweet.totalLikes: '' }
                         views={'466'}
                         onClick={() => onClickLike(tweet)}
+                        isLiked={isLiked}
                     />
             </div>
         </React.Fragment>

@@ -45,6 +45,12 @@ export const getUserSavedTweets = async (
                 },
             },
             {
+                $unwind: {
+                    path: '$likes',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
                 $project: {
                     _id: '$tweet._id',
                     user: {
@@ -62,8 +68,17 @@ export const getUserSavedTweets = async (
                     reply: '$tweet.reply',
                     createdAt: '$createdAt',
                     updatedAt: '$updatedAt',
-                    likes: {
-                        $ifNull: [{ $size: '$likes.likes' }, 0],
+                    likes: '$likes.likes',
+                    totalLikes: {
+                        $cond: {
+                            if: {
+                                $isArray: '$likes.likes',
+                            },
+                            then: {
+                                $size: '$likes.likes',
+                            },
+                            else: 0,
+                        },
                     },
                 },
             },

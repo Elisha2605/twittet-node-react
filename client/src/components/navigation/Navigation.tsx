@@ -1,11 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { faHashtag, faHome } from '@fortawesome/free-solid-svg-icons';
+import { faHashtag, faHome, faHomeUser } from '@fortawesome/free-solid-svg-icons';
 import {
     faBell,
     faBookmark,
     faEnvelope,
     faUser,
 } from '@fortawesome/free-regular-svg-icons';
+import {
+    faBell as faBellSolid,
+    faBookmark as faBookmarkSolid,
+    faEnvelope as faEnvelopeSolid,
+    faUser as faUserSolid,
+} from '@fortawesome/free-solid-svg-icons';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import styles from './Navigation.module.css';
 import NavigationItem from './NavigationItem';
@@ -68,7 +74,12 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                             activeNav === 'home' ? styles.active : ''
                         }
                     >
-                        <NavigationItem icon={faHome} label={'Home'} path="/" />
+                        <NavigationItem 
+                            icon={faHomeUser} 
+                            label={'Home'} 
+                            path="/" 
+                            className={styles.home}
+                        />
                     </div>
 
                     <div
@@ -95,7 +106,7 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                         }
                     >
                         <NavigationItem
-                            icon={faBell}
+                            icon={activeNav === 'notification' ?  faBellSolid : faBell}
                             label={'Notifications'}
                             path="/notification"
                         />
@@ -110,7 +121,7 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                         }
                     >
                         <NavigationItem
-                            icon={faEnvelope}
+                            icon={activeNav === 'message' ? faEnvelopeSolid : faEnvelope}
                             label={'Message'}
                             path="/message"
                         />
@@ -125,7 +136,7 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                         }
                     >
                         <NavigationItem
-                            icon={faBookmark}
+                            icon={activeNav === 'bookmarks' ? faBookmarkSolid : faBookmark}
                             label={'Bookmarks'}
                             path="/bookmarks"
                             className={styles.bookmarks}
@@ -141,7 +152,7 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                         }
                     >
                         <NavigationItem
-                            icon={faUser}
+                            icon={activeNav === 'profile' ? faUserSolid : faUser}
                             label={'Profile'}
                             path={`/profile/${authUser?._id}`}
                         />

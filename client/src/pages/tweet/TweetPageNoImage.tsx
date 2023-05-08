@@ -17,8 +17,16 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {  faBookmark, faComment, faHeart } from '@fortawesome/free-regular-svg-icons';
-import { faArrowUpFromBracket,  faRepeat } from '@fortawesome/free-solid-svg-icons';
+import {
+    faBookmark,
+    faComment,
+    faHeart,
+} from '@fortawesome/free-regular-svg-icons';
+import {
+    faArrowUpFromBracket,
+    faRepeat,
+} from '@fortawesome/free-solid-svg-icons';
+import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
 import UserInfo from '../../components/ui/UserInfo';
 import { getTweetById, getUserTweets } from '../../api/tweet.api';
 import { tweetMenuIcons, tweetMenuOptions } from '../../data/menuOptions';
@@ -44,56 +52,54 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
 
     const [userTweets, setUserTweets] = useState<any[]>([]);
 
-
     const navigate = useNavigate();
 
-    
     // get Auth user
     const ctx = useContext(AuthContext);
     useEffect(() => {
         const getAuthUserAndTweets = async () => {
-          const { user } = ctx.getUserContext();
-          setAuthUser(user);
-          
-          if (user) {
-            const res = await getUserTweets(user._id);
-            const { tweets } = res;
-            setUserTweets(tweets);
-          }
+            const { user } = ctx.getUserContext();
+            setAuthUser(user);
+
+            if (user) {
+                const res = await getUserTweets(user._id);
+                const { tweets } = res;
+                setUserTweets(tweets);
+            }
         };
-        
+
         getAuthUserAndTweets();
     }, []);
 
-     // get Tweet by ID
-     useEffect(() => {
+    // get Tweet by ID
+    useEffect(() => {
         const getTweet = async () => {
             const { tweet } = await getTweetById(id!);
             setTweet(tweet[0]);
         };
         getTweet();
     }, [id]);
-    
-    // On like tweet
-    const onClickLike = async () => {
-        const res: any = await likeTweet(tweet?._id);
-        const { likedTweet } = res;
-        setLikedTweet(likedTweet);
-    };
 
-    const handleTweetMenuOptionClick = async (option: string, tweetId: string, tweet: any) => {
+    const handleTweetMenuOptionClick = async (
+        option: string,
+        tweetId: string,
+        tweet: any
+    ) => {
         if (option === TWEET_MENU.delete) {
-           console.log('hello');
+            console.log('hello');
         } else if (option === TWEET_MENU.edit) {
-          
-        } 
+        }
     };
 
-    const handleTextAreaOnChangeReply = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const handleTextAreaOnChangeReply = (
+        e: React.ChangeEvent<HTMLTextAreaElement>
+    ) => {
         const val = e.target?.value;
         setValue(val);
-    }
-    const handleImageUploadRepy = (event: React.ChangeEvent<HTMLInputElement>) => {
+    };
+    const handleImageUploadRepy = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
         const file = event.target.files && event.target.files[0];
         if (file) {
             setSelectedFile(file);
@@ -101,7 +107,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
             setPreviewImage(imageUrl);
         }
     };
-    
+
     const handleCanselPreviewImage = () => {
         setPreviewImage('');
         setSelectedFile(null);
@@ -111,7 +117,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
         setValue('');
         setPreviewImage('');
         setSelectedFile(null);
-    }
+    };
 
     const handleSubmitTweet = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -119,8 +125,8 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
             ? tweetTextRef.current?.value
             : null;
 
-            console.log(text);
-            console.log(selectedFile);
+        console.log(text);
+        console.log(selectedFile);
         // const res = await createTweet(text, selectedFile, tweetAudience, tweetReply);
         // const { tweet }: any = res;
         const newTweet = {
@@ -128,7 +134,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
             text: tweet.text,
             user: {
                 _id: authUser._id,
-                avatar: authUser.avatar,   
+                avatar: authUser.avatar,
                 name: authUser.name,
                 username: authUser.username,
                 isVerified: authUser.isVerified,
@@ -145,6 +151,22 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
         clearTweetForm();
     };
 
+    // On like tweet
+    const onClickLike = async () => {
+        const res: any = await likeTweet(tweet?._id);
+        const { likedTweet } = res;
+        setLikedTweet(likedTweet);
+    };
+
+    // Update Likes state
+    useEffect(() => {
+        setTweet((prev: any) => ({
+            ...prev,
+            totalLikes: likedTweet?.likesCount,
+            likes: likedTweet?.likes,
+        }));
+    }, [likedTweet]);
+
     return (
         <React.Fragment>
             <div className={Layout.mainSectionContainer}>
@@ -158,7 +180,10 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                 }}
                                 className={styles.arrowLeftIcon}
                             />
-                            <HeaderTitle title={'Tweet'} className={styles.title} />
+                            <HeaderTitle
+                                title={'Tweet'}
+                                className={styles.title}
+                            />
                         </div>
                     </Header>
                     {/* *** HEADER - END *** */}
@@ -166,69 +191,146 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                     <div className={styles.main}>
                         {/* *** MAIN - START *** */}
                         <div className={styles.aside}>
-                    <div className={styles.asideUpperSectionWrapper}>
-                        <UserInfo
-                            userId={tweet?.user?._id}
-                            tweet={tweet}
-                            avatar={tweet?.user?.avatar ? `${IMAGE_AVATAR_BASE_URL}/${tweet?.user?.avatar}` : undefined}
-                            name={tweet?.user?.name}
-                            username={tweet?.user?.username}
-                            isVerified={tweet?.user?.isVerified}
-                            className={styles.userInfo}
-                            options={tweetMenuOptions}
-                            icons={tweetMenuIcons}
-                            onClickOption={handleTweetMenuOptionClick}
-                        />
-                        <div className={styles.asideContent}>
-                            <div className={styles.text}>
-                                {tweet?.text}
-                            </div>
-                            <div className={styles.info}>
-                                <span>9:15 PM</span> · <span>May 5, 2023</span> · <p><span>1.2M </span>Views</p>  
-                            </div>
-                            <div className={styles.stats}>
-                                <p><span>332</span>Retweets</p> <p><span>61</span>Quotes</p> <p><span>{tweet?.totalLikes > 0 ? tweet?.totalLikes : ''}</span>Likes</p> <p><span>332</span>Bookmarks</p>
-                            </div>
-                            <div className={styles.icons}>
-                                <FontAwesomeIcon icon={faComment} className={styles.faComment} />
-                                <FontAwesomeIcon icon={faRepeat} className={styles.faRepeat} />
-                                <FontAwesomeIcon icon={faHeart} className={styles.faHeart} />
-                                <FontAwesomeIcon icon={faBookmark} className={styles.faBookmark} />
-                                <FontAwesomeIcon icon={faArrowUpFromBracket} className={styles.faArrowUpFromBracket} />
-                            </div>
+                            <div className={styles.asideUpperSectionWrapper}>
+                                <UserInfo
+                                    userId={tweet?.user?._id}
+                                    tweet={tweet}
+                                    avatar={
+                                        tweet?.user?.avatar
+                                            ? `${IMAGE_AVATAR_BASE_URL}/${tweet?.user?.avatar}`
+                                            : undefined
+                                    }
+                                    name={tweet?.user?.name}
+                                    username={tweet?.user?.username}
+                                    isVerified={tweet?.user?.isVerified}
+                                    className={styles.userInfo}
+                                    options={tweetMenuOptions}
+                                    icons={tweetMenuIcons}
+                                    onClickOption={handleTweetMenuOptionClick}
+                                />
+                                <div className={styles.asideContent}>
+                                    <div className={styles.text}>
+                                        {tweet?.text}
+                                    </div>
+                                    <div className={styles.info}>
+                                        <span>9:15 PM</span> ·{' '}
+                                        <span>May 5, 2023</span> ·{' '}
+                                        <p>
+                                            <span>1.2M </span>Views
+                                        </p>
+                                    </div>
+                                    <div className={styles.stats}>
+                                        <p>
+                                            <span>332</span>Retweets
+                                        </p>{' '}
+                                        <p>
+                                            <span>61</span>Quotes
+                                        </p>{' '}
+                                        {tweet?.totalLikes > 0 && (
+                                            <p>
+                                                <span>
+                                                    {tweet?.totalLikes > 0
+                                                        ? tweet?.totalLikes
+                                                        : ''}
+                                                </span>
+                                                Likes
+                                            </p>
+                                        )}{' '}
+                                        <p>
+                                            <span>332</span>Bookmarks
+                                        </p>
+                                    </div>
+                                    <div className={styles.icons}>
+                                        <div>
+                                            <FontAwesomeIcon
+                                                icon={faComment}
+                                                className={styles.faComment}
+                                            />
+                                        </div>
+                                        <FontAwesomeIcon
+                                            icon={faRepeat}
+                                            className={styles.faRepeat}
+                                        />
+                                        <div onClick={onClickLike}>
+                                            <FontAwesomeIcon
+                                                icon={
+                                                    tweet?.likes?.includes(
+                                                        authUser?._id
+                                                    )
+                                                        ? faHeartSolid
+                                                        : faHeart
+                                                }
+                                                className={styles.faHeart}
+                                                color={
+                                                    tweet?.likes?.includes(
+                                                        authUser?._id
+                                                    )
+                                                        ? 'var(--color-pink)'
+                                                        : ''
+                                                }
+                                            />
+                                        </div>
+                                        <div>
+                                            <FontAwesomeIcon
+                                                icon={faBookmark}
+                                                className={styles.faBookmark}
+                                            />
+                                        </div>
+                                        <div>
+                                            <FontAwesomeIcon
+                                                icon={faArrowUpFromBracket}
+                                                className={
+                                                    styles.faArrowUpFromBracket
+                                                }
+                                            />
+                                        </div>
+                                    </div>
 
-                            <div className={styles.formSection}>
-                                <Avatar
-                                    path={authUser?.avatar ? `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}` : undefined}
-                                    size={Size.small}
-                                    className={''}
-                                />
-                                <FormReply
-                                    value={value}
-                                    tweetTextRef={tweetTextRef}
-                                    imagePreview={previewImage}
-                                    isFocused={isFormFocused}                           
-                                    setIsFocused={setIsFormFocused}
-                                    onSubmit={handleSubmitTweet}
-                                    onImageUpload={handleImageUploadRepy}
-                                    onCancelImagePreview={handleCanselPreviewImage}
-                                    onChageImage={handleTextAreaOnChangeReply} 
-                                />
+                                    <div className={styles.formSection}>
+                                        <Avatar
+                                            path={
+                                                authUser?.avatar
+                                                    ? `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`
+                                                    : undefined
+                                            }
+                                            size={Size.small}
+                                            className={''}
+                                        />
+                                        <FormReply
+                                            value={value}
+                                            tweetTextRef={tweetTextRef}
+                                            imagePreview={previewImage}
+                                            isFocused={isFormFocused}
+                                            setIsFocused={setIsFormFocused}
+                                            onSubmit={handleSubmitTweet}
+                                            onImageUpload={
+                                                handleImageUploadRepy
+                                            }
+                                            onCancelImagePreview={
+                                                handleCanselPreviewImage
+                                            }
+                                            onChageImage={
+                                                handleTextAreaOnChangeReply
+                                            }
+                                        />
+                                    </div>
+                                </div>
                             </div>
+                            {userTweets.map((tweet: any) => (
+                                <div
+                                    className={styles.asideReplySection}
+                                    key={tweet?._id}
+                                >
+                                    <TweetReply
+                                        key={tweet._id}
+                                        tweet={tweet}
+                                        onClickMenu={() => {}}
+                                        onClickLike={onClickLike}
+                                        classNameNoImage={styles.image}
+                                    />
+                                </div>
+                            ))}
                         </div>
-                    </div>
-                    {userTweets.map((tweet: any) => (
-                        <div className={styles.asideReplySection} key={tweet?._id}>
-                            <TweetReply
-                                key={tweet._id}
-                                tweet={tweet}
-                                onClickMenu={() => {}}
-                                onClickLike={onClickLike}
-                                classNameNoImage={styles.image}
-                            />
-                        </div>
-                    ))}
-                </div>
                         {/* *** MAIN - END *** */}
                     </div>
                 </div>

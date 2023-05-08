@@ -143,7 +143,7 @@ const EditTweetModal: FC<EditTweetProp> = ({
                         className={''}
                     />
                     <FormTweet
-                        value={value}
+                        value={value ? value : ''}
                         tweetTextRef={tweetTextRef}
                         imagePreview={previewImage}
                         isFocused={true}

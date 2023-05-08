@@ -21,6 +21,7 @@ import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../consta
 import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
 import AuthContext from '../../context/user.context';
 import { likeTweet } from '../../api/like.api';
+import { useNavigate } from 'react-router-dom';
 
 interface HomeProps {
     value: string;
@@ -113,10 +114,10 @@ const Home: React.FC<HomeProps> = ({
 
     useEffect(() => {
         const handleEditTweetFromModal = () => {
-            if (authUser?.avatar) {
-                setTweets((prevTweets) => 
-                    prevTweets.map((tweet) => 
-                        tweet._id === onEditTweet._id
+            if (authUser) {
+                setTweets((prevTweets: any) => 
+                    prevTweets.map((tweet: any) => 
+                        tweet?._id === onEditTweet?._id
                             ? { ...tweet, ...onEditTweet }
                             : tweet
                     )
@@ -160,6 +161,12 @@ const Home: React.FC<HomeProps> = ({
         }
     }
 
+    let navigate = useNavigate();
+    const previousPath = localStorage.getItem('active-nav');
+    const goBack = () => {
+        navigate(`/${previousPath}`)
+    }
+
     const handleSubmitTweet = async (e: React.FormEvent) => {
         e.preventDefault();
         const text = tweetTextRef.current?.value
@@ -185,6 +192,7 @@ const Home: React.FC<HomeProps> = ({
             reposts: [],
             likes: [],
         };
+        goBack();
         setTweets((prevTweets) => [newTweet, ...prevTweets]);
         setIsFormFocused(false);
         setTweetAudience(TWEET_AUDIENCE.everyone)
@@ -192,30 +200,38 @@ const Home: React.FC<HomeProps> = ({
         clearTweetForm();
     };
 
+    useEffect(() => {
+        setTweets((prevTweets: any) =>
+            prevTweets.map((tweet: any) =>
+                tweet?._id === likedTweet?.tweet
+                    ? {
+                          ...tweet,
+                          totalLikes: likedTweet?.likesCount,
+                          likes: likedTweet?.likes,
+                      }
+                    : tweet
+            )
+        );
+        setFollowingTweets((prevTweets: any) =>
+            prevTweets.map((tweet: any) =>
+                tweet?._id === likedTweet?.tweet
+                    ? {
+                          ...tweet,
+                          totalLikes: likedTweet?.likesCount,
+                          likes: likedTweet?.likes,
+                      }
+                    : tweet
+            )
+        );
+    }, [likedTweet]);
+
     const onClickLike = async (tweet: any) => {
-        const res: any = await likeTweet(tweet._id);
+        const res: any = await likeTweet(tweet._id);;
         const { likedTweet } = res;
+        console.log(likedTweet);
         setLikedTweet(likedTweet)
     }
-
-
-    useEffect(() => {
-            setTweets((prevTweets: any) => 
-                prevTweets.map((tweet: any) =>
-                    tweet._id === likedTweet.tweet
-                        ? { ...tweet, totalLikes: likedTweet.likesCount}
-                        : tweet
-                )
-            )
-            setFollowingTweets((prevTweets: any) => 
-                prevTweets.map((tweet: any) =>
-                    tweet._id === likedTweet.tweet
-                        ? { ...tweet, totalLikes: likedTweet.likesCount}
-                        : tweet
-                )
-            )
-    }, [likedTweet])
-
+    
     return (
         <React.Fragment>
             <div className={Layout.mainSectionContainer}>
@@ -264,6 +280,7 @@ const Home: React.FC<HomeProps> = ({
                                     tweet={tweet}
                                     onClickMenu={onClickTweetMenu}
                                     onClickLike={onClickLike}
+                                    isLiked={tweet?.likes?.includes(authUser?._id)}
                                 />
                             ))}
                         </div>
@@ -276,6 +293,7 @@ const Home: React.FC<HomeProps> = ({
                                     tweet={tweet}
                                     onClickMenu={onClickTweetMenu!}
                                     onClickLike={onClickLike}
+                                    isLiked={tweet?.likes?.includes(authUser?._id)}
                                 />
                             ))}
                         </div>

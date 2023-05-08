@@ -173,3 +173,7 @@
     transition: 0.1s ease-in;
     cursor: pointer;
 }
+
+.liked svg {
+    color: var(--color-pink);
+}
