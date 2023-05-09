@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { faHashtag, faHome, faHomeUser } from '@fortawesome/free-solid-svg-icons';
+import { faHashtag, faHomeUser } from '@fortawesome/free-solid-svg-icons';
 import {
     faBell,
     faBookmark,
@@ -16,14 +16,17 @@ import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import styles from './Navigation.module.css';
 import NavigationItem from './NavigationItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import Button, { ButtonSize, ButtonType } from '../ui/Button';
 import NavigationUserInfo from './NavigationUserInfo';
 import { logout } from '../../api/auth.api';
-import { navUseMenuIcons, navUserMenuOptions } from '../../data/menuOptions';
-import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
+import { moreIcons, moreOptions, navUseMenuIcons, navUserMenuOptions, tweetAudienceMenuIcons, tweetAudienceMenuOptions } from '../../data/menuOptions';
+import { IMAGE_AVATAR_BASE_URL, MORE_NAV_OPTION, TWEET_AUDIENCE } from '../../constants/common.constants';
 import { ModalContext } from '../../context/modal.context';
 import AuthContext from '../../context/user.context';
+import FaCircleEllipsis from '../../assets/faCircleEllipsis.svg';
+import PopUpMenu from '../ui/PopUpMenu';
+import { useNavigate } from 'react-router-dom';
+
 
 interface NavigationProps {}
 
@@ -32,6 +35,8 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
     const [activeNav, setActiveNav] = useState(
         localStorage.getItem('active-nav') || 'home'
     );
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         localStorage.setItem('active-nav', activeNav);
@@ -54,6 +59,21 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
             await logout();
         }
     };
+
+    const handleMoreOptions = (option: string) => {
+        if (option === MORE_NAV_OPTION.connect) {
+            console.log(option);
+        }
+        if (option === MORE_NAV_OPTION.followRequests) {
+            navigate('/follower-requests')
+        }
+        if (option === MORE_NAV_OPTION.settingsAndPrivacy) {
+            console.log(option);
+        }
+        if (option === MORE_NAV_OPTION.display) {
+            console.log(option);
+        }
+    }
 
     return (
         <React.Fragment>
@@ -157,23 +177,19 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                             path={`/profile/${authUser?._id}`}
                         />
                     </div>
-
-                    <div
-                        onClick={() => {
-                            setActiveNav('#');
-                        }}
-                        className={
-                            activeNav === '#' ? styles.active : ''
-                        }
+                    <PopUpMenu 
+                        options={moreOptions}
+                        icons={moreIcons}
+                        isMenuIcon={false}
+                        isDisable={false}
+                        onClick={handleMoreOptions} 
+                        className={styles.moreOptions}
                     >
-                        <NavigationItem
-                            icon={faEllipsisH}
-                            label={'More'}
-                            path="#"
-                            className={styles.ellipsis}
-                        />
-                    </div>
-                    
+                        <div className={styles.faCircleEllipsis}>
+                            <img src={FaCircleEllipsis} alt="" />
+                            <h2>More</h2>
+                        </div>
+                    </PopUpMenu>
                 </div>
                 <Button
                     value={'Tweet'}

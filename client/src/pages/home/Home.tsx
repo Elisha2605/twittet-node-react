@@ -135,27 +135,27 @@ const Home: React.FC<HomeProps> = ({
             );
     }, [onDeleteTweet])
 
-    const handleTweetAudienceOptions = (options: string) => {
-        if (options === TWEET_AUDIENCE.everyone) {
+    const handleTweetAudienceOptions = (option: string) => {
+        if (option === TWEET_AUDIENCE.everyone) {
             setTweetAudience(TWEET_AUDIENCE.everyone);
             setTweetReply(TWEET_REPLY.everyone)
         }
-        if (options === TWEET_AUDIENCE.twitterCircle) {
+        if (option === TWEET_AUDIENCE.twitterCircle) {
             setTweetAudience(TWEET_AUDIENCE.twitterCircle);
             setTweetReply(TWEET_REPLY.onlyTwitterCircle)
         }
     }
 
-    const handleTweetReyplyOptions = (options: string) => {
-        if (options === TWEET_REPLY.everyone) {
+    const handleTweetReyplyOptions = (option: string) => {
+        if (option === TWEET_REPLY.everyone) {
             console.log(TWEET_REPLY.everyone);
             setTweetReply(TWEET_REPLY.everyone);
         }
-        if (options === TWEET_REPLY.peopleYouFollow) {
+        if (option === TWEET_REPLY.peopleYouFollow) {
             console.log(TWEET_REPLY.peopleYouFollow);
             setTweetReply(TWEET_REPLY.peopleYouFollow);
         }
-        if (options === TWEET_REPLY.onlyPeopleYouMention) {
+        if (option === TWEET_REPLY.onlyPeopleYouMention) {
             console.log(TWEET_REPLY.onlyPeopleYouMention);
             setTweetReply(TWEET_REPLY.onlyPeopleYouMention);
         }

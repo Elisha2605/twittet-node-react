@@ -42,9 +42,7 @@ const FollowButton: FC<FollowButtonProps> = ({
     onClick,
 }) => {
     const [authUser, setAuthUser] = useState<any>(null);
-    const [followings, setFollowings] = useState<any[]>([]);
     const [isFollowing, setIsFollowing] = useState<boolean>();
-    const [isloading, setIsLoading] = useState<boolean>(false);
 
     let allStyles = styles.primary;
 
@@ -78,7 +76,6 @@ const FollowButton: FC<FollowButtonProps> = ({
     }, []);
 
     const getAuthUserFollowStatus = async () => {
-        setIsLoading(true);
         const { followings } = await getAuthUserFollows(authUser?._id!);
         if (
             followings &&
@@ -86,8 +83,6 @@ const FollowButton: FC<FollowButtonProps> = ({
         ) {
             setIsFollowing(true);
         }
-        setFollowings(followings);
-        setIsLoading(false);
     };
 
     useEffect(() => {
@@ -108,22 +103,19 @@ const FollowButton: FC<FollowButtonProps> = ({
 
     return (
         <React.Fragment>
-            {!isloading && (
-                <button
-                    className={`${className} ${allStyles} ${styles[type!]} ${
-                        loading ? styles.loading : ''
-                    } ${isDisabled && styles.disabled}
-                    ${isFollowing ? styles.followBtn : ''}
-                    `}
-                    onClick={(e: any) => handleFollowRequest(e)}
-                    onMouseEnter={onMouseEnter}
-                    onMouseLeave={onMouseLeave}
-                    disabled={isDisabled}
-                >
-                    {isFollowing ? 'Following' : 'Follow'}
-                </button>
-            )}
-            {isloading && <LoadingRing size={'small'} />}
+            <button
+                className={`${className} ${allStyles} ${styles[type!]} ${
+                    loading ? styles.loading : ''
+                } ${isDisabled && styles.disabled}
+                ${isFollowing ? styles.followBtn : ''}
+                `}
+                onClick={(e: any) => handleFollowRequest(e)}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+                disabled={isDisabled}
+            >
+                {isFollowing ? 'Following' : 'Follow'}
+            </button>
         </React.Fragment>
     );
 };

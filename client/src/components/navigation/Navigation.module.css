@@ -25,6 +25,16 @@
     font-size: 23px;
 }
 
+.faCircleEllipsis {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-left: 0.8rem;
+    font-size: 22px !important;
+    cursor: pointer;
+}
+
 .active h2 {
     font-weight: var(--font-weight-800);
 }
+

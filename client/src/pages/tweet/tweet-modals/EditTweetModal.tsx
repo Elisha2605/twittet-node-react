@@ -1,15 +1,15 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
-import styles from './MainTweetModal.module.css';
-import Avatar, { Size } from '../../components/ui/Avatar';
-import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
-import { ModalContext } from '../../context/modal.context';
-import Modal from '../../components/ui/Modal';
-import FormTweet from '../../components/form/FormTweet';
-import AuthContext from '../../context/user.context';
-import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
-import { createTweet } from '../../api/tweet.api';
+import styles from './EditTweetModal.module.css';
+import Avatar, { Size } from '../../../components/ui/Avatar';
+import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../../constants/common.constants';
+import { ModalContext } from '../../../context/modal.context';
+import Modal from '../../../components/ui/Modal';
+import FormTweet from '../../../components/form/FormTweet';
+import AuthContext from '../../../context/user.context';
+import { TweetAudienceType, TweetReplyType } from '../../../types/tweet.types';
+import { editTweet } from '../../../api/tweet.api';
 
-interface MainTweetProp {
+interface EditTweetProp {
     value: string;
     
     selectedFile: File | null
@@ -18,12 +18,13 @@ interface MainTweetProp {
     handleTextAreaOnChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     handleCanselPreviewImage: () => void;
     handleImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    onAddTweet: (tweet: any) => void;
     onEditTweet: (tweet: any) => void;
     clearTweetForm: () => void;
+
+    editTweetModal: any,
 }
 
-const MainTweet: FC<MainTweetProp> = ({ 
+const EditTweetModal: FC<EditTweetProp> = ({ 
     value,
     selectedFile,
     previewImage,
@@ -31,10 +32,11 @@ const MainTweet: FC<MainTweetProp> = ({
     handleTextAreaOnChange,
     handleCanselPreviewImage,
     handleImageUpload,
-    onAddTweet, 
+    onEditTweet,
     clearTweetForm,
-}) => {
 
+    editTweetModal,
+}) => {
 
     const [isFormFocused, setIsFormFocused] = useState(false);
     const [tweetAudience, setTweetAudience] = useState<TweetAudienceType>(TWEET_AUDIENCE.everyone);
@@ -49,19 +51,24 @@ const MainTweet: FC<MainTweetProp> = ({
         }
         getAuthUser();
     }, []);
-    
 
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
 
     const { closeModal } = useContext(ModalContext);
-    
+
+    // Set audience and reply on Edit
+    useEffect(() => {
+        setTweetAudience(editTweetModal.audience)
+        setTweetReply(editTweetModal.reply)
+    }, [editTweetModal])
+
     const handleSubmitTweet = async (e: React.FormEvent) => {
-        console.log('inside handleSubmitTweet');
+        console.log({hello: editTweetModal});
         e.preventDefault();
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
             : null;
-        const res = await createTweet(text, selectedFile, tweetAudience, tweetReply);
+        const res = await editTweet(editTweetModal._id, text, selectedFile, tweetAudience, tweetReply);
         const { tweet }: any = res;
         
         if (authUser) {
@@ -83,10 +90,10 @@ const MainTweet: FC<MainTweetProp> = ({
                 reposts: [],
                 likes: [],
             };
-            onAddTweet(newTweet)
+            onEditTweet(newTweet)
         }
-        // setIsFormFocused(false);
-        closeModal('main-tweet-modal');
+        setIsFormFocused(false);
+        closeModal('edit-tweet-modal');
         setTweetAudience(TWEET_AUDIENCE.everyone)
         setTweetReply(TWEET_REPLY.everyone)
         clearTweetForm();
@@ -117,11 +124,11 @@ const MainTweet: FC<MainTweetProp> = ({
             setTweetReply(TWEET_REPLY.onlyPeopleYouMention);
         }
     }
-
+    
     return (
         <React.Fragment>
             <Modal
-                    modalName={'main-tweet-modal'}
+                    modalName={'edit-tweet-modal'}
                     isOverlay={true}
                     classNameContainer={styles.modalContainer}
                     classNameWrapper={styles.modalWrapper}
@@ -136,7 +143,7 @@ const MainTweet: FC<MainTweetProp> = ({
                         className={''}
                     />
                     <FormTweet
-                        value={value}
+                        value={value ? value : ''}
                         tweetTextRef={tweetTextRef}
                         imagePreview={previewImage}
                         isFocused={true}
@@ -157,4 +164,4 @@ const MainTweet: FC<MainTweetProp> = ({
     );
 };
 
-export default MainTweet;
+export default EditTweetModal;

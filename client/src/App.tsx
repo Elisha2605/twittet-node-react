@@ -17,10 +17,11 @@ import Following from './pages/follow/Following';
 import Follower from './pages/follow/Follower';
 import { deleteTweet } from './api/tweet.api';
 import { IMAGE_TWEET_BASE_URL, TWEET_MENU } from './constants/common.constants';
-import MainTweet from './pages/tweet-modals/MainTweetModal';
-import EditTweetModal from './pages/tweet-modals/EditTweetModal';
+import MainTweet from './pages/tweet/tweet-modals/MainTweetModal';
+import EditTweetModal from './pages/tweet/tweet-modals/EditTweetModal';
 import TweetPage from './pages/tweet/TweetPage';
 import TweetPageNoImage from './pages/tweet/TweetPageNoImage';
+import FollowerRequests from './pages/follow/FollowerRequests';
 
 function App() {
 
@@ -225,6 +226,7 @@ function App() {
                                 <Route path="/followers/:id" element={<Follower />} />
                                 <Route path="/tweet/image/:id" element={ <TweetPage />} />
                                 <Route path="/tweet/:id" element={ <TweetPageNoImage />} />
+                                <Route path="/follower-requests" element={ <FollowerRequests />} />
                                 <Route
                                     path="*"
                                     element={<Navigate to="/" replace={true} />}

@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useRef, useState } from 'react';
+import React, { FC, useContext } from 'react';
 import styles from './Index.module.css';
 import hero from '../../assets/hero.png';
 import TwitterIcon from '../../components/icons/TwitterIcon';

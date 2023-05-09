@@ -13,6 +13,9 @@ export interface IPending extends mongoose.Types.Subdocument {
 export interface IWaiting extends mongoose.Types.Subdocument {
     user: ObjectId | string;
 }
+export interface IDeclined extends mongoose.Types.Subdocument {
+    user: ObjectId | string;
+}
 
 const followerSchema = new mongoose.Schema({
     user: {
@@ -58,6 +61,17 @@ const waitingSchema = new mongoose.Schema({
     },
 });
 
+const declinedSchema = new mongoose.Schema({
+    user: {
+        type: Types.ObjectId,
+        ref: 'User',
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+});
+
 export interface IFollow extends mongoose.Document {
     user: ObjectId | string;
     followers: mongoose.Types.DocumentArray<IFollower>;
@@ -84,6 +98,9 @@ const followModel = {
     waitings: {
         type: [waitingSchema],
     },
+    declines: {
+        type: [declinedSchema],
+    }
 };
 
 const followSchema = new mongoose.Schema<IFollow>(followModel, {
