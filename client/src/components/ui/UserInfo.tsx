@@ -24,6 +24,7 @@ interface UserInfoProps {
     time?: string;
     onClickOption?: Function;
     isReply?: boolean;
+    isOnHover?: boolean;
 }
 
 const UserInfo: FC<UserInfoProps> = ({
@@ -43,6 +44,7 @@ const UserInfo: FC<UserInfoProps> = ({
     time,
     onClickOption,
     isReply = false,
+    isOnHover = false
 }) => {
 
     const [authUser, setAuthUser] = useState<any>(null);
@@ -59,12 +61,13 @@ const UserInfo: FC<UserInfoProps> = ({
     const navigate = useNavigate();
 
     const onNavigateToProfile = () => {
-            navigate(`/profile/${userId}`)
+        navigate(`/profile/${userId}`)
     }
+    
 
     return (
         <React.Fragment>
-            <div className={`${styles.container}`}>
+            <div className={`${styles.container} ${isOnHover ? styles.onHoverUser : ''}`}>
                 {avatar && (
                     <div className={styles.avatar} onClick={onNavigateToProfile}>
                         <a href={link}>

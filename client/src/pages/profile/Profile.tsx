@@ -50,7 +50,6 @@ const Profile: FC<ProfileProps> = ({
 
     const [authUser, setAuthUser] = useState<any>(null);
     const [user, setUser] = useState<any>();
-    const [isFollowing, setIsFollowing] = useState<boolean>();
     const [userTweets, setUserTweets] = useState<any[]>([]);
     const [userTweetsMedia, setUserTweetsMedia] = useState<any[]>([]);
     const [userLikedTweets, setUserLikedTweets] = useState<any[]>([]);
@@ -87,14 +86,7 @@ const Profile: FC<ProfileProps> = ({
         if (authUser) {
             const getAuthUserFollowStatus = async () => {
                 const { followers, followings } = await getAuthUserFollows(id!);
-                if (
-                    followings &&
-                    followings.some(
-                        (following: any) => following?.user?._id === id
-                    )
-                ) {
-                    setIsFollowing(true);
-                }
+              
                 setFollowings(followings);
                 setFollowers(followers);
             };
@@ -114,7 +106,7 @@ const Profile: FC<ProfileProps> = ({
             const { tweets } = res;
 
             const medias = tweets
-                .filter((tweet: any) => tweet.image !== null)
+                .filter((tweet: any) => tweet?.image !== null)
                 .map((tweet: any) => {
                     return tweet;
                 });
@@ -122,7 +114,7 @@ const Profile: FC<ProfileProps> = ({
             setUserTweetsMedia(medias);
         };
         fetchUserTweets();
-    }, []);
+    }, [id]);
 
     // On create tweet
     useEffect(() => {
@@ -188,7 +180,7 @@ const Profile: FC<ProfileProps> = ({
             setUserLikedTweets(tweets);
         };
         getLikedTweet();
-    }, []);
+    }, [id]);
 
     useEffect(() => {
         setUserTweets((prevTweets: any) =>
@@ -204,10 +196,10 @@ const Profile: FC<ProfileProps> = ({
         );
         setUserTweetsMedia((prevTweets: any) =>
             prevTweets.map((tweet: any) =>
-                tweet?._id === likedTweet.tweet
+                tweet?._id === likedTweet?.tweet
                     ? {
                           ...tweet,
-                          totalLikes: likedTweet.likesCount,
+                          totalLikes: likedTweet?.likesCount,
                           likes: likedTweet?.likes,
                       }
                     : tweet

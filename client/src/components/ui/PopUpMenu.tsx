@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import MenuIcon from '../icons/MenuIcon';
 import styles from './PopUpMenu.module.css';
+import useClickOutSide from '../../hooks/useClickOutSide';
 
 interface MenuPopUpProps {
     itemId?: string;
@@ -46,22 +47,7 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
         onClick(option, id, value);
     };
 
-    useEffect(() => {
-        const handleOutsideClick = (event: MouseEvent) => {
-            if (
-                menuRef.current &&
-                !menuRef.current.contains(event.target as Node)
-            ) {
-                setShowMenu(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleOutsideClick);
-
-        return () => {
-            document.removeEventListener('mousedown', handleOutsideClick);
-        };
-    }, []);
+    useClickOutSide(menuRef, setShowMenu)
 
     return (
         <div className={styles.container}>

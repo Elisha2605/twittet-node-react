@@ -44,3 +44,18 @@ export const getUserById = async (userId: string) => {
         }
     }
 };
+
+export const searchUsers = async (searchTerm: string) => {
+    try {
+        const res = await http.get(`/users/search?q=${searchTerm}`, GETREQUESTOPTIONS());
+        return res.data;
+    } catch (error: any) {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('context');
+            window.location.href = '/';
+        } else {
+            console.error(error);
+            throw error;
+        }
+    }
+};
