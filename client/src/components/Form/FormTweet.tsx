@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import Button, { ButtonSize, ButtonType } from '../ui/Button';
 import { 
     tweetAudienceMenuOptions, 
@@ -17,7 +17,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAt, faChevronDown, faEarthAfrica, faLock, faUserCheck } from '@fortawesome/free-solid-svg-icons';
 import PopUpMenu from '../ui/PopUpMenu';
 import { TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
-import { ModalContext } from '../../context/modal.context';
 
 interface FormProps {
     value: string;
@@ -72,7 +71,6 @@ const FormTweet: FC<FormProps> = ({
         }
     }
 
-
     const isImageSelected = !!imagePreview;
 
     return (
@@ -104,15 +102,18 @@ const FormTweet: FC<FormProps> = ({
                         </PopUpMenu>
                     </div>
                 ) : null }
+        
                 <textarea
                     className={`${styles.textarea} ${classNameTextErea}`}
                     id="review-text"
-                    onChange={onChageImage}
+                    onChange={(e) => {
+                        onChageImage(e);
+                    }}
                     placeholder="What's happening?"
                     ref={tweetTextRef}
                     rows={1}
                     value={value}
-                />
+                    />
                 {isFocused || isImageSelected ? (
                     <PopUpMenu 
                             title={'Who can reply?'}
@@ -161,7 +162,9 @@ const FormTweet: FC<FormProps> = ({
                 <div className={styles.footer}>
                     <div className={styles.icons}>
                         <ImageIcon onChange={onImageUpload} />
-                        <EmojiIcon />
+                        <div onClick={() => console.log()}>
+                            <EmojiIcon />
+                        </div>
                         <CalendarIcon />
                     </div>
                     <Button

@@ -1,6 +1,8 @@
 import mongoose, { Types, ObjectId } from 'mongoose';
 import { TWEET_AUDIENCE, TWEET_REPLY } from 'src/constants/tweet.constants';
 import { handleError } from 'src/utils/db.util';
+import User from './user.model';
+import Notification, { INotification } from './notification.model';
 
 export interface ITweet extends mongoose.Document {
     user: ObjectId | string;
@@ -8,6 +10,8 @@ export interface ITweet extends mongoose.Document {
     text: string;
     audience: string; //Create constants (Everyone, Twitter Circle);
     reply: string;
+    mentions: ObjectId[]; // an array of user ids
+    hashtags: ObjectId[]; // an array of hashtags
 }
 
 export const tweetModel = {
@@ -37,10 +41,43 @@ export const tweetModel = {
         default: TWEET_REPLY.everyone,
         require: false,
     },
+    mentions: [
+        {
+            type: Types.ObjectId,
+            ref: 'User',
+            require: false,
+        },
+    ],
+    hashtags: [
+        {
+            type: String,
+            require: false,
+        },
+    ],
 };
 
 const tweetSchema = new mongoose.Schema<ITweet>(tweetModel, {
     timestamps: true,
+});
+
+// adding a pre-save hook to parse mentions from the tweet text
+tweetSchema.pre<ITweet>('save', function (next) {
+    const text = this.text;
+    const regex = /@(\w+)/g; // match @username
+    const mentions: string[] = [];
+    let match: any;
+    while ((match = regex.exec(text)) !== null) {
+        const username = match[1];
+        mentions.push(username);
+    }
+
+    // find the user ids for each mentioned username
+    User.find({ username: { $in: mentions } }, '_id')
+        .then((users) => {
+            this.mentions = users.map((user) => user._id);
+            next();
+        })
+        .catch((error) => next(error));
 });
 
 const Tweet = mongoose.model<ITweet>('Tweet', tweetSchema, 'Tweet');

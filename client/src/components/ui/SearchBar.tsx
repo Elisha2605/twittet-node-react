@@ -86,7 +86,7 @@ const SearchBar: FC<SearchBarProps> = ({ width }) => {
                         <p className={styles.searchMsg}>No result found for "{searchTerm}"</p>
                     </div>
                 )}
-                {isFocused && (searchTerm.length === '' || searchResults.length === 0) && (
+                {isFocused && (searchTerm.length === 0 && searchResults.length === 0) && (
                     <div className={styles.searchResults}>
                         <p className={styles.searchMsg}>Searching for people, by their name or username</p>
                     </div>

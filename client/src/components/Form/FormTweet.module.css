@@ -127,3 +127,9 @@
     background-color: var(--color-black-lighter);
     transition: 0.1s ease-in-out;
 }
+
+.highlighted {
+    background-color: var(--color-primary);
+    color: var(--color-primary);;
+    font-weight: bold;
+}  
