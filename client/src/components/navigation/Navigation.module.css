@@ -25,9 +25,18 @@
     font-size: 23px;
 }
 
-.faHome {
+.faHome, .faHashTag, .faCircleEllipsis {
     gap: 1.2rem;
-    width: 100%;
+    width: fit-content;
+    cursor: pointer;
+    padding: 0 1rem 0 1rem;
+    position: relative;
+    right: 1rem;
+}
+
+.faHome:hover, .faHashTag:hover, .faCircleEllipsis:hover  {
+    background: var(--color-secondary-light);
+    border-radius: var(--border-round);
 }
 
 .faHome img, .faHashTag img, .faCircleEllipsis img {

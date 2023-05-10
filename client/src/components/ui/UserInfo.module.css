@@ -49,6 +49,14 @@
     min-width: 7.5rem;
 }
 
+.onHoverUser {
+    padding: 0.2rem 0.6rem ;
+}
+.onHoverUser:hover {
+    background: var(--color-secondary-light);
+    cursor: pointer;
+}
+
 .name {
     font-weight: var(--font-weight-600);
 }

@@ -78,7 +78,7 @@ const FollowButton: FC<FollowButtonProps> = ({
     }, []);
 
     const getAuthUserFollowStatus = async () => {
-        setIsLoading(true);
+        // setIsLoading(true); // remove the comment to get a spinner
         const { followings } = await getAuthUserFollows(authUser?._id!);
         if (
             followings &&

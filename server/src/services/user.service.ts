@@ -79,3 +79,29 @@ export const getUserInfo = async (userId: string): Promise<any> => {
     const user = await User.findById(userId);
     return user;
 };
+
+export const searchUsers = async (
+    searchTerm: string
+): Promise<ApiResponse<any>> => {
+    try {
+        const regex = new RegExp(searchTerm, 'i');
+        const users = await User.find({
+            $or: [{ name: regex }, { username: regex }],
+        }).limit(13);
+
+        return {
+            success: true,
+            message: 'Success',
+            status: 200,
+            payload: users,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};

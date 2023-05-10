@@ -4,6 +4,7 @@ import {
     getAllUsers,
     getUserById,
     getAuthUserInfo,
+    searchUsers,
 } from 'src/services/user.service';
 
 export const users = asyncHandler(
@@ -56,6 +57,30 @@ export const info = asyncHandler(
                 res.status(200).json({ user: payload });
             } else {
                 res.status(500).json({ success: message, status: status });
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+export const searchUsersController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const searchTerm = req.query.q?.toString().trim();
+
+        try {
+            const { success, message, status, payload } = await searchUsers(
+                searchTerm
+            );
+            if (success) {
+                res.json({
+                    success: success,
+                    status: status,
+                    message: message,
+                    users: payload,
+                });
+            } else {
+                res.status(status).json({ success, message });
             }
         } catch (error) {
             next(error);
