@@ -25,7 +25,9 @@ import { useNavigate } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
 import { getUserTweets } from '../../api/tweet.api';
 import FollowButton from '../../components/ui/FollowButton';
+import faLockSolid from "../../assets/faLock-solid.svg"
 import { getUserLikedTweets, likeTweet } from '../../api/like.api';
+
 
 interface ProfileProps {
     onAddTweet: any;
@@ -88,7 +90,7 @@ const Profile: FC<ProfileProps> = ({
                 if (
                     followings &&
                     followings.some(
-                        (following: any) => following.user._id === id
+                        (following: any) => following?.user?._id === id
                     )
                 ) {
                     setIsFollowing(true);
@@ -144,14 +146,14 @@ const Profile: FC<ProfileProps> = ({
             if (authUser?.avatar) {
                 setUserTweets((prevTweets) =>
                     prevTweets.map((tweet) =>
-                        tweet._id === onEditTweet._id
+                        tweet?._id === onEditTweet?._id
                             ? { ...tweet, ...onEditTweet }
                             : tweet
                     )
                 );
                 setUserTweetsMedia((prevTweets) =>
                     prevTweets.map((tweet) =>
-                        tweet._id === onEditTweet._id
+                        tweet?._id === onEditTweet?._id
                             ? { ...tweet, ...onEditTweet }
                             : tweet
                     )
@@ -164,10 +166,10 @@ const Profile: FC<ProfileProps> = ({
     // On delete tweet
     useEffect(() => {
         setUserTweets((preveState) =>
-            preveState.filter((tweet) => tweet._id !== onDeleteTweet._id)
+            preveState.filter((tweet) => tweet?._id !== onDeleteTweet?._id)
         );
         setUserTweetsMedia((preveState) =>
-            preveState.filter((tweet) => tweet._id !== onDeleteTweet._id)
+            preveState.filter((tweet) => tweet?._id !== onDeleteTweet?._id)
         );
     }, [onDeleteTweet]);
 
@@ -191,10 +193,10 @@ const Profile: FC<ProfileProps> = ({
     useEffect(() => {
         setUserTweets((prevTweets: any) =>
             prevTweets.map((tweet: any) =>
-                tweet._id === likedTweet.tweet
+                tweet?._id === likedTweet?.tweet
                     ? {
                           ...tweet,
-                          totalLikes: likedTweet.likesCount,
+                          totalLikes: likedTweet?.likesCount,
                           likes: likedTweet?.likes,
                       }
                     : tweet
@@ -202,7 +204,7 @@ const Profile: FC<ProfileProps> = ({
         );
         setUserTweetsMedia((prevTweets: any) =>
             prevTweets.map((tweet: any) =>
-                tweet._id === likedTweet.tweet
+                tweet?._id === likedTweet.tweet
                     ? {
                           ...tweet,
                           totalLikes: likedTweet.likesCount,
@@ -213,7 +215,7 @@ const Profile: FC<ProfileProps> = ({
         );
         setUserLikedTweets((prevTweets: any) =>
             prevTweets.map((tweet: any) =>
-                tweet._id === likedTweet?.tweet
+                tweet?._id === likedTweet?.tweet
                     ? {
                           ...tweet,
                           totalLikes: likedTweet?.likesCount,
@@ -238,6 +240,7 @@ const Profile: FC<ProfileProps> = ({
                             />
                             <HeaderTitle
                                 title={user?.name}
+                                isProtected={user?.isProtected}
                                 subTitle={
                                     (activeTab === 'tweets' ||
                                         activeTab === 'replies') &&
@@ -279,7 +282,7 @@ const Profile: FC<ProfileProps> = ({
                                     alt=""
                                 />
                             </div>
-                            {authUser?._id === id ? (
+                            {authUser?._id === id! ? (
                                 <Button
                                     className={styles.editProfileBtn}
                                     value={'Edit profile'}
@@ -299,7 +302,14 @@ const Profile: FC<ProfileProps> = ({
                             )}
                         </div>
                         <div className={styles.userInfo}>
-                            <p className={styles.firstname}>{user?.name}</p>
+                            {!user?.isProtected ? (
+                                <p className={styles.firstname}>{user?.name}</p>
+                            ): (
+                                <div className={styles.isProtected}>
+                                    <p className={styles.firstname}>{user?.name}</p>
+                                    <img src={faLockSolid} alt="" />
+                                </div>
+                            )}
                             <p className={styles.username}>@{user?.username}</p>
                             <p className={styles.bio}>
                                 Lorem ipsum dolor sit amet consectetur

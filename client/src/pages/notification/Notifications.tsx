@@ -10,7 +10,6 @@ import SearchBar from '../../components/ui/SearchBar';
 import Aside from '../../components/aside/Aside';
 import WhoToFollow from '../../components/ui/WhoToFollow';
 
-
 const Notification = () => {
 
     const [activeTab, setActiveTab] = useState(localStorage.getItem('activeTab-notification') || 'all');
@@ -19,6 +18,7 @@ const Notification = () => {
     useEffect(() => {
         localStorage.setItem('activeTab-notification', activeTab);
     }, [activeTab]);
+
     
     return (
         <React.Fragment>

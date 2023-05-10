@@ -25,12 +25,29 @@
     font-size: 23px;
 }
 
+.faHome {
+    gap: 1.2rem;
+    width: 100%;
+}
+
+.faHome img, .faHashTag img, .faCircleEllipsis img {
+    width: 2rem;
+    height: 3.5rem;
+}
+
+.faHashTag {
+    gap: 1.2rem;
+}
+
 .faCircleEllipsis {
+    gap: 1.1rem;
+}
+
+.faCircleEllipsis, .faHashTag, .faHome {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+
     margin-left: 0.8rem;
-    font-size: 22px !important;
     cursor: pointer;
 }
 

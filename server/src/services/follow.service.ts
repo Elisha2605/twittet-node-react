@@ -365,19 +365,6 @@ export const approveFollowRequest = async (
             };
         }
 
-        if (
-            receiver.followers.some(
-                (waiting: any) => waiting.user.toString() !== sender._id
-            )
-        ) {
-            return {
-                success: false,
-                message: 'User not found nor waiting for approval',
-                status: 400,
-                payload: [],
-            };
-        }
-
         // put the sender ID in the receiver followers array
         receiver.followers.push({ user: sender.user._id });
 
@@ -431,19 +418,6 @@ export const declineFollowRequest = async (
             return {
                 success: false,
                 message: 'You can not approve yourself',
-                status: 400,
-                payload: [],
-            };
-        }
-
-        if (
-            receiver.followers.some(
-                (waiting: any) => waiting.user.toString() !== sender._id
-            )
-        ) {
-            return {
-                success: false,
-                message: 'User not found nor waiting for approval',
                 status: 400,
                 payload: [],
             };

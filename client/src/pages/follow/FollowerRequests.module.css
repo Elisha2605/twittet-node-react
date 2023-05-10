@@ -29,10 +29,6 @@
     padding: 0 1rem;
 }
 
-.modalContent {
-    padding: 0 0 0 3.8rem;
-}
-
 .buttons {
     margin-top: 0.5rem;
     display: flex;
@@ -40,7 +36,7 @@
 }
 
 .declineBtn, .acceptBtn {
-    width: 5rem;
+    width: 8rem;
     border: 0;
     border-radius: 50px;
     font-weight: var(--font-weight-400);
@@ -53,20 +49,40 @@
 }
 
 .declineBtn {
+    color: var(--color-secondary);
+    border: 0.5px solid var(--color-secondary);
+}
+
+.declineBtn:hover {
+    background-color: var(--color-pink-lighter);
     color: var(--color-error);
     border: 0.5px solid var(--color-error);
 }
 
-.declineBtn:hover {
-    background-color: var(--color-error-light);
-    
-}
-
 .acceptBtn {
-    border: 0.5px solid var(--color-green);
-    color: var(--color-green);
+    border: 0.5px solid var(--color-primary);
+    color: var(--color-primary);
 }
 
 .acceptBtn:hover {
     background-color: var(--color-primary-lighter);
+}
+
+.declineMsg {
+    color: var(--color-error);
+    border: 0.5px solid var(--color-error);
+    border-radius: 5rem;
+    padding: 0 1rem;
+}
+
+.followsYou {
+    position: relative;
+    top: -0.3rem;
+    margin-left: 3.8rem;
+    font-size: var(--font-size-xs);
+    color: var(--color-secondary-light);
+    background: var(--color-black-lighter);
+    width: fit-content;
+    padding: 0rem 0.2rem;
+    border-radius: 0.2rem;
 }

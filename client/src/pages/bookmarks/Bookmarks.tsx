@@ -72,10 +72,6 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
         }
     };
 
-    useEffect(() => {
-        console.log(savedTweets);
-    }, [savedTweets])
-
     return (
         <React.Fragment>
             <div className={Layout.mainSectionContainer}>

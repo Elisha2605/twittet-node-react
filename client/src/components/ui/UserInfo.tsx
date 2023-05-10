@@ -4,6 +4,8 @@ import styles from './UserInfo.module.css';
 import Certified from '../../assets/certified.svg';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../context/user.context';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLock } from '@fortawesome/free-solid-svg-icons';
 
 interface UserInfoProps {
     tweet?: any;
@@ -12,6 +14,7 @@ interface UserInfoProps {
     name: string;
     username: string;
     isVerified?: boolean;
+    isProtected?: boolean;
     children?: React.ReactNode;
     link?: string;
     className?: string;
@@ -30,6 +33,7 @@ const UserInfo: FC<UserInfoProps> = ({
     name,
     username,
     isVerified = false,
+    isProtected = false,
     children,
     link,
     className,
@@ -102,6 +106,9 @@ const UserInfo: FC<UserInfoProps> = ({
                                 {name}{' '}
                                 {isVerified && (
                                         <img className={styles.certifiedIcon} src={Certified} alt="" />
+                                )}{' '}
+                                {isProtected && (
+                                    <FontAwesomeIcon icon={faLock} />
                                 )}{' '}
                                 </p>
                                 <p className={styles.username}>
