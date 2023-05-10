@@ -1,8 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faEdit, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faEdit, faArrowRightFromBracket, faAt, faGear, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import EarthIcon from '../components/icons/EarthIcon';
 import HeartIcon from '../components/icons/HeartIcon';
-import { TWEET_AUDIENCE, TWEET_MENU, TWEET_REPLY } from '../constants/common.constants';
+import { MORE_NAV_OPTION, TWEET_AUDIENCE, TWEET_MENU, TWEET_REPLY } from '../constants/common.constants';
 import UserIcon from '../components/icons/UserIcon';
 import AtIcon from '../components/icons/AtIcon';
 import BookmarkIcon from '../components/icons/BookmarkIcon';
@@ -43,4 +43,18 @@ export const shareOptions = [
 ]
 export const shareIcon = {
    'Bookmark': <BookmarkIcon />
+}
+
+export const moreOptions = [
+   MORE_NAV_OPTION.connect,
+   MORE_NAV_OPTION.followRequests,
+   MORE_NAV_OPTION.settingsAndPrivacy,
+   MORE_NAV_OPTION.display
+]
+
+export const moreIcons = {
+   'Connect': <FontAwesomeIcon icon={faAt} />,
+   'Follow requests': <FontAwesomeIcon icon={faUserPlus} />,
+   'Settings and privacy': <FontAwesomeIcon icon={faGear} />,
+   'Display': <FontAwesomeIcon icon={faEdit} />
 }

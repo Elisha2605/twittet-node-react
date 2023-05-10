@@ -20,3 +20,10 @@ export enum TWEET_REPLY {
     onlyPeopleYouMention = 'Only people you mention',
     onlyTwitterCircle = 'Only twitter circle',
 }
+
+export enum MORE_NAV_OPTION {
+    connect = 'Connect',
+    followRequests = 'Follow requests',
+    settingsAndPrivacy = 'Settings and privacy',
+    display = 'Display',
+}

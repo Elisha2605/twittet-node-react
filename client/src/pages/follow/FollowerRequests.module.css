@@ -1,0 +1,88 @@
+.modalContainer {
+    max-width: 40rem !important;
+    height: 90vh !important;
+    overflow-x: hidden;
+}
+
+.headerItems {
+    display: flex;
+    align-items: center;
+    margin-left: 0.5rem;
+    gap: 2rem;
+    margin-bottom: 1rem;
+
+}
+
+.title p {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-600);
+}
+
+.arrowLeftIcon {
+    margin-top: 0.7rem;
+}
+
+.contentWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+}
+
+.buttons {
+    margin-top: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.declineBtn, .acceptBtn {
+    width: 8rem;
+    border: 0;
+    border-radius: 50px;
+    font-weight: var(--font-weight-400);
+    text-decoration: none;
+    text-align: center;
+    display: block;
+    font-family: 'lato', sans-serif;
+    transition: .15s ease-in-out;
+    cursor: pointer;
+}
+
+.declineBtn {
+    color: var(--color-secondary);
+    border: 0.5px solid var(--color-secondary);
+}
+
+.declineBtn:hover {
+    background-color: var(--color-pink-lighter);
+    color: var(--color-error);
+    border: 0.5px solid var(--color-error);
+}
+
+.acceptBtn {
+    border: 0.5px solid var(--color-primary);
+    color: var(--color-primary);
+}
+
+.acceptBtn:hover {
+    background-color: var(--color-primary-lighter);
+}
+
+.declineMsg {
+    color: var(--color-error);
+    border: 0.5px solid var(--color-error);
+    border-radius: 5rem;
+    padding: 0 1rem;
+}
+
+.followsYou {
+    position: relative;
+    top: -0.3rem;
+    margin-left: 3.8rem;
+    font-size: var(--font-size-xs);
+    color: var(--color-secondary-light);
+    background: var(--color-black-lighter);
+    width: fit-content;
+    padding: 0rem 0.2rem;
+    border-radius: 0.2rem;
+}

@@ -41,7 +41,7 @@ const handleProtectedFollowRequest = async (
     leader: any,
     follower: any
 ): Promise<ApiResponse<any>> => {
-    // Code to handle follow request for protected users
+    // handle follow request for protected users
     try {
         let receiver: any = await Follow.findOne({ user: leader._id });
         let sender: any = await Follow.findOne({ user: follower._id });
@@ -58,8 +58,18 @@ const handleProtectedFollowRequest = async (
                     (item: any) =>
                         item.user.toString() === follower._id.toString()
                 )) ||
+            (receiver &&
+                receiver.followers.some(
+                    (item: any) =>
+                        item.user.toString() === follower._id.toString()
+                )) ||
             (sender &&
                 sender.pendings.some(
+                    (item: any) =>
+                        item.user.toString() === leader._id.toString()
+                )) ||
+            (sender &&
+                sender.followings.some(
                     (item: any) =>
                         item.user.toString() === leader._id.toString()
                 ))
@@ -68,9 +78,15 @@ const handleProtectedFollowRequest = async (
             receiver.waitings = receiver.waitings.filter(
                 (item: any) => item.user.toString() !== follower._id.toString()
             );
+            receiver.followers = receiver.followers.filter(
+                (item: any) => item.user.toString() !== follower._id.toString()
+            );
 
             // Remove leader._id from sender.pendings array
             sender.pendings = sender.pendings.filter(
+                (item: any) => item.user.toString() !== leader._id.toString()
+            );
+            sender.followings = sender.followings.filter(
                 (item: any) => item.user.toString() !== leader._id.toString()
             );
 
@@ -78,11 +94,14 @@ const handleProtectedFollowRequest = async (
             const result = await Promise.all([receiver.save(), sender.save()]);
             return {
                 success: true,
-                message: 'Request removed',
+                message: 'Unfollow',
                 status: 200,
                 payload: result,
             };
         }
+
+        // unfollow if user is protected
+        // if ((receiver && receiver.followers.some((item: any) => item.user.toString)))
 
         if (!receiver && !sender) {
             // Both the receiver and sender do not exist
@@ -99,7 +118,7 @@ const handleProtectedFollowRequest = async (
             const result = await Promise.all([receiver.save(), sender.save()]);
             return {
                 success: true,
-                message: 'Successfully sent the Follow request',
+                message: 'Following',
                 status: 200,
                 payload: result,
             };
@@ -113,7 +132,7 @@ const handleProtectedFollowRequest = async (
             ]);
             return {
                 success: true,
-                message: 'Follow request sent',
+                message: 'Following',
                 status: 200,
                 payload: response,
             };
@@ -132,7 +151,7 @@ const handleProtectedFollowRequest = async (
             const result = await Promise.all([receiver.save(), sender.save()]);
             return {
                 success: true,
-                message: 'Yuhuuu!',
+                message: 'Following',
                 status: 200,
                 payload: result,
             };
@@ -151,7 +170,7 @@ const handleProtectedFollowRequest = async (
             const result = await Promise.all([receiver.save(), sender.save()]);
             return {
                 success: true,
-                message: 'Yuhuuu!',
+                message: 'Following',
                 status: 200,
                 payload: result,
             };
@@ -212,7 +231,6 @@ async function handleUnprotectedFollowRequest(
     leader: any,
     follower: any
 ): Promise<ApiResponse<any>> {
-    // Code to handle follow request for unprotected users
     // Handle follow request if user is not protected
     let receiver: any = await Follow.findOne({ user: leader._id });
     let sender: any = await Follow.findOne({ user: follower._id });
@@ -241,7 +259,7 @@ async function handleUnprotectedFollowRequest(
         const result = await Promise.all([receiver.save(), sender.save()]);
         return {
             success: true,
-            message: 'Request removed',
+            message: 'Unfollow',
             status: 200,
             payload: result,
         };
@@ -262,7 +280,7 @@ async function handleUnprotectedFollowRequest(
         const result = await Promise.all([receiver.save(), sender.save()]);
         return {
             success: true,
-            message: 'Yuhuuu!',
+            message: 'Following!',
             status: 200,
             payload: result,
         };
@@ -278,7 +296,7 @@ async function handleUnprotectedFollowRequest(
         const result = await Promise.all([receiver.save(), sender.save()]);
         return {
             success: true,
-            message: 'Yuhuuu!',
+            message: 'Following!',
             status: 200,
             payload: result,
         };
@@ -297,7 +315,7 @@ async function handleUnprotectedFollowRequest(
         const result = await Promise.all([receiver.save(), sender.save()]);
         return {
             success: true,
-            message: 'Yuhuuu!',
+            message: 'Following!',
             status: 200,
             payload: result,
         };
@@ -316,9 +334,122 @@ async function handleUnprotectedFollowRequest(
         const result = await Promise.all([receiver.save(), sender.save()]);
         return {
             success: true,
-            message: 'Yuhuuu!',
+            message: 'Following!',
             status: 200,
             payload: result,
         };
     }
 }
+
+export const approveFollowRequest = async (
+    leader: any,
+    follower: any
+): Promise<ApiResponse<any>> => {
+    try {
+        const receiver: any = await Follow.findOne({ user: leader });
+        const sender: any = await Follow.findOne({ user: follower });
+
+        if (!receiver) {
+            throw CustomError('User not found', 404);
+        }
+        if (!sender) {
+            throw CustomError('Follower user not found', 404);
+        }
+
+        if (sender._id.toString() === leader.toString()) {
+            return {
+                success: false,
+                message: 'You can not follow yourself',
+                status: 400,
+                payload: [],
+            };
+        }
+
+        // put the sender ID in the receiver followers array
+        receiver.followers.push({ user: sender.user._id });
+
+        // remove the sender ID from the receiver waitings array
+        receiver.waitings = receiver.waitings.filter(
+            (waiting: any) => !waiting.user.equals(sender.user._id)
+        );
+
+        // put the receiver ID in the sender followings array
+        sender.followings.push({ user: receiver.user._id });
+
+        // remove the receiver ID from the sender pendings array
+        sender.pendings = sender.pendings.filter(
+            (pending: any) => !pending.user.equals(receiver.user._id)
+        );
+
+        const result = await Promise.all([receiver.save(), sender.save()]);
+        return {
+            success: true,
+            message: 'Approved Follow request',
+            status: 200,
+            payload: result,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};
+
+export const declineFollowRequest = async (
+    leader: any,
+    follower: any
+): Promise<ApiResponse<any>> => {
+    try {
+        const receiver: any = await Follow.findOne({ user: leader });
+        const sender: any = await Follow.findOne({ user: follower });
+
+        if (!receiver) {
+            throw CustomError('User not found', 404);
+        }
+        if (!sender) {
+            throw CustomError('Follower user not found', 404);
+        }
+
+        if (sender._id.toString() === leader.toString()) {
+            return {
+                success: false,
+                message: 'You can not approve yourself',
+                status: 400,
+                payload: [],
+            };
+        }
+
+        // remove the sender ID from the receiver waitings array
+        receiver.waitings = receiver.waitings.filter(
+            (waiting: any) => !waiting.user.equals(sender.user._id)
+        );
+
+        // put the sender ID in the declines array
+        receiver.declines.push({ user: sender.user._id });
+
+        // remove the receiver ID from the sender pendings array
+        sender.pendings = sender.pendings.filter(
+            (pending: any) => !pending.user.equals(receiver.user._id)
+        );
+
+        const result = await Promise.all([receiver.save(), sender.save()]);
+        return {
+            success: true,
+            message: 'Declined follow request',
+            status: 200,
+            payload: result,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};

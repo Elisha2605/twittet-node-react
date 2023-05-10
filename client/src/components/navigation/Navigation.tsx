@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { faHashtag, faHome, faHomeUser } from '@fortawesome/free-solid-svg-icons';
+import { faHomeUser } from '@fortawesome/free-solid-svg-icons';
 import {
     faBell,
     faBookmark,
@@ -16,26 +16,55 @@ import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import styles from './Navigation.module.css';
 import NavigationItem from './NavigationItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import Button, { ButtonSize, ButtonType } from '../ui/Button';
 import NavigationUserInfo from './NavigationUserInfo';
 import { logout } from '../../api/auth.api';
-import { navUseMenuIcons, navUserMenuOptions } from '../../data/menuOptions';
-import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
+import {
+    moreIcons,
+    moreOptions,
+    navUseMenuIcons,
+    navUserMenuOptions,
+} from '../../data/menuOptions';
+import {
+    IMAGE_AVATAR_BASE_URL,
+    MORE_NAV_OPTION,
+} from '../../constants/common.constants';
 import { ModalContext } from '../../context/modal.context';
 import AuthContext from '../../context/user.context';
+import FaCircleEllipsis from '../../assets/faCircleEllipsis-regular.svg';
+import faHashTagRegular from '../../assets/faHashTag-regular.svg';
+import faHashTagSolid from '../../assets/faHashTag-solid.svg';
+import faHomeRegular from '../../assets/faHome-regular.svg';
+import faHomeSolid from '../../assets/faHome-solid.svg';
+import PopUpMenu from '../ui/PopUpMenu';
+import { useNavigate } from 'react-router-dom';
 
 interface NavigationProps {}
 
 const Navigation: React.FC<NavigationProps> = ({}) => {
     const [authUser, setAuthUser] = useState<any>(null);
-    const [activeNav, setActiveNav] = useState(
-        localStorage.getItem('active-nav') || 'home'
-    );
+    const [activeNav, setActiveNav] = useState('home');
+
+    const navigate = useNavigate();
 
     useEffect(() => {
-        localStorage.setItem('active-nav', activeNav);
-    }, [activeNav]);
+        const setNavActive = () => {
+          const path = window.location.pathname;
+          const activeNav = path.split('/')[1] || 'home';
+          setActiveNav(activeNav);
+        };
+      
+        // set active nav on component mount
+        setNavActive();
+      
+        // add popstate event listener to set active nav on back/forward navigation
+        window.addEventListener('popstate', setNavActive);
+      
+        // cleanup function to remove popstate event listener
+        return () => {
+          window.removeEventListener('popstate', setNavActive);
+        };
+      }, []);      
 
     const ctx = useContext(AuthContext);
     useEffect(() => {
@@ -55,6 +84,21 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
         }
     };
 
+    const handleMoreOptions = (option: string) => {
+        if (option === MORE_NAV_OPTION.connect) {
+            console.log(option);
+        }
+        if (option === MORE_NAV_OPTION.followRequests) {
+            navigate('/follower-requests');
+        }
+        if (option === MORE_NAV_OPTION.settingsAndPrivacy) {
+            console.log(option);
+        }
+        if (option === MORE_NAV_OPTION.display) {
+            console.log(option);
+        }
+    };
+
     return (
         <React.Fragment>
             <div className={styles.container}>
@@ -66,35 +110,40 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                     />
                 </div>
                 <div className={styles.naviItems}>
-                    <div
+                    {/* <div
                         onClick={() => {
                             setActiveNav('home');
                         }}
-                        className={
-                            activeNav === 'home' ? styles.active : ''
-                        }
+                        className={activeNav === 'home' ? styles.active : ''}
                     >
-                        <NavigationItem 
-                            icon={faHomeUser} 
-                            label={'Home'} 
-                            path="/" 
+                        <NavigationItem
+                            icon={faHomeUser}
+                            label={'Home'}
+                            path="/"
                             className={styles.home}
                         />
+                    </div> */}
+                    <div
+                        className={` ${styles.faHome} ${activeNav === 'home' ? styles.active : ''}`}
+                        onClick={() => {
+                            navigate('/')
+                            setActiveNav('home');
+                            
+                        }}
+                        >
+                            <img src={activeNav === 'home' ? faHomeSolid : faHomeRegular} alt="" />
+                            <h2>Home</h2>
                     </div>
 
                     <div
+                        className={` ${styles.faHashTag} ${activeNav === 'explore' ? styles.active : ''}`}
                         onClick={() => {
+                            navigate('/explore')
                             setActiveNav('explore');
                         }}
-                        className={
-                            activeNav === 'explore' ? styles.active : ''
-                        }
-                    >
-                        <NavigationItem
-                            icon={faHashtag}
-                            label={'Explore'}
-                            path="/explore"
-                        />
+                        >
+                            <img src={activeNav === 'explore' ? faHashTagSolid : faHashTagRegular} alt="" />
+                            <h2>Explore</h2>
                     </div>
 
                     <div
@@ -106,7 +155,11 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                         }
                     >
                         <NavigationItem
-                            icon={activeNav === 'notification' ?  faBellSolid : faBell}
+                            icon={
+                                activeNav === 'notification'
+                                    ? faBellSolid
+                                    : faBell
+                            }
                             label={'Notifications'}
                             path="/notification"
                         />
@@ -116,12 +169,14 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                         onClick={() => {
                             setActiveNav('message');
                         }}
-                        className={
-                            activeNav === 'message' ? styles.active : ''
-                        }
+                        className={activeNav === 'message' ? styles.active : ''}
                     >
                         <NavigationItem
-                            icon={activeNav === 'message' ? faEnvelopeSolid : faEnvelope}
+                            icon={
+                                activeNav === 'message'
+                                    ? faEnvelopeSolid
+                                    : faEnvelope
+                            }
                             label={'Message'}
                             path="/message"
                         />
@@ -136,44 +191,56 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                         }
                     >
                         <NavigationItem
-                            icon={activeNav === 'bookmarks' ? faBookmarkSolid : faBookmark}
+                            icon={
+                                activeNav === 'bookmarks'
+                                    ? faBookmarkSolid
+                                    : faBookmark
+                            }
                             label={'Bookmarks'}
                             path="/bookmarks"
                             className={styles.bookmarks}
                         />
                     </div>
 
-                    <div
-                        onClick={() => {
-                            setActiveNav('profile');
-                        }}
-                        className={
-                            activeNav === 'profile' ? styles.active : ''
-                        }
-                    >
-                        <NavigationItem
-                            icon={activeNav === 'profile' ? faUserSolid : faUser}
-                            label={'Profile'}
-                            path={`/profile/${authUser?._id}`}
-                        />
-                    </div>
+                    {authUser && authUser._id && (
+                        <div
+                            onClick={() => {
+                                setActiveNav('profile');
+                            }}
+                            className={
+                                activeNav === 'profile' ? styles.active : ''
+                            }
+                        >
+                            <NavigationItem
+                                icon={
+                                    activeNav === 'profile'
+                                        ? faUserSolid
+                                        : faUser
+                                }
+                                label={'Profile'}
+                                path={`/profile/${authUser._id}`}
+                            />
+                        </div>
+                    )}
 
-                    <div
-                        onClick={() => {
-                            setActiveNav('#');
-                        }}
-                        className={
-                            activeNav === '#' ? styles.active : ''
-                        }
+                    <PopUpMenu
+                        options={moreOptions}
+                        icons={moreIcons}
+                        isMenuIcon={false}
+                        isDisable={false}
+                        onClick={handleMoreOptions}
+                        className={styles.moreOptions}
                     >
-                        <NavigationItem
-                            icon={faEllipsisH}
-                            label={'More'}
-                            path="#"
-                            className={styles.ellipsis}
-                        />
-                    </div>
-                    
+                        <div
+                            className={styles.faCircleEllipsis}
+                            onClick={() => {
+                                setActiveNav('more');
+                            }}
+                        >
+                            <img src={FaCircleEllipsis} alt="" />
+                            <h2>More</h2>
+                        </div>
+                    </PopUpMenu>
                 </div>
                 <Button
                     value={'Tweet'}

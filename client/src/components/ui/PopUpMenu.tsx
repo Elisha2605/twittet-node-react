@@ -10,6 +10,7 @@ interface MenuPopUpProps {
     icons?: Record<string, React.ReactNode>;
     className?: string;
     classNameWithTitle?: string;
+    classNameMenuItemList?  : string;
     isMenuIcon?: boolean;
     isDisable?: boolean;
     children?: React.ReactNode;
@@ -24,6 +25,7 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
     icons,
     className,
     classNameWithTitle,
+    classNameMenuItemList,
     isMenuIcon = true,
     isDisable,
     children,
@@ -79,14 +81,14 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
                     />
                     <div className={className}>
                         <ul
-                            className={`${styles.menuList} ${title && `${styles.popUpWithTitle} ${classNameWithTitle}`}`}
+                            className={`${styles.menuList} ${title ? `${styles.popUpWithTitle} ${classNameWithTitle} ` : styles.popUpWithTitle}`}
                             ref={menuRef}
                         >
                             {title && <h1>{title}</h1>}
                             {options.map((option) => (
                                 <li
                                     key={option}
-                                    className={`${styles.menuItemList} ${
+                                    className={`${styles.menuItemList} ${classNameMenuItemList} ${
                                         icons &&
                                         icons[option] === icons['Delete']
                                             ? styles.delete
