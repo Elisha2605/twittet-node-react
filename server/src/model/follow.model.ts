@@ -100,7 +100,7 @@ const followModel = {
     },
     declines: {
         type: [declinedSchema],
-    }
+    },
 };
 
 const followSchema = new mongoose.Schema<IFollow>(followModel, {

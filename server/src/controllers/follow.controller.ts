@@ -1,6 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
-import { approveFollowRequest, declineFollowRequest, getUserFollows, sendFollowRequest } from 'src/services/follow.service';
+import {
+    approveFollowRequest,
+    declineFollowRequest,
+    getUserFollows,
+    sendFollowRequest,
+} from 'src/services/follow.service';
 
 export const getUserFollowsController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
