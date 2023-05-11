@@ -9,13 +9,11 @@ import ArrowLeftIcon from '../../components/icons/ArrowLeftIcon';
 import HeaderTitle from '../../components/header/HeaderTitle';
 import {
     IMAGE_AVATAR_BASE_URL,
-    IMAGE_COVER_BASE_URL,
     TWEET_MENU,
 } from '../../constants/common.constants';
 import AuthContext from '../../context/user.context';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { getUserById } from '../../api/user.api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faBookmark,
@@ -31,7 +29,7 @@ import UserInfo from '../../components/ui/UserInfo';
 import { getTweetById, getUserTweets } from '../../api/tweet.api';
 import { tweetMenuIcons, tweetMenuOptions } from '../../data/menuOptions';
 import Avatar, { Size } from '../../components/ui/Avatar';
-import FormReply from '../../components/form/FormReply';
+import FormReply from '../../components/form/FormReplyTweet';
 import TweetReply from '../../components/tweet/TweetReply';
 import { likeTweet } from '../../api/like.api';
 

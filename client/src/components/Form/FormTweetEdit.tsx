@@ -6,7 +6,7 @@ import {
     tweetReplyOptions,
     tweetReplyIcons 
 } from '../../data/menuOptions';
-import styles from './FormTweet.module.css';
+import styles from './FormTweetEdit.module.css';
 import EmojiIcon from '../icons/EmojiIcon';
 import ImageIcon from '../icons/ImageIcon';
 import CalendarIcon from '../icons/CalendarIcon';
@@ -20,7 +20,7 @@ import { searchUsers } from '../../api/user.api';
 import UserInfo from '../ui/UserInfo';
 import useClickOutSide from '../../hooks/useClickOutSide';
 
-interface FormProps {
+interface FormTweetEditProps {
     value: string;
     tweetTextRef: React.RefObject<HTMLTextAreaElement>;
     imagePreview?: string | null;
@@ -42,7 +42,7 @@ interface FormProps {
     isReplay?: boolean;    
 }
 
-const FormTweet: FC<FormProps> = ({
+const FormTweetEdit: FC<FormTweetEditProps> = ({
     value,
     tweetTextRef,
     imagePreview,
@@ -97,11 +97,10 @@ const FormTweet: FC<FormProps> = ({
         const { users } = await searchUsers(encodeURIComponent(searchTerm));
         setSearchResults(users);
     };
-    
 
     const handleUserClick = (username: string) => {
         setShowSuggestions(false);
-        const textarea = document.getElementById('review-text') as HTMLTextAreaElement;
+        const textarea = document.getElementById('form-edit') as HTMLTextAreaElement;
         if (textarea) {
           textarea.focus();
           const text = textarea.value;
@@ -148,7 +147,7 @@ const FormTweet: FC<FormProps> = ({
         
                 <textarea
                     className={`${styles.textarea} ${classNameTextErea}`}
-                    id="review-text"
+                    id="form-edit"
                     onChange={(e: any) => {
                         handleInputChange(e)
                         onChageImage(e);
@@ -250,4 +249,4 @@ const FormTweet: FC<FormProps> = ({
     );
 };
 
-export default FormTweet;
+export default FormTweetEdit;

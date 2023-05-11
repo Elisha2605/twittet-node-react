@@ -1,13 +1,13 @@
 import React, { FC } from 'react';
 import Button, { ButtonSize, ButtonType } from '../ui/Button';
-import styles from './FormReply.module.css';
+import styles from './FormReplyTweet.module.css';
 import EmojiIcon from '../icons/EmojiIcon';
 import ImageIcon from '../icons/ImageIcon';
 import CalendarIcon from '../icons/CalendarIcon';
 import XmarkIcon from '../icons/XmarkIcon';
 import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 
-interface FormProps {
+interface FormReplyTweetProps {
     value: string;
     tweetTextRef: React.RefObject<HTMLTextAreaElement>;
     imagePreview?: string | null;
@@ -28,7 +28,7 @@ interface FormProps {
     classNameTextErea?: string;   
 }
 
-const FormTweet: FC<FormProps> = ({
+const FormReplyTweet: FC<FormReplyTweetProps> = ({
     value,
     tweetTextRef,
     imagePreview,
@@ -105,4 +105,4 @@ const FormTweet: FC<FormProps> = ({
     );
 };
 
-export default FormTweet;
+export default FormReplyTweet;
