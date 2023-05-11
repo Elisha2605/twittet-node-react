@@ -35,8 +35,6 @@ const FormNavigationTweet: FC<NavigationTweetProp> = ({
     clearTweetForm,
 }) => {
 
-
-    const [isFormFocused, setIsFormFocused] = useState(false);
     const [tweetAudience, setTweetAudience] = useState<TweetAudienceType>(TWEET_AUDIENCE.everyone);
     const [tweetReply, setTweetReply] = useState<TweetReplyType>(TWEET_REPLY.everyone);
     const [authUser, setAuthUser] = useState<any>(null);

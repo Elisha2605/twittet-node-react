@@ -3,7 +3,10 @@ import { TWEET_AUDIENCE, TWEET_REPLY } from 'src/constants/tweet.constants';
 import { handleError } from 'src/utils/db.util';
 import User from './user.model';
 import Notification, { INotification } from './notification.model';
-import { NOTIFICATION_MESSAGE, NOTIFICATION_TYPE } from 'src/constants/notification.constants';
+import {
+    NOTIFICATION_MESSAGE,
+    NOTIFICATION_TYPE,
+} from 'src/constants/notification.constants';
 
 export interface ITweet extends mongoose.Document {
     user: ObjectId | string;
@@ -21,7 +24,6 @@ export const tweetModel = {
         ref: 'User',
         require: true,
     },
-
     image: {
         type: String,
         default: null,

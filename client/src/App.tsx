@@ -36,6 +36,7 @@ function App() {
     const [selectedFileModal, setSelectedFileModal] = useState<File | null>(null);
     const [previewImageModal, setPreviewImageModal] = useState<string | null>(null);
     const [valueModal, setValueModal] = useState('');
+    
     const [onEditTweet, setOnEditTweets] = useState<any[]>([]);
 
     // cross-components states
