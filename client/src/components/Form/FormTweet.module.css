@@ -61,7 +61,7 @@
     position: relative;
     margin-top: 0.7rem;
     right: 0.5rem;
-    padding: 0 0.7rem;    
+    padding: 0 0.7rem;
 }
 
 .everyone span:nth-child(1), 
@@ -133,3 +133,13 @@
     color: var(--color-primary);;
     font-weight: bold;
 }  
+
+.searchResults {
+    width: 60%;
+    position: absolute;
+    background: var(--color-white);
+    box-shadow: 0 0 0 1px rgba(15, 15, 15, 0.001), 0 8px 16px rgba(15, 15, 15, 0.4);
+    border-radius: 1rem;
+    overflow: hidden;
+    z-index: 90;
+}

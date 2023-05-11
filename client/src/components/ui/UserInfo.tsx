@@ -25,6 +25,7 @@ interface UserInfoProps {
     onClickOption?: Function;
     isReply?: boolean;
     isOnHover?: boolean;
+    isNavigate?: boolean;
 }
 
 const UserInfo: FC<UserInfoProps> = ({
@@ -44,7 +45,8 @@ const UserInfo: FC<UserInfoProps> = ({
     time,
     onClickOption,
     isReply = false,
-    isOnHover = false
+    isOnHover = false,
+    isNavigate = false,
 }) => {
 
     const [authUser, setAuthUser] = useState<any>(null);
@@ -61,7 +63,9 @@ const UserInfo: FC<UserInfoProps> = ({
     const navigate = useNavigate();
 
     const onNavigateToProfile = () => {
-        navigate(`/profile/${userId}`)
+        if (isNavigate) {
+            navigate(`/profile/${userId}`)
+        }
     }
     
 
