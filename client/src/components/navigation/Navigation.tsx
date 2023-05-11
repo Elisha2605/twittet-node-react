@@ -51,13 +51,7 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
         const setNavActive = () => {
           const path = window.location.pathname;
           const activeNav = path.split('/')[1] || 'home';
-          console.log('activeNav:', activeNav);
-          if (path.startsWith('/profile/')) {
-            setActiveNav('profile');
-          } else {
-              setActiveNav(activeNav);
-          }
-
+          setActiveNav(activeNav);
         };
       
         // set active nav on component mount
@@ -70,7 +64,7 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
         return () => {
           window.removeEventListener('popstate', setNavActive);
         };
-    }, [authUser]);      
+      }, []);      
 
     const ctx = useContext(AuthContext);
     useEffect(() => {
@@ -116,6 +110,19 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                     />
                 </div>
                 <div className={styles.naviItems}>
+                    {/* <div
+                        onClick={() => {
+                            setActiveNav('home');
+                        }}
+                        className={activeNav === 'home' ? styles.active : ''}
+                    >
+                        <NavigationItem
+                            icon={faHomeUser}
+                            label={'Home'}
+                            path="/"
+                            className={styles.home}
+                        />
+                    </div> */}
                     <div
                         className={` ${styles.faHome} ${activeNav === 'home' ? styles.active : ''}`}
                         onClick={() => {

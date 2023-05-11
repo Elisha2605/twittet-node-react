@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import Button, { ButtonSize, ButtonType } from '../ui/Button';
 import { 
     tweetAudienceMenuOptions, 
@@ -16,8 +16,10 @@ import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAt, faChevronDown, faEarthAfrica, faLock, faUserCheck } from '@fortawesome/free-solid-svg-icons';
 import PopUpMenu from '../ui/PopUpMenu';
-import { TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
-import { ModalContext } from '../../context/modal.context';
+import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
+import { searchUsers } from '../../api/user.api';
+import UserInfo from '../ui/UserInfo';
+import useClickOutSide from '../../hooks/useClickOutSide';
 
 interface FormProps {
     value: string;
@@ -61,7 +63,16 @@ const FormTweet: FC<FormProps> = ({
     classNameTextErea,
     isReplay
 }) => {
-    
+
+    const [inputValue, setInputValue] = useState(value);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [searchResults, setSearchResults] = useState<any[]>([]);
+
+    const searchResultsRef = useRef<HTMLDivElement>(null);
+
+    // close searech result on click outside
+    useClickOutSide(searchResultsRef, setShowSuggestions);  
+
     // Adjust text erea with input value
     useAutosizeTextArea(tweetTextRef.current, value)
 
@@ -71,8 +82,41 @@ const FormTweet: FC<FormProps> = ({
             onSubmit(e);
         }
     }
+    
+    const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        const lastChar = value.charAt(value.length - 1);
+        if (lastChar === '@') {
+        setShowSuggestions(true);
+        } else if (lastChar === ' ') {
+        setShowSuggestions(false);
+        }
+        setInputValue(value);
 
+        const atIndex = value.lastIndexOf('@');
+        const searchTerm = value.substring(atIndex + 1);
+        const { users } = await searchUsers(encodeURIComponent(searchTerm));
+        setSearchResults(users);
+    };
+    
 
+    const handleUserClick = (username: string) => {
+        setShowSuggestions(false);
+        const textarea = document.getElementById('review-text') as HTMLTextAreaElement;
+        if (textarea) {
+          textarea.focus();
+          const text = textarea.value;
+          const atPosition = text.lastIndexOf('@');
+          if (atPosition !== -1) {
+            const newText = text.substring(0, atPosition) + `@${username} ` + text.substring(textarea.selectionEnd);
+            setInputValue(newText);
+            textarea.setSelectionRange(atPosition + username.length + 2, atPosition + username.length + 2);
+          }
+        }
+    };
+      
+
+      
     const isImageSelected = !!imagePreview;
 
     return (
@@ -104,15 +148,47 @@ const FormTweet: FC<FormProps> = ({
                         </PopUpMenu>
                     </div>
                 ) : null }
+        
                 <textarea
                     className={`${styles.textarea} ${classNameTextErea}`}
                     id="review-text"
-                    onChange={onChageImage}
+                    onChange={(e: any) => {
+                        handleInputChange(e)
+                        onChageImage(e);
+                    }}
                     placeholder="What's happening?"
                     ref={tweetTextRef}
                     rows={1}
-                    value={value}
-                />
+                    value={inputValue}
+                    />
+                    {showSuggestions && (
+                        <div>
+                            <div
+                                ref={searchResultsRef}
+                                className={styles.searchResults}
+                            >
+                                {searchResults.map((user: any) => (
+                                    <div 
+                                        key={user._id}
+                                        onClick={() => handleUserClick(user.username)}
+                                        >
+                                    <UserInfo
+                                            userId={user?._id}
+                                            avatar={
+                                                user?.avatar &&
+                                                `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`
+                                            }
+                                            name={user?.name}
+                                            username={user?.username}
+                                            isVerified={user?.isVerified}
+                                            isOnHover={true}
+                                            isNavigate={false}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 {isFocused || isImageSelected ? (
                     <PopUpMenu 
                             title={'Who can reply?'}

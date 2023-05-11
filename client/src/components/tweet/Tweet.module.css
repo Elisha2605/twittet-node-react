@@ -26,7 +26,12 @@
     margin-bottom: 0.5rem;
     /* TODO: change the font-familly */
 }
-
+.coloredText {
+    color: var(--color-primary);
+}
+.coloredText:hover {
+    text-decoration: underline
+}
 .image {
     height: 20rem; /*Consider removing this or increasing it*/
     margin-bottom: 1rem;

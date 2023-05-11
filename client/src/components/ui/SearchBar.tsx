@@ -1,6 +1,6 @@
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import styles from './SearchBar.module.css';
 import { searchUsers } from '../../api/user.api';
 import UserInfo from './UserInfo';
@@ -35,11 +35,7 @@ const SearchBar: FC<SearchBarProps> = ({ width }) => {
         setSearchResults(users);
     };
 
-    useClickOutSide(searchResultsRef, setIsFocused);
-
-    useEffect(() => {
-        console.log(searchResults);
-    }, [searchResults])
+    useClickOutSide(searchResultsRef, setIsFocused);    
 
     const navigate = useNavigate();
 
@@ -86,7 +82,7 @@ const SearchBar: FC<SearchBarProps> = ({ width }) => {
                         <p className={styles.searchMsg}>No result found for "{searchTerm}"</p>
                     </div>
                 )}
-                {isFocused && (searchTerm.length === '' || searchResults.length === 0) && (
+                {isFocused && (searchTerm.length === 0 && searchResults.length === 0) && (
                     <div className={styles.searchResults}>
                         <p className={styles.searchMsg}>Searching for people, by their name or username</p>
                     </div>

@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import React, { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 import TweetFooter from '../ui/TweetFooter';
 import UserInfo from '../ui/UserInfo';
 import styles from './Tweet.module.css';
@@ -29,7 +29,6 @@ const Tweet: FC<TweetProps> = ({
     
     const tweetId = tweet?._id;
     const createdAt = getTimeDifference(new Date(tweet?.createdAt).getTime());
-    const tweetText = tweet?.text;
     const tweetImage = tweet?.image;
     
     const userId = tweet?.user?._id;
@@ -40,6 +39,25 @@ const Tweet: FC<TweetProps> = ({
 
     let navigate = useNavigate();
     
+
+    const renderColoredText = (text: string) => {
+        const words = text ? text.split(' ') : [];
+        return words.map((word: any, index: any) => {
+          if (word.startsWith('@') || word.startsWith('#')) {
+            return (
+              <a
+                key={index}
+                href={`http://127.0.0.1:3000/profile/${userId}`}
+                className={styles.coloredText}
+              >
+                {word}{' '}
+              </a>
+            );
+          }
+          return <span key={index}>{word} </span>;
+        });
+      };
+
     const goToTweetPage = () => {
         if (tweet?.image) {
             navigate(`/tweet/image/${tweet._id}`)
@@ -66,7 +84,7 @@ const Tweet: FC<TweetProps> = ({
                     onClickOption={onClickMenu}
                 />
                     <div className={styles.body} key={tweet._id} onClick={goToTweetPage}>
-                        <p className={styles.tweet}>{tweetText}</p>
+                        <p className={styles.tweet}>{renderColoredText(tweet.text)}</p>
                         {tweetImage && (
                             <div className={styles.image}>
                                 <img src={tweetImage ? `${IMAGE_TWEET_BASE_URL}/${tweetImage}` : undefined} alt="" />
