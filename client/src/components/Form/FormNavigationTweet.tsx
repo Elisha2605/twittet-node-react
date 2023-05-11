@@ -6,7 +6,7 @@ import {
     tweetReplyOptions,
     tweetReplyIcons 
 } from '../../data/menuOptions';
-import styles from './FormTweet.module.css';
+import styles from './FormNavigationTweet.module.css';
 import EmojiIcon from '../icons/EmojiIcon';
 import ImageIcon from '../icons/ImageIcon';
 import CalendarIcon from '../icons/CalendarIcon';
@@ -20,13 +20,12 @@ import { searchUsers } from '../../api/user.api';
 import UserInfo from '../ui/UserInfo';
 import useClickOutSide from '../../hooks/useClickOutSide';
 
-interface FormProps {
+interface FormNavigationProps {
     value: string;
     tweetTextRef: React.RefObject<HTMLTextAreaElement>;
     imagePreview?: string | null;
     imagePreviewModal?: string | null;
     isFocused?: boolean;
-    setIsFocused: React.Dispatch<React.SetStateAction<boolean>>;
 
     tweetAudienceValue?: string,
     tweetReplyValue?: string,
@@ -42,12 +41,11 @@ interface FormProps {
     isReplay?: boolean;    
 }
 
-const FormTweet: FC<FormProps> = ({
+const FormNavigation: FC<FormNavigationProps> = ({
     value,
     tweetTextRef,
     imagePreview,
     isFocused = false,
-    setIsFocused,
 
     tweetAudienceValue,
     tweetReplyValue,
@@ -101,7 +99,7 @@ const FormTweet: FC<FormProps> = ({
 
     const handleUserClick = (username: string) => {
         setShowSuggestions(false);
-        const textarea = document.getElementById('review-text') as HTMLTextAreaElement;
+        const textarea = document.getElementById('form-navigation') as HTMLTextAreaElement;
         if (textarea) {
           textarea.focus();
           const text = textarea.value;
@@ -114,11 +112,13 @@ const FormTweet: FC<FormProps> = ({
         }
     };
       
+
+      
     const isImageSelected = !!imagePreview;
 
     return (
         <React.Fragment>
-            <form className={styles.container} onSubmit={onSubmit} onKeyDown={handleKeyDown} onClick={() => setIsFocused(true)}>
+            <form className={styles.container} onSubmit={onSubmit} onKeyDown={handleKeyDown}>
                 {isFocused || isImageSelected ? (
                     <div className={`${styles.everyone} ${tweetAudienceValue === TWEET_AUDIENCE.twitterCircle ? styles.twitterCirlce : ''}`}>
                         <PopUpMenu 
@@ -148,7 +148,7 @@ const FormTweet: FC<FormProps> = ({
         
                 <textarea
                     className={`${styles.textarea} ${classNameTextErea}`}
-                    id="review-text"
+                    id="form-navigation"
                     onChange={(e: any) => {
                         handleInputChange(e)
                         onChageImage(e);
@@ -242,7 +242,7 @@ const FormTweet: FC<FormProps> = ({
                         type={ButtonType.primary}
                         size={ButtonSize.small}
                         isDisabled={value.length > 0 || imagePreview ? false : true}
-                        onClick={() => setIsFocused(false)}
+                        onClick={() => {}}
                     />
                 </div>
             </form>
@@ -250,4 +250,4 @@ const FormTweet: FC<FormProps> = ({
     );
 };
 
-export default FormTweet;
+export default FormNavigation;

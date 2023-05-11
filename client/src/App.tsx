@@ -17,7 +17,7 @@ import Following from './pages/follow/Following';
 import Follower from './pages/follow/Follower';
 import { deleteTweet } from './api/tweet.api';
 import { IMAGE_TWEET_BASE_URL, TWEET_MENU } from './constants/common.constants';
-import MainTweet from './pages/tweet/tweet-modals/MainTweetModal';
+import FormNavigationTweet from './pages/tweet/tweet-modals/NavigationTweetModal';
 import EditTweetModal from './pages/tweet/tweet-modals/EditTweetModal';
 import TweetPage from './pages/tweet/TweetPage';
 import TweetPageNoImage from './pages/tweet/TweetPageNoImage';
@@ -165,7 +165,7 @@ function App() {
                     <BrowserRouter>
                         <div className={Layout.navigation}>
                             <Navigation />
-                            <MainTweet 
+                            <FormNavigationTweet 
                                 selectedFile={selectedFileModal}
                                 previewImage={previewImageModal}                                    
                                 value={valueModal}

@@ -1,15 +1,15 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
-import styles from './MainTweetModal.module.css';
+import styles from './NavigationTweetModal.module.css';
 import Avatar, { Size } from '../../../components/ui/Avatar';
 import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../../constants/common.constants';
 import { ModalContext } from '../../../context/modal.context';
 import Modal from '../../../components/ui/Modal';
-import FormTweet from '../../../components/form/FormTweet';
 import AuthContext from '../../../context/user.context';
 import { TweetAudienceType, TweetReplyType } from '../../../types/tweet.types';
 import { createTweet } from '../../../api/tweet.api';
+import FormNavigation from '../../../components/form/FormNavigationTweet';
 
-interface MainTweetProp {
+interface NavigationTweetProp {
     value: string;
     
     selectedFile: File | null
@@ -23,7 +23,7 @@ interface MainTweetProp {
     clearTweetForm: () => void;
 }
 
-const MainTweet: FC<MainTweetProp> = ({ 
+const FormNavigationTweet: FC<NavigationTweetProp> = ({ 
     value,
     selectedFile,
     previewImage,
@@ -85,7 +85,7 @@ const MainTweet: FC<MainTweetProp> = ({
             };
             onAddTweet(newTweet)
         }
-        // setIsFormFocused(false);
+
         closeModal('main-tweet-modal');
         setTweetAudience(TWEET_AUDIENCE.everyone)
         setTweetReply(TWEET_REPLY.everyone)
@@ -135,13 +135,12 @@ const MainTweet: FC<MainTweetProp> = ({
                         size={Size.small}
                         className={''}
                     />
-                    <FormTweet
+                    <FormNavigation
                         value={value}
                         tweetTextRef={tweetTextRef}
                         imagePreview={previewImage}
                         isFocused={true}
                         tweetReplyValue={tweetReply}
-                        setIsFocused={setIsFormFocused}
                         onSubmit={handleSubmitTweet}
                         onImageUpload={handleImageUpload}
                         onCancelImagePreview={handleCanselPreviewImage}
@@ -157,4 +156,4 @@ const MainTweet: FC<MainTweetProp> = ({
     );
 };
 
-export default MainTweet;
+export default FormNavigationTweet;

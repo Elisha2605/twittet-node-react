@@ -25,7 +25,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Avatar, { Size } from '../../components/ui/Avatar';
 import AuthContext from '../../context/user.context';
-import FormReply from '../../components/form/FormReply';
+import FormReply from '../../components/form/FormReplyTweet';
 import TweetReply from '../../components/tweet/TweetReply';
 import { createTweetReply, getAllTweetReplies } from '../../api/reply.api';
 

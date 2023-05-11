@@ -4,10 +4,10 @@ import Avatar, { Size } from '../../../components/ui/Avatar';
 import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../../constants/common.constants';
 import { ModalContext } from '../../../context/modal.context';
 import Modal from '../../../components/ui/Modal';
-import FormTweet from '../../../components/form/FormTweet';
 import AuthContext from '../../../context/user.context';
 import { TweetAudienceType, TweetReplyType } from '../../../types/tweet.types';
 import { editTweet } from '../../../api/tweet.api';
+import FormTweetEdit from '../../../components/form/FormTweetEdit';
 
 interface EditTweetProp {
     value: string;
@@ -142,7 +142,7 @@ const EditTweetModal: FC<EditTweetProp> = ({
                         size={Size.small}
                         className={''}
                     />
-                    <FormTweet
+                    <FormTweetEdit
                         value={value ? value : ''}
                         tweetTextRef={tweetTextRef}
                         imagePreview={previewImage}
