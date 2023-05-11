@@ -38,6 +38,8 @@ const EditTweetModal: FC<EditTweetProp> = ({
     editTweetModal,
 }) => {
 
+    console.log(value);
+
     const [isFormFocused, setIsFormFocused] = useState(false);
     const [tweetAudience, setTweetAudience] = useState<TweetAudienceType>(TWEET_AUDIENCE.everyone);
     const [tweetReply, setTweetReply] = useState<TweetReplyType>(TWEET_REPLY.everyone);

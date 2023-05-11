@@ -7,7 +7,7 @@ export interface INotification extends mongoose.Document {
     sender: ObjectId | string;
     tweet: ObjectId | string;
     follow: ObjectId | string;
-    message: ObjectId | string;
+    message: string;
     read: boolean;
     createdAt: Date;
 }
@@ -38,7 +38,7 @@ const notificationModel = {
         required: false,
     },
     message: {
-        type: Types.ObjectId,
+        type: String,
         ref: 'Message',
         required: false,
     },

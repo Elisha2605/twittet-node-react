@@ -3,6 +3,7 @@ import { TWEET_AUDIENCE, TWEET_REPLY } from 'src/constants/tweet.constants';
 import { handleError } from 'src/utils/db.util';
 import User from './user.model';
 import Notification, { INotification } from './notification.model';
+import { NOTIFICATION_MESSAGE, NOTIFICATION_TYPE } from 'src/constants/notification.constants';
 
 export interface ITweet extends mongoose.Document {
     user: ObjectId | string;
@@ -76,6 +77,20 @@ tweetSchema.pre<ITweet>('save', function (next) {
         .then((users) => {
             this.mentions = users.map((user) => user._id);
             next();
+
+            // create a notification for each mentioned user
+            users.forEach((user) => {
+                const notification: INotification = new Notification({
+                    type: NOTIFICATION_TYPE.mention,
+                    user: user._id,
+                    sender: this.user,
+                    tweet: this._id,
+                    message: NOTIFICATION_MESSAGE.mention,
+                });
+                notification.save().catch((error) => {
+                    console.error(`Failed to create notification: ${error}`);
+                });
+            });
         })
         .catch((error) => next(error));
 });

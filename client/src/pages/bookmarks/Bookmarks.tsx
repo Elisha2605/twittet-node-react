@@ -39,6 +39,7 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
         getSavedTweets();
     }, []);
 
+
     // On like tweet
    const onClickLike = async (tweet: any) => {
         const res: any = await likeTweet(tweet._id);;

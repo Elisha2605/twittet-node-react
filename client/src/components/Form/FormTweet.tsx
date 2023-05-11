@@ -17,6 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAt, faChevronDown, faEarthAfrica, faLock, faUserCheck } from '@fortawesome/free-solid-svg-icons';
 import PopUpMenu from '../ui/PopUpMenu';
 import { TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
+import { ModalContext } from '../../context/modal.context';
 
 interface FormProps {
     value: string;
@@ -60,7 +61,14 @@ const FormTweet: FC<FormProps> = ({
     classNameTextErea,
     isReplay
 }) => {
+
+    const [inputValue, setInputValue] = useState(value);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [selectedUser, setSelectedUser] = useState('');
+
     
+    const { modalOpen } = useContext(ModalContext);
+
     // Adjust text erea with input value
     useAutosizeTextArea(tweetTextRef.current, value)
 
@@ -71,6 +79,38 @@ const FormTweet: FC<FormProps> = ({
         }
     }
 
+    //new 
+    
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        const lastChar = value.charAt(value.length - 1);
+        if (lastChar === '@') {
+        setShowSuggestions(true);
+        } else if (lastChar === ' ') {
+        setShowSuggestions(false);
+        }
+        setInputValue(value);
+    };
+    
+
+    const handleUserClick = (username: string) => {
+        setSelectedUser(username);
+        setShowSuggestions(false);
+        const textarea = document.getElementById('review-text') as HTMLTextAreaElement;
+        if (textarea) {
+          textarea.focus();
+          const text = textarea.value;
+          const atPosition = text.lastIndexOf('@');
+          if (atPosition !== -1) {
+            const newText = text.substring(0, atPosition) + `@${username} ` + text.substring(textarea.selectionEnd);
+            setInputValue(newText);
+            textarea.setSelectionRange(atPosition + username.length + 2, atPosition + username.length + 2);
+          }
+        }
+      };
+      
+
+      
     const isImageSelected = !!imagePreview;
 
     return (
@@ -106,14 +146,24 @@ const FormTweet: FC<FormProps> = ({
                 <textarea
                     className={`${styles.textarea} ${classNameTextErea}`}
                     id="review-text"
-                    onChange={(e) => {
+                    onChange={(e: any) => {
+                        handleInputChange(e)
                         onChageImage(e);
                     }}
                     placeholder="What's happening?"
                     ref={tweetTextRef}
                     rows={1}
-                    value={value}
+                    value={inputValue}
                     />
+                    {showSuggestions && (
+                        <div>
+                        <ul>
+                            <li onClick={() => handleUserClick('user1')}>user1</li>
+                            <li onClick={() => handleUserClick('user2')}>user2</li>
+                            <li onClick={() => handleUserClick('user3')}>user3</li>
+                        </ul>
+                        </div>
+                    )}
                 {isFocused || isImageSelected ? (
                     <PopUpMenu 
                             title={'Who can reply?'}
@@ -162,9 +212,7 @@ const FormTweet: FC<FormProps> = ({
                 <div className={styles.footer}>
                     <div className={styles.icons}>
                         <ImageIcon onChange={onImageUpload} />
-                        <div onClick={() => console.log()}>
-                            <EmojiIcon />
-                        </div>
+                        <EmojiIcon />
                         <CalendarIcon />
                     </div>
                     <Button

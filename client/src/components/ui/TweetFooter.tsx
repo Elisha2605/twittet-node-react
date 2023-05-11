@@ -38,7 +38,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
         onClick!(tweet);
     };
 
-    const onClickShare = async (option: any, _id: string, tweet: any) => {
+    const onClickSaveAndUnsaveTweet = async (option: any, _id: string, tweet: any) => {
         if (option === 'Bookmark' || option === 'Remove tweet') {
             const res = await saveTweetToBookmark(tweet._id);
             console.log(res);
@@ -80,7 +80,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
                                 isMenuIcon={false}
                                 options={['Remove tweet']!}
                                 icons={{'Remove tweet': <FontAwesomeIcon icon={faBookmark} />}}
-                                onClick={onClickShare}
+                                onClick={onClickSaveAndUnsaveTweet}
                             > 
                                 <FontAwesomeIcon icon={faArrowUpFromBracket} className={`${styles.faArrowUpFromBracket} ${styles.hoverBlue}`} />
                             </PopUpMenu>
@@ -90,7 +90,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
                                 isMenuIcon={false}
                                 options={shareOptions!}
                                 icons={shareIcon}
-                                onClick={onClickShare}
+                                onClick={onClickSaveAndUnsaveTweet}
                             > 
                                 <FontAwesomeIcon icon={faArrowUpFromBracket} className={`${styles.faArrowUpFromBracket} ${styles.hoverBlue}`} />
                             </PopUpMenu>

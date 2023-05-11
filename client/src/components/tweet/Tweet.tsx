@@ -41,7 +41,7 @@ const Tweet: FC<TweetProps> = ({
     
 
     const renderColoredText = (text: string) => {
-        const words = text.split(' ');
+        const words = text ? text.split(' ') : [];
         return words.map((word: any, index: any) => {
           if (word.startsWith('@') || word.startsWith('#')) {
             return (
