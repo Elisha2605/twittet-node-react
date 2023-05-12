@@ -27,6 +27,7 @@ const Tweet: FC<TweetProps> = ({
     isLiked,
 }) => {
     
+    console.log(tweet);
     const tweetId = tweet?._id;
     const createdAt = getTimeDifference(new Date(tweet?.createdAt).getTime());
     const tweetImage = tweet?.image;
@@ -82,6 +83,7 @@ const Tweet: FC<TweetProps> = ({
                     options={tweetMenuOptions}
                     icons={tweetMenuIcons}
                     onClickOption={onClickMenu}
+                    isNavigate={true}
                 />
                     <div className={styles.body} key={tweet._id} onClick={goToTweetPage}>
                         <p className={styles.tweet}>{renderColoredText(tweet.text)}</p>

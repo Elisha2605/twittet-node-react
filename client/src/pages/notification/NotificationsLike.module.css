@@ -1,0 +1,41 @@
+.wrapper {
+    display: flex;
+    padding: 0 1rem 0.5rem 1rem ;
+    border-bottom: 1px solid var(--color-secondary-light);
+}
+
+.wrapper:hover {
+    background: var(--color-secondary-lighter);
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+
+.userInfoWrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.container .message, .container svg {
+    position: relative;
+    top: 2.5rem;
+}
+.container .message {
+    color: var(--color-secondary);
+    font-size: var(--font-size-ms);
+    padding-left: 0.5rem;
+} 
+
+/* .container {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--color-secondary-light);
+    gap: 0.5rem;
+}
+
+
+
+.container .message {
+    color: var(--color-secondary);
+    font-size: var(--font-size-sm);
+} */

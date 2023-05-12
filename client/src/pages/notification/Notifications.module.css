@@ -1,3 +1,11 @@
+.mainSectionContainer {
+    width: 100%;
+}
+
+.main {
+    width: 100%;
+}
+
 .headerWrapper {
     display: flex;
     justify-content: space-between;
