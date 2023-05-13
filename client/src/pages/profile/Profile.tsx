@@ -25,9 +25,11 @@ import { useNavigate } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
 import { getUserTweets } from '../../api/tweet.api';
 import FollowButton from '../../components/ui/FollowButton';
-import faLockSolid from "../../assets/faLock-solid.svg"
+import faLockSolid from '../../assets/faLock-solid.svg';
 import { getUserLikedTweets, likeTweet } from '../../api/like.api';
-
+import { ModalContext } from '../../context/modal.context';
+import ProfileEditModal from './profile-modals/ProfileEditModal';
+import { faLink, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 
 interface ProfileProps {
     onAddTweet: any;
@@ -43,6 +45,10 @@ const Profile: FC<ProfileProps> = ({
     onClickTweetMenu,
 }) => {
     const { id } = useParams<{ id: string }>();
+
+    const [object, setObject] = useState<any>({ key: 'value' });
+
+    const { openModal } = useContext(ModalContext);
 
     const [activeTab, setActiveTab] = useState(
         localStorage.getItem('activeTab-profile') || 'tweets'
@@ -86,7 +92,7 @@ const Profile: FC<ProfileProps> = ({
         if (authUser) {
             const getAuthUserFollowStatus = async () => {
                 const { followers, followings } = await getAuthUserFollows(id!);
-              
+
                 setFollowings(followings);
                 setFollowers(followers);
             };
@@ -121,7 +127,6 @@ const Profile: FC<ProfileProps> = ({
         const handleNewTweetFromModal = () => {
             // Add new tweet from NavigationTweet to state
             if (authUser?.avatar) {
-                console.log('Inside handleNewTweet');
                 setUserTweets((prevTweets) => [onAddTweet[0], ...prevTweets]);
                 setUserTweetsMedia((prevTweets) => [
                     onAddTweet[0],
@@ -218,6 +223,60 @@ const Profile: FC<ProfileProps> = ({
         );
     }, [likedTweet]);
 
+    const updateTweetsUserInfoOnProfileEdit = (user: any) => {
+        setUserTweets((prevTweets) =>
+            prevTweets.map((tweet) => {
+                if (tweet?.user?._id === user?._id) {
+                    return {
+                        ...tweet,
+                        user: {
+                            ...tweet?.user,
+                            name: user?.name,
+                            avatar: user?.avatar,
+                        },
+                    };
+                }
+                return tweet;
+            })
+        );
+        setUserTweetsMedia((prevTweets) =>
+            prevTweets.map((tweet) => {
+                if (tweet?.user?._id === user?._id) {
+                    return {
+                        ...tweet,
+                        user: {
+                            ...tweet?.user,
+                            name: user?.name,
+                            avatar: user?.avatar,
+                        },
+                    };
+                }
+                return tweet;
+            })
+        );
+        setUserLikedTweets((prevTweets) =>
+            prevTweets.map((tweet) => {
+                if (tweet?.user?._id === user?._id) {
+                    return {
+                        ...tweet,
+                        user: {
+                            ...tweet?.user,
+                            name: user?.name,
+                            avatar: user?.avatar,
+                        },
+                    };
+                }
+                return tweet;
+            })
+        );
+    };
+
+    const getObjet = (editedObject: any) => {
+        updateTweetsUserInfoOnProfileEdit(editedObject);
+        setObject(editedObject);
+        setUser((prevUser: any) => ({ ...prevUser, ...editedObject }));
+    };
+
     return (
         <React.Fragment>
             <div className={Layout.mainSectionContainer}>
@@ -244,7 +303,7 @@ const Profile: FC<ProfileProps> = ({
                                         ? userTweets.length + ' tweets'
                                         : activeTab === 'media'
                                         ? userTweetsMedia.length + ' photos'
-                                        : '1 like'
+                                        : userLikedTweets.length + ' like'
                                 }
                             />
                         </div>
@@ -281,7 +340,7 @@ const Profile: FC<ProfileProps> = ({
                                     type={ButtonType.tietary}
                                     size={ButtonSize.small}
                                     onClick={() => {
-                                        console.log('Edit profile clicked');
+                                        openModal('profile-edit-modal');
                                     }}
                                 />
                             ) : (
@@ -292,28 +351,76 @@ const Profile: FC<ProfileProps> = ({
                                     className={styles.editProfileBtn}
                                 />
                             )}
+                            <ProfileEditModal
+                                user={user}
+                                editedObject={object}
+                                onCallBackEdit={getObjet}
+                            />
                         </div>
                         <div className={styles.userInfo}>
                             {!user?.isProtected ? (
                                 <p className={styles.firstname}>{user?.name}</p>
-                            ): (
+                            ) : (
                                 <div className={styles.isProtected}>
-                                    <p className={styles.firstname}>{user?.name}</p>
+                                    <p className={styles.firstname}>
+                                        {user?.name}
+                                    </p>
                                     <img src={faLockSolid} alt="" />
                                 </div>
                             )}
                             <p className={styles.username}>@{user?.username}</p>
-                            <p className={styles.bio}>
-                                Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Maxime mollitia,
-                            </p>
-                            <div className={styles.joined}>
-                                <FontAwesomeIcon icon={faCalendarDays} />
-                                <p>
-                                    Joined {getMonthName(user?.createdAt)}{' '}
-                                    {getYear(user?.createdAt)}
-                                </p>
+                            <p className={styles.bio}>{user?.bio}</p>
+
+                            <div className={styles.metaInfo}>
+                                {user?.location && (
+                                    <div className={styles.location}>
+                                        <FontAwesomeIcon icon={faLocationDot} />
+                                        <p>{user?.location}</p>
+                                    </div>
+                                )}
+                                {user?.website && (
+                                    <div className={styles.website}>
+                                        <FontAwesomeIcon icon={faLink} />
+                                        <a
+                                            href={
+                                                user?.website?.startsWith(
+                                                    'https://'
+                                                )
+                                                    ? user.website.replace(
+                                                          'http://',
+                                                          'https://'
+                                                      )
+                                                    : user?.website
+                                            }
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            {user?.website &&
+                                                (() => {
+                                                    const url = new URL(
+                                                        user?.website.includes(
+                                                            '://'
+                                                        )
+                                                            ? user?.website
+                                                            : `https://${user?.website}`
+                                                    );
+                                                    return url.hostname.replace(
+                                                        'www.',
+                                                        ''
+                                                    );
+                                                })()}
+                                        </a>
+                                    </div>
+                                )}
+                                <div className={styles.joinedAt}>
+                                    <FontAwesomeIcon icon={faCalendarDays} />
+                                    <p>
+                                        Joined {getMonthName(user?.createdAt)}{' '}
+                                        {getYear(user?.createdAt)}
+                                    </p>
+                                </div>
                             </div>
+
                             <div className={styles.followStatus}>
                                 <NavLink to={`/following/${id}`}>
                                     <p>

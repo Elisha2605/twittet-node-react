@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { faHomeUser } from '@fortawesome/free-solid-svg-icons';
 import {
     faBell,
     faBookmark,
@@ -49,22 +48,32 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
 
     useEffect(() => {
         const setNavActive = () => {
-          const path = window.location.pathname;
-          const activeNav = path.split('/')[1] || 'home';
-          setActiveNav(activeNav);
+            const path = window.location.pathname;
+            const activeNav = path.split('/')[1] || 'home';
+            setActiveNav(activeNav);
         };
-      
+
         // set active nav on component mount
         setNavActive();
-      
+
         // add popstate event listener to set active nav on back/forward navigation
         window.addEventListener('popstate', setNavActive);
-      
+
         // cleanup function to remove popstate event listener
         return () => {
-          window.removeEventListener('popstate', setNavActive);
+            window.removeEventListener('popstate', setNavActive);
         };
-      }, []);      
+    }, []);
+
+    // update the auth user when the context changes in local storage.
+    const contextStr = localStorage.getItem('context');
+    useEffect(() => {
+        if (contextStr) {
+            const context = JSON.parse(contextStr);
+            const user = context?.user;
+            setAuthUser((prevUser: any) => ({ ...prevUser, ...user }));
+        }
+    }, [contextStr]);
 
     const ctx = useContext(AuthContext);
     useEffect(() => {
@@ -110,40 +119,44 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                     />
                 </div>
                 <div className={styles.naviItems}>
-                    {/* <div
-                        onClick={() => {
-                            setActiveNav('home');
-                        }}
-                        className={activeNav === 'home' ? styles.active : ''}
-                    >
-                        <NavigationItem
-                            icon={faHomeUser}
-                            label={'Home'}
-                            path="/"
-                            className={styles.home}
-                        />
-                    </div> */}
                     <div
-                        className={` ${styles.faHome} ${activeNav === 'home' ? styles.active : ''}`}
+                        className={` ${styles.faHome} ${
+                            activeNav === 'home' ? styles.active : ''
+                        }`}
                         onClick={() => {
-                            navigate('/')
+                            navigate('/');
                             setActiveNav('home');
-                            
                         }}
-                        >
-                            <img src={activeNav === 'home' ? faHomeSolid : faHomeRegular} alt="" />
-                            <h2>Home</h2>
+                    >
+                        <img
+                            src={
+                                activeNav === 'home'
+                                    ? faHomeSolid
+                                    : faHomeRegular
+                            }
+                            alt=""
+                        />
+                        <h2>Home</h2>
                     </div>
 
                     <div
-                        className={` ${styles.faHashTag} ${activeNav === 'explore' ? styles.active : ''}`}
+                        className={` ${styles.faHashTag} ${
+                            activeNav === 'explore' ? styles.active : ''
+                        }`}
                         onClick={() => {
-                            navigate('/explore')
+                            navigate('/explore');
                             setActiveNav('explore');
                         }}
-                        >
-                            <img src={activeNav === 'explore' ? faHashTagSolid : faHashTagRegular} alt="" />
-                            <h2>Explore</h2>
+                    >
+                        <img
+                            src={
+                                activeNav === 'explore'
+                                    ? faHashTagSolid
+                                    : faHashTagRegular
+                            }
+                            alt=""
+                        />
+                        <h2>Explore</h2>
                     </div>
 
                     <div

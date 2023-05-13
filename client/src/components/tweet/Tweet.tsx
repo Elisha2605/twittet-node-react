@@ -26,8 +26,7 @@ const Tweet: FC<TweetProps> = ({
     onClickLike,
     isLiked,
 }) => {
-    
-    console.log(tweet);
+
     const tweetId = tweet?._id;
     const createdAt = getTimeDifference(new Date(tweet?.createdAt).getTime());
     const tweetImage = tweet?.image;

@@ -1,3 +1,5 @@
+import { domainCodes } from "../data/countryCodes";
+
 const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
 
 export const validateFileExtension = (value: any | null) => {
@@ -9,4 +11,26 @@ export const validateFileExtension = (value: any | null) => {
     const extension = fileName.substr(fileName.lastIndexOf('.') + 1);
 
     return allowedExtensions.includes(extension);
+};
+
+export const validateWebsite = (value: string) => {
+    if(value.trim() === '' || value.trim() === null) {
+        return true
+    }
+    // Check if website value starts with 'http://' or 'https://'
+    if (!value.startsWith('http://') && !value.startsWith('https://')) {
+        value = `https://${value}`;
+    }
+    // Check if website value ends with any of the domain codes
+    
+    const domainRegex = new RegExp(
+        `^https?:\\/\\/[\\S]+\\.(${domainCodes.join('|')})\\/?$`,
+        'i'
+    );
+
+    if (!domainRegex.test(value)) {
+        return 'Invalid website URL';
+    }
+    
+    return true;
 };
