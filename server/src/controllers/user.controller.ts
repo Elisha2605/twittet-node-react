@@ -7,6 +7,7 @@ import {
     searchUsers,
     editUserProfile,
 } from 'src/services/user.service';
+import { validate_name, validate_website } from 'src/utils/validation.util';
 
 export const users = asyncHandler(
     async (_req: Request, res: Response, next: NextFunction) => {
@@ -91,13 +92,13 @@ export const searchUsersController = asyncHandler(
 
 export const editUserProfileController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        const userId = req.user._id;
+        const userId = req.user._id; // needs validation
         const coverImage = req.files?.['cover']?.[0]?.filename ?? null;
         const avatar = req.files?.['avatar']?.[0]?.filename ?? null;
-        const name = req.body.name;
-        const bio = req.body.bio;
-        const location = req.body.location;
-        const website = req.body.website;
+        const name = validate_name(req.body.name);
+        const bio = req.body.bio; // needs validation
+        const location = req.body.location; // needs validation
+        const website = validate_website(req.body.website);
 
         try {
             const { success, message, status, payload } = await editUserProfile(
@@ -107,7 +108,7 @@ export const editUserProfileController = asyncHandler(
                 name,
                 bio,
                 location,
-                website
+                website as string
             );
             if (success) {
                 res.json({

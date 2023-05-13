@@ -54,7 +54,6 @@ const Profile: FC<ProfileProps> = ({
         localStorage.getItem('activeTab-profile') || 'tweets'
     );
 
-
     const [authUser, setAuthUser] = useState<any>(null);
     const [user, setUser] = useState<any>();
     const [userTweets, setUserTweets] = useState<any[]>([]);
@@ -224,55 +223,59 @@ const Profile: FC<ProfileProps> = ({
         );
     }, [likedTweet]);
 
-
     const updateTweetsUserInfoOnProfileEdit = (user: any) => {
-        setUserTweets(prevTweets => prevTweets.map(tweet => {
-          if (tweet?.user?._id === user?._id) {
-            return {
-              ...tweet,
-              user: {
-                ...tweet?.user,
-                name: user?.name,
-                avatar: user?.avatar
-              }
-            }
-          }
-          return tweet;
-        }));
-        setUserTweetsMedia(prevTweets => prevTweets.map(tweet => {
-            if (tweet?.user?._id === user?._id) {
-              return {
-                ...tweet,
-                user: {
-                  ...tweet?.user,
-                  name: user?.name,
-                  avatar: user?.avatar
+        setUserTweets((prevTweets) =>
+            prevTweets.map((tweet) => {
+                if (tweet?.user?._id === user?._id) {
+                    return {
+                        ...tweet,
+                        user: {
+                            ...tweet?.user,
+                            name: user?.name,
+                            avatar: user?.avatar,
+                        },
+                    };
                 }
-              }
-            }
-            return tweet;
-        }));
-        setUserLikedTweets(prevTweets => prevTweets.map(tweet => {
-        if (tweet?.user?._id === user?._id) {
-            return {
-            ...tweet,
-            user: {
-                ...tweet?.user,
-                name: user?.name,
-                avatar: user?.avatar
-            }
-            }
-        }
-        return tweet;
-        }));
-}
+                return tweet;
+            })
+        );
+        setUserTweetsMedia((prevTweets) =>
+            prevTweets.map((tweet) => {
+                if (tweet?.user?._id === user?._id) {
+                    return {
+                        ...tweet,
+                        user: {
+                            ...tweet?.user,
+                            name: user?.name,
+                            avatar: user?.avatar,
+                        },
+                    };
+                }
+                return tweet;
+            })
+        );
+        setUserLikedTweets((prevTweets) =>
+            prevTweets.map((tweet) => {
+                if (tweet?.user?._id === user?._id) {
+                    return {
+                        ...tweet,
+                        user: {
+                            ...tweet?.user,
+                            name: user?.name,
+                            avatar: user?.avatar,
+                        },
+                    };
+                }
+                return tweet;
+            })
+        );
+    };
 
     const getObjet = (editedObject: any) => {
-        updateTweetsUserInfoOnProfileEdit(editedObject)
+        updateTweetsUserInfoOnProfileEdit(editedObject);
         setObject(editedObject);
         setUser((prevUser: any) => ({ ...prevUser, ...editedObject }));
     };
-    
 
     return (
         <React.Fragment>

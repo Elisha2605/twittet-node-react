@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useRef, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import styles from './ProfileEditModal.module.css';
 import {
     IMAGE_AVATAR_BASE_URL,
@@ -12,6 +12,7 @@ import FaCamera from '../../../assets/faCamera-regular.svg';
 import XmarkIcon from '../../../components/icons/XmarkIcon';
 import Button, { ButtonSize, ButtonType } from '../../../components/ui/Button';
 import { editUserProfile } from '../../../api/user.api';
+import { validateWebsite } from '../../../utils/formValidation.utils';
 
 interface ProfileEditModalProps {
     user: any;
@@ -37,13 +38,12 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
     const [previewAvatarImage, setPreviewAvatarImage] = useState<string | null>(
         null
     );
+    const [authUser, setAuthUser] = useState<any>(null);
 
     const [name, setName] = useState('');
     const [bio, setBio] = useState('');
     const [location, setLocation] = useState('');
     const [website, setWebsite] = useState('');
-
-    const [serverError, setServerError] = useState('');
 
     const {
         register,
@@ -52,23 +52,26 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
         formState: { errors },
     } = useForm({
         defaultValues: {
-            name: user?.name,
-            bio: user?.bio,
-            location: user?.location,
-            website: user?.website,
+            name: authUser?.name as string,
+            bio: authUser?.bio as string,
+            location: authUser?.location as string,
+            website: authUser?.website as string,
         },
     });
 
-    const [authUser, setAuthUser] = useState<any>(null);
     const { closeModal, modalOpen } = useContext(ModalContext);
 
-    const tweetTextRef = useRef<HTMLTextAreaElement>(null);
+    const ctx = useContext(AuthContext);
+    useEffect(() => {
+        const getAuthUser = async () => {
+            const { user } = ctx.getUserContext();
+            setAuthUser(user);
+        };
+        getAuthUser();
+    }, []);
 
-    const nameInputRef = useRef(null);
 
     // setting the values when the modal is open
-    const ctx = useContext(AuthContext);
-
     useEffect(() => {
         setName(user?.name || '');
         setBio(user?.bio || '');
@@ -97,7 +100,6 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
             setPreviewAvatarImage(imageUrl);
         }
     };
-    
 
     const handleSubmitForm = handleSubmit(async (data: any) => {
         const { user } = await editUserProfile(
@@ -125,7 +127,10 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
         setPreviewAvatarImage('');
         setSelectedCoverFile(null);
         setSelectedAvatarFile(null);
+        reset(); // clear form input values
+
     });
+
     return (
         <React.Fragment>
             <Modal
@@ -135,7 +140,6 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
                 classNameContainer={styles.modalContainer}
                 classNameWrapper={styles.modalWrapper}
                 isCustomeHeader={true}
-                // isXmarkLeft={true}
             >
                 <form
                     className={styles.formSection}
@@ -169,7 +173,7 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
                                     src={
                                         user?.avatar
                                             ? `${IMAGE_COVER_BASE_URL}/${user?.coverImage}`
-                                            : undefined
+                                            : `${IMAGE_COVER_BASE_URL}/default-cover.jpg`
                                     }
                                     alt=""
                                 />
@@ -203,7 +207,7 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
                                     src={
                                         user?.avatar
                                             ? `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`
-                                            : undefined
+                                            : `${IMAGE_AVATAR_BASE_URL}/default-avatar.jpg`
                                     }
                                     alt=""
                                 />
@@ -244,11 +248,11 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
                             <label className={styles.formLabel} htmlFor="name">
                                 Name
                             </label>
-                            {/* {errors.name && (
+                            {errors.name && (
                                 <p className={styles.errorMsg}>
                                     {errors.name?.message}
                                 </p>
-                            )} */}
+                            )}
                         </div>
                         <div
                             className={`${styles.inputWrapper} ${
@@ -269,11 +273,11 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
                             <label className={styles.formLabel} htmlFor="bio">
                                 Bio
                             </label>
-                            {/* {errors.bio && (
+                            {errors.bio && (
                                 <p className={styles.errorMsg}>
                                     {errors.bio?.message}
                                 </p>
-                            )} */}
+                            )}
                         </div>
                         <div
                             className={`${styles.inputWrapper} ${
@@ -296,11 +300,11 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
                             >
                                 Location
                             </label>
-                            {/* {errors.location && (
+                            {errors.location && (
                                 <p className={styles.errorMsg}>
                                     {errors.location?.message}
                                 </p>
-                            )} */}
+                            )}
                         </div>
                         <div
                             className={`${styles.inputWrapper} ${
@@ -308,7 +312,7 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
                             }`}
                         >
                             <input
-                                {...register('website')}
+                                {...register('website', { validate: validateWebsite })}
                                 className={styles.formInput}
                                 type="text"
                                 id="website"
@@ -323,11 +327,11 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
                             >
                                 Website
                             </label>
-                            {/* {errors.website && (
+                            {errors.website && (
                                 <p className={styles.errorMsg}>
                                     {errors.website?.message}
                                 </p>
-                            )} */}
+                            )}
                         </div>
                     </div>
                 </form>

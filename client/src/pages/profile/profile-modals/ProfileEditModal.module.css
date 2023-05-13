@@ -1,5 +1,7 @@
 .modalContainer {
     max-width: 37.5rem !important;
+    max-height: 50rem !important;
+    overflow-x: hidden;
 }
 
 .modalWrapper {
