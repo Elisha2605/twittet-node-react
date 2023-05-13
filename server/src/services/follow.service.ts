@@ -94,7 +94,7 @@ const handleProtectedFollowRequest = async (
             const result = await Promise.all([receiver.save(), sender.save()]);
             return {
                 success: true,
-                message: 'Unfollow',
+                message: 'Unsend',
                 status: 200,
                 payload: result,
             };
@@ -118,7 +118,7 @@ const handleProtectedFollowRequest = async (
             const result = await Promise.all([receiver.save(), sender.save()]);
             return {
                 success: true,
-                message: 'Following',
+                message: 'Pending',
                 status: 200,
                 payload: result,
             };
@@ -132,7 +132,7 @@ const handleProtectedFollowRequest = async (
             ]);
             return {
                 success: true,
-                message: 'Following',
+                message: 'Pending',
                 status: 200,
                 payload: response,
             };
@@ -151,7 +151,7 @@ const handleProtectedFollowRequest = async (
             const result = await Promise.all([receiver.save(), sender.save()]);
             return {
                 success: true,
-                message: 'Following',
+                message: 'Pending',
                 status: 200,
                 payload: result,
             };
@@ -170,7 +170,7 @@ const handleProtectedFollowRequest = async (
             const result = await Promise.all([receiver.save(), sender.save()]);
             return {
                 success: true,
-                message: 'Following',
+                message: 'Pending',
                 status: 200,
                 payload: result,
             };

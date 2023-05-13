@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styles from './App.module.css';
 import Navigation from './components/navigation/Navigation';
 import Layout from './Layout.module.css';
@@ -60,8 +60,7 @@ function App() {
     const handleEditTweet = (editedTweet: any) => {
         setOnEditTweets(editedTweet)
     }
-
-
+    
     // On Login blue background
     const handleLoginSuccess = () => {
         setShowBackground(true); // Set the showBackground state to true when login is successful
@@ -70,7 +69,6 @@ function App() {
         }, 1000)
     };
 
-    
     //// Temp functions - start //
     const handleTextAreaOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const val = e.target?.value;

@@ -42,7 +42,7 @@ const FollowButton: FC<FollowButtonProps> = ({
     onClick,
 }) => {
     const [authUser, setAuthUser] = useState<any>(null);
-    const [followings, setFollowings] = useState<any[]>([]);
+    const [isPending, setIspending] = useState<any[]>([]);
     const [isFollowing, setIsFollowing] = useState<boolean>();
     const [isloading, setIsLoading] = useState<boolean>(false);
 
@@ -79,14 +79,13 @@ const FollowButton: FC<FollowButtonProps> = ({
 
     const getAuthUserFollowStatus = async () => {
         // setIsLoading(true); // remove the comment to get a spinner
-        const { followings } = await getAuthUserFollows(authUser?._id!);
+        const { followings, pendings } = await getAuthUserFollows(authUser?._id!);
         if (
             followings &&
             followings.some((following: any) => following.user._id === userId)
         ) {
             setIsFollowing(true);
         }
-        setFollowings(followings);
         setIsLoading(false);
     };
 

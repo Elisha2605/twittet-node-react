@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { faHomeUser } from '@fortawesome/free-solid-svg-icons';
 import {
     faBell,
     faBookmark,
@@ -84,6 +83,7 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
         }
     };
 
+
     const handleMoreOptions = (option: string) => {
         if (option === MORE_NAV_OPTION.connect) {
             console.log(option);
@@ -110,19 +110,6 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                     />
                 </div>
                 <div className={styles.naviItems}>
-                    {/* <div
-                        onClick={() => {
-                            setActiveNav('home');
-                        }}
-                        className={activeNav === 'home' ? styles.active : ''}
-                    >
-                        <NavigationItem
-                            icon={faHomeUser}
-                            label={'Home'}
-                            path="/"
-                            className={styles.home}
-                        />
-                    </div> */}
                     <div
                         className={` ${styles.faHome} ${activeNav === 'home' ? styles.active : ''}`}
                         onClick={() => {

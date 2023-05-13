@@ -23,6 +23,8 @@ export interface IUser extends mongoose.Document {
     avatar: string;
     coverImage: string;
     bio: string;
+    location: string;
+    website: string;
     isActive: boolean;
     isVerified: boolean;
     isProtected: boolean;
@@ -72,10 +74,22 @@ export const userModel = {
     },
     coverImage: {
         type: String,
+        default: 'default-cover.jpg',
         required: false,
     },
     bio: {
         type: String,
+        default: null,
+        required: false,
+    },
+    location: {
+        type: String,
+        default: null,
+        required: false,
+    },
+    website: {
+        type: String,
+        default: null,
         required: false,
     },
     isActive: {

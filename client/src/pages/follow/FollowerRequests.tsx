@@ -1,6 +1,5 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import styles from './FollowerRequests.module.css';
-import { ModalContext } from '../../context/modal.context';
 import AuthContext from '../../context/user.context';
 import UserInfo from '../../components/ui/UserInfo';
 import { approveFollowRequest, declineFollowRequest, getAuthUserFollows, sendFollowRequest } from '../../api/follow.api';
@@ -32,9 +31,9 @@ const FollowerRequests: FC<FollowerRequestsProps> = ({}) => {
     const getAuthUser = async () => {
         const { user } = ctx.getUserContext();
         if (user) {
-        setAuthUser(user);
-        const res = await getAuthUserFollows(user._id);
-        setWaitingRequests(res.waitings);
+            setAuthUser(user);
+            const res = await getAuthUserFollows(user._id);
+            setWaitingRequests(res.waitings);
         }
     };
     getAuthUser();
@@ -91,7 +90,7 @@ const FollowerRequests: FC<FollowerRequestsProps> = ({}) => {
                     </Header>
                     {/* Home page - start */}
                     <div className={styles.main}>
-                            {waitingRequests && waitingRequests.map((waiting: any) => (
+                            {waitingRequests.map((waiting: any) => (
                                 <div key={waiting?.user?._id} className={styles.contentWrapper}>
                                     <div>
                                         <UserInfo

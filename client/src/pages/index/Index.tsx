@@ -41,6 +41,7 @@ const Index: FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
                         modalName={'Signup'}
                         isOverlay={true}
                         logo={true}
+                        isXmarkLeft={false}
                     >
                         <Signup />
                     </Modal>
@@ -50,6 +51,7 @@ const Index: FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
                             modalName={'Login'}
                             isOverlay={true}
                             logo={true}
+                            isXmarkLeft={false}
                         >
                             <Login onSuccess={onSuccess} />
                         </Modal>

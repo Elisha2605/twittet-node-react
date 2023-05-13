@@ -27,6 +27,8 @@ import { getUserTweets } from '../../api/tweet.api';
 import FollowButton from '../../components/ui/FollowButton';
 import faLockSolid from "../../assets/faLock-solid.svg"
 import { getUserLikedTweets, likeTweet } from '../../api/like.api';
+import { ModalContext } from '../../context/modal.context';
+import ProfileEditModal from './profile-modals/ProfileEditModal';
 
 
 interface ProfileProps {
@@ -43,6 +45,10 @@ const Profile: FC<ProfileProps> = ({
     onClickTweetMenu,
 }) => {
     const { id } = useParams<{ id: string }>();
+
+    const [object, setObject] = useState<any>({ key: "value" });
+
+    const { openModal } = useContext(ModalContext);
 
     const [activeTab, setActiveTab] = useState(
         localStorage.getItem('activeTab-profile') || 'tweets'
@@ -121,7 +127,6 @@ const Profile: FC<ProfileProps> = ({
         const handleNewTweetFromModal = () => {
             // Add new tweet from NavigationTweet to state
             if (authUser?.avatar) {
-                console.log('Inside handleNewTweet');
                 setUserTweets((prevTweets) => [onAddTweet[0], ...prevTweets]);
                 setUserTweetsMedia((prevTweets) => [
                     onAddTweet[0],
@@ -218,6 +223,22 @@ const Profile: FC<ProfileProps> = ({
         );
     }, [likedTweet]);
 
+    const getObjet = (editedObject: any) => {
+        setUser((prevInfo: any) => 
+
+        prevInfo?._id === editedObject?._id
+                    ? {
+                        ...prevInfo,
+                        coverImage: editedObject?.coverImage,
+                        avatar: editedObject?.avatar,
+                        name: editedObject?.name,
+                        bio: editedObject?.bio,
+                      }
+                    : prevInfo
+        )
+        setObject(editedObject)
+    }
+
     return (
         <React.Fragment>
             <div className={Layout.mainSectionContainer}>
@@ -281,7 +302,7 @@ const Profile: FC<ProfileProps> = ({
                                     type={ButtonType.tietary}
                                     size={ButtonSize.small}
                                     onClick={() => {
-                                        console.log('Edit profile clicked');
+                                        openModal('profile-edit-modal')
                                     }}
                                 />
                             ) : (
@@ -292,6 +313,7 @@ const Profile: FC<ProfileProps> = ({
                                     className={styles.editProfileBtn}
                                 />
                             )}
+                        <ProfileEditModal user={user} editedObject={object} onCallBackEdit={getObjet} />
                         </div>
                         <div className={styles.userInfo}>
                             {!user?.isProtected ? (
@@ -303,10 +325,7 @@ const Profile: FC<ProfileProps> = ({
                                 </div>
                             )}
                             <p className={styles.username}>@{user?.username}</p>
-                            <p className={styles.bio}>
-                                Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Maxime mollitia,
-                            </p>
+                            <p className={styles.bio}>{user?.bio}</p>
                             <div className={styles.joined}>
                                 <FontAwesomeIcon icon={faCalendarDays} />
                                 <p>

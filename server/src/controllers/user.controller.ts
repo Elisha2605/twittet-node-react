@@ -5,6 +5,7 @@ import {
     getUserById,
     getAuthUserInfo,
     searchUsers,
+    editUserProfile,
 } from 'src/services/user.service';
 
 export const users = asyncHandler(
@@ -78,6 +79,42 @@ export const searchUsersController = asyncHandler(
                     status: status,
                     message: message,
                     users: payload,
+                });
+            } else {
+                res.status(status).json({ success, message });
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+export const editUserProfileController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req.user._id;
+        const coverImage = req.files?.['cover']?.[0]?.filename ?? null;
+        const avatar = req.files?.['avatar']?.[0]?.filename ?? null;
+        const name = req.body.name;
+        const bio = req.body.bio;
+        const location = req.body.location;
+        const website = req.body.website;
+
+        try {
+            const { success, message, status, payload } = await editUserProfile(
+                userId,
+                coverImage,
+                avatar,
+                name,
+                bio,
+                location,
+                website
+            );
+            if (success) {
+                res.json({
+                    success: success,
+                    status: status,
+                    message: message,
+                    user: payload,
                 });
             } else {
                 res.status(status).json({ success, message });

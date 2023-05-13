@@ -78,7 +78,6 @@ const Following = () => {
                         </HorizontalNavBar>
                     </Header>
 
-                    {/* FOR YOU - START */}
                     <div className={styles.main}>
                         {followings.map((follow) => (
                             <div key={follow._id} className={styles.followingItem} onClick={() => navigate(`/profile/${follow.user._id}`)}>    
@@ -102,7 +101,7 @@ const Following = () => {
                         ))}
                     </div>
                 </div>
-                {/* Home page - start */}
+                
                 <div>
                     <Header border={false}>
                         <SearchBar width={74} />

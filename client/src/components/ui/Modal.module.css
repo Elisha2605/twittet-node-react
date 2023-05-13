@@ -1,6 +1,7 @@
 /* Modal styles */
 
 .container {
+    width: 100%;
     position: fixed;
     z-index: 999;
     top: 0;
@@ -12,7 +13,7 @@
     align-items: center;
 }
 
-.close {
+.closeRightSide {
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
@@ -23,6 +24,34 @@
     background-color: transparent;
     border: none;
     cursor: pointer;
+}
+.closeLeftSide {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    gap: 2rem;
+    top: 0.5rem;
+    left: 0.5rem;
+    font-size: var(--font-size-xl);
+}
+
+.closeLeftSide svg:hover {
+    background-color: var(--color-secondary-light);
+}
+
+.titleAndBtnWrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.button {
+    padding: 0.3rem 1.2rem;
+    align-self: flex-end;
+    margin-right: 2rem;
+    font-size: var(--font-size-ms);
 }
 
 .overlay {
@@ -65,7 +94,7 @@
 }
 
 .container ::-webkit-scrollbar {
-    width: 10px;
+    width: 7px;
 }
 
 .container ::-webkit-scrollbar-track {
@@ -74,7 +103,7 @@
 }
 
 .container ::-webkit-scrollbar-thumb {
-    background-color: #888;
+    background-color: #b9b9b9;
 }
 
 .container ::-webkit-scrollbar-thumb:hover {

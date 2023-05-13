@@ -28,6 +28,13 @@
     --color-green-lighter: #edfef3; 
     --color-error-light: #ffece9;
 
+    /* color transparent */
+    --color-black-transparent: #0000008a;
+
+    /* color transparent hoeever */
+    --color-black-transparent-hover: #626262ad;
+
+
     /* button color */
     --color-btn-disabled: #7accff;
 

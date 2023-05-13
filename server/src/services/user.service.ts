@@ -105,3 +105,45 @@ export const searchUsers = async (
         return Promise.reject(errorResponse);
     }
 };
+
+export const editUserProfile = async (
+    userId: string,
+    coverImage: string,
+    avatar: string,
+    name: string,
+    bio: string,
+    location: string,
+    website: string
+): Promise<ApiResponse<any>> => {
+    try {
+        const user = await User.findById(userId);
+
+        if (!user) {
+            throw CustomError('User not found', 404);
+        }
+
+        user.coverImage = coverImage === null ? user.coverImage : coverImage;
+        user.avatar = avatar === null ? user.avatar : avatar;
+        user.name = name === '' ? user.name : name;
+        user.bio = bio;
+        user.location = location;
+        user.website = website;
+
+        const editedUser = await user.save();
+
+        return {
+            success: true,
+            message: 'Success',
+            status: 200,
+            payload: editedUser,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};
