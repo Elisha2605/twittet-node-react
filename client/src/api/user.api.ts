@@ -94,6 +94,7 @@ export const editUserProfile = async (
             user: {
             _id: res.data.user._id,
             name: res.data.user.name,
+            username: res.data.user.username,
             email: res.data.user.email,
             avatar: res.data.user.avatar,
             coverImage: res.data.user.coverImage,

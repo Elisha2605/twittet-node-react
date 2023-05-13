@@ -81,10 +81,21 @@
     margin-bottom: 0.5rem;
 }
 
-.joined {
+.metaInfo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--color-secondary);
+    font-size: var(--font-size-ms);
+}
+.location, .website, .joinedAt {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+.website a {
+    color: var(--color-primary);
 }
 
 .followStatus {

@@ -54,8 +54,8 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
         defaultValues: {
             name: user?.name,
             bio: user?.bio,
-            location: '',
-            website: '',
+            location: user?.location,
+            website: user?.website,
         },
     });
 
@@ -286,6 +286,8 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
                                 type="text"
                                 id="location"
                                 name="location"
+                                value={location}
+                                onChange={(e) => setLocation(e.target.value)}
                                 placeholder=" "
                             />
                             <label
@@ -294,11 +296,11 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
                             >
                                 Location
                             </label>
-                            {errors.location && (
+                            {/* {errors.location && (
                                 <p className={styles.errorMsg}>
                                     {errors.location?.message}
                                 </p>
-                            )}
+                            )} */}
                         </div>
                         <div
                             className={`${styles.inputWrapper} ${
@@ -311,6 +313,8 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
                                 type="text"
                                 id="website"
                                 name="website"
+                                value={website}
+                                onChange={(e) => setWebsite(e.target.value)}
                                 placeholder=" "
                             />
                             <label
@@ -319,11 +323,11 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
                             >
                                 Website
                             </label>
-                            {errors.website && (
+                            {/* {errors.website && (
                                 <p className={styles.errorMsg}>
                                     {errors.website?.message}
                                 </p>
-                            )}
+                            )} */}
                         </div>
                     </div>
                 </form>
