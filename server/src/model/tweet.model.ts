@@ -7,6 +7,7 @@ import {
     NOTIFICATION_MESSAGE,
     NOTIFICATION_TYPE,
 } from 'src/constants/notification.constants';
+import TwitterCircle from './twitterCircle.model';
 
 export interface ITweet extends mongoose.Document {
     user: ObjectId | string;
@@ -95,6 +96,35 @@ tweetSchema.pre<ITweet>('save', function (next) {
             });
         })
         .catch((error) => next(error));
+});
+
+// adding a pre-save hook to initialize a new twitter circle doc fo a user.
+tweetSchema.pre<ITweet>('save', async function (next) {
+    if (this.audience === TWEET_AUDIENCE.twitterCircle) {
+        try {
+            const existingTwitterCircle = await TwitterCircle.findOne({
+                user: this.user,
+            });
+
+            if (existingTwitterCircle) {
+                console.log('User Circle doc already exists!');
+                return;
+            }
+
+            const newCircle = await TwitterCircle.create({
+                user: this.user,
+                members: [],
+                count: 0,
+            });
+            console.log('New Twitter Circle created:', newCircle);
+            next();
+        } catch (err) {
+            console.error('Error creating Twitter Circle:', err);
+            next(err);
+        }
+    } else {
+        next();
+    }
 });
 
 const Tweet = mongoose.model<ITweet>('Tweet', tweetSchema, 'Tweet');

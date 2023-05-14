@@ -21,6 +21,7 @@ const twitterCirlceModel = {
     },
     count: {
         type: Number,
+        default: 0,
         require: true,
     },
     createdAt: {

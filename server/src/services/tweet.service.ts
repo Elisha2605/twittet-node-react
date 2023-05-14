@@ -47,6 +47,7 @@ export const getAllTweets = async (
             {
                 $unwind: { path: '$likes', preserveNullAndEmptyArrays: true },
             },
+            // think if you should or shouldn't remove this.
             {
                 $addFields: {
                     isInCircle: {

@@ -29,7 +29,7 @@ export const addUserToTwitterCircle = async (
             const membersList = await memberToAdd.save();
             return {
                 success: true,
-                message: 'Added member to Twitter Circle',
+                message: 'Added a new member in your Twitter Circle',
                 status: 200,
                 payload: membersList,
             };
@@ -63,7 +63,7 @@ export const addUserToTwitterCircle = async (
 
         return {
             success: true,
-            message: 'Removed member from Twitter Circle',
+            message: 'Added a new member in your Twitter Circle',
             status: 200,
             payload: membersList,
         };
