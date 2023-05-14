@@ -75,20 +75,21 @@ export const getAllTweets = async (
                         {
                             audience: TWEET_AUDIENCE.twitterCircle,
                             $expr: {
-                                $and: [
-                                    {
+                                $cond: {
+                                    if: {
                                         $eq: [
-                                            '$user._id',
+                                            new mongoose.Types.ObjectId(userId),
                                             '$twitterCircle.user',
                                         ],
                                     },
-                                    {
+                                    then: true,
+                                    else: {
                                         $in: [
                                             new mongoose.Types.ObjectId(userId),
                                             '$twitterCircle.members',
                                         ],
                                     },
-                                ],
+                                },
                             },
                         },
                     ],
