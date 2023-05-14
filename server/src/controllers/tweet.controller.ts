@@ -13,8 +13,9 @@ import {
 
 export const getAllTweetsController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req.user._id;
         try {
-            const { success, message, payload } = await getAllTweets();
+            const { success, message, payload } = await getAllTweets(userId);
             if (success) {
                 res.status(200).json({ tweets: payload });
             } else {

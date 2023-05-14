@@ -318,7 +318,7 @@ const Profile: FC<ProfileProps> = ({
                                     src={
                                         user?.coverImage
                                             ? `${IMAGE_COVER_BASE_URL}/${user?.coverImage}`
-                                            : undefined
+                                            : `${IMAGE_COVER_BASE_URL}/default-cover.jpg`
                                     }
                                     alt=""
                                 />
@@ -328,7 +328,7 @@ const Profile: FC<ProfileProps> = ({
                                     src={
                                         user?.avatar
                                             ? `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`
-                                            : undefined
+                                            : `${IMAGE_COVER_BASE_URL}/default-avatar.jpg`
                                     }
                                     alt=""
                                 />

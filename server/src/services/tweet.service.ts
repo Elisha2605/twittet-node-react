@@ -6,9 +6,25 @@ import Tweet from 'src/model/tweet.model';
 import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
 import { CustomError } from 'src/utils/helpers';
 
-export const getAllTweets = async (): Promise<ApiResponse<any>> => {
+export const getAllTweets = async (
+    userId: string
+): Promise<ApiResponse<any>> => {
     try {
         const tweets = await Tweet.aggregate([
+            {
+                $lookup: {
+                    from: 'TwitterCircle',
+                    localField: 'user',
+                    foreignField: 'user',
+                    as: 'twitterCircle',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$twitterCircle',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
             {
                 $lookup: {
                     from: 'User',
@@ -29,9 +45,58 @@ export const getAllTweets = async (): Promise<ApiResponse<any>> => {
                 },
             },
             {
-                $unwind: {
-                    path: '$likes',
-                    preserveNullAndEmptyArrays: true,
+                $unwind: { path: '$likes', preserveNullAndEmptyArrays: true },
+            },
+            {
+                $addFields: {
+                    isInCircle: {
+                        $cond: {
+                            if: {
+                                $eq: ['$audience', TWEET_AUDIENCE.everyone],
+                            },
+                            then: false,
+                            else: {
+                                $in: [
+                                    new mongoose.Types.ObjectId(userId),
+                                    '$twitterCircle.members',
+                                ],
+                            },
+                        },
+                    },
+                    twitterCircleMembers: '$twitterCircle.members',
+                },
+            },
+            {
+                $match: {
+                    $or: [
+                        {
+                            audience: TWEET_AUDIENCE.everyone,
+                        },
+                        {
+                            audience: TWEET_AUDIENCE.twitterCircle,
+                            $expr: {
+                                $and: [
+                                    {
+                                        $eq: [
+                                            '$user._id',
+                                            '$twitterCircle.user',
+                                        ],
+                                    },
+                                    {
+                                        $in: [
+                                            new mongoose.Types.ObjectId(userId),
+                                            '$twitterCircle.members',
+                                        ],
+                                    },
+                                ],
+                            },
+                        },
+                    ],
+                },
+            },
+            {
+                $sort: {
+                    createdAt: -1,
                 },
             },
             {
@@ -64,17 +129,14 @@ export const getAllTweets = async (): Promise<ApiResponse<any>> => {
                             else: 0,
                         },
                     },
-                },
-            },
-            {
-                $sort: {
-                    createdAt: -1,
+                    isInCircle: 1,
+                    twitterCircleMembers: 1,
                 },
             },
         ]).exec();
 
-        if (tweets.length === 0) {
-            return { success: false, message: 'No tweet found!', status: 200 };
+        if (tweets.length < 1) {
+            throw CustomError('Tweets not found', 204);
         }
         return {
             success: true,

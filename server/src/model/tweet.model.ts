@@ -12,10 +12,10 @@ export interface ITweet extends mongoose.Document {
     user: ObjectId | string;
     image: string;
     text: string;
-    audience: string; //Create constants (Everyone, Twitter Circle);
+    audience: string;
     reply: string;
-    mentions: ObjectId[]; // an array of user ids
-    hashtags: ObjectId[]; // an array of hashtags
+    mentions: ObjectId[];
+    hashtags: ObjectId[];
 }
 
 export const tweetModel = {

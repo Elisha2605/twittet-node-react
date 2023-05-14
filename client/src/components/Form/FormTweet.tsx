@@ -91,7 +91,7 @@ const FormTweet: FC<FormProps> = ({
         setShowSuggestions(false);
         }
         setInputValue(value);
-
+        
         const atIndex = value.lastIndexOf('@');
         const searchTerm = value.substring(atIndex + 1);
         const { users } = await searchUsers(encodeURIComponent(searchTerm));

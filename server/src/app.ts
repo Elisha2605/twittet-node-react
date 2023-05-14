@@ -22,6 +22,7 @@ import likeRouter from './routes/like.routes';
 import bookmarkRouter from './routes/bookmark.routes';
 import replyRouter from './routes/reply.routes';
 import notificationRouter from './routes/notification.routes';
+import twitterCircleRouter from './routes/twitterCircle.routes';
 
 dotenv.config();
 
@@ -84,6 +85,7 @@ app.use('/api/likes', likeRouter);
 app.use('/api/bookmarks', bookmarkRouter);
 app.use('/api/replies', replyRouter);
 app.use('/api/notifications', notificationRouter);
+app.use('/api/twitterCircles', twitterCircleRouter);
 
 // SERVING STATIC FILES
 app.use('/avatar', express.static(path.join(__dirname, 'uploads', 'avatar')));
