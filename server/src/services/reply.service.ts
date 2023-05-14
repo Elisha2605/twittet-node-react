@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
+import { TWEET_AUDIENCE, TWEET_REPLY } from 'src/constants/tweet.constants';
+import Follow from 'src/model/follow.model';
 import Reply from 'src/model/reply.model';
+import Tweet from 'src/model/tweet.model';
 import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
 import { CustomError } from 'src/utils/helpers';
 
@@ -158,6 +161,56 @@ export const createReply = async (
     image: string
 ): Promise<ApiResponse<any>> => {
     try {
+        const tweet: any = await Tweet.findById(tweetId);
+
+        if (!tweet) {
+            throw CustomError('Tweet not found!', 404);
+        }
+
+        const authorFollowers = await Follow.findOne({ user: tweet.user });
+
+        // check for Twitter Circle
+        if (
+            tweet.user.toString() !== userId.toString() &&
+            tweet.audience === TWEET_AUDIENCE.twitterCircle &&
+            !authorFollowers.followers.some(
+                (follower: any) =>
+                    follower.user.toString() === userId.toString()
+            )
+        ) {
+            throw CustomError(
+                'Unthorised! only people in the Twitter Circle who follow the user can reply!',
+                404
+            );
+        }
+
+        // check for people people you follow
+        if (
+            tweet.user.toString() !== userId.toString() &&
+            tweet.reply === TWEET_REPLY.peopleYouFollow &&
+            !authorFollowers.followings.some(
+                (follower: any) =>
+                    follower.user.toString() === userId.toString()
+            )
+        ) {
+            throw CustomError(
+                'Unthorised! only people the user follows can reply!',
+                404
+            );
+        }
+
+        // check for people you mention
+        if (
+            tweet.user.toString() !== userId.toString() &&
+            tweet.reply === TWEET_REPLY.onlyPeopleYouMention &&
+            !tweet.mentions.includes(userId)
+        ) {
+            throw CustomError(
+                'Unthorised! only people mentioned by the user can reply!',
+                404
+            );
+        }
+
         const newReply = new Reply({
             tweet: tweetId,
             user: userId,

@@ -195,7 +195,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                     <div className={styles.footer}>
                         <TweetFooter
                             comments={'123'}
-                            reposts={'123'}
+                            replys={'123'}
                             likesCount={
                                 tweet?.totalLikes > 0 ? tweet?.totalLikes : ''
                             }

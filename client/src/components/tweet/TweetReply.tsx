@@ -80,7 +80,7 @@ const Tweet: FC<TweetProps> = ({
                     <TweetFooter
                         tweet={tweet}
                         comments={'1'}
-                        reposts={'9'}
+                        replys={'9'}
                         likesCount={tweet.totalLikes > 0 ? tweet.totalLikes: '' }
                         views={'4'}
                         onClick={() => onClickLike(tweet)}
