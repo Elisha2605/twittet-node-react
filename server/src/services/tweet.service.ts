@@ -137,6 +137,7 @@ export const getAllTweets = async (
                     text: 1,
                     audience: 1,
                     reply: 1,
+                    mentions: 1,
                     createdAt: 1,
                     updatedAt: 1,
                     likes: '$likes.likes',
@@ -225,6 +226,7 @@ export const getTweetById = async (tweetId: string): Promise<any> => {
                     reply: 1,
                     createdAt: 1,
                     updatedAt: 1,
+                    mentions: 1,
                     likes: '$likes.likes',
                     totalLikes: {
                         $cond: {

@@ -145,7 +145,7 @@ const Tweet: FC<TweetProps> = ({
                 ) : tweet.reply === TWEET_REPLY.peopleYouFollow ? (
                     <div className={styles.tweetReply}>
                         <span className={styles.icon}>
-                            <UserIcon small={true} />
+                            <UserIcon isSmall={true} />
                         </span>{' '}
                         <span>You can reply to this conversation</span>
                     </div>
@@ -153,7 +153,7 @@ const Tweet: FC<TweetProps> = ({
                     tweet.reply === TWEET_REPLY.onlyPeopleYouMention && (
                         <div className={styles.tweetReply}>
                             <span className={styles.icon}>
-                                <AtIcon small={true} />
+                                <AtIcon isSmall={true} />
                             </span>{' '}
                             <span>You can reply to this conversation</span>
                         </div>
