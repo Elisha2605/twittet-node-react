@@ -20,6 +20,19 @@ export const getUserFollowsController = asyncHandler(
     }
 );
 
+export const getAuthUserFollowsController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req.user._id;
+
+        try {
+            const response = await getUserFollows(userId);
+            res.status(200).json(response);
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
 export const followRequestController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const sender = req.body.senderId;

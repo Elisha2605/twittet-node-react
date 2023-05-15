@@ -10,7 +10,7 @@ import HorizontalNavBar from '../../components/ui/HorizontalNavBar';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
 import ArrowLeftIcon from '../../components/icons/ArrowLeftIcon';
-import { getAuthUserFollows } from '../../api/follow.api';
+import { getUserFollows } from '../../api/follow.api';
 import UserInfo from '../../components/ui/UserInfo';
 import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
 import { ButtonSize, ButtonType } from '../../components/ui/Button';
@@ -48,7 +48,7 @@ const Follower: React.FC<{}> = () => {
       // get Follow status
     useEffect(() => {
         const getAuthUserFollowStatus = async () => {
-            const { followers } = await getAuthUserFollows(id!);
+            const { followers } = await getUserFollows(id!);
             setFollowers(followers);
         };
         getAuthUserFollowStatus();

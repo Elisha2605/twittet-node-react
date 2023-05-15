@@ -180,7 +180,7 @@ export const createReply = async (
         ) {
             throw CustomError(
                 'Unthorised! only people in the Twitter Circle who follow the user can reply!',
-                404
+                400
             );
         }
 
@@ -195,7 +195,7 @@ export const createReply = async (
         ) {
             throw CustomError(
                 'Unthorised! only people the user follows can reply!',
-                404
+                400
             );
         }
 
@@ -207,7 +207,7 @@ export const createReply = async (
         ) {
             throw CustomError(
                 'Unthorised! only people mentioned by the user can reply!',
-                404
+                400
             );
         }
 

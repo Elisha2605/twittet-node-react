@@ -70,6 +70,8 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
         getTweetReplies();
     }, [id]);
 
+    
+
     // get Tweet by ID
     useEffect(() => {
         const getTweet = async () => {
@@ -310,6 +312,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                                     className={''}
                                 />
                                 <FormReply
+                                    tweet={tweet}
                                     value={value}
                                     tweetTextRef={tweetTextRef}
                                     imagePreview={previewImage}
@@ -321,6 +324,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                                         handleCanselPreviewImage
                                     }
                                     onChageImage={handleTextAreaOnChangeReply}
+                                    authUserId={authUser && authUser?._id}
                                 />
                             </div>
                         </div>

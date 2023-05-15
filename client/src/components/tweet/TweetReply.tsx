@@ -48,7 +48,6 @@ const Tweet: FC<TweetProps> = ({
         }
     }
     
-    
     return (
         <React.Fragment>
             <div className={`${styles.container}`} key={tweetId}>
