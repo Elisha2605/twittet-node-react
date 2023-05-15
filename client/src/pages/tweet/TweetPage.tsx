@@ -420,7 +420,35 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                                         </div>
                                     </div>
                                 </> 
-                            ): null}
+                            ): (
+                                <>
+                                    <div className={styles.formSection}>
+                                    <Avatar
+                                        path={
+                                            authUser?.avatar
+                                                ? `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`
+                                                : undefined
+                                        }
+                                        size={Size.small}
+                                        className={''}
+                                    />
+                                    <FormReply
+                                        tweet={tweet}
+                                        value={value}
+                                        tweetTextRef={tweetTextRef}
+                                        imagePreview={previewImage}
+                                        isFocused={isFormFocused}
+                                        setIsFocused={setIsFormFocused}
+                                        onSubmit={handleSubmitTweet}
+                                        onImageUpload={handleImageUploadRepy}
+                                        onCancelImagePreview={
+                                            handleCanselPreviewImage
+                                        }
+                                        onChageImage={handleTextAreaOnChangeReply}
+                                    />
+                                </div>
+                                </>
+                            )}
 
                             
                             {/* {!isOnlyPeopleYouFollow(tweet?.user?._id) || isMention(tweet && authUser?._id) ? (
