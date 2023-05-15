@@ -48,10 +48,8 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
 
     const [tweetReplies, setTweetReplies] = useState<any[]>([]);
-    const [tweetMentions, setTweetMentions] = useState<any[]>([]);
 
     const [followers, setFollowers] = useState<any>([]);
-    const [followings, setFollowings] = useState<any>([]);
 
     const previousPath = localStorage.getItem('active-nav');
     const goBack = () => {
@@ -72,7 +70,6 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
             const res = await getAllTweetReplies(id!);
             const { tweets } = res;
             setTweetReplies(tweets);
-            setTweetMentions(res.mentions);
         }
     };
 
@@ -178,14 +175,11 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
 
     useEffect(() => {
         const fetchAuthUserData = async () => {
-            const { followers, followings } = await getAuthUserFollows();
+            const { followers } = await getAuthUserFollows();
             setFollowers(followers);
-            setFollowings(followings);
         };
         fetchAuthUserData();
     }, []);
-    
-
 
     const isTwitterCircle = (userId: string): boolean => {
         console.log(userId);
