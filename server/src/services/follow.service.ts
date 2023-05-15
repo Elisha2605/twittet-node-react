@@ -12,22 +12,22 @@ export const getUserFollows = async (userId: string): Promise<any> => {
             })
             .populate({
                 path: 'followers.user',
-                select: '_id name username avatar isVerified',
+                select: '_id name username avatar isVerified isProtected',
                 model: 'User',
             })
             .populate({
                 path: 'followings.user',
-                select: '_id name username avatar isVerified',
+                select: '_id name username avatar isVerified isProtected',
                 model: 'User',
             })
             .populate({
                 path: 'pendings.user',
-                select: '_id name username avatar isVerified',
+                select: '_id name username avatar isVerified isProtected',
                 model: 'User',
             })
             .populate({
                 path: 'waitings.user',
-                select: '_id name username avatar isVerified',
+                select: '_id name username avatar isVerified isProtected',
                 model: 'User',
             })
             .exec();

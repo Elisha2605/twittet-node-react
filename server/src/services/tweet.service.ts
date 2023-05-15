@@ -430,15 +430,6 @@ export const getFollowTweets = async (
             },
         ]).exec();
 
-        // To consider in the feature ( additional query criteria to filter the tweets based on their audience or reply)
-        // const tweets = await Tweet.find({
-        //     user: { $in: followingIds },
-        //     audience: {
-        //         $in: [TWEET_AUDIENCE.everyone, TWEET_AUDIENCE.followers],
-        //     },
-        //     reply: { $in: [TWEET_REPLY.everyone, TWEET_REPLY.followers] },
-        // });
-
         return {
             success: true,
             message: 'Successfully fetched tweets',

@@ -3,6 +3,34 @@ import User from 'src/model/user.model';
 import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
 import { CustomError } from 'src/utils/helpers';
 
+export const getUserTwitterCircleMembers = async (
+    userId: string
+): Promise<ApiResponse<any>> => {
+    try {
+        const members = await TwitterCircle.findOne({ user: userId })
+            .populate({
+                path: 'members',
+                select: 'name username avatar isVerified isProtected',
+            })
+            .exec();
+
+        return {
+            success: true,
+            message: 'Twitter Circle members',
+            status: 200,
+            payload: members,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};
+
 export const addUserToTwitterCircle = async (
     userId: string,
     addId: string
