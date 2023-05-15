@@ -17,7 +17,7 @@ export const getUserTwitterCircleMembersController = asyncHandler(
                     success: success,
                     status: status,
                     message: message,
-                    users: payload,
+                    user: payload,
                 });
             } else {
                 res.status(status).json({ success, message });

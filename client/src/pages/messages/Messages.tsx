@@ -9,6 +9,7 @@ import SearchBar from '../../components/ui/SearchBar';
 import Aside from '../../components/aside/Aside';
 import DetailIcon from '../../components/icons/DetailIcon';
 import Avatar, { Size } from '../../components/ui/Avatar';
+import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
 
 const Message = () => {
     
@@ -44,7 +45,7 @@ const Message = () => {
                     </Header>
                     <Aside className={styles.aside}>
                         <div className={styles.userToInfo}>
-                            <Avatar size={Size.medium} path={'https://scontent-cph2-1.xx.fbcdn.net/v/t39.30808-6/337155884_6676092215753622_8028443491988735130_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=IRPEb8TdpAgAX8zOR2g&_nc_ht=scontent-cph2-1.xx&oh=00_AfCtQZxorTlL7uOnmq7BFVIBBYvDEwBVtfxKU0_p-ENDJg&oe=644BD948'} className={''} />
+                            <Avatar size={Size.medium} path={`${IMAGE_AVATAR_BASE_URL}/default-avatar.jpg`} className={''} />
                             <p className={styles.fullname}>Aïcha Haïdara</p>
                             <p className={styles.username}>@haidara_e</p>
                             <p className={styles.moreInfo}>Joined September 2011 · 14 Followers</p>

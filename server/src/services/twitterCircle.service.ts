@@ -7,18 +7,31 @@ export const getUserTwitterCircleMembers = async (
     userId: string
 ): Promise<ApiResponse<any>> => {
     try {
-        const members = await TwitterCircle.findOne({ user: userId })
+        const user = await TwitterCircle.findOne({ user: userId })
+            .populate({
+                path: 'user',
+                select: 'name username avatar isVerified isProtected',
+            })
             .populate({
                 path: 'members',
                 select: 'name username avatar isVerified isProtected',
             })
             .exec();
 
+        if (!user) {
+            return {
+                success: true,
+                message: 'No members yet',
+                status: 404,
+                payload: [],
+            };
+        }
+
         return {
             success: true,
             message: 'Twitter Circle members',
             status: 200,
-            payload: members,
+            payload: user,
         };
     } catch (error) {
         const errorResponse: ErrorResponse = {
