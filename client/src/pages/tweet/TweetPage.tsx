@@ -50,6 +50,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
     const [tweetReplies, setTweetReplies] = useState<any[]>([]);
 
     const [followers, setFollowers] = useState<any>([]);
+    const [followings, setFollowings] = useState<any>([]);
 
     const previousPath = localStorage.getItem('active-nav');
     const goBack = () => {
@@ -175,8 +176,9 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
 
     useEffect(() => {
         const fetchAuthUserData = async () => {
-            const { followers } = await getAuthUserFollows();
+            const { followers, followings } = await getAuthUserFollows();
             setFollowers(followers);
+            setFollowings(followings)
         };
         fetchAuthUserData();
     }, []);
@@ -187,7 +189,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
             authUser && tweet &&
             tweet?.user?._id !== authUser?._id &&
             tweet?.audience === TWEET_AUDIENCE.twitterCircle &&
-            !followers.some(
+            !followings.some(
                 (follower: any) => follower?.user?._id === userId
             )
         ) {
@@ -498,9 +500,9 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                                             <div className={styles.replyMsg}>
                                                 <h4>Who can reply?</h4>
                                                 <p>
-                                                    People @
+                                                    People in Twitter Circle who follow @
                                                     {tweet?.user?.username}{' '} 
-                                                    follow in the Twitter Circle can reply
+                                                    can reply
                                                 </p>
                                             </div>
                                         </div>
