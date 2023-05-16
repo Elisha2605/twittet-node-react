@@ -68,6 +68,25 @@ export const getAllTweets = async (
                 },
             },
             {
+                $addFields: {
+                    isInCircle: {
+                        $cond: {
+                            if: {
+                                $eq: ['$audience', TWEET_AUDIENCE.everyone],
+                            },
+                            then: false,
+                            else: {
+                                $in: [
+                                    new mongoose.Types.ObjectId(userId),
+                                    '$twitterCircle.members',
+                                ],
+                            },
+                        },
+                    },
+                    twitterCircleMembers: '$twitterCircle.members',
+                },
+            },
+            {
                 $match: {
                     $or: [
                         {
@@ -117,6 +136,7 @@ export const getAllTweets = async (
                     text: 1,
                     audience: 1,
                     reply: 1,
+                    mentions: 1,
                     createdAt: 1,
                     updatedAt: 1,
                     likes: '$likes.likes',
@@ -137,8 +157,13 @@ export const getAllTweets = async (
             },
         ]).exec();
 
-        if (tweets.length < 1) {
-            throw CustomError('Tweets not found', 204);
+        if (tweets.length === 0) {
+            return {
+                success: true,
+                message: 'Not tweets found!',
+                status: 404,
+                payload: [],
+            };
         }
         return {
             success: true,
@@ -205,6 +230,7 @@ export const getTweetById = async (tweetId: string): Promise<any> => {
                     reply: 1,
                     createdAt: 1,
                     updatedAt: 1,
+                    mentions: 1,
                     likes: '$likes.likes',
                     totalLikes: {
                         $cond: {
@@ -408,14 +434,14 @@ export const getFollowTweets = async (
             },
         ]).exec();
 
-        // To consider in the feature ( additional query criteria to filter the tweets based on their audience or reply)
-        // const tweets = await Tweet.find({
-        //     user: { $in: followingIds },
-        //     audience: {
-        //         $in: [TWEET_AUDIENCE.everyone, TWEET_AUDIENCE.followers],
-        //     },
-        //     reply: { $in: [TWEET_REPLY.everyone, TWEET_REPLY.followers] },
-        // });
+        if (tweets.length === 0) {
+            return {
+                success: true,
+                message: 'Not tweets found!',
+                status: 404,
+                payload: [],
+            };
+        }
 
         return {
             success: true,

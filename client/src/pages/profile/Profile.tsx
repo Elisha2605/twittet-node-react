@@ -19,7 +19,7 @@ import {
 } from '../../constants/common.constants';
 import { getMonthName, getYear } from '../../utils/helpers.utils';
 import AuthContext from '../../context/user.context';
-import { getAuthUserFollows } from '../../api/follow.api';
+import { getUserFollows } from '../../api/follow.api';
 import { NavLink, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
@@ -90,13 +90,13 @@ const Profile: FC<ProfileProps> = ({
     // get Follow status (consider putting this in the userContext)
     useEffect(() => {
         if (authUser) {
-            const getAuthUserFollowStatus = async () => {
-                const { followers, followings } = await getAuthUserFollows(id!);
+            const fetchUserFollowStatus = async () => {
+                const { followers, followings } = await getUserFollows(id!);
 
                 setFollowings(followings);
                 setFollowers(followers);
             };
-            getAuthUserFollowStatus();
+            fetchUserFollowStatus();
         }
     }, [authUser, id]);
 
@@ -108,7 +108,7 @@ const Profile: FC<ProfileProps> = ({
     // fetch user tweets
     useEffect(() => {
         const fetchUserTweets = async () => {
-            const res = await getUserTweets(id!);
+            const res = await getUserTweets();
             const { tweets } = res;
 
             const medias = tweets

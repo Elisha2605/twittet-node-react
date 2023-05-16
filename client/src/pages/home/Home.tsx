@@ -22,6 +22,7 @@ import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
 import AuthContext from '../../context/user.context';
 import { likeTweet } from '../../api/like.api';
 import { useNavigate } from 'react-router-dom';
+import HomeEditTwitterCirlceModal from './home-modals/HomeEditTwitterCirlceModal';
 
 interface HomeProps {
     value: string;
@@ -78,27 +79,32 @@ const Home: React.FC<HomeProps> = ({
         getAuthUser();
     }, []);
 
-
-
     // fetching Tweets
     useEffect(() => {
         const fetchTweets = async () => {
-            const { tweets } = await getAllTweets();
-            setTweets(tweets);
-        };
+            try {
+              if (authUser) {
+                const { tweets } = await getAllTweets();
+                setTweets(tweets);
+              }
+            } catch (error) {
+              // Handle the error here, e.g., display an error message or set default values for tweets
+              console.error('Error fetching tweets:', error);
+            }
+          };          
         fetchTweets();
-    }, []);
+    }, [authUser]);
     const memoizedTweets = useMemo(() => tweets, [tweets]);
 
 
     useEffect(() => {
-        if (authUser) {
-            const fetchFollowingTweets = async () => {
-                const { tweets } = await getFollowTweets(authUser?._id);
+        const fetchFollowingTweets = async () => {
+            if (authUser) {
+                const { tweets } = await getFollowTweets();
                 setFollowingTweets(tweets);
-            };
-            fetchFollowingTweets();
-        }
+            }
+        };
+        fetchFollowingTweets();
     }, [authUser]);
     const memoizedFollowTweets = useMemo(() => followingTweets, [followingTweets]);
 
@@ -148,15 +154,12 @@ const Home: React.FC<HomeProps> = ({
 
     const handleTweetReyplyOptions = (option: string) => {
         if (option === TWEET_REPLY.everyone) {
-            console.log(TWEET_REPLY.everyone);
             setTweetReply(TWEET_REPLY.everyone);
         }
         if (option === TWEET_REPLY.peopleYouFollow) {
-            console.log(TWEET_REPLY.peopleYouFollow);
             setTweetReply(TWEET_REPLY.peopleYouFollow);
         }
         if (option === TWEET_REPLY.onlyPeopleYouMention) {
-            console.log(TWEET_REPLY.onlyPeopleYouMention);
             setTweetReply(TWEET_REPLY.onlyPeopleYouMention);
         }
     }
@@ -272,9 +275,15 @@ const Home: React.FC<HomeProps> = ({
                             onClickReplyMenu={handleTweetReyplyOptions} 
                         />
                     </div>
+                    {/* Twitter Circle Modal */}
+                    <>
+
+                        <HomeEditTwitterCirlceModal />
+                    
+                    </>
                     {activeTab === 'for-you' && (
                         <div className={styles.main}>
-                            {memoizedTweets.map((tweet: any) => (
+                            {tweets.map((tweet: any) => (
                                 <Tweet
                                     key={tweet._id}
                                     tweet={tweet}
@@ -287,7 +296,7 @@ const Home: React.FC<HomeProps> = ({
                     )}
                     {activeTab === 'following' && (
                         <div className={styles.main}>
-                            {memoizedFollowTweets.map((tweet: any) => (
+                            {followingTweets.map((tweet: any) => (
                                 <Tweet
                                     key={tweet._id}
                                     tweet={tweet}

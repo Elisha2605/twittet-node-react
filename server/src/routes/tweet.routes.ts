@@ -15,8 +15,8 @@ import upload from 'src/middleware/multer.middleware';
 const tweetRouter = Router();
 
 tweetRouter.get('', verifyUser(), getAllTweetsController);
-tweetRouter.get('/user/:id', verifyUser(), getUserTweetsController);
-tweetRouter.get('/follow/:id', verifyUser(), getFollowTweetsController);
+tweetRouter.get('/user-tweets', verifyUser(), getUserTweetsController);
+tweetRouter.get('/follower-tweets', verifyUser(), getFollowTweetsController);
 tweetRouter.get('/tweet/:id', verifyUser(), getTweetByIdController);
 tweetRouter.post(
     '/create',

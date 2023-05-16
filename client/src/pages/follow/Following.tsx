@@ -13,7 +13,7 @@ import UserInfo from '../../components/ui/UserInfo';
 import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
 import { ButtonSize, ButtonType } from '../../components/ui/Button';
 import HorizontalNavBar from '../../components/ui/HorizontalNavBar';
-import { getAuthUserFollows } from '../../api/follow.api';
+import { getUserFollows } from '../../api/follow.api';
 import AuthContext from '../../context/user.context';
 import FollowButton from '../../components/ui/FollowButton';
 
@@ -49,7 +49,7 @@ const Following = () => {
     // get Follow status
     useEffect(() => {
         const getAuthUserFollowStatus = async () => {
-            const { followings } = await getAuthUserFollows(id!);
+            const { followings } = await getUserFollows(id!);
             setFollowings(followings);
         };
         getAuthUserFollowStatus();

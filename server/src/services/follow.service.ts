@@ -12,6 +12,40 @@ export const getUserFollows = async (userId: string): Promise<any> => {
             })
             .populate({
                 path: 'followers.user',
+                select: '_id name username avatar isVerified isProtected',
+                model: 'User',
+            })
+            .populate({
+                path: 'followings.user',
+                select: '_id name username avatar isVerified isProtected',
+                model: 'User',
+            })
+            .populate({
+                path: 'pendings.user',
+                select: '_id name username avatar isVerified isProtected',
+                model: 'User',
+            })
+            .populate({
+                path: 'waitings.user',
+                select: '_id name username avatar isVerified isProtected',
+                model: 'User',
+            })
+            .exec();
+        return result;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+export const getAuthUserFollow = async (userId: string): Promise<any> => {
+    try {
+        const result = await Follow.findOne({ user: userId })
+            .populate({
+                path: 'user',
+                select: 'name username',
+            })
+            .populate({
+                path: 'followers.user',
                 select: '_id name username avatar isVerified',
                 model: 'User',
             })

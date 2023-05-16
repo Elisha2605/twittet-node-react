@@ -29,7 +29,7 @@ export const getAllTweetsController = asyncHandler(
 
 export const getUserTweetsController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        const userId = req.params.id;
+        const userId = req.user._id;
         if (!userId) {
             res.status(400).json({ InvalidInputError: 'Invalid input' });
         }
@@ -48,7 +48,7 @@ export const getUserTweetsController = asyncHandler(
 
 export const getFollowTweetsController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        const userId = req.params.id;
+        const userId = req.user._id;
         if (!userId) {
             res.status(400).json({ InvalidInputError: 'Invalid input' });
         }

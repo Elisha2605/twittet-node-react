@@ -1,7 +1,9 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import MenuIcon from '../icons/MenuIcon';
 import styles from './PopUpMenu.module.css';
 import useClickOutSide from '../../hooks/useClickOutSide';
+import { TWEET_AUDIENCE } from '../../constants/common.constants';
+import { ModalContext } from '../../context/modal.context';
 
 interface MenuPopUpProps {
     itemId?: string;
@@ -35,6 +37,8 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
     const [showMenu, setShowMenu] = useState(false);
     const menuRef = useRef<HTMLUListElement>(null);
 
+    const { openModal } = useContext(ModalContext);
+
     const handleButtonClick = () => {
         if (isDisable) {
             return;
@@ -48,6 +52,10 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
     };
 
     useClickOutSide(menuRef, setShowMenu)
+
+    const onEditTwitterCircle = (e: React.MouseEvent<HTMLDivElement>) => {
+        openModal('home-edit-twitterCircle-modal');
+    }
 
     return (
         <div className={styles.container}>
@@ -67,7 +75,9 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
                     />
                     <div className={className}>
                         <ul
-                            className={`${styles.menuList} ${title ? `${styles.popUpWithTitle} ${classNameWithTitle} ` : styles.popUpWithTitle}`}
+                            className={`
+                                ${styles.menuList} ${title ? 
+                                    `${styles.popUpWithTitle} ${classNameWithTitle} ` : styles.popUpWithTitle}`}
                             ref={menuRef}
                         >
                             {title && <h1>{title}</h1>}
@@ -79,13 +89,20 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
                                         icons[option] === icons['Delete']
                                             ? styles.delete
                                             : ''
-                                    }`}
+                                    } ${options.includes(TWEET_AUDIENCE.twitterCircle) ? styles.test : ''}`}
                                     onClick={() =>
                                         handleOptionClick(option, itemId!, value!)
                                     }
                                 >
                                     {icons && icons[option]}
                                     {option}
+
+                                    {option === TWEET_AUDIENCE.twitterCircle && (
+                                        <div className={styles.editTwitterCircle}>
+                                            <p><span>1</span>person</p>
+                                            <div onClick={onEditTwitterCircle}>Edit</div>
+                                        </div>
+                                    )}
                                 </li>
                             ))}
                         </ul>

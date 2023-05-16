@@ -1,7 +1,7 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import styles from './FollowButton.module.css';
 import LoadingRing from './LoadingRing';
-import { getAuthUserFollows, sendFollowRequest } from '../../api/follow.api';
+import { getUserFollows, sendFollowRequest } from '../../api/follow.api';
 import AuthContext from '../../context/user.context';
 
 export enum ButtonType {
@@ -79,7 +79,7 @@ const FollowButton: FC<FollowButtonProps> = ({
 
     const getAuthUserFollowStatus = async () => {
         // setIsLoading(true); // remove the comment to get a spinner
-        const { followings, pendings } = await getAuthUserFollows(authUser?._id!);
+        const { followings, pendings } = await getUserFollows(authUser?._id!);
         if (
             followings &&
             followings.some((following: any) => following.user._id === userId)

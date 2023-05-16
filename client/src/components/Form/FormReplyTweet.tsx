@@ -8,6 +8,7 @@ import XmarkIcon from '../icons/XmarkIcon';
 import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 
 interface FormReplyTweetProps {
+    tweet?: any;
     value: string;
     tweetTextRef: React.RefObject<HTMLTextAreaElement>;
     imagePreview?: string | null;
@@ -29,6 +30,7 @@ interface FormReplyTweetProps {
 }
 
 const FormReplyTweet: FC<FormReplyTweetProps> = ({
+    tweet,
     value,
     tweetTextRef,
     imagePreview,
@@ -42,7 +44,7 @@ const FormReplyTweet: FC<FormReplyTweetProps> = ({
 
     classNameTextErea,
 }) => {
-    
+
     // Adjust text erea with input value
     useAutosizeTextArea(tweetTextRef.current, value)
 
@@ -99,8 +101,8 @@ const FormReplyTweet: FC<FormReplyTweetProps> = ({
                         />
                     </div>
                 ): null}
-                
             </form>
+
         </React.Fragment>
     );
 };

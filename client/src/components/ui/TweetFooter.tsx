@@ -12,7 +12,7 @@ import { useLocation } from 'react-router-dom';
 interface TweetFooterProps {
     tweet?: any;
     comments: string;
-    reposts: string;
+    replys: string;
     likesCount: string;
     views: string;
     onClick?: (tweet: string) => void;
@@ -24,7 +24,7 @@ interface TweetFooterProps {
 const TweetFooter: FC<TweetFooterProps> = ({ 
     tweet,
     comments,
-    reposts,
+    replys,
     likesCount,
     views,
     onClick,
@@ -55,7 +55,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
                 </div>
                 <div className={`${styles.item} ${styles.hoverGreen} ${isTweetReply ? styles.itemOnTweetReply : ''}`}>
                     <FontAwesomeIcon icon={faRepeat} className={styles.faRepeat} />
-                    <p>{reposts}</p>
+                    <p>{replys}</p>
                 </div>
                 {isLiked ? (
                     <div className={`${styles.item} ${styles.liked} ${styles.hoverPink} ${isTweetReply ? styles.itemOnTweetReply : ''}`} onClick={handleLike} >

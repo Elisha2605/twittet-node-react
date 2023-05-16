@@ -160,6 +160,25 @@
     padding-bottom: 0.5rem;
 }
 
+.whoCanReply {
+    border-bottom: var(--border-light);
+    padding-bottom: 1rem;
+}
+
+.replyMsgWrapper {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem;
+  
+    background: var(--color-primary-lighter);
+    border-radius: 0.5rem;
+    color: var(--color-black);
+}
+
+.whoCanReply p {
+    font-size: var(--font-size-ms);
+}
+
 .asideReplySection:hover {
     background: var(--color-secondary-lighter);
     transition: 0.1s ease-in;

@@ -2,7 +2,7 @@ import React, { FC, useContext, useEffect, useState } from 'react';
 import styles from './FollowerRequests.module.css';
 import AuthContext from '../../context/user.context';
 import UserInfo from '../../components/ui/UserInfo';
-import { approveFollowRequest, declineFollowRequest, getAuthUserFollows, sendFollowRequest } from '../../api/follow.api';
+import { approveFollowRequest, declineFollowRequest, getUserFollows, sendFollowRequest } from '../../api/follow.api';
 import Header from '../../components/header/Header';
 import Layout from '../../Layout.module.css';
 import SearchBar from '../../components/ui/SearchBar';
@@ -32,7 +32,7 @@ const FollowerRequests: FC<FollowerRequestsProps> = ({}) => {
         const { user } = ctx.getUserContext();
         if (user) {
             setAuthUser(user);
-            const res = await getAuthUserFollows(user._id);
+            const res = await getUserFollows(user._id);
             setWaitingRequests(res.waitings);
         }
     };
