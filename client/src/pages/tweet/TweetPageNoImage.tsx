@@ -57,6 +57,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
     const [tweetReplies, setTweetReplies] = useState<any[]>([]);
 
     const [followers, setFollowers] = useState<any>([]);
+    const [followings, setFollowings] = useState<any>([]);
 
     const navigate = useNavigate();
 
@@ -173,13 +174,23 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
         }));
     }, [likedTweet]);
 
+    useEffect(() => {
+        const fetchAuthUserData = async () => {
+            const { followers, followings } = await getAuthUserFollows();
+            setFollowers(followers);
+            setFollowings(followings)
+
+        };
+        fetchAuthUserData();
+    }, []);
+
     const isTwitterCircle = (userId: string): boolean => {
         console.log(userId);
         if (
             authUser && tweet &&
             tweet?.user?._id !== authUser?._id &&
             tweet?.audience === TWEET_AUDIENCE.twitterCircle &&
-            !followers.some(
+            !followings.some(
                 (follower: any) => follower?.user?._id === userId
             )
         ) {
@@ -187,15 +198,6 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
         }
         return true;
     };
-
-    useEffect(() => {
-        const fetchAuthUserData = async () => {
-            const { followers } = await getAuthUserFollows();
-            setFollowers(followers);
-
-        };
-        fetchAuthUserData();
-    }, []);
 
     const isOnlyPeopleYouFollow = (userId: string): boolean => {
         if (
