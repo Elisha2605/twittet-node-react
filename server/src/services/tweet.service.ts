@@ -123,7 +123,6 @@ export const getAllTweets = async (
             {
                 $project: {
                     _id: 1,
-                    followers: '$follow.user',
                     user: {
                         _id: '$user._id',
                         name: '$user.name',

@@ -22,6 +22,8 @@ import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
 import AuthContext from '../../context/user.context';
 import { likeTweet } from '../../api/like.api';
 import { useNavigate } from 'react-router-dom';
+import HomeEditTwitterCirlceModal from './home-modals/HomeEditTwitterCirlceModal';
+import { ModalContext } from '../../context/modal.context';
 
 interface HomeProps {
     value: string;
@@ -65,6 +67,8 @@ const Home: React.FC<HomeProps> = ({
     const [tweetReply, setTweetReply] = useState<TweetReplyType>(TWEET_REPLY.everyone);
 
     const [likedTweet, setLikedTweet] = useState<any>();
+
+    const { modalOpen } = useContext(ModalContext);
 
     //new 
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
@@ -148,15 +152,12 @@ const Home: React.FC<HomeProps> = ({
 
     const handleTweetReyplyOptions = (option: string) => {
         if (option === TWEET_REPLY.everyone) {
-            console.log(TWEET_REPLY.everyone);
             setTweetReply(TWEET_REPLY.everyone);
         }
         if (option === TWEET_REPLY.peopleYouFollow) {
-            console.log(TWEET_REPLY.peopleYouFollow);
             setTweetReply(TWEET_REPLY.peopleYouFollow);
         }
         if (option === TWEET_REPLY.onlyPeopleYouMention) {
-            console.log(TWEET_REPLY.onlyPeopleYouMention);
             setTweetReply(TWEET_REPLY.onlyPeopleYouMention);
         }
     }
@@ -272,6 +273,12 @@ const Home: React.FC<HomeProps> = ({
                             onClickReplyMenu={handleTweetReyplyOptions} 
                         />
                     </div>
+                    {/* Twitter Circle Modal */}
+                    <>
+
+                        <HomeEditTwitterCirlceModal />
+                    
+                    </>
                     {activeTab === 'for-you' && (
                         <div className={styles.main}>
                             {memoizedTweets.map((tweet: any) => (

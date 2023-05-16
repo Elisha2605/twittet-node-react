@@ -84,9 +84,9 @@ const Follower: React.FC<{}> = () => {
                                 <div key={follower._id} className={styles.followingItem} onClick={() => navigate(`/profile/${follower.user._id}`)}>   
                                     <UserInfo
                                         userId={id}
-                                        avatar={follower.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${follower.user?.avatar}`}
-                                        isVerified={follower?.user.isVerified}
-                                        name={follower.user?.name}
+                                        avatar={follower?.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${follower?.user?.avatar}`}
+                                        isVerified={follower?.user?.isVerified}
+                                        name={follower?.user?.name}
                                         username={follower?.user?.username}
                                         className={styles.userInfoWrapper}
                                     >
