@@ -34,10 +34,10 @@ export const getTweetById = async (tweetId: string) => {
     }
 };
 
-export const getUserTweets = async (userId: string) => {
+export const getUserTweets = async () => {
     try {
         const res = await http.get(
-            `/tweets/user/${userId}`,
+            '/tweets/user-tweets',
             GETREQUESTOPTIONS()
         );
         return res.data;
@@ -52,10 +52,10 @@ export const getUserTweets = async (userId: string) => {
     }
 };
 
-export const getFollowTweets = async (userId: string) => {
+export const getFollowTweets = async () => {
     try {
         const res = await http.get(
-            `/tweets/follow/${userId}`,
+            '/tweets/follower-tweets',
             GETREQUESTOPTIONS()
         );
         return res.data;

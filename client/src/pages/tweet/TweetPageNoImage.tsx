@@ -28,7 +28,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
 import UserInfo from '../../components/ui/UserInfo';
-import { getTweetById, getUserTweets } from '../../api/tweet.api';
+import { getTweetById } from '../../api/tweet.api';
 import { tweetMenuIcons, tweetMenuOptions } from '../../data/menuOptions';
 import Avatar, { Size } from '../../components/ui/Avatar';
 import FormReply from '../../components/form/FormReplyTweet';

@@ -142,7 +142,7 @@ const HomeEditTwitterCirlceModal: FC<HomeEditTwitterCirlceModalProps> = ({}) => 
                             </div>
                          ))}
 
-                        {members && members.length === 0 && (
+                        {!members && (
                             <ContentNotAvailable 
                                 title={'There isn’t anyone in your Twitter Circle — yet'} 
                                 message='When you add people, they’ll show up here.' 

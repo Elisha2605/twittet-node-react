@@ -157,8 +157,13 @@ export const getAllTweets = async (
             },
         ]).exec();
 
-        if (tweets.length < 1) {
-            throw CustomError('Tweets not found', 204);
+        if (tweets.length === 0) {
+            return {
+                success: true,
+                message: 'Not tweets found!',
+                status: 404,
+                payload: [],
+            };
         }
         return {
             success: true,
@@ -428,6 +433,15 @@ export const getFollowTweets = async (
                 },
             },
         ]).exec();
+
+        if (tweets.length === 0) {
+            return {
+                success: true,
+                message: 'Not tweets found!',
+                status: 404,
+                payload: [],
+            };
+        }
 
         return {
             success: true,

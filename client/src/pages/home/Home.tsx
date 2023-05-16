@@ -23,7 +23,6 @@ import AuthContext from '../../context/user.context';
 import { likeTweet } from '../../api/like.api';
 import { useNavigate } from 'react-router-dom';
 import HomeEditTwitterCirlceModal from './home-modals/HomeEditTwitterCirlceModal';
-import { ModalContext } from '../../context/modal.context';
 
 interface HomeProps {
     value: string;
@@ -68,8 +67,6 @@ const Home: React.FC<HomeProps> = ({
 
     const [likedTweet, setLikedTweet] = useState<any>();
 
-    const { modalOpen } = useContext(ModalContext);
-
     //new 
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
     
@@ -82,27 +79,32 @@ const Home: React.FC<HomeProps> = ({
         getAuthUser();
     }, []);
 
-
-
     // fetching Tweets
     useEffect(() => {
         const fetchTweets = async () => {
-            const { tweets } = await getAllTweets();
-            setTweets(tweets);
-        };
+            try {
+              if (authUser) {
+                const { tweets } = await getAllTweets();
+                setTweets(tweets);
+              }
+            } catch (error) {
+              // Handle the error here, e.g., display an error message or set default values for tweets
+              console.error('Error fetching tweets:', error);
+            }
+          };          
         fetchTweets();
-    }, []);
+    }, [authUser]);
     const memoizedTweets = useMemo(() => tweets, [tweets]);
 
 
     useEffect(() => {
-        if (authUser) {
-            const fetchFollowingTweets = async () => {
-                const { tweets } = await getFollowTweets(authUser?._id);
+        const fetchFollowingTweets = async () => {
+            if (authUser) {
+                const { tweets } = await getFollowTweets();
                 setFollowingTweets(tweets);
-            };
-            fetchFollowingTweets();
-        }
+            }
+        };
+        fetchFollowingTweets();
     }, [authUser]);
     const memoizedFollowTweets = useMemo(() => followingTweets, [followingTweets]);
 
@@ -281,7 +283,7 @@ const Home: React.FC<HomeProps> = ({
                     </>
                     {activeTab === 'for-you' && (
                         <div className={styles.main}>
-                            {memoizedTweets.map((tweet: any) => (
+                            {tweets.map((tweet: any) => (
                                 <Tweet
                                     key={tweet._id}
                                     tweet={tweet}
@@ -294,7 +296,7 @@ const Home: React.FC<HomeProps> = ({
                     )}
                     {activeTab === 'following' && (
                         <div className={styles.main}>
-                            {memoizedFollowTweets.map((tweet: any) => (
+                            {followingTweets.map((tweet: any) => (
                                 <Tweet
                                     key={tweet._id}
                                     tweet={tweet}

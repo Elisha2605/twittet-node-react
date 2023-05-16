@@ -14,7 +14,6 @@ import HeartIcon from '../icons/HeartIcon';
 import UserIcon from '../icons/UserIcon';
 import AtIcon from '../icons/AtIcon';
 import { tweetMenuOptions, tweetMenuIcons } from '../../data/menuOptions';
-import { getAuthUserFollows } from '../../api/follow.api';
 
 interface TweetProps {
     tweet?: any;
@@ -29,8 +28,6 @@ const Tweet: FC<TweetProps> = ({
     onClickLike,
     isLiked,
 }) => {
-    const [followers, setFollowers] = useState<any>([]);
-    const [followings, setFollowings] = useState<any>([]);
 
     const tweetId = tweet?._id;
     const createdAt = getTimeDifference(new Date(tweet?.createdAt).getTime());
@@ -68,25 +65,6 @@ const Tweet: FC<TweetProps> = ({
         } else {
             navigate(`/tweet/${tweet._id}`);
         }
-    };
-
-    useEffect(() => {
-        const fetchAuthUserFollowStatus = async () => {
-            const { followers, followings } = await getAuthUserFollows();
-            setFollowers(followers);
-            setFollowings(followings);
-        };
-        fetchAuthUserFollowStatus();
-    }, []);
-
-    const isOnlyPeopleYouFollow = (userId: string): boolean => {
-        if (
-            TWEET_REPLY.peopleYouFollow &&
-            followings.some((following: any) => following.user === userId)
-        ) {
-            return true;
-        }
-        return false;
     };
 
     return (
