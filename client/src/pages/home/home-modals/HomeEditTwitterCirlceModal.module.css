@@ -82,3 +82,13 @@
     cursor: pointer;
     transition: 0.2s ease-in-out;
 }
+
+.twitterCircleMsg {
+    padding: 0 3rem;
+    text-align: center;
+    color: var(--color-secondary);
+}
+
+.recommendation, .members {
+    position: relative;
+}

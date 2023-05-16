@@ -14,6 +14,8 @@ import { useNavigate } from 'react-router-dom';
 import Button, { ButtonSize, ButtonType } from '../../../components/ui/Button';
 import { addUserToTwitterCircle, getAuthUserTwitterCircleMembers } from '../../../api/twitterCircle.api';
 import SearchBar from '../../../components/ui/SearchBar';
+import PageUnderConstruction from '../../../components/ui/PageUnderConstruction';
+import ContentNotAvailable from '../../../components/ui/ContentNotAvailable';
 
 interface HomeEditTwitterCirlceModalProps {}
 
@@ -118,6 +120,10 @@ const HomeEditTwitterCirlceModal: FC<HomeEditTwitterCirlceModalProps> = ({}) => 
 
                 {activeTab === 'twitter-cirlce' && (
                     <div className={styles.members}>
+                        <p className={styles.twitterCircleMsg}>
+                            People won’t be notified when you edit your Twitter Circle. 
+                            Anyone you add will be able to see your previous Twitter Circle Tweets.
+                        </p>
                        {members && members.map((member: any) => (
                             <div key={member?._id} className={styles.followingItem} onClick={() => navigate(`/profile/${member?._id}`)}>   
                                 <UserInfo
@@ -135,6 +141,13 @@ const HomeEditTwitterCirlceModal: FC<HomeEditTwitterCirlceModalProps> = ({}) => 
                                 </UserInfo>
                             </div>
                          ))}
+
+                        {members.length === 0 && (
+                            <ContentNotAvailable 
+                                title={'There isn’t anyone in your Twitter Circle — yet'} 
+                                message='When you add people, they’ll show up here.' 
+                            />
+                        )}
                     </div>
                 )}
                 {activeTab === 'recommended' && (
@@ -144,6 +157,11 @@ const HomeEditTwitterCirlceModal: FC<HomeEditTwitterCirlceModalProps> = ({}) => 
                             classNameContainer={styles.searchBarContainer} 
                             classNameInput={styles.searchBarInput}
                         /> */}
+                        {}
+                        <p className={styles.twitterCircleMsg}>
+                            People won’t be notified when you edit your Twitter Circle. Anyone 
+                            you add will be able to see your previous Twitter Circle Tweets
+                        </p>
                          {followings && followings.map((following: any) => (
                             <div key={following?._id} className={styles.followingItem} onClick={() => navigate(`/profile/${following.user._id}`)}>   
                                 <UserInfo
@@ -170,6 +188,12 @@ const HomeEditTwitterCirlceModal: FC<HomeEditTwitterCirlceModalProps> = ({}) => 
                                 </UserInfo>
                             </div>
                          ))}
+                         {followings.length === 0 && (
+                            <ContentNotAvailable 
+                                title={'You don’t have any recommendations — yet'} 
+                                message='We’ll suggest people to add to your Twitter Circle here.' 
+                            />
+                         )}
                     </div>
                 )}
             </Modal>
