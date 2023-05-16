@@ -538,7 +538,6 @@ const Profile: FC<ProfileProps> = ({
                             </div>
                         )}
                         {/* REPLIES - END */}
-
                         {/* MEDIA - START */}
                         {activeTab === 'media' && (
                             <div className={styles.main}>
