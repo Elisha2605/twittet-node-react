@@ -99,7 +99,7 @@ const FollowButton: FC<FollowButtonProps> = ({
         e: React.MouseEvent<HTMLButtonElement>
     ) => {
         e.stopPropagation();
-        const res = await sendFollowRequest(authUser?._id, userId!);
+        const res = await sendFollowRequest(userId!);
         console.log(res);
 
         setIsFollowing(!isFollowing);

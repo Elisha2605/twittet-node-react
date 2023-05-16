@@ -31,6 +31,10 @@ export const getUserFollows = async (userId: string): Promise<any> => {
                 model: 'User',
             })
             .exec();
+
+        if (!result) {
+            return [];
+        }
         return result;
     } catch (error) {
         console.error(error);
@@ -283,12 +287,14 @@ async function handleUnprotectedFollowRequest(
         receiver.followers = receiver.followers.filter(
             (item: any) => item.user.toString() !== follower._id.toString()
         );
+        receiver.followerCount = receiver.followers.length;
 
         // Remove leader._id from sender.followings array
         sender.followings = sender.followings.filter(
             (item: any) => item.user.toString() !== leader._id.toString()
         );
 
+        sender.followingCount = sender.followings.length;
         // Save the updated documents
         const result = await Promise.all([receiver.save(), sender.save()]);
         return {
@@ -304,10 +310,12 @@ async function handleUnprotectedFollowRequest(
         receiver = new Follow({
             user: leader._id,
             followers: [{ user: follower._id }],
+            followerCount: 1,
         });
         sender = new Follow({
             user: follower._id,
             followings: [{ user: leader._id }],
+            followingCount: 1,
         });
 
         // Save the new documents
@@ -323,8 +331,11 @@ async function handleUnprotectedFollowRequest(
 
         // Update followers array of the receiver
         receiver.followers.push({ user: follower._id });
+        receiver.followerCount = receiver.followers.length;
+
         // Update followings array of the sender
         sender.followings.push({ user: leader._id });
+        sender.followingCount = sender.followings.length;
 
         // Save the updated sender and receiver documents
         const result = await Promise.all([receiver.save(), sender.save()]);
@@ -338,11 +349,14 @@ async function handleUnprotectedFollowRequest(
         // Only the receiver exists
         // Update followers array of the receiver
         receiver.followers.push({ user: follower._id });
+        receiver.followerCount = receiver.followers.length;
+
 
         // Create new document for sender
         sender = new Follow({
             user: follower._id,
             followings: [{ user: leader._id }],
+            followingCount: 1,
         });
 
         // Save the updated receiver and new sender documents
@@ -359,10 +373,12 @@ async function handleUnprotectedFollowRequest(
         receiver = new Follow({
             user: leader._id,
             followers: [{ user: follower._id }],
+            followerCount: 1,
         });
 
         // Update followings array of the sender
         sender.followings.push({ user: leader._id });
+        sender.followingCount = sender.followings.length;
 
         // Save the new receiver and updated sender documents
         const result = await Promise.all([receiver.save(), sender.save()]);

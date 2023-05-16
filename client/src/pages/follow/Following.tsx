@@ -40,7 +40,6 @@ const Following = () => {
         const userInfo = async () => {
             const res = await getUserById(id!);
             const { user } = res;
-            // console.log(res);
             setUser(user);
         };
         userInfo();

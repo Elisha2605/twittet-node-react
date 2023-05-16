@@ -19,7 +19,7 @@ import {
 } from '../../constants/common.constants';
 import { getMonthName, getYear } from '../../utils/helpers.utils';
 import AuthContext from '../../context/user.context';
-import { getUserFollows } from '../../api/follow.api';
+import { getUserFollows, sendFollowRequest } from '../../api/follow.api';
 import { NavLink, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
@@ -59,9 +59,9 @@ const Profile: FC<ProfileProps> = ({
     const [userTweets, setUserTweets] = useState<any[]>([]);
     const [userTweetsMedia, setUserTweetsMedia] = useState<any[]>([]);
     const [userLikedTweets, setUserLikedTweets] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
     const [followings, setFollowings] = useState<any[]>([]);
-    const [followers, setFollowers] = useState<any[]>([]);
 
     const [likedTweet, setLikedTweet] = useState<any>();
 
@@ -80,8 +80,7 @@ const Profile: FC<ProfileProps> = ({
     // get User by Id
     useEffect(() => {
         const userInfo = async () => {
-            const res = await getUserById(id!);
-            const { user } = res;
+            const { user } = await getUserById(id!);
             setUser(user);
         };
         userInfo();
@@ -91,14 +90,14 @@ const Profile: FC<ProfileProps> = ({
     useEffect(() => {
         if (authUser) {
             const fetchUserFollowStatus = async () => {
-                const { followers, followings } = await getUserFollows(id!);
-
+                const { followings } = await getUserFollows(authUser?._id);
+                setLoading(false)
                 setFollowings(followings);
-                setFollowers(followers);
             };
             fetchUserFollowStatus();
         }
     }, [authUser, id]);
+    
 
     // Set active tab in local storage
     useEffect(() => {
@@ -271,11 +270,48 @@ const Profile: FC<ProfileProps> = ({
         );
     };
 
-    const getObjet = (editedObject: any) => {
-        updateTweetsUserInfoOnProfileEdit(editedObject);
-        setObject(editedObject);
-        setUser((prevUser: any) => ({ ...prevUser, ...editedObject }));
+    const getEditedUser = (editedUser: any) => {
+        updateTweetsUserInfoOnProfileEdit(editedUser);
+        setObject(editedUser);
+        setUser((prevUser: any) => ({ ...prevUser, ...editedUser }));
     };
+
+    const onFollowUser = async () => {
+        const updatedFollowings = [...followings]; // Create a copy of the followings array
+      
+        if (isFollowing()) {
+          // Unfollow the user
+          const res = await sendFollowRequest(user?._id);
+          console.log(res);
+          const unfollowedIndex = updatedFollowings.findIndex(
+            (following: any) => following.user?._id === user?._id
+          );
+          if (unfollowedIndex !== -1) {
+            updatedFollowings.splice(unfollowedIndex, 1);
+            setUser((prevUser: any) => ({
+                ...prevUser,
+                followerCount: prevUser.followerCount - 1,
+              }));
+          }
+        } else {
+          // Follow the user
+          const res = await sendFollowRequest(user?._id);
+          console.log(res);
+          updatedFollowings.push({ user: { _id: user?._id } });
+          setUser((prevUser: any) => ({
+            ...prevUser,
+            followerCount: prevUser.followerCount + 1,
+          }));
+        }
+
+        setFollowings(updatedFollowings);
+      };
+
+    
+    const isFollowing = (): boolean => {
+        return followings && followings.some((following: any) => following.user?._id === id);
+    };
+    
 
     return (
         <React.Fragment>
@@ -318,7 +354,7 @@ const Profile: FC<ProfileProps> = ({
                                     src={
                                         user?.coverImage
                                             ? `${IMAGE_COVER_BASE_URL}/${user?.coverImage}`
-                                            : `${IMAGE_COVER_BASE_URL}/default-cover.jpg`
+                                            : undefined
                                     }
                                     alt=""
                                 />
@@ -328,7 +364,7 @@ const Profile: FC<ProfileProps> = ({
                                     src={
                                         user?.avatar
                                             ? `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`
-                                            : `${IMAGE_COVER_BASE_URL}/default-avatar.jpg`
+                                            : undefined
                                     }
                                     alt=""
                                 />
@@ -344,17 +380,22 @@ const Profile: FC<ProfileProps> = ({
                                     }}
                                 />
                             ) : (
-                                <FollowButton
-                                    userId={id}
-                                    type={ButtonType.secondary}
-                                    size={ButtonSize.small}
-                                    className={styles.editProfileBtn}
-                                />
+                                <>
+                                {!loading && (
+                                    <Button
+                                        type={isFollowing() ? ButtonType.tietary : ButtonType.secondary}
+                                        size={ButtonSize.small}
+                                        value={isFollowing() ? 'Following' : 'Follow'}
+                                        onClick={onFollowUser}
+                                        className={styles.editProfileBtn}
+                                    />
+                                )}
+                                </>
                             )}
                             <ProfileEditModal
                                 user={user}
                                 editedObject={object}
-                                onCallBackEdit={getObjet}
+                                onCallBackEdit={getEditedUser}
                             />
                         </div>
                         <div className={styles.userInfo}>
@@ -424,13 +465,13 @@ const Profile: FC<ProfileProps> = ({
                             <div className={styles.followStatus}>
                                 <NavLink to={`/following/${id}`}>
                                     <p>
-                                        {followings.length}
+                                        {user?.followingCount ? user?.followingCount : 0}
                                         <span>Following</span>
                                     </p>
                                 </NavLink>
                                 <NavLink to={`/followers/${id}`}>
                                     <p>
-                                        {followers.length}
+                                        {user?.followerCount ? user?.followerCount : 0}
                                         <span>Followers</span>
                                     </p>
                                 </NavLink>
