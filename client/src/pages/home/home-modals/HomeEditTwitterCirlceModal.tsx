@@ -2,11 +2,9 @@ import React, { FC, useContext, useEffect, useState } from 'react';
 import styles from './HomeEditTwitterCirlceModal.module.css';
 import {
     IMAGE_AVATAR_BASE_URL,
-    IMAGE_COVER_BASE_URL,
 } from '../../../constants/common.constants';
 import { ModalContext } from '../../../context/modal.context';
 import Modal from '../../../components/ui/Modal';
-import AuthContext from '../../../context/user.context';
 import XmarkIcon from '../../../components/icons/XmarkIcon';
 import { getAuthUserFollows } from '../../../api/follow.api';
 import Header from '../../../components/header/Header';
@@ -15,14 +13,11 @@ import UserInfo from '../../../components/ui/UserInfo';
 import { useNavigate } from 'react-router-dom';
 import Button, { ButtonSize, ButtonType } from '../../../components/ui/Button';
 import { addUserToTwitterCircle, getAuthUserTwitterCircleMembers } from '../../../api/twitterCircle.api';
+import SearchBar from '../../../components/ui/SearchBar';
 
-interface HomeEditTwitterCirlceModalProps {
+interface HomeEditTwitterCirlceModalProps {}
 
-}
-
-const HomeEditTwitterCirlceModal: FC<HomeEditTwitterCirlceModalProps> = ({
-
-}) => {
+const HomeEditTwitterCirlceModal: FC<HomeEditTwitterCirlceModalProps> = ({}) => {
 
     const [followings, setFollowings] = useState<any[]>([]);
     const [members, setMembers] = useState<any[]>([]);
@@ -87,8 +82,6 @@ const HomeEditTwitterCirlceModal: FC<HomeEditTwitterCirlceModalProps> = ({
           console.log(res);
         }
     };
-      
-      
 
     const isTwitterCircle = (userId: string): boolean => {
         return members && members.some((member: any) => member?._id === userId);
@@ -146,6 +139,11 @@ const HomeEditTwitterCirlceModal: FC<HomeEditTwitterCirlceModalProps> = ({
                 )}
                 {activeTab === 'recommended' && (
                     <div className={styles.recommendation}>
+                        {/* <SearchBar 
+                            isButton={true} 
+                            classNameContainer={styles.searchBarContainer} 
+                            classNameInput={styles.searchBarInput}
+                        /> */}
                          {followings && followings.map((following: any) => (
                             <div key={following?._id} className={styles.followingItem} onClick={() => navigate(`/profile/${following.user._id}`)}>   
                                 <UserInfo

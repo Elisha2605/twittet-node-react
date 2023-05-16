@@ -23,7 +23,6 @@
     background-color: var(--color-secondary-light);
 }
 
-
 /* Nav */
 .twitterCircleNavBar {
     margin-top: 1rem;
@@ -58,6 +57,17 @@
     justify-content: space-between;
 }
 
+.searchBarContainer {
+    position: relative;
+    bottom: 1rem;
+}
+
+.searchBarInput {
+    background: var(--color-white);
+    border: 0.5px solid var(--color-secondary);
+}
+
+/* users list */
 .userInfoWrapper {
     display: flex;
     justify-content: space-between;

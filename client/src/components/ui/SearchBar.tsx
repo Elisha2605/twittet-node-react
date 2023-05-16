@@ -10,9 +10,13 @@ import { useNavigate } from 'react-router-dom';
 
 interface SearchBarProps {
     width?: number;
+    isButton?: boolean;
+    classNameContainer?: string;
+    classNameInput?: string;
+    onClickBtn?: () => void;
 }
 
-const SearchBar: FC<SearchBarProps> = ({ width }) => {
+const SearchBar: FC<SearchBarProps> = ({ width, isButton, classNameContainer, classNameInput, onClickBtn }) => {
     const [searchTerm, setSearchTerm] = useState<any>('');
     const [searchResults, setSearchResults] = useState<any[]>([]);
     const [isFocused, setIsFocused] = useState<boolean>(false);
@@ -41,9 +45,9 @@ const SearchBar: FC<SearchBarProps> = ({ width }) => {
 
     return (
         <React.Fragment>
-            <div className={styles.container} style={{ width: `${width}%` }}>
+            <div className={`${styles.container} ${classNameContainer}`} style={{ width: `${width}%` }}>
                 <input
-                    className={styles.input}
+                    className={`${styles.input} ${classNameInput}`}
                     type="text"
                     placeholder="Search Twitter"
                     value={searchTerm}
@@ -61,31 +65,54 @@ const SearchBar: FC<SearchBarProps> = ({ width }) => {
                         }}
                     >
                         {searchResults.map((user: any) => (
-                            <div key={user._id} onClick={() => navigate(`/profile/${user._id}`)}>
-                            <UserInfo
-                                    userId={user?._id}
-                                    avatar={
-                                        user?.avatar &&
-                                        `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`
-                                    }
-                                    name={user?.name}
-                                    username={user?.username}
-                                    isVerified={user?.isVerified}
-                                    isOnHover={true}
-                                />
-                            </div>
+                            <>
+                            {isButton ? (
+                                <div key={user._id} onClick={onClickBtn}>
+                                <UserInfo
+                                        userId={user?._id}
+                                        avatar={
+                                            user?.avatar &&
+                                            `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`
+                                        }
+                                        name={user?.name}
+                                        username={user?.username}
+                                        isVerified={user?.isVerified}
+                                        isOnHover={true}
+                                    />
+                                </div>
+                            ): (
+                                <div key={user._id} onClick={() => navigate(`/profile/${user._id}`)}>
+                                    <UserInfo
+                                        userId={user?._id}
+                                        avatar={
+                                            user?.avatar &&
+                                            `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`
+                                        }
+                                        name={user?.name}
+                                        username={user?.username}
+                                        isVerified={user?.isVerified}
+                                        isOnHover={true}
+                                    />
+                                </div>
+                            )} 
+                                
+                            </>
                         ))}
                     </div>
                 )}
-                {isFocused && searchResults.length === 0 && searchTerm.length > 0 && (
-                    <div className={styles.searchResults}>
-                        <p className={styles.searchMsg}>No result found for "{searchTerm}"</p>
-                    </div>
-                )}
-                {isFocused && (searchTerm.length === 0 && searchResults.length === 0) && (
-                    <div className={styles.searchResults}>
-                        <p className={styles.searchMsg}>Searching for people, by their name or username</p>
-                    </div>
+                {onClickBtn && (
+                    <>
+                        {isFocused && searchResults.length === 0 && searchTerm.length > 0 && (
+                            <div className={styles.searchResults}>
+                                <p className={styles.searchMsg}>No result found for "{searchTerm}"</p>
+                            </div>
+                        )}
+                        {isFocused && (searchTerm.length === 0 && searchResults.length === 0) && (
+                            <div className={styles.searchResults}>
+                                <p className={styles.searchMsg}>Searching for people, by their name or username</p>
+                            </div>
+                        )}
+                    </>
                 )}
                 <FontAwesomeIcon icon={faSearch} />
             </div>

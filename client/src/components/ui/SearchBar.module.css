@@ -38,7 +38,8 @@
     box-shadow: 0 0 0 1px rgba(15, 15, 15, 0.001), 0 8px 16px rgba(15, 15, 15, 0.4);
     border-radius: 1rem;
     overflow: hidden;
-    top: 3.5rem
+    top: 3.5rem;
+    z-index: 1;
 }
 
 .userItem {
