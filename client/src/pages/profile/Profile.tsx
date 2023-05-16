@@ -24,7 +24,6 @@ import { NavLink, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
 import { getUserTweets } from '../../api/tweet.api';
-import FollowButton from '../../components/ui/FollowButton';
 import faLockSolid from '../../assets/faLock-solid.svg';
 import { getUserLikedTweets, likeTweet } from '../../api/like.api';
 import { ModalContext } from '../../context/modal.context';
