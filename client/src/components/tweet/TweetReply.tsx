@@ -78,9 +78,9 @@ const Tweet: FC<TweetProps> = ({
 
                     <TweetFooter
                         tweet={tweet}
-                        comments={'1'}
-                        replys={'9'}
-                        likesCount={tweet.totalLikes > 0 ? tweet.totalLikes: '' }
+                        replies={'1'}
+                        retTweets={'9'}
+                        likes={tweet.totalLikes > 0 ? tweet.totalLikes: '' }
                         views={'4'}
                         onClick={() => onClickLike(tweet)}
                         isTweetReply={isReply}

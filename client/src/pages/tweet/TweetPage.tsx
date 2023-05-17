@@ -152,6 +152,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
         console.log(selectedFile);
         const res = await createTweetReply(id!, text!, selectedFile);
         const { tweet }: any = res;
+        console.log(tweet);
         const newTweet = {
             _id: tweet._id,
             text: tweet.text,
@@ -165,11 +166,15 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
             audience: tweet.audience,
             reply: tweet.reply,
             createdAt: tweet.createdAt,
-            image: tweet.image,
+            image: tweet?.image,
             comments: [],
             reposts: [],
             likes: [],
         };
+        setTweet((prev: any) => ({
+            ...prev,
+            replyCount: tweet?.replyCount,
+        }));
         setTweetReplies((prevTweets) => [newTweet, ...prevTweets]);
         clearTweetForm();
     };
@@ -184,7 +189,6 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
     }, []);
 
     const isTwitterCircle = (userId: string): boolean => {
-        console.log(userId);
         if (
             authUser && tweet &&
             tweet?.user?._id !== authUser?._id &&
@@ -242,16 +246,17 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                 <div className={styles.image}>
                     <img
                         src={
-                            tweet?.image &&
-                            `${IMAGE_TWEET_BASE_URL}/${tweet?.image}`
+                            tweet?.image ?
+                            `${IMAGE_TWEET_BASE_URL}/${tweet?.image}` :
+                            undefined
                         }
                         alt=""
                     />
                     <div className={styles.footer}>
                         <TweetFooter
-                            comments={'123'}
-                            replys={'123'}
-                            likesCount={
+                            replies={tweet?.replyCount}
+                            retTweets={'123'}
+                            likes={
                                 tweet?.totalLikes > 0 ? tweet?.totalLikes : ''
                             }
                             views={'453'}

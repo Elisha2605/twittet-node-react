@@ -11,9 +11,10 @@ import { useLocation } from 'react-router-dom';
 
 interface TweetFooterProps {
     tweet?: any;
-    comments: string;
-    replys: string;
-    likesCount: string;
+
+    replies: string;
+    retTweets: string;
+    likes: string;
     views: string;
     onClick?: (tweet: string) => void;
     // onClickShare?: ()
@@ -23,9 +24,10 @@ interface TweetFooterProps {
 
 const TweetFooter: FC<TweetFooterProps> = ({ 
     tweet,
-    comments,
-    replys,
-    likesCount,
+
+    replies,
+    retTweets,
+    likes,
     views,
     onClick,
     isTweetReply,
@@ -51,21 +53,21 @@ const TweetFooter: FC<TweetFooterProps> = ({
             <div className={`${styles.container} ${isTweetReply ? styles.containerOnTweetReply : ''}`}>
                 <div className={`${styles.item} ${styles.hoverBlue} ${isTweetReply ? styles.itemOnTweetReply   : ''}`}>
                     <FontAwesomeIcon icon={faComment} className={styles.faComment} />
-                    <p>{comments}</p>
+                    <p>{replies}</p>
                 </div>
                 <div className={`${styles.item} ${styles.hoverGreen} ${isTweetReply ? styles.itemOnTweetReply : ''}`}>
                     <FontAwesomeIcon icon={faRepeat} className={styles.faRepeat} />
-                    <p>{replys}</p>
+                    <p>{retTweets}</p>
                 </div>
                 {isLiked ? (
                     <div className={`${styles.item} ${styles.liked} ${styles.hoverPink} ${isTweetReply ? styles.itemOnTweetReply : ''}`} onClick={handleLike} >
                         <FontAwesomeIcon icon={faHeartSolid} color={'var(--color-pink)'} className={styles.faHeart} />
-                        <p>{likesCount}</p>
+                        <p>{likes}</p>
                     </div>
                 ): (
                     <div className={`${styles.item} ${styles.hoverPink} ${isTweetReply ? styles.itemOnTweetReply : ''}`} onClick={handleLike} >
                         <FontAwesomeIcon icon={faHeart} className={styles.faHeart} />
-                        <p>{likesCount}</p>
+                        <p>{likes}</p>
                     </div>  
                 )}
                 

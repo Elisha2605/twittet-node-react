@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { model } from 'mongoose';
 import { TWEET_AUDIENCE, TWEET_REPLY } from 'src/constants/tweet.constants';
 import Follow from 'src/model/follow.model';
 import Reply from 'src/model/reply.model';
@@ -227,11 +227,20 @@ export const createReply = async (
             model: 'User',
         });
 
+        const newObject = {
+            _id: populatedReply._id,
+            tweet: populatedReply.tweet,
+            user: populatedReply.user,
+            text: populatedReply.text,
+            image: populatedReply.image,
+            replyCount: tweet.replyCount,
+        };
+
         return {
             success: true,
             message: 'Successfully created reply',
             status: 200,
-            payload: populatedReply,
+            payload: newObject,
         };
     } catch (error) {
         const errorResponse: ErrorResponse = {

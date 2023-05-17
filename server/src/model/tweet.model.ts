@@ -17,6 +17,7 @@ export interface ITweet extends mongoose.Document {
     reply: string;
     mentions: ObjectId[];
     hashtags: ObjectId[];
+    replyCount: number;
 }
 
 export const tweetModel = {
@@ -58,6 +59,11 @@ export const tweetModel = {
             require: false,
         },
     ],
+    replyCount: {
+        type: Number,
+        default: 0,
+        require: true,
+    },
 };
 
 const tweetSchema = new mongoose.Schema<ITweet>(tweetModel, {

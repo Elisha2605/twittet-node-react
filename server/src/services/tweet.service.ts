@@ -47,45 +47,6 @@ export const getAllTweets = async (
             {
                 $unwind: { path: '$likes', preserveNullAndEmptyArrays: true },
             },
-            // think if you should or shouldn't remove this.
-            {
-                $addFields: {
-                    isInCircle: {
-                        $cond: {
-                            if: {
-                                $eq: ['$audience', TWEET_AUDIENCE.everyone],
-                            },
-                            then: false,
-                            else: {
-                                $in: [
-                                    new mongoose.Types.ObjectId(userId),
-                                    '$twitterCircle.members',
-                                ],
-                            },
-                        },
-                    },
-                    twitterCircleMembers: '$twitterCircle.members',
-                },
-            },
-            {
-                $addFields: {
-                    isInCircle: {
-                        $cond: {
-                            if: {
-                                $eq: ['$audience', TWEET_AUDIENCE.everyone],
-                            },
-                            then: false,
-                            else: {
-                                $in: [
-                                    new mongoose.Types.ObjectId(userId),
-                                    '$twitterCircle.members',
-                                ],
-                            },
-                        },
-                    },
-                    twitterCircleMembers: '$twitterCircle.members',
-                },
-            },
             {
                 $match: {
                     $or: [
@@ -140,6 +101,7 @@ export const getAllTweets = async (
                     createdAt: 1,
                     updatedAt: 1,
                     likes: '$likes.likes',
+                    replyCount: 1,
                     totalLikes: {
                         $cond: {
                             if: {
@@ -231,6 +193,7 @@ export const getTweetById = async (tweetId: string): Promise<any> => {
                     createdAt: 1,
                     updatedAt: 1,
                     mentions: 1,
+                    replyCount: 1,
                     likes: '$likes.likes',
                     totalLikes: {
                         $cond: {
