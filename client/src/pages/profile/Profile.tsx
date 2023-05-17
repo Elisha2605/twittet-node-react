@@ -276,7 +276,7 @@ const Profile: FC<ProfileProps> = ({
     };
 
     const onFollowUser = async () => {
-        const updatedFollowings = [...followings]; // Create a copy of the followings array
+        const updatedFollowings = [...followings];
       
         if (isFollowing()) {
           // Unfollow the user
