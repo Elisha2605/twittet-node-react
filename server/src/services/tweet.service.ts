@@ -68,25 +68,6 @@ export const getAllTweets = async (
                 },
             },
             {
-                $addFields: {
-                    isInCircle: {
-                        $cond: {
-                            if: {
-                                $eq: ['$audience', TWEET_AUDIENCE.everyone],
-                            },
-                            then: false,
-                            else: {
-                                $in: [
-                                    new mongoose.Types.ObjectId(userId),
-                                    '$twitterCircle.members',
-                                ],
-                            },
-                        },
-                    },
-                    twitterCircleMembers: '$twitterCircle.members',
-                },
-            },
-            {
                 $match: {
                     $or: [
                         {
@@ -151,8 +132,6 @@ export const getAllTweets = async (
                             else: 0,
                         },
                     },
-                    isInCircle: 1,
-                    twitterCircleMembers: 1,
                 },
             },
         ]).exec();

@@ -38,6 +38,7 @@ import { createTweetReply, getAllTweetReplies } from '../../api/reply.api';
 import { getAuthUserFollows } from '../../api/follow.api';
 import UserIcon from '../../components/icons/UserIcon';
 import AtIcon from '../../components/icons/AtIcon';
+import Tweet from '../../components/tweet/Tweet';
 
 interface TweetPageNoImageProps {}
 
@@ -535,11 +536,12 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                     className={styles.asideReplySection}
                                     key={tweet?._id}
                                 >
-                                    <TweetReply
+                                    <Tweet
                                         key={tweet?._id}
                                         tweet={tweet}
                                         onClickMenu={() => {}}
-                                        onClickLike={onClickLike}
+                                        onClickLike={() => {}}
+                                        isLiked={tweet?.likes?.includes(authUser?._id)}
                                         isReply={true}
                                     />
                                 </div>
