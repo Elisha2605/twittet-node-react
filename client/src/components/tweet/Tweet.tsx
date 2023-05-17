@@ -7,6 +7,7 @@ import { getTimeDifference } from '../../utils/helpers.utils';
 import {
     IMAGE_AVATAR_BASE_URL,
     IMAGE_TWEET_BASE_URL,
+    IMAGE_TWEET_REPLY_BASE_URL,
     TWEET_AUDIENCE,
     TWEET_REPLY,
 } from '../../constants/common.constants';
@@ -21,6 +22,7 @@ interface TweetProps {
     onClickMenu: Function;
     onClickLike: (tweet: any) => void;
     isLiked?: boolean;
+    isReply?: boolean;
 }
 
 const Tweet: FC<TweetProps> = ({
@@ -29,6 +31,7 @@ const Tweet: FC<TweetProps> = ({
     onClickMenu,
     onClickLike,
     isLiked,
+    isReply = false,
 }) => {
 
     const tweetId = tweet?._id;
@@ -101,14 +104,25 @@ const Tweet: FC<TweetProps> = ({
                     </p>
                     {tweetImage && (
                         <div className={styles.image}>
-                            <img
+                            {!isReply ? (
+                                <img
+                                    src={
+                                        tweetImage
+                                            ? `${IMAGE_TWEET_BASE_URL}/${tweetImage}`
+                                            : undefined
+                                    }
+                                    alt=""
+                                />
+                            ): (
+                                <img
                                 src={
                                     tweetImage
-                                        ? `${IMAGE_TWEET_BASE_URL}/${tweetImage}`
+                                        ? `${IMAGE_TWEET_REPLY_BASE_URL}/${tweetImage}`
                                         : undefined
                                 }
                                 alt=""
                             />
+                            )}
                         </div>
                     )}
                 </div>

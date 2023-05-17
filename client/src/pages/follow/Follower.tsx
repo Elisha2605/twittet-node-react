@@ -85,7 +85,7 @@ const Follower: React.FC<{}> = () => {
                                     <UserInfo
                                         userId={id}
                                         avatar={follower?.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${follower?.user?.avatar}`}
-                                        isVerified={follower?.user?.isVerified}
+                                        isVerified={follower?.user.isVerified}
                                         name={follower?.user?.name}
                                         username={follower?.user?.username}
                                         className={styles.userInfoWrapper}

@@ -113,8 +113,6 @@ export const getAllTweets = async (
                             else: 0,
                         },
                     },
-                    isInCircle: 1,
-                    twitterCircleMembers: 1,
                 },
             },
         ]).exec();

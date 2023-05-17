@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import Button, { ButtonSize, ButtonType } from '../ui/Button';
 import { 
     tweetAudienceMenuOptions, 
@@ -33,7 +33,7 @@ interface FormProps {
 
     onSubmit: (e: React.FormEvent) => void;
     onImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    onChageImage: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    onChageTextArea: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     onCancelImagePreview: () => void;
     onClickAudienceMenu?: Function;
     onClickReplyMenu?: Function;
@@ -54,7 +54,7 @@ const FormTweet: FC<FormProps> = ({
 
     onSubmit,
     onImageUpload,
-    onChageImage,
+    onChageTextArea,
     onCancelImagePreview,
     onClickAudienceMenu,
     onClickReplyMenu,
@@ -63,7 +63,7 @@ const FormTweet: FC<FormProps> = ({
     isReplay
 }) => {
 
-    const [inputValue, setInputValue] = useState(value);
+    const [inputValue, setInputValue] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [searchResults, setSearchResults] = useState<any[]>([]);
 
@@ -113,6 +113,12 @@ const FormTweet: FC<FormProps> = ({
           }
         }
     };
+
+    useEffect(() => {
+        if (!isFocused) {
+            setInputValue('')
+        }
+    }, [isFocused])
       
     const isImageSelected = !!imagePreview;
 
@@ -151,7 +157,7 @@ const FormTweet: FC<FormProps> = ({
                     id="review-text"
                     onChange={(e: any) => {
                         handleInputChange(e)
-                        onChageImage(e);
+                        onChageTextArea(e);
                     }}
                     placeholder="What's happening?"
                     ref={tweetTextRef}

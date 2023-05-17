@@ -35,8 +35,8 @@ export const getAuthUserFollowsController = asyncHandler(
 
 export const followRequestController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        const sender = req.body.senderId;
-        const receiver = req.body.receiverId;
+        const sender = req.user._id;
+        const receiver = req.params.id;
 
         try {
             const { success, message, payload } = await sendFollowRequest(

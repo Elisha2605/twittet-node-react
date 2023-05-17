@@ -30,6 +30,7 @@ const likeModel = {
 
 const likeSchema = new mongoose.Schema<Ilike>(likeModel);
 
+// Like notification hook
 likeSchema.post<Ilike>('save', async function (doc, next) {
     try {
         const tweet = await Tweet.findById(doc.tweet);

@@ -12,7 +12,7 @@ const followRouter = Router();
 
 followRouter.get('', verifyUser(), getAuthUserFollowsController);
 followRouter.get('/:id', verifyUser(), getUserFollowsController);
-followRouter.post('/send', verifyUser(), followRequestController);
+followRouter.post('/request/:id', verifyUser(), followRequestController);
 followRouter.post('/approve', verifyUser(), approveFollowRequestController);
 followRouter.post('/decline', verifyUser(), declineFollowRequestController);
 

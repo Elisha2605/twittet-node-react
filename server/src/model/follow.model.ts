@@ -78,6 +78,8 @@ export interface IFollow extends mongoose.Document {
     followings: mongoose.Types.DocumentArray<IFollowing>;
     pendings: mongoose.Types.DocumentArray<IPending>;
     waitings: mongoose.Types.DocumentArray<IWaiting>;
+    followerCount: number;
+    followingCount: number;
 }
 
 const followModel = {
@@ -100,6 +102,16 @@ const followModel = {
     },
     declines: {
         type: [declinedSchema],
+    },
+    followerCount: {
+        type: Number,
+        default: 0,
+        require: true,
+    },
+    followingCount: {
+        type: Number,
+        default: 0,
+        require: true,
     },
 };
 
