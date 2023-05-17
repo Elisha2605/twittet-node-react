@@ -7,7 +7,7 @@ import styles from "./TweetFooter.module.css";
 import PopUpMenu from "./PopUpMenu";
 import { shareIcon, shareOptions } from "../../data/menuOptions";
 import { saveTweetToBookmark } from "../../api/bookmark.api";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface TweetFooterProps {
     tweet?: any;
@@ -35,6 +35,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
 }) => {
 
     const location = useLocation();
+    const navigate = useNavigate();
 
     const handleLike = (tweet: any) => {
         onClick!(tweet);
@@ -47,11 +48,19 @@ const TweetFooter: FC<TweetFooterProps> = ({
         }
     }
 
+    const onTweetReply = () => {
+        if (tweet?.image) {
+            navigate(`/tweet/image/${tweet?._id}`)
+        } else if (!tweet?.image) {
+            navigate(`/tweet/${tweet?._id}`)
+        }
+    }
+
    
     return (
         <React.Fragment>
             <div className={`${styles.container} ${isTweetReply ? styles.containerOnTweetReply : ''}`}>
-                <div className={`${styles.item} ${styles.hoverBlue} ${isTweetReply ? styles.itemOnTweetReply   : ''}`}>
+                <div className={`${styles.item} ${styles.hoverBlue} ${isTweetReply ? styles.itemOnTweetReply   : ''}`} onClick={onTweetReply}>
                     <FontAwesomeIcon icon={faComment} className={styles.faComment} />
                     <p>{replies}</p>
                 </div>
