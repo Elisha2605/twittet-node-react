@@ -8,7 +8,6 @@ import AuthContext from '../../../context/user.context';
 import { TweetAudienceType, TweetReplyType } from '../../../types/tweet.types';
 import { createTweet } from '../../../api/tweet.api';
 import FormNavigation from '../../../components/form/FormNavigationTweet';
-import HomeEditTwitterCirlceModal from '../../home/home-modals/HomeEditTwitterCirlceModal';
 
 interface NavigationTweetProp {
     value: string;

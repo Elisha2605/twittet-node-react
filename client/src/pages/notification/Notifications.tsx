@@ -5,27 +5,22 @@ import Layout from '../../Layout.module.css';
 import HeaderTitle from '../../components/header/HeaderTitle';
 import GearIcon from '../../components/icons/GearIcon';
 import HorizontalNavBar from '../../components/ui/HorizontalNavBar';
-import PageUnderConstruction from '../../components/ui/PageUnderConstruction';
 import SearchBar from '../../components/ui/SearchBar';
 import Aside from '../../components/aside/Aside';
 import WhoToFollow from '../../components/ui/WhoToFollow';
 import { getLikesNotification, getMentionsNotification } from '../../api/notification.api';
-import UserInfo from '../../components/ui/UserInfo';
-import { useNavigate } from 'react-router-dom';
-import { IMAGE_AVATAR_BASE_URL, NOTIFICATION_TYPE } from '../../constants/common.constants';
+import { NOTIFICATION_TYPE } from '../../constants/common.constants';
 import NotificationsLike from './NotificationsLike';
-import NotificationsMention from './NotificationsMention';
 import Tweet from '../../components/tweet/Tweet';
 import AuthContext from '../../context/user.context';
 import { likeTweet } from '../../api/like.api';
+import ContentNotAvailable from '../../components/ui/ContentNotAvailable';
 
 const Notification = () => {
 
     const [authUser, setAuthUser] = useState<any>(null);
     
     const [activeTab, setActiveTab] = useState(localStorage.getItem('activeTab-notification') || 'all');
-    const [likesNotification, setLikesNotification] = useState<any[]>([]);
-    const [mentionsNotification, setMentionsNotification] = useState<any[]>([]);
     const [likedTweet, setLikedTweet] = useState<any>();
     const [allNotifications, setAllNotifications] = useState<any[]>([]);
 
@@ -115,6 +110,9 @@ const Notification = () => {
                     {/* Home page - start */}
                     {activeTab === 'all' && (
                         <div className={styles.main}>
+                            {allNotifications.length === 0 && (
+                                <ContentNotAvailable title={"You don't have notificaitons - yet!"} message={'All your notifications will be shown here!'} />
+                            )}
                         {allNotifications.map((notification: any) => 
                             <div key={notification._id}>
                                 {notification.type === NOTIFICATION_TYPE.like ? (
@@ -135,6 +133,9 @@ const Notification = () => {
                     )}
                     {activeTab === 'mentions' && (
                         <div className={styles.main}>
+                            {allNotifications.length === 0 && (
+                                <ContentNotAvailable title={"You haven't been metioned - yet!"} message={'Here you will find all tweets in which people mentioned you!'} />
+                            )}
                             {allNotifications.map((notification: any) => 
                             <div key={notification._id}>
                                 {notification.type === NOTIFICATION_TYPE.mention ? (
