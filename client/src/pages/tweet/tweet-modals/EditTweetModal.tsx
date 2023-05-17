@@ -70,7 +70,6 @@ const EditTweetModal: FC<EditTweetProp> = ({
             : null;
         const res = await editTweet(editTweetModal._id, text, selectedFile, tweetAudience, tweetReply);
         const { tweet }: any = res;
-        
         if (authUser) {
             const newTweet = {
                 _id: tweet._id,

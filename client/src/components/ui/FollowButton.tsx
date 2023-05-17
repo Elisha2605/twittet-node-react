@@ -44,7 +44,7 @@ const FollowButton: FC<FollowButtonProps> = ({
     const [authUser, setAuthUser] = useState<any>(null);
     const [isPending, setIspending] = useState<any[]>([]);
     const [isFollowing, setIsFollowing] = useState<boolean>();
-    const [isloading, setIsLoading] = useState<boolean>(false);
+    const [isloading, setIsLoading] = useState<boolean>(true);
 
     let allStyles = styles.primary;
 
@@ -99,7 +99,7 @@ const FollowButton: FC<FollowButtonProps> = ({
         e: React.MouseEvent<HTMLButtonElement>
     ) => {
         e.stopPropagation();
-        const res = await sendFollowRequest(authUser?._id, userId!);
+        const res = await sendFollowRequest(userId!);
         console.log(res);
 
         setIsFollowing(!isFollowing);
@@ -122,7 +122,6 @@ const FollowButton: FC<FollowButtonProps> = ({
                     {isFollowing ? 'Following' : 'Follow'}
                 </button>
             )}
-            {isloading && <LoadingRing size={'small'} />}
         </React.Fragment>
     );
 };

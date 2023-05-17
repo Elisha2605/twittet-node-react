@@ -173,7 +173,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
         };
         setTweet((prev: any) => ({
             ...prev,
-            replyCount: tweet?.replyCount,
+            replyCount: tweet?.replyCount +1,
         }));
         setTweetReplies((prevTweets) => [newTweet, ...prevTweets]);
         clearTweetForm();

@@ -94,9 +94,9 @@ const UserInfo: FC<UserInfoProps> = ({
                                     @{isReply && username.length > 6 ? username.substring(0, 6) + '...' : username} {time && ` · ${time}`}{' '}
                                 </p>
                             </div>
-                            {authUser?._id === tweet.user._id && (
+                            {authUser?._id === tweet?.user?._id && (
                                 <PopUpMenu
-                                    itemId={tweet._id}
+                                    itemId={tweet?._id}
                                     options={options!}
                                     value={tweet}
                                     icons={icons}

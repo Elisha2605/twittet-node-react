@@ -164,13 +164,7 @@ const Home: React.FC<HomeProps> = ({
         }
     }
 
-    let navigate = useNavigate();
-    const previousPath = localStorage.getItem('active-nav');
-    const goBack = () => {
-        navigate(`/${previousPath}`)
-    }
-
-    const handleSubmitTweet = async (e: React.FormEvent) => {
+    const handleSubmitTweet = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
@@ -195,14 +189,13 @@ const Home: React.FC<HomeProps> = ({
             reposts: [],
             likes: [],
         };
-        goBack();
         setTweets((prevTweets) => [newTweet, ...prevTweets]);
         setIsFormFocused(false);
         setTweetAudience(TWEET_AUDIENCE.everyone)
         setTweetReply(TWEET_REPLY.everyone)
         clearTweetForm();
     };
-
+    
     useEffect(() => {
         setTweets((prevTweets: any) =>
             prevTweets.map((tweet: any) =>
@@ -267,10 +260,10 @@ const Home: React.FC<HomeProps> = ({
                             tweetAudienceValue={tweetAudience}                           
                             tweetReplyValue={tweetReply}
                             setIsFocused={setIsFormFocused}
-                            onSubmit={handleSubmitTweet}
+                            onSubmit={(e: any) => handleSubmitTweet(e)}
                             onImageUpload={handleImageUpload}
                             onCancelImagePreview={handleCanselPreviewImage}
-                            onChageImage={handleTextAreaOnChange} 
+                            onChageTextArea={handleTextAreaOnChange} 
                             onClickAudienceMenu={handleTweetAudienceOptions} 
                             onClickReplyMenu={handleTweetReyplyOptions} 
                         />

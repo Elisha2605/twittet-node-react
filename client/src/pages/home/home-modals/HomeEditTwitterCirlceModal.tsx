@@ -13,8 +13,6 @@ import UserInfo from '../../../components/ui/UserInfo';
 import { useNavigate } from 'react-router-dom';
 import Button, { ButtonSize, ButtonType } from '../../../components/ui/Button';
 import { addUserToTwitterCircle, getAuthUserTwitterCircleMembers } from '../../../api/twitterCircle.api';
-import SearchBar from '../../../components/ui/SearchBar';
-import PageUnderConstruction from '../../../components/ui/PageUnderConstruction';
 import ContentNotAvailable from '../../../components/ui/ContentNotAvailable';
 
 interface HomeEditTwitterCirlceModalProps {}
@@ -152,11 +150,6 @@ const HomeEditTwitterCirlceModal: FC<HomeEditTwitterCirlceModalProps> = ({}) => 
                 )}
                 {activeTab === 'recommended' && (
                     <div className={styles.recommendation}>
-                        {/* <SearchBar 
-                            isButton={true} 
-                            classNameContainer={styles.searchBarContainer} 
-                            classNameInput={styles.searchBarInput}
-                        /> */}
                         {}
                         <p className={styles.twitterCircleMsg}>
                             People won’t be notified when you edit your Twitter Circle. Anyone 
