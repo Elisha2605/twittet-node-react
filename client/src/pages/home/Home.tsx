@@ -189,7 +189,6 @@ const Home: React.FC<HomeProps> = ({
             reposts: [],
             likes: [],
         };
-
         setTweets((prevTweets) => [newTweet, ...prevTweets]);
         setIsFormFocused(false);
         setTweetAudience(TWEET_AUDIENCE.everyone)

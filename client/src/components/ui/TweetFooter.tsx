@@ -2,7 +2,7 @@ import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faArrowUpFromBracket, faBookmark, faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons'
 import { faChartSimple, faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import styles from "./TweetFooter.module.css";
 import PopUpMenu from "./PopUpMenu";
 import { shareIcon, shareOptions } from "../../data/menuOptions";
