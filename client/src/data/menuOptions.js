@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faEdit, faArrowRightFromBracket, faAt, faGear, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faEdit, faArrowRightFromBracket, faAt, faGear, faUserPlus, faRepeat, faPen } from '@fortawesome/free-solid-svg-icons';
 import EarthIcon from '../components/icons/EarthIcon';
 import HeartIcon from '../components/icons/HeartIcon';
 import { MORE_NAV_OPTION, TWEET_AUDIENCE, TWEET_MENU, TWEET_REPLY } from '../constants/common.constants';
@@ -58,3 +58,13 @@ export const moreIcons = {
    'Settings and privacy': <FontAwesomeIcon icon={faGear} />,
    'Display': <FontAwesomeIcon icon={faEdit} />
 }
+
+export const reTweetOptions = [
+   TWEET_MENU.retweet,
+   TWEET_MENU.quoteTweet
+]
+
+export const reTweetIcon = {
+   'Retweet': <FontAwesomeIcon icon={faRepeat} />,
+   'Quote Tweet': <FontAwesomeIcon icon={faPen} />
+} 

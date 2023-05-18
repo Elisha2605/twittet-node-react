@@ -5,6 +5,11 @@
 .containerOnTweetReply {
     margin-left: 2rem;
 }
+.retweetPopUp {
+    position: absolute;
+    bottom: 6.5rem;
+    left: 10rem;
+}
 .item {
     display: flex;
     align-items: center;

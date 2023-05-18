@@ -221,6 +221,10 @@ const Home: React.FC<HomeProps> = ({
         );
     }, [likedTweet]);
 
+    useEffect(() => {
+        console.log(tweets);
+    }, [tweets])
+
     const onClickLike = async (tweet: any) => {
         const res: any = await likeTweet(tweet._id);;
         const { likedTweet } = res;
@@ -276,7 +280,7 @@ const Home: React.FC<HomeProps> = ({
                     </>
                     {activeTab === 'for-you' && (
                         <div className={styles.main}>
-                            {tweets.map((tweet: any) => (
+                            {memoizedTweets.map((tweet: any) => (
                                 <Tweet
                                     key={tweet._id}
                                     tweet={tweet}
@@ -289,7 +293,7 @@ const Home: React.FC<HomeProps> = ({
                     )}
                     {activeTab === 'following' && (
                         <div className={styles.main}>
-                            {followingTweets.map((tweet: any) => (
+                            {memoizedFollowTweets.map((tweet: any) => (
                                 <Tweet
                                     key={tweet._id}
                                     tweet={tweet}

@@ -58,7 +58,7 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
     }
 
     return (
-        <div className={styles.container}>
+        <div className={`${styles.container}`}>
             {isMenuIcon && (
                 <button className={styles.menuBtn} onClick={handleButtonClick}>
                     <MenuIcon />

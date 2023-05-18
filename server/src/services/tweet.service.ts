@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { TWEET_AUDIENCE } from 'src/constants/tweet.constants';
+import { TWEET_AUDIENCE, TWEET_TYPE } from 'src/constants/tweet.constants';
 import Follow from 'src/model/follow.model';
 import Like from 'src/model/like.model';
 import Tweet from 'src/model/tweet.model';
@@ -84,6 +84,7 @@ export const getAllTweets = async (
             {
                 $project: {
                     _id: 1,
+                    type: 1,
                     user: {
                         _id: '$user._id',
                         name: '$user.name',
@@ -175,6 +176,7 @@ export const getTweetById = async (tweetId: string): Promise<any> => {
             {
                 $project: {
                     _id: 1,
+                    type: 1,
                     user: {
                         _id: '$user._id',
                         name: '$user.name',
@@ -208,6 +210,15 @@ export const getTweetById = async (tweetId: string): Promise<any> => {
             },
         ]).exec();
 
+        if (!tweet) {
+            return {
+                success: true,
+                message: 'Not tweets found!',
+                status: 404,
+                payload: {},
+            };
+        }
+
         return {
             success: true,
             message: 'Successfully fetched tweet',
@@ -229,7 +240,7 @@ export const getUserTweets = async (
     userId: string
 ): Promise<ApiResponse<any>> => {
     try {
-        const tweet = await Tweet.aggregate([
+        const tweets = await Tweet.aggregate([
             {
                 $match: {
                     user: new mongoose.Types.ObjectId(userId),
@@ -260,6 +271,7 @@ export const getUserTweets = async (
             {
                 $project: {
                     _id: 1,
+                    type: 1,
                     user: {
                         _id: '$user._id',
                         name: '$user.name',
@@ -295,14 +307,19 @@ export const getUserTweets = async (
                 },
             },
         ]).exec();
-        if (tweet.length < 0) {
-            throw CustomError('Tweets not found', 204);
+        if (tweets.length === 0) {
+            return {
+                success: true,
+                message: 'Not tweets found!',
+                status: 404,
+                payload: [],
+            };
         }
         return {
             success: true,
             message: 'Successfully fetched tweets',
             status: 200,
-            payload: tweet,
+            payload: tweets,
         };
     } catch (error) {
         const errorResponse: ErrorResponse = {
@@ -322,6 +339,15 @@ export const getFollowTweets = async (
         const follow = await Follow.findOne({ user: userId }).populate(
             'followings.user'
         );
+
+        if (!follow) {
+            return {
+                success: true,
+                message: 'Follow status not found!',
+                status: 404,
+                payload: [],
+            };
+        }
         // Extract the user IDs from the followings array
         const followingIds = follow.followings.map(
             (following: any) => following.user._id
@@ -354,6 +380,7 @@ export const getFollowTweets = async (
             {
                 $project: {
                     _id: 1,
+                    type: 1,
                     user: {
                         _id: '$user._id',
                         name: '$user.name',
@@ -440,6 +467,56 @@ export const createTweet = async (
         if (!savedTweet) {
             throw CustomError('Could not create tweet', 500);
         }
+        const populatedTweet = await newTweet.populate({
+            path: 'user',
+            select: 'name username avatar coverImage isVerified isProtected',
+            model: 'User',
+        });
+
+        return {
+            success: true,
+            message: 'Successfully created tweet',
+            status: 200,
+            payload: populatedTweet,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};
+
+export const reTweet = async (
+    tweetId: string,
+    userId: string,
+    text: string,
+    image: string,
+    audience: string,
+    reply: string
+): Promise<ApiResponse<any>> => {
+    try {
+        const tweet = await Tweet.findById(tweetId);
+
+        const newTweet = new Tweet({
+            type: TWEET_TYPE.reTweet,
+            originalTweet: tweet._id,
+            user: userId,
+            text: text,
+            image: image,
+            audience: audience,
+            reply: reply,
+        });
+
+        const savedReTweet = await newTweet.save();
+        if (!savedReTweet) {
+            throw CustomError('Could not create tweet', 500);
+        }
+
+        // change this to aggregate function.
         const populatedTweet = await newTweet.populate({
             path: 'user',
             select: 'name username avatar coverImage isVerified isProtected',

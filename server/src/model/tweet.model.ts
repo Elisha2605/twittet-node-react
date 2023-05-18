@@ -1,5 +1,9 @@
 import mongoose, { Types, ObjectId } from 'mongoose';
-import { TWEET_AUDIENCE, TWEET_REPLY } from 'src/constants/tweet.constants';
+import {
+    TWEET_AUDIENCE,
+    TWEET_REPLY,
+    TWEET_TYPE,
+} from 'src/constants/tweet.constants';
 import { handleError } from 'src/utils/db.util';
 import User from './user.model';
 import Notification, { INotification } from './notification.model';
@@ -10,41 +14,47 @@ import {
 import TwitterCircle from './twitterCircle.model';
 
 export interface ITweet extends mongoose.Document {
+    type: string;
     user: ObjectId | string;
     image: string;
     text: string;
     audience: string;
     reply: string;
     mentions: ObjectId[];
-    hashtags: ObjectId[];
     replyCount: number;
+    originalTweet: ObjectId | string;
 }
 
 export const tweetModel = {
+    type: {
+        type: String,
+        required: true,
+        default: TWEET_TYPE.regular,
+    },
     user: {
         type: Types.ObjectId,
         ref: 'User',
-        require: true,
+        required: true,
     },
     image: {
         type: String,
         default: null,
-        require: false,
+        required: false,
     },
     text: {
         type: String,
         default: null,
-        require: false,
+        required: false,
     },
     audience: {
         type: String,
         default: TWEET_AUDIENCE.everyone,
-        require: false,
+        required: false,
     },
     reply: {
         type: String,
         default: TWEET_REPLY.everyone,
-        require: false,
+        required: false,
     },
     mentions: [
         {
@@ -53,16 +63,15 @@ export const tweetModel = {
             require: false,
         },
     ],
-    hashtags: [
-        {
-            type: String,
-            require: false,
-        },
-    ],
     replyCount: {
         type: Number,
         default: 0,
-        require: true,
+        required: true,
+    },
+    originalTweet: {
+        type: Types.ObjectId,
+        ref: 'Tweet',
+        required: false,
     },
 };
 

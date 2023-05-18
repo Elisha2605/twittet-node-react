@@ -5,9 +5,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { FC } from "react";
 import styles from "./TweetFooter.module.css";
 import PopUpMenu from "./PopUpMenu";
-import { shareIcon, shareOptions } from "../../data/menuOptions";
+import { reTweetIcon, reTweetOptions, shareIcon, shareOptions } from "../../data/menuOptions";
 import { saveTweetToBookmark } from "../../api/bookmark.api";
 import { useLocation, useNavigate } from 'react-router-dom';
+import { TWEET_MENU } from "../../constants/common.constants";
 
 interface TweetFooterProps {
     tweet?: any;
@@ -56,7 +57,15 @@ const TweetFooter: FC<TweetFooterProps> = ({
         }
     }
 
-   
+    const onReTweet = (option: any, id: string, tweet: any) => {
+        if(option === TWEET_MENU.retweet) {
+            console.log('retweet clicked');
+            console.log(tweet);
+        } else if (option === TWEET_MENU.quoteTweet) {
+            console.log('quote retweet clicked');
+        }
+    }   
+
     return (
         <React.Fragment>
             <div className={`${styles.container} ${isTweetReply ? styles.containerOnTweetReply : ''}`}>
@@ -65,7 +74,16 @@ const TweetFooter: FC<TweetFooterProps> = ({
                     <p>{replies}</p>
                 </div>
                 <div className={`${styles.item} ${styles.hoverGreen} ${isTweetReply ? styles.itemOnTweetReply : ''}`}>
-                    <FontAwesomeIcon icon={faRepeat} className={styles.faRepeat} />
+                    <PopUpMenu
+                        value={tweet}
+                        isMenuIcon={false}
+                        options={reTweetOptions!}
+                        icons={reTweetIcon}
+                        onClick={onReTweet}
+                        className={styles.retweetPopUp}
+                    > 
+                        <FontAwesomeIcon icon={faRepeat} className={styles.faRepeat} />
+                    </PopUpMenu>
                     <p>{retTweets}</p>
                 </div>
                 {isLiked ? (

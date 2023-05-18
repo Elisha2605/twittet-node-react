@@ -7,6 +7,8 @@ export const IMAGE_TWEET_REPLY_BASE_URL = `http://localhost:4000/replyImage`
 export enum TWEET_MENU {
     delete = 'Delete',
     edit = 'Edit',
+    retweet = 'Retweet',
+    quoteTweet = 'Quote Tweet',
 }
 
 export enum TWEET_AUDIENCE {

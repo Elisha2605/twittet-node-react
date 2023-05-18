@@ -29,6 +29,7 @@ import { getUserLikedTweets, likeTweet } from '../../api/like.api';
 import { ModalContext } from '../../context/modal.context';
 import ProfileEditModal from './profile-modals/ProfileEditModal';
 import { faLink, faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import FollowButton from '../../components/ui/FollowButton';
 
 interface ProfileProps {
     onAddTweet: any;
@@ -60,8 +61,6 @@ const Profile: FC<ProfileProps> = ({
     const [userLikedTweets, setUserLikedTweets] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const [followings, setFollowings] = useState<any[]>([]);
-
     const [likedTweet, setLikedTweet] = useState<any>();
 
     const navigate = useNavigate();
@@ -89,9 +88,7 @@ const Profile: FC<ProfileProps> = ({
     useEffect(() => {
         if (authUser) {
             const fetchUserFollowStatus = async () => {
-                const { followings } = await getUserFollows(authUser?._id);
                 setLoading(false)
-                setFollowings(followings);
             };
             fetchUserFollowStatus();
         }
@@ -275,43 +272,6 @@ const Profile: FC<ProfileProps> = ({
         setUser((prevUser: any) => ({ ...prevUser, ...editedUser }));
     };
 
-    const onFollowUser = async () => {
-        const updatedFollowings = [...followings];
-      
-        if (isFollowing()) {
-          // Unfollow the user
-          const res = await sendFollowRequest(user?._id);
-          console.log(res);
-          const unfollowedIndex = updatedFollowings.findIndex(
-            (following: any) => following.user?._id === user?._id
-          );
-          if (unfollowedIndex !== -1) {
-            updatedFollowings.splice(unfollowedIndex, 1);
-            setUser((prevUser: any) => ({
-                ...prevUser,
-                followerCount: prevUser.followerCount - 1,
-              }));
-          }
-        } else {
-          // Follow the user
-          const res = await sendFollowRequest(user?._id);
-          console.log(res);
-          updatedFollowings.push({ user: { _id: user?._id } });
-          setUser((prevUser: any) => ({
-            ...prevUser,
-            followerCount: prevUser.followerCount + 1,
-          }));
-        }
-
-        setFollowings(updatedFollowings);
-      };
-
-    
-    const isFollowing = (): boolean => {
-        return followings && followings.some((following: any) => following.user?._id === id);
-    };
-    
-
     return (
         <React.Fragment>
             <div className={Layout.mainSectionContainer}>
@@ -381,11 +341,10 @@ const Profile: FC<ProfileProps> = ({
                             ) : (
                                 <>
                                 {!loading && (
-                                    <Button
-                                        type={isFollowing() ? ButtonType.tietary : ButtonType.secondary}
+                                    <FollowButton
+                                        userId={user?._id}
+                                        type={ButtonType.secondary}
                                         size={ButtonSize.small}
-                                        value={isFollowing() ? 'Following' : 'Follow'}
-                                        onClick={onFollowUser}
                                         className={styles.editProfileBtn}
                                     />
                                 )}
