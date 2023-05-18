@@ -56,3 +56,28 @@
 ::-webkit-scrollbar-thumb:hover {
     background-color: #555;
 }
+
+/* @media only screen and (min-width: 1440px) {
+    .navigation {
+        position: fixed;
+        top: 0;
+        left: 13rem;
+        height: 100%;
+        width: 22rem;
+        border-right-color: var(--color-secondary-light);
+        border-style: solid;
+        border-width: 0 1px 0 0;
+    }
+    .page {
+        margin-right: 22rem;
+        position: relative;
+        left: 13rem;
+    }
+    
+    .mainSectionContainer,
+    .mainSectionSectionMessageContainer 
+    {
+        display: grid;
+        grid-template-columns: 1.9fr 1.5fr;
+    }
+} */

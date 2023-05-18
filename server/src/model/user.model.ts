@@ -6,12 +6,15 @@ export interface ISession extends mongoose.Types.Subdocument {
     refreshToken: string;
 }
 
-const sessionSchema = new mongoose.Schema({
-    refreshToken: {
-        type: String,
-        default: '',
+const sessionSchema = new mongoose.Schema(
+    {
+        refreshToken: {
+            type: String,
+            required: true,
+        },
     },
-});
+    { timestamps: true }
+);
 
 export interface IUser extends mongoose.Document {
     email: string;
@@ -20,6 +23,8 @@ export interface IUser extends mongoose.Document {
     avatar: string;
     coverImage: string;
     bio: string;
+    location: string;
+    website: string;
     isActive: boolean;
     isVerified: boolean;
     isProtected: boolean;
@@ -31,8 +36,8 @@ export interface IUser extends mongoose.Document {
 export const userModel = {
     email: {
         type: String,
-        unique: true, // change to true
-        required: true, // change to true
+        unique: true,
+        required: true,
         validate: {
             validator: (v: string) => {
                 return v !== undefined;
@@ -69,10 +74,22 @@ export const userModel = {
     },
     coverImage: {
         type: String,
+        default: 'default-cover.jpg',
         required: false,
     },
     bio: {
         type: String,
+        default: null,
+        required: false,
+    },
+    location: {
+        type: String,
+        default: null,
+        required: false,
+    },
+    website: {
+        type: String,
+        default: null,
         required: false,
     },
     isActive: {

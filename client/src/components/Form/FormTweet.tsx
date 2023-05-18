@@ -1,5 +1,11 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import Button, { ButtonSize, ButtonType } from '../ui/Button';
+import { 
+    tweetAudienceMenuOptions, 
+    tweetAudienceMenuIcons,
+    tweetReplyOptions,
+    tweetReplyIcons 
+} from '../../data/menuOptions';
 import styles from './FormTweet.module.css';
 import EmojiIcon from '../icons/EmojiIcon';
 import ImageIcon from '../icons/ImageIcon';
@@ -9,7 +15,10 @@ import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAt, faChevronDown, faEarthAfrica, faLock, faUserCheck } from '@fortawesome/free-solid-svg-icons';
 import PopUpMenu from '../ui/PopUpMenu';
-import { TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
+import { searchUsers } from '../../api/user.api';
+import UserInfo from '../ui/UserInfo';
+import useClickOutSide from '../../hooks/useClickOutSide';
 
 interface FormProps {
     value: string;
@@ -19,23 +28,18 @@ interface FormProps {
     isFocused?: boolean;
     setIsFocused: React.Dispatch<React.SetStateAction<boolean>>;
 
-    tweetAudienceOptions: string[];
-    tweetAudienceIcons: Record<string, React.ReactNode>;
-    tweetAudienceValue: string,
-
-
-    tweetReplyOptions: string[];
-    tweetReplyIcons: Record<string, React.ReactNode>,
-    tweetReplyValue: string,
+    tweetAudienceValue?: string,
+    tweetReplyValue?: string,
 
     onSubmit: (e: React.FormEvent) => void;
     onImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    onChageImage: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    onChageTextArea: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     onCancelImagePreview: () => void;
-    onClickAudienceMenu: Function;
-    onClickReplyMenu: Function;
+    onClickAudienceMenu?: Function;
+    onClickReplyMenu?: Function;
 
-    classNameTextErea?: string;    
+    classNameTextErea?: string;
+    isReplay?: boolean;    
 }
 
 const FormTweet: FC<FormProps> = ({
@@ -45,34 +49,77 @@ const FormTweet: FC<FormProps> = ({
     isFocused = false,
     setIsFocused,
 
-    tweetAudienceOptions,
-    tweetAudienceIcons,
     tweetAudienceValue,
-
-    tweetReplyOptions,
-    tweetReplyIcons,
     tweetReplyValue,
 
     onSubmit,
     onImageUpload,
-    onChageImage,
+    onChageTextArea,
     onCancelImagePreview,
     onClickAudienceMenu,
     onClickReplyMenu,
 
-    classNameTextErea
+    classNameTextErea,
+    isReplay
 }) => {
-    
+
+    const [inputValue, setInputValue] = useState('');
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [searchResults, setSearchResults] = useState<any[]>([]);
+
+    const searchResultsRef = useRef<HTMLDivElement>(null);
+
+    // close searech result on click outside
+    useClickOutSide(searchResultsRef, setShowSuggestions);  
+
     // Adjust text erea with input value
     useAutosizeTextArea(tweetTextRef.current, value)
 
-    // submit with by pressing "command + enter"
+    // ubmit with by pressing "command + enter"
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === "Enter" && e.metaKey) {
             onSubmit(e);
         }
     }
+    
+    const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        const lastChar = value.charAt(value.length - 1);
+        if (lastChar === '@') {
+        setShowSuggestions(true);
+        } else if (lastChar === ' ') {
+        setShowSuggestions(false);
+        }
+        setInputValue(value);
+        
+        const atIndex = value.lastIndexOf('@');
+        const searchTerm = value.substring(atIndex + 1);
+        const { users } = await searchUsers(encodeURIComponent(searchTerm));
+        setSearchResults(users);
+    };
+    
 
+    const handleUserClick = (username: string) => {
+        setShowSuggestions(false);
+        const textarea = document.getElementById('review-text') as HTMLTextAreaElement;
+        if (textarea) {
+          textarea.focus();
+          const text = textarea.value;
+          const atPosition = text.lastIndexOf('@');
+          if (atPosition !== -1) {
+            const newText = text.substring(0, atPosition) + `@${username} ` + text.substring(textarea.selectionEnd);
+            setInputValue(newText);
+            textarea.setSelectionRange(atPosition + username.length + 2, atPosition + username.length + 2);
+          }
+        }
+    };
+
+    useEffect(() => {
+        if (!isFocused) {
+            setInputValue('')
+        }
+    }, [isFocused])
+      
     const isImageSelected = !!imagePreview;
 
     return (
@@ -82,8 +129,8 @@ const FormTweet: FC<FormProps> = ({
                     <div className={`${styles.everyone} ${tweetAudienceValue === TWEET_AUDIENCE.twitterCircle ? styles.twitterCirlce : ''}`}>
                         <PopUpMenu 
                             title={'Choose audience'}
-                            options={tweetAudienceOptions}
-                            icons={tweetAudienceIcons}
+                            options={tweetAudienceMenuOptions}
+                            icons={tweetAudienceMenuIcons}
                             isMenuIcon={false}
                             isDisable={false}
                             onClick={(tweetPrivacyOptions) => {
@@ -104,15 +151,47 @@ const FormTweet: FC<FormProps> = ({
                         </PopUpMenu>
                     </div>
                 ) : null }
+        
                 <textarea
                     className={`${styles.textarea} ${classNameTextErea}`}
                     id="review-text"
-                    onChange={onChageImage}
+                    onChange={(e: any) => {
+                        handleInputChange(e)
+                        onChageTextArea(e);
+                    }}
                     placeholder="What's happening?"
                     ref={tweetTextRef}
                     rows={1}
-                    value={value}
-                />
+                    value={inputValue}
+                    />
+                    {showSuggestions && (
+                        <div>
+                            <div
+                                ref={searchResultsRef}
+                                className={styles.searchResults}
+                            >
+                                {searchResults.map((user: any) => (
+                                    <div 
+                                        key={user._id}
+                                        onClick={() => handleUserClick(user.username)}
+                                        >
+                                    <UserInfo
+                                            userId={user?._id}
+                                            avatar={
+                                                user?.avatar &&
+                                                `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`
+                                            }
+                                            name={user?.name}
+                                            username={user?.username}
+                                            isVerified={user?.isVerified}
+                                            isOnHover={true}
+                                            isNavigate={false}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 {isFocused || isImageSelected ? (
                     <PopUpMenu 
                             title={'Who can reply?'}
@@ -155,7 +234,7 @@ const FormTweet: FC<FormProps> = ({
                     <div className={styles.previewImage}>
                         <XmarkIcon className={styles.cancelBtn} size={'lg'}
                             onClick={onCancelImagePreview}/>
-                        <img src={imagePreview} alt='preview tweet img' />
+                        <img id={imagePreview} src={imagePreview} alt='preview tweet img' />
                     </div>
                 )}
                 <div className={styles.footer}>

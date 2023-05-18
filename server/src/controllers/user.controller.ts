@@ -4,7 +4,10 @@ import {
     getAllUsers,
     getUserById,
     getAuthUserInfo,
+    searchUsers,
+    editUserProfile,
 } from 'src/services/user.service';
+import { validate_name, validate_website } from 'src/utils/validation.util';
 
 export const users = asyncHandler(
     async (_req: Request, res: Response, next: NextFunction) => {
@@ -56,6 +59,66 @@ export const info = asyncHandler(
                 res.status(200).json({ user: payload });
             } else {
                 res.status(500).json({ success: message, status: status });
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+export const searchUsersController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const searchTerm = req.query.q?.toString().trim();
+
+        try {
+            const { success, message, status, payload } = await searchUsers(
+                searchTerm
+            );
+            if (success) {
+                res.json({
+                    success: success,
+                    status: status,
+                    message: message,
+                    users: payload,
+                });
+            } else {
+                res.status(status).json({ success, message });
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+export const editUserProfileController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req.user._id; // needs validation
+        const coverImage = req.files?.['cover']?.[0]?.filename ?? null;
+        const avatar = req.files?.['avatar']?.[0]?.filename ?? null;
+        const name = validate_name(req.body.name);
+        const bio = req.body.bio; // needs validation
+        const location = req.body.location; // needs validation
+        const website = validate_website(req.body.website);
+
+        try {
+            const { success, message, status, payload } = await editUserProfile(
+                userId,
+                coverImage,
+                avatar,
+                name,
+                bio,
+                location,
+                website as string
+            );
+            if (success) {
+                res.json({
+                    success: success,
+                    status: status,
+                    message: message,
+                    user: payload,
+                });
+            } else {
+                res.status(status).json({ success, message });
             }
         } catch (error) {
             next(error);

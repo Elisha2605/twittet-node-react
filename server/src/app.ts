@@ -17,6 +17,12 @@ import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import tweetRouter from './routes/tweet.routes';
 import path from 'path';
+import followRouter from './routes/follow.routes';
+import likeRouter from './routes/like.routes';
+import bookmarkRouter from './routes/bookmark.routes';
+import replyRouter from './routes/reply.routes';
+import notificationRouter from './routes/notification.routes';
+import twitterCircleRouter from './routes/twitterCircle.routes';
 
 dotenv.config();
 
@@ -74,6 +80,12 @@ app.use(loggerMiddleware);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/tweets', tweetRouter);
+app.use('/api/follows', followRouter);
+app.use('/api/likes', likeRouter);
+app.use('/api/bookmarks', bookmarkRouter);
+app.use('/api/replies', replyRouter);
+app.use('/api/notifications', notificationRouter);
+app.use('/api/twitterCircles', twitterCircleRouter);
 
 // SERVING STATIC FILES
 app.use('/avatar', express.static(path.join(__dirname, 'uploads', 'avatar')));
@@ -81,6 +93,10 @@ app.use('/cover', express.static(path.join(__dirname, 'uploads', 'cover')));
 app.use(
     '/tweetImage',
     express.static(path.join(__dirname, 'uploads', 'tweetImage'))
+);
+app.use(
+    '/replyImage',
+    express.static(path.join(__dirname, 'uploads', 'replyImage'))
 );
 
 // ERROR - REQUEST HANDLING

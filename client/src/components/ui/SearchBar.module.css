@@ -31,4 +31,24 @@
     color: rgb(104, 120, 121);
 } 
 
+.searchResults {
+    width: 100%;
+    position: absolute;
+    background: var(--color-white);
+    box-shadow: 0 0 0 1px rgba(15, 15, 15, 0.001), 0 8px 16px rgba(15, 15, 15, 0.4);
+    border-radius: 1rem;
+    overflow: hidden;
+    top: 3.5rem;
+    z-index: 1;
+}
 
+.userItem {
+    background: var(--color-secondary-light);
+}
+
+.searchMsg {
+    color: var(--color-secondary);
+    font-size: var(--font-size-ms);
+    height: 5rem;
+    padding: 1rem;
+}

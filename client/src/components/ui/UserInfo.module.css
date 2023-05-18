@@ -21,6 +21,7 @@
 .avatar a:hover {
     filter: brightness(0.8);
     transition: .2s;
+    cursor: pointer;
 }
 
 .userWrapper {
@@ -48,16 +49,27 @@
     min-width: 7.5rem;
 }
 
-.firstname {
-    font-weight: var(--font-weight-500);
+.onHoverUser {
+    padding: 0.2rem 0.6rem ;
+}
+.onHoverUser:hover {
+    background: var(--color-secondary-light);
+    cursor: pointer;
 }
 
-.userInfo a:hover {
+.name {
+    font-weight: var(--font-weight-600);
+}
+
+.name:hover {
     text-decoration: underline;
+    transition: 0.2s ease-in;
+    cursor: pointer;
 }
 
 .username {
     color: var(--color-secondary);
+    cursor: pointer;
 }
 
 .certifiedIcon {

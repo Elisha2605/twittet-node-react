@@ -2,16 +2,19 @@ import React, { FC, useContext, useEffect, useState } from 'react';
 import PopUpMenu from './PopUpMenu';
 import styles from './UserInfo.module.css';
 import Certified from '../../assets/certified.svg';
-import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../context/user.context';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLock } from '@fortawesome/free-solid-svg-icons';
 
 interface UserInfoProps {
-    itemId: any;
+    tweet?: any;
     userId?: string;
     avatar: string | undefined;
     name: string;
     username: string;
     isVerified?: boolean;
+    isProtected?: boolean;
     children?: React.ReactNode;
     link?: string;
     className?: string;
@@ -20,15 +23,19 @@ interface UserInfoProps {
     icons?: Record<string, React.ReactNode>;
     time?: string;
     onClickOption?: Function;
+    isReply?: boolean;
+    isOnHover?: boolean;
+    isNavigate?: boolean;
 }
 
 const UserInfo: FC<UserInfoProps> = ({
-    itemId,
+    tweet,
     userId,
     avatar,
     name,
     username,
     isVerified = false,
+    isProtected = false,
     children,
     link,
     className,
@@ -37,6 +44,9 @@ const UserInfo: FC<UserInfoProps> = ({
     icons,
     time,
     onClickOption,
+    isReply = false,
+    isOnHover = false,
+    isNavigate = false,
 }) => {
 
     const [authUser, setAuthUser] = useState<any>(null);
@@ -50,18 +60,20 @@ const UserInfo: FC<UserInfoProps> = ({
         getAuthUser();
     }, []);
 
-    let profileLink: string;
-    if (userId === authUser?._id) {
-        profileLink = `/profile`;
-    } else {
-        profileLink = `/user-profile/${userId}`;
+    const navigate = useNavigate();
+
+    const onNavigateToProfile = () => {
+        if (isNavigate) {
+            navigate(`/profile/${userId}`)
+        }
     }
+    
 
     return (
         <React.Fragment>
-            <div className={`${styles.container}`}>
+            <div className={`${styles.container} ${isOnHover ? styles.onHoverUser : ''}`}>
                 {avatar && (
-                    <div className={styles.avatar}>
+                    <div className={styles.avatar} onClick={onNavigateToProfile}>
                         <a href={link}>
                             <img src={avatar} alt="" />
                         </a>
@@ -71,36 +83,44 @@ const UserInfo: FC<UserInfoProps> = ({
                     {isOption ? (
                         <div className={styles.userInfoOptionWrapper}>
                             <div className={styles.userInfo}>
-                                <NavLink to={profileLink}>
-                                    <p className={styles.firstname}>
-                                        {name}{' '}
-                                        {isVerified && (
-                                            <img className={styles.certifiedIcon} src={Certified} alt="" />
-                                        )}{' '}
-                                    </p>
-                                </NavLink>
-                                <p className={styles.username}>
-                                <NavLink to={'/user-profile'}>@{username}</NavLink> {time && ` · ${time}`}
+                                <p className={styles.name} onClick={onNavigateToProfile}>
+                                    {/* this is for TweetReply */}
+                                    {isReply && name.length > 6 ? name.substring(0, 6) + '...' : name}{' '}
+                                    {isVerified && (
+                                        <img className={styles.certifiedIcon} src={Certified} alt="" />
+                                    )}
+                                </p>
+                                <p className={styles.username} onClick={onNavigateToProfile}>
+                                    @{isReply && username.length > 6 ? username.substring(0, 6) + '...' : username} {time && ` · ${time}`}{' '}
                                 </p>
                             </div>
-                            <PopUpMenu
-                                itemId={itemId}
-                                options={options!}
-                                icons={icons}
-                                onClick={(option, id) =>
-                                    onClickOption!(option, id)
-                                }
-                            />
+                            {authUser?._id === tweet?.user?._id && (
+                                <PopUpMenu
+                                    itemId={tweet?._id}
+                                    options={options!}
+                                    value={tweet}
+                                    icons={icons}
+                                    onClick={(option, id, tweet) =>
+                                        onClickOption!(option, id, tweet)
+                                    }
+                                />
+                            )}
                         </div>
                     ) : (
                         <>
-                            <div className={styles.userInfo}>
-                                <NavLink to={'/user-profile'}>
-                                    <p className={styles.firstname}>
-                                    {name}
-                                    </p>
-                                </NavLink>
-                                @{username}
+                            <div className={styles.userInfo} onClick={onNavigateToProfile}>
+                                <p className={styles.name}>
+                                {name}{' '}
+                                {isVerified && (
+                                        <img className={styles.certifiedIcon} src={Certified} alt="" />
+                                )}{' '}
+                                {isProtected && (
+                                    <FontAwesomeIcon icon={faLock} />
+                                )}{' '}
+                                </p>
+                                <p className={styles.username}>
+                                    @{username}
+                                </p>
                             </div>
                             {children}
                         </>

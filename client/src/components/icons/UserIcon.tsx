@@ -8,14 +8,17 @@ const UserIcon: FC<{
     className?: string;
     color?: string;
     size?: SizeProp;
-    small?: boolean;
+    isSmall?: boolean;
+    isMedium?: boolean;
     onClick?: () => void;
-}> = ({ className, size, color, small, onClick }) => {
+}> = ({ className, size, color, isSmall, isMedium, onClick }) => {
     return (
         <React.Fragment>
             <FontAwesomeIcon
                 icon={faUserCheck}
-                className={`${styles.faUserCheck} ${className} ${small ? styles.small : ''}`}
+                className={`${styles.faUserCheck} ${className} ${
+                    isSmall ? styles.small : ''
+                } ${isMedium ? styles.medium : ''}`}
                 size={size}
                 color={color ? color : '#fff'}
                 onClick={onClick}

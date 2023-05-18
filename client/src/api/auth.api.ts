@@ -68,7 +68,7 @@ export const login = async (email: string, password: string) => {
         };
         localStorage.setItem('context', JSON.stringify(contex));
         setTimeout(() => {
-            window.location.href = '/';
+            window.location.href = '/home';
         }, 1000)
     }
 
@@ -85,6 +85,7 @@ export const logout = async () => {
         localStorage.removeItem('context');
         localStorage.removeItem('activeTab-home');
         localStorage.removeItem('activeTab-notification');
+        localStorage.removeItem('activeTab-profile');
         localStorage.removeItem('activeTab-profile');
         window.location.href = '/';
     }

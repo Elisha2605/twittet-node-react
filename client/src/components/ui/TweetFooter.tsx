@@ -1,42 +1,130 @@
 import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
+import { faArrowUpFromBracket, faBookmark, faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons'
 import { faChartSimple, faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { FC } from "react";
 import styles from "./TweetFooter.module.css";
+import PopUpMenu from "./PopUpMenu";
+import { reTweetIcon, reTweetOptions, shareIcon, shareOptions } from "../../data/menuOptions";
+import { saveTweetToBookmark } from "../../api/bookmark.api";
+import { useLocation, useNavigate } from 'react-router-dom';
+import { TWEET_MENU } from "../../constants/common.constants";
 
 interface TweetFooterProps {
-    comments: string;
-    reposts: string;
+    tweet?: any;
+
+    replies: string;
+    retTweets: string;
     likes: string;
     views: string;
+    onClick?: (tweet: string) => void;
+    // onClickShare?: ()
+    isTweetReply?: boolean;
+    isLiked?: boolean;
 }
 
 const TweetFooter: FC<TweetFooterProps> = ({ 
-    comments,
-    reposts,
+    tweet,
+
+    replies,
+    retTweets,
     likes,
-    views
+    views,
+    onClick,
+    isTweetReply,
+    isLiked
 }) => {
+
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const handleLike = (tweet: any) => {
+        onClick!(tweet);
+    };
+
+    const onClickSaveAndUnsaveTweet = async (option: any, _id: string, tweet: any) => {
+        if (option === 'Bookmark' || option === 'Remove tweet') {
+            const res = await saveTweetToBookmark(tweet._id);
+            console.log(res);
+        }
+    }
+
+    const onTweetReply = () => {
+        if (tweet?.image) {
+            navigate(`/tweet/image/${tweet?._id}`)
+        } else if (!tweet?.image) {
+            navigate(`/tweet/${tweet?._id}`)
+        }
+    }
+
+    const onReTweet = (option: any, id: string, tweet: any) => {
+        if(option === TWEET_MENU.retweet) {
+            console.log('retweet clicked');
+            console.log(tweet);
+        } else if (option === TWEET_MENU.quoteTweet) {
+            console.log('quote retweet clicked');
+        }
+    }   
 
     return (
         <React.Fragment>
-            <div className={styles.container}>
-                <div className={styles.item}>
-                    <FontAwesomeIcon icon={faComment} />
-                    <p>{comments}</p>
+            <div className={`${styles.container} ${isTweetReply ? styles.containerOnTweetReply : ''}`}>
+                <div className={`${styles.item} ${styles.hoverBlue} ${isTweetReply ? styles.itemOnTweetReply   : ''}`} onClick={onTweetReply}>
+                    <FontAwesomeIcon icon={faComment} className={styles.faComment} />
+                    <p>{replies}</p>
                 </div>
-                <div className={styles.item}>
-                    <FontAwesomeIcon icon={faRepeat} />
-                    <p>{reposts}</p>
+                <div className={`${styles.item} ${styles.hoverGreen} ${isTweetReply ? styles.itemOnTweetReply : ''}`}>
+                    <PopUpMenu
+                        value={tweet}
+                        isMenuIcon={false}
+                        options={reTweetOptions!}
+                        icons={reTweetIcon}
+                        onClick={onReTweet}
+                        className={styles.retweetPopUp}
+                    > 
+                        <FontAwesomeIcon icon={faRepeat} className={styles.faRepeat} />
+                    </PopUpMenu>
+                    <p>{retTweets}</p>
                 </div>
-                <div className={styles.item}>
-                    <FontAwesomeIcon icon={faHeart} />
-                    <p>{likes}</p>
-                </div>
-                <div className={styles.item}>
-                    <FontAwesomeIcon icon={faChartSimple} />
+                {isLiked ? (
+                    <div className={`${styles.item} ${styles.liked} ${styles.hoverPink} ${isTweetReply ? styles.itemOnTweetReply : ''}`} onClick={handleLike} >
+                        <FontAwesomeIcon icon={faHeartSolid} color={'var(--color-pink)'} className={styles.faHeart} />
+                        <p>{likes}</p>
+                    </div>
+                ): (
+                    <div className={`${styles.item} ${styles.hoverPink} ${isTweetReply ? styles.itemOnTweetReply : ''}`} onClick={handleLike} >
+                        <FontAwesomeIcon icon={faHeart} className={styles.faHeart} />
+                        <p>{likes}</p>
+                    </div>  
+                )}
+                
+                <div className={`${styles.item} ${styles.hoverBlue} ${isTweetReply ? styles.itemOnTweetReply : ''}`}>
+                    <FontAwesomeIcon icon={faChartSimple} className={styles.faChartSimple}  />
                     <p>{views}</p>
                 </div>
+                    <div className={`${styles.item} ${isTweetReply ? styles.itemOnTweetReply : ''}`}>
+                        {location.pathname === '/bookmarks' ? (
+                            <PopUpMenu
+                                value={tweet}
+                                isMenuIcon={false}
+                                options={['Remove tweet']!}
+                                icons={{'Remove tweet': <FontAwesomeIcon icon={faBookmark} />}}
+                                onClick={onClickSaveAndUnsaveTweet}
+                            > 
+                                <FontAwesomeIcon icon={faArrowUpFromBracket} className={`${styles.faArrowUpFromBracket} ${styles.hoverBlue}`} />
+                            </PopUpMenu>
+                        ): (
+                            <PopUpMenu
+                                value={tweet}
+                                isMenuIcon={false}
+                                options={shareOptions!}
+                                icons={shareIcon}
+                                onClick={onClickSaveAndUnsaveTweet}
+                            > 
+                                <FontAwesomeIcon icon={faArrowUpFromBracket} className={`${styles.faArrowUpFromBracket} ${styles.hoverBlue}`} />
+                            </PopUpMenu>
+                        )}
+                    </div>
             </div>
         </React.Fragment>
     )
