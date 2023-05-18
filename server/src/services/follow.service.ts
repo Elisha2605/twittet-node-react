@@ -69,6 +69,10 @@ export const getAuthUserFollow = async (userId: string): Promise<any> => {
                 model: 'User',
             })
             .exec();
+
+        if (!result) {
+            return [];
+        }
         return result;
     } catch (error) {
         console.error(error);
@@ -350,7 +354,6 @@ async function handleUnprotectedFollowRequest(
         // Update followers array of the receiver
         receiver.followers.push({ user: follower._id });
         receiver.followerCount = receiver.followers.length;
-
 
         // Create new document for sender
         sender = new Follow({

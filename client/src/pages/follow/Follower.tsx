@@ -93,7 +93,7 @@ const Follower: React.FC<{}> = () => {
                                     {authUser?._id !== follower.user._id && (
 
                                         <FollowButton
-                                            userId={follower.user._id}
+                                            userId={follower?.user?._id}
                                             type={ButtonType.secondary}
                                             size={ButtonSize.small}
                                         />

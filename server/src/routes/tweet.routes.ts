@@ -7,6 +7,7 @@ import {
     getFollowTweetsController,
     getTweetByIdController,
     getUserTweetsController,
+    reTweetController,
     updateAudienceController,
 } from 'src/controllers/tweet.controller';
 import { verifyUser } from 'src/utils/jwt.util';
@@ -23,6 +24,12 @@ tweetRouter.post(
     upload.single('tweetImage'),
     verifyUser(),
     createTweetController
+);
+tweetRouter.post(
+    '/retweet/:id',
+    upload.single('tweetImage'),
+    verifyUser(),
+    reTweetController
 );
 
 tweetRouter.put(

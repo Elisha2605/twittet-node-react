@@ -11,12 +11,12 @@ const bookmarkModel = {
     user: {
         type: Types.ObjectId,
         ref: 'User',
-        require: true,
+        required: true,
     },
     tweet: {
         type: Types.ObjectId,
         ref: 'Tweet',
-        require: true,
+        required: true,
     },
     createdAt: {
         type: Date,

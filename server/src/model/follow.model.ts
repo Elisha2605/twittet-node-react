@@ -86,7 +86,7 @@ const followModel = {
     user: {
         type: Types.ObjectId,
         ref: 'User',
-        require: true,
+        required: true,
     },
     followers: {
         type: [followerSchema],
@@ -106,12 +106,12 @@ const followModel = {
     followerCount: {
         type: Number,
         default: 0,
-        require: true,
+        required: true,
     },
     followingCount: {
         type: Number,
         default: 0,
-        require: true,
+        required: true,
     },
 };
 

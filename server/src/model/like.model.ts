@@ -15,12 +15,12 @@ const likeModel = {
     tweet: {
         type: Types.ObjectId,
         ref: 'Tweet',
-        require: true,
+        required: true,
     },
     likes: {
         type: [Types.ObjectId],
         ref: 'User',
-        require: true,
+        required: true,
     },
     likesCount: {
         type: Number,

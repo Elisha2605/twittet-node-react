@@ -155,8 +155,8 @@ const Tweet: FC<TweetProps> = ({
                 )}
                 <TweetFooter
                     tweet={tweet}
-                    replies={tweet?.replyCount}
-                    retTweets={'923'}
+                    replies={tweet?.replyCount === 0 ? '' : tweet?.replyCount}
+                    retTweets={''}
                     likes={tweet.totalLikes > 0 ? tweet.totalLikes : ''}
                     views={'466'}
                     onClick={() => onClickLike(tweet)}

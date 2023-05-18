@@ -254,7 +254,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                     />
                     <div className={styles.footer}>
                         <TweetFooter
-                            replies={tweet?.replyCount}
+                            replies={tweet?.replyCount === 0 ? '' : tweet?.replyCount}
                             retTweets={'123'}
                             likes={
                                 tweet?.totalLikes > 0 ? tweet?.totalLikes : ''

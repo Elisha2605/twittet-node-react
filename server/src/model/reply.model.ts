@@ -13,22 +13,22 @@ export const replyModel = {
     tweet: {
         type: Types.ObjectId,
         ref: 'Tweet',
-        require: true,
+        required: true,
     },
     user: {
         type: Types.ObjectId,
         ref: 'User',
-        require: true,
+        required: true,
     },
     image: {
         type: String,
         default: null,
-        require: false,
+        required: false,
     },
     text: {
         type: String,
         default: null,
-        require: false,
+        required: false,
     },
 };
 

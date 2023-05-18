@@ -8,6 +8,7 @@ import {
     getFollowTweets,
     getTweetById,
     getUserTweets,
+    reTweet,
     updateTweetAudience,
 } from 'src/services/tweet.service';
 
@@ -86,6 +87,59 @@ export const createTweetController = asyncHandler(
 
         try {
             const response = await createTweet(
+                userId,
+                text,
+                image,
+                audience,
+                reply
+            );
+            const { payload } = response;
+            if (response.success) {
+                res.status(response.status).send({
+                    success: response.success,
+                    message: response.message,
+                    status: response.status,
+                    tweet: payload,
+                });
+            }
+        } catch (error) {
+            res.status(error.status).json({
+                sucess: error.success,
+                message: error.message,
+                status: error.status,
+            });
+            next(error);
+        }
+    }
+);
+
+export const reTweetController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const tweetId = req.params.id;
+        const userId = req.user._id;
+        const text = req.body.text;
+        const image = req.file ? req.file.filename : null;
+        const audience = req.body.audience;
+        const reply = req.body.reply;
+
+        if (tweetId === undefined) {
+            res.status(400).json({ InvalidInputError: 'Invalid Input' });
+            return;
+        }
+        if (text === undefined && image === null) {
+            res.status(400).json({ InvalidInputError: 'Invalid Input' });
+            return;
+        }
+        if (text !== undefined && text.length >= 300) {
+            res.status(400).json({
+                InvalidInput: 'Tweet input must be less that 280',
+            });
+            return;
+        }
+
+        try {
+            const response = await reTweet(
+                tweetId,
                 userId,
                 text,
                 image,
