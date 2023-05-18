@@ -1,15 +1,16 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
-import styles from './NavigationTweetModal.module.css';
+import styles from './RetweetModal.module.css';
 import Avatar, { Size } from '../../../components/ui/Avatar';
 import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../../constants/common.constants';
 import { ModalContext } from '../../../context/modal.context';
 import Modal from '../../../components/ui/Modal';
 import AuthContext from '../../../context/user.context';
 import { TweetAudienceType, TweetReplyType } from '../../../types/tweet.types';
-import { createTweet } from '../../../api/tweet.api';
-import FormNavigation from '../../../components/form/FormNavigationTweet';
+import { editTweet } from '../../../api/tweet.api';
+import FormTweetEdit from '../../../components/form/FormTweetEdit';
+import FormRetweet from '../../../components/form/FormRetweet';
 
-interface NavigationTweetProp {
+interface RetweetModalProps {
     value: string;
     
     selectedFile: File | null
@@ -18,12 +19,13 @@ interface NavigationTweetProp {
     handleTextAreaOnChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     handleCanselPreviewImage: () => void;
     handleImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    onAddTweet: (tweet: any) => void;
     onEditTweet: (tweet: any) => void;
     clearTweetForm: () => void;
+
+    editTweetModal: any,
 }
 
-const NavigationTweetModal: FC<NavigationTweetProp> = ({ 
+const RetweetModal: FC<RetweetModalProps> = ({ 
     value,
     selectedFile,
     previewImage,
@@ -31,10 +33,13 @@ const NavigationTweetModal: FC<NavigationTweetProp> = ({
     handleTextAreaOnChange,
     handleCanselPreviewImage,
     handleImageUpload,
-    onAddTweet, 
+    onEditTweet,
     clearTweetForm,
+
+    editTweetModal,
 }) => {
 
+    const [isFormFocused, setIsFormFocused] = useState(false);
     const [tweetAudience, setTweetAudience] = useState<TweetAudienceType>(TWEET_AUDIENCE.everyone);
     const [tweetReply, setTweetReply] = useState<TweetReplyType>(TWEET_REPLY.everyone);
     const [authUser, setAuthUser] = useState<any>(null);
@@ -47,21 +52,25 @@ const NavigationTweetModal: FC<NavigationTweetProp> = ({
         }
         getAuthUser();
     }, []);
-    
 
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
 
     const { closeModal } = useContext(ModalContext);
-    
+
+    // Set audience and reply on Edit
+    useEffect(() => {
+        setTweetAudience(editTweetModal.audience)
+        setTweetReply(editTweetModal.reply)
+    }, [editTweetModal])
+
     const handleSubmitTweet = async (e: React.FormEvent) => {
-        console.log('inside handleSubmitTweet');
+        console.log({hello: editTweetModal});
         e.preventDefault();
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
             : null;
-        const res = await createTweet(text, selectedFile, tweetAudience, tweetReply);
+        const res = await editTweet(editTweetModal._id, text, selectedFile, tweetAudience, tweetReply);
         const { tweet }: any = res;
-        
         if (authUser) {
             const newTweet = {
                 _id: tweet._id,
@@ -81,10 +90,10 @@ const NavigationTweetModal: FC<NavigationTweetProp> = ({
                 reposts: [],
                 likes: [],
             };
-            onAddTweet(newTweet)
+            onEditTweet(newTweet)
         }
-
-        closeModal('main-tweet-modal');
+        setIsFormFocused(false);
+        closeModal('edit-tweet-modal');
         setTweetAudience(TWEET_AUDIENCE.everyone)
         setTweetReply(TWEET_REPLY.everyone)
         clearTweetForm();
@@ -115,11 +124,11 @@ const NavigationTweetModal: FC<NavigationTweetProp> = ({
             setTweetReply(TWEET_REPLY.onlyPeopleYouMention);
         }
     }
-
+    
     return (
         <React.Fragment>
             <Modal
-                    modalName={'main-tweet-modal'}
+                    modalName={'retweet-modal'}
                     isOverlay={true}
                     classNameContainer={styles.modalContainer}
                     classNameWrapper={styles.modalWrapper}
@@ -133,12 +142,13 @@ const NavigationTweetModal: FC<NavigationTweetProp> = ({
                         size={Size.small}
                         className={''}
                     />
-                    <FormNavigation
-                        value={value}
+                    <FormRetweet
+                        value={value ? value : ''}
                         tweetTextRef={tweetTextRef}
                         imagePreview={previewImage}
                         isFocused={true}
                         tweetReplyValue={tweetReply}
+                        setIsFocused={setIsFormFocused}
                         onSubmit={handleSubmitTweet}
                         onImageUpload={handleImageUpload}
                         onCancelImagePreview={handleCanselPreviewImage}
@@ -154,4 +164,4 @@ const NavigationTweetModal: FC<NavigationTweetProp> = ({
     );
 };
 
-export default NavigationTweetModal;
+export default RetweetModal;

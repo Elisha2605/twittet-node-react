@@ -2,13 +2,14 @@ import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faArrowUpFromBracket, faBookmark, faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons'
 import { faChartSimple, faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import styles from "./TweetFooter.module.css";
 import PopUpMenu from "./PopUpMenu";
 import { reTweetIcon, reTweetOptions, shareIcon, shareOptions } from "../../data/menuOptions";
 import { saveTweetToBookmark } from "../../api/bookmark.api";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { TWEET_MENU } from "../../constants/common.constants";
+import { ModalContext } from "../../context/modal.context";
 
 interface TweetFooterProps {
     tweet?: any;
@@ -21,6 +22,7 @@ interface TweetFooterProps {
     // onClickShare?: ()
     isTweetReply?: boolean;
     isLiked?: boolean;
+    onClickRetweet?: Function;
 }
 
 const TweetFooter: FC<TweetFooterProps> = ({ 
@@ -32,11 +34,13 @@ const TweetFooter: FC<TweetFooterProps> = ({
     views,
     onClick,
     isTweetReply,
-    isLiked
+    isLiked,
+    onClickRetweet
 }) => {
 
     const location = useLocation();
     const navigate = useNavigate();
+    const { openModal } = useContext(ModalContext);
 
     const handleLike = (tweet: any) => {
         onClick!(tweet);
@@ -57,14 +61,14 @@ const TweetFooter: FC<TweetFooterProps> = ({
         }
     }
 
-    const onReTweet = (option: any, id: string, tweet: any) => {
-        if(option === TWEET_MENU.retweet) {
-            console.log('retweet clicked');
-            console.log(tweet);
-        } else if (option === TWEET_MENU.quoteTweet) {
-            console.log('quote retweet clicked');
-        }
-    }   
+    // const onReTweet = (option: any, id: string, tweet: any) => {
+    //     if(option === TWEET_MENU.retweet) {
+    //         console.log(tweet);
+    //         openModal('retweet-modal')
+    //     } else if (option === TWEET_MENU.quoteTweet) {
+    //         console.log('quote retweet clicked');
+    //     }
+    // }   
 
     return (
         <React.Fragment>
@@ -79,7 +83,9 @@ const TweetFooter: FC<TweetFooterProps> = ({
                         isMenuIcon={false}
                         options={reTweetOptions!}
                         icons={reTweetIcon}
-                        onClick={onReTweet}
+                        onClick={(option, tweet) =>
+                            onClickRetweet!(option, tweet)
+                        }
                         className={styles.retweetPopUp}
                     > 
                         <FontAwesomeIcon icon={faRepeat} className={styles.faRepeat} />

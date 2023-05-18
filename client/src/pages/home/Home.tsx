@@ -21,7 +21,6 @@ import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../consta
 import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
 import AuthContext from '../../context/user.context';
 import { likeTweet } from '../../api/like.api';
-import { useNavigate } from 'react-router-dom';
 import HomeEditTwitterCirlceModal from './home-modals/HomeEditTwitterCirlceModal';
 
 interface HomeProps {
@@ -38,6 +37,7 @@ interface HomeProps {
     handleImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
     clearTweetForm: () => void;
     onClickTweetMenu: Function;
+    onClickRetweet?: Function;
 }
 
 const Home: React.FC<HomeProps> = ({ 
@@ -54,6 +54,7 @@ const Home: React.FC<HomeProps> = ({
     handleImageUpload,
     clearTweetForm,
     onClickTweetMenu,
+    onClickRetweet
 }) => {
 
     const [tweets, setTweets] = useState<any[]>([]);
@@ -283,6 +284,8 @@ const Home: React.FC<HomeProps> = ({
                                     onClickMenu={onClickTweetMenu}
                                     onClickLike={onClickLike}
                                     isLiked={tweet?.likes?.includes(authUser?._id)}
+                                    onClickRetweet={onClickRetweet}
+
                                 />
                             ))}
                         </div>
@@ -296,6 +299,7 @@ const Home: React.FC<HomeProps> = ({
                                     onClickMenu={onClickTweetMenu!}
                                     onClickLike={onClickLike}
                                     isLiked={tweet?.likes?.includes(authUser?._id)}
+                                    onClickRetweet={onClickRetweet}
                                 />
                             ))}
                         </div>

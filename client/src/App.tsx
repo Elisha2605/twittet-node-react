@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styles from './App.module.css';
 import Navigation from './components/navigation/Navigation';
 import Layout from './Layout.module.css';
@@ -17,11 +17,12 @@ import Following from './pages/follow/Following';
 import Follower from './pages/follow/Follower';
 import { deleteTweet } from './api/tweet.api';
 import { IMAGE_TWEET_BASE_URL, TWEET_MENU } from './constants/common.constants';
-import FormNavigationTweet from './pages/tweet/tweet-modals/NavigationTweetModal';
+import NavigationTweetModal from './pages/tweet/tweet-modals/NavigationTweetModal';
 import EditTweetModal from './pages/tweet/tweet-modals/EditTweetModal';
 import TweetPage from './pages/tweet/TweetPage';
 import TweetPageNoImage from './pages/tweet/TweetPageNoImage';
 import FollowerRequests from './pages/follow/FollowerRequests';
+import RetweetModal from './pages/tweet/tweet-modals/RetweetModal';
 
 function App() {
 
@@ -129,10 +130,21 @@ function App() {
             setValueEditModal(tweet.text);
             const image = tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`;
             setPreviewEditImageModal(image);
-            console.log(image);
         } 
     };
-    //// Temp functions - end ///
+
+    const onReTweet = (option: any, tweet: any) => {
+        if(option === TWEET_MENU.retweet) {
+
+        } else if (option === TWEET_MENU.quoteTweet) {
+            // changle the name of the states
+            openModal('retweet-modal')
+            setEditTweetModal(tweet);
+            setValueEditModal(tweet.text);
+            const image = tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`;
+            setPreviewEditImageModal(image);
+        }
+    }  
 
     // Index page
     if (!ctx?.isLoggedIn) {
@@ -164,7 +176,7 @@ function App() {
                     <BrowserRouter>
                         <div className={Layout.navigation}>
                             <Navigation />
-                            <FormNavigationTweet 
+                            <NavigationTweetModal 
                                 selectedFile={selectedFileModal}
                                 previewImage={previewImageModal}                                    
                                 value={valueModal}
@@ -176,6 +188,18 @@ function App() {
                                 onEditTweet={handleEditTweet}
                             />
                             <EditTweetModal 
+                                selectedFile={selectedFileModal}
+                                previewImage={previewEditImageModal}                                    
+                                value={valueEditModal}
+                                clearTweetForm={clearTweetForm}
+                                handleTextAreaOnChange={handleTextAreaOnChange}
+                                handleCanselPreviewImage={handleCanselPreviewImage}
+                                handleImageUpload={handleImageUpload}
+                                onEditTweet={handleEditTweet}
+                                
+                                editTweetModal={editTweetModal}
+                            />
+                            <RetweetModal 
                                 selectedFile={selectedFileModal}
                                 previewImage={previewEditImageModal}                                    
                                 value={valueEditModal}
@@ -203,6 +227,7 @@ function App() {
                                         handleCanselPreviewImage={handleCanselPreviewImage}
                                         handleImageUpload={handleImageUpload} 
                                         clearTweetForm={clearTweetForm}
+                                        onClickRetweet={onReTweet}
                                     />
                                 }/>
                                 <Route path="/explore" element={<Explore />} />

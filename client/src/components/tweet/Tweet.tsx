@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TweetFooter from '../ui/TweetFooter';
 import UserInfo from '../ui/UserInfo';
@@ -20,8 +20,8 @@ import UserInfoRetweet from '../ui/UserInfoRetweet';
 
 interface TweetProps {
     tweet?: any;
-    reply?: any;
     onClickMenu: Function;
+    onClickRetweet?: Function;
     onClickLike: (tweet: any) => void;
     isLiked?: boolean;
     isReply?: boolean;
@@ -29,8 +29,8 @@ interface TweetProps {
 
 const Tweet: FC<TweetProps> = ({
     tweet,
-    reply,
     onClickMenu,
+    onClickRetweet,
     onClickLike,
     isLiked,
     isReply = false,
@@ -306,7 +306,7 @@ const Tweet: FC<TweetProps> = ({
                     retTweets={''}
                     likes={tweet.totalLikes > 0 ? tweet.totalLikes : ''}
                     views={'466'}
-                    onClick={() => onClickLike(tweet)}
+                    onClickRetweet={onClickRetweet}
                     isLiked={isLiked}
                 />
             </div>
