@@ -38,6 +38,31 @@ export const getAllTweets = async (
             },
             {
                 $lookup: {
+                    from: 'Tweet',
+                    localField: 'originalTweet',
+                    foreignField: '_id',
+                    as: 'retweet',
+                },
+            },
+            {
+                $unwind: { path: '$retweet', preserveNullAndEmptyArrays: true },
+            },
+            {
+                $lookup: {
+                    from: 'User',
+                    localField: 'retweet.user',
+                    foreignField: '_id',
+                    as: 'tweetOwner',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$tweetOwner',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $lookup: {
                     from: 'Like',
                     localField: '_id',
                     foreignField: 'tweet',
@@ -85,6 +110,18 @@ export const getAllTweets = async (
                 $project: {
                     _id: 1,
                     type: 1,
+                    retweet: {
+                        tweet: '$retweet',
+                        user: {
+                            _id: '$tweetOwner._id',
+                            name: '$tweetOwner.name',
+                            username: '$tweetOwner.username',
+                            avatar: '$tweetOwner.avatar',
+                            coverImage: '$tweetOwner.coverImage',
+                            isVerified: '$tweetOwner.isVerified',
+                            isProtected: '$tweetOwner.isProtected',
+                        },
+                    },
                     user: {
                         _id: '$user._id',
                         name: '$user.name',
