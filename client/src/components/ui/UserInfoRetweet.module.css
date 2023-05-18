@@ -1,0 +1,79 @@
+.container {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.2rem 1rem 0.2rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.avatar {
+    max-width: 100%;
+    max-height: 100%;
+    margin-top: 0.5rem;
+}
+
+.avatar img {
+    width: 1.5rem;
+    height: 1.5rem;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.avatar a:hover {
+    filter: brightness(0.8);
+    transition: .2s;
+    cursor: pointer;
+}
+
+.userWrapper {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    width: 100%;
+}   
+
+/* userInfoOption */
+.userInfoOptionWrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    
+}
+.userInfoOptionWrapper .userInfo {
+    display: flex;
+    gap: 0.3rem;
+    width: 100%;
+}
+
+/* userInfo */
+.userInfo {
+    min-width: 7.5rem;
+}
+
+.onHoverUser {
+    padding: 0.2rem 0.6rem ;
+}
+.onHoverUser:hover {
+    background: var(--color-secondary-light);
+    cursor: pointer;
+}
+
+.name {
+    font-weight: var(--font-weight-600);
+}
+
+.name:hover {
+    text-decoration: underline;
+    transition: 0.2s ease-in;
+    cursor: pointer;
+}
+
+.username {
+    color: var(--color-secondary);
+    cursor: pointer;
+}
+
+.certifiedIcon {
+    position: relative;
+    top: 0.2rem;
+}
