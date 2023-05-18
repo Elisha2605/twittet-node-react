@@ -8,17 +8,14 @@ const AtIcon: FC<{
     className?: string;
     color?: string;
     size?: SizeProp;
-    isMedium?: boolean;
-    isSmall?: boolean;
+    small?: boolean;
     onClick?: () => void;
-}> = ({ className, size, color, isSmall, isMedium, onClick }) => {
+}> = ({ className, size, color, small, onClick }) => {
     return (
         <React.Fragment>
             <FontAwesomeIcon
                 icon={faAt}
-                className={`${styles.faAt} ${className} ${
-                    isSmall ? styles.small : ''
-                } ${isMedium ? styles.medium : ''}`}
+                className={`${styles.faAt} ${className} ${small ? styles.small : ''}`}
                 size={size}
                 color={color ? color : '#fff'}
                 onClick={onClick}

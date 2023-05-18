@@ -1,8 +1,3 @@
-export enum TWEET_TYPE {
-    regular = 'Regular',
-    reTweet = 'Retweet',
-}
-
 export enum TWEET_AUDIENCE {
     everyone = 'Everyone',
     twitterCircle = 'Twitter Circle',

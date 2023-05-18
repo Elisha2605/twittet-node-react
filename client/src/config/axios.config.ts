@@ -28,9 +28,9 @@ const GETREQUESTOPTIONS_WITH_MULTIFROM = () => {
     return {
         withCredentials: true,
         headers: {
-            'Content-Type': 'multipart/form-data',
             authorization: `Bearer ${getCurrentContext().token}`,
-            Accept: 'application/json'
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data'
         },
     };
 };

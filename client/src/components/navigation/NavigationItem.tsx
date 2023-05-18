@@ -10,10 +10,9 @@ interface NavigationProps {
     label: string;
     path: string;
     className?: string;
-    onClick?: () => void;
 }
 
-const NavigationItem: FC<NavigationProps> = ({ label, icon, path, className, onClick}) => {
+const NavigationItem: FC<NavigationProps> = ({ label, icon, path, className}) => {
     return (
         <React.Fragment>
             <NavLink to={path} className={`${styles.container} ${className}`} >
@@ -22,7 +21,6 @@ const NavigationItem: FC<NavigationProps> = ({ label, icon, path, className, onC
                     color={''}
                     size={'2xl'}
                     style={{ flex: "none", width: "23px" }}
-                    onClick={onClick}
                 />
                 <h2 className={styles.label}>{label}</h2>
             </NavLink>

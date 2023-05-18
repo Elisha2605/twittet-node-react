@@ -5,13 +5,6 @@
     font-family: inherit;
     font-size: var(--font-size-lg);
 }
-.textarea:focus {
-    outline: none;
-}
-
-.textarea::placeholder {
-    color: var(--color-secondary);
-}
 
 /* AUDIENCE */
 
@@ -61,7 +54,7 @@
     position: relative;
     margin-top: 0.7rem;
     right: 0.5rem;
-    padding: 0 0.7rem;
+    padding: 0 0.7rem;    
 }
 
 .everyone span:nth-child(1), 
@@ -92,6 +85,14 @@
     border: none;
     border-top: var(--border-light);
     margin: 10px 0;
+}
+
+.textarea:focus {
+    outline: none;
+}
+
+.textarea::placeholder {
+    color: var(--color-secondary);
 }
 
 .footer {
@@ -126,20 +127,4 @@
 .cancelBtn:hover {
     background-color: var(--color-black-lighter);
     transition: 0.1s ease-in-out;
-}
-
-.highlighted {
-    background-color: var(--color-primary);
-    color: var(--color-primary);;
-    font-weight: bold;
-}  
-
-.searchResults {
-    width: 60%;
-    position: absolute;
-    background: var(--color-white);
-    box-shadow: 0 0 0 1px rgba(15, 15, 15, 0.001), 0 8px 16px rgba(15, 15, 15, 0.4);
-    border-radius: 1rem;
-    overflow: hidden;
-    z-index: 90;
 }

@@ -1,34 +1,27 @@
-import React, { FC, useContext, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import MenuIcon from '../icons/MenuIcon';
 import styles from './PopUpMenu.module.css';
-import useClickOutSide from '../../hooks/useClickOutSide';
-import { TWEET_AUDIENCE } from '../../constants/common.constants';
-import { ModalContext } from '../../context/modal.context';
 
 interface MenuPopUpProps {
     itemId?: string;
-    value?: any;
     title?: string;
     options: string[];
     icons?: Record<string, React.ReactNode>;
     className?: string;
     classNameWithTitle?: string;
-    classNameMenuItemList?  : string;
     isMenuIcon?: boolean;
     isDisable?: boolean;
     children?: React.ReactNode;
-    onClick: (option: string, id: string, value?: any) => void;
+    onClick: (option: string, id: string) => void;
 }
 
 const MenuPopUp: FC<MenuPopUpProps> = ({
     itemId,
-    value,
     title,
     options,
     icons,
     className,
     classNameWithTitle,
-    classNameMenuItemList,
     isMenuIcon = true,
     isDisable,
     children,
@@ -37,8 +30,6 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
     const [showMenu, setShowMenu] = useState(false);
     const menuRef = useRef<HTMLUListElement>(null);
 
-    const { openModal } = useContext(ModalContext);
-
     const handleButtonClick = () => {
         if (isDisable) {
             return;
@@ -46,19 +37,30 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
         setShowMenu(!showMenu);
     };
 
-    const handleOptionClick = (option: string, id: string, value?: any) => {
+    const handleOptionClick = (option: string, id: string) => {
         setShowMenu(false);
-        onClick(option, id, value);
+        onClick(option, id);
     };
 
-    useClickOutSide(menuRef, setShowMenu)
+    useEffect(() => {
+        const handleOutsideClick = (event: MouseEvent) => {
+            if (
+                menuRef.current &&
+                !menuRef.current.contains(event.target as Node)
+            ) {
+                setShowMenu(false);
+            }
+        };
 
-    const onEditTwitterCircle = (e: React.MouseEvent<HTMLDivElement>) => {
-        openModal('home-edit-twitterCircle-modal');
-    }
+        document.addEventListener('mousedown', handleOutsideClick);
+
+        return () => {
+            document.removeEventListener('mousedown', handleOutsideClick);
+        };
+    }, []);
 
     return (
-        <div className={`${styles.container}`}>
+        <div className={styles.container}>
             {isMenuIcon && (
                 <button className={styles.menuBtn} onClick={handleButtonClick}>
                     <MenuIcon />
@@ -75,34 +77,25 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
                     />
                     <div className={className}>
                         <ul
-                            className={`
-                                ${styles.menuList} ${title ? 
-                                    `${styles.popUpWithTitle} ${classNameWithTitle} ` : styles.popUpWithTitle}`}
+                            className={`${styles.menuList} ${title && `${styles.popUpWithTitle} ${classNameWithTitle}`}`}
                             ref={menuRef}
                         >
                             {title && <h1>{title}</h1>}
                             {options.map((option) => (
                                 <li
                                     key={option}
-                                    className={`${styles.menuItemList} ${classNameMenuItemList} ${
+                                    className={`${styles.menuItemList} ${
                                         icons &&
                                         icons[option] === icons['Delete']
                                             ? styles.delete
                                             : ''
-                                    } ${options.includes(TWEET_AUDIENCE.twitterCircle) ? styles.test : ''}`}
+                                    }`}
                                     onClick={() =>
-                                        handleOptionClick(option, itemId!, value!)
+                                        handleOptionClick(option, itemId!)
                                     }
                                 >
                                     {icons && icons[option]}
                                     {option}
-
-                                    {option === TWEET_AUDIENCE.twitterCircle && (
-                                        <div className={styles.editTwitterCircle}>
-                                            <p><span>1</span>person</p>
-                                            <div onClick={onEditTwitterCircle}>Edit</div>
-                                        </div>
-                                    )}
                                 </li>
                             ))}
                         </ul>

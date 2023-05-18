@@ -1,21 +1,12 @@
-import {
-    GETREQUESTOPTIONS,
-    GETREQUESTOPTIONS_WITH_MULTIFROM,
-    http,
-} from '../config/axios.config';
+import { GETREQUESTOPTIONS, http } from "../config/axios.config";
 
 export const getAllUsers = async () => {
     try {
         const res = await http.get('/users');
         return res.data;
-    } catch (error: any) {
-        if (error.response && error.response.status === 401) {
-            localStorage.removeItem('context');
-            window.location.href = '/';
-        } else {
-            console.error(error);
-            throw error;
-        }
+    } catch (error) {
+        console.error(error);
+        throw error;
     }
 };
 
@@ -26,6 +17,9 @@ export const getAuthUserInfo = async () => {
     } catch (error: any) {
         if (error.response && error.response.status === 401) {
             localStorage.removeItem('context');
+            localStorage.removeItem('activeTab-home');
+            localStorage.removeItem('activeTab-notification');
+            localStorage.removeItem('activeTab-profile');
             window.location.href = '/';
         } else {
             console.error(error);
@@ -36,81 +30,10 @@ export const getAuthUserInfo = async () => {
 
 export const getUserById = async (userId: string) => {
     try {
-        const res = await http.get(
-            `/users/info/${userId}`,
-            GETREQUESTOPTIONS()
-        );
+        const res = await http.get(`/users/info/${userId}`, GETREQUESTOPTIONS());
         return res.data;
     } catch (error: any) {
-        if (error.response && error.response.status === 401) {
-            localStorage.removeItem('context');
-            window.location.href = '/';
-        } else {
-            console.error(error);
-            throw error;
-        }
+        console.error(error);
+        throw error;
     }
-};
-
-export const searchUsers = async (searchTerm: string) => {
-    try {
-        const res = await http.get(
-            `/users/search?q=${searchTerm}`,
-            GETREQUESTOPTIONS()
-        );
-        return res.data;
-    } catch (error: any) {
-        if (error.response && error.response.status === 401) {
-            localStorage.removeItem('context');
-            window.location.href = '/';
-        } else {
-            console.error(error);
-            throw error;
-        }
-    }
-};
-
-export const editUserProfile = async (
-    coverImage: File | null,
-    avatarImage: File | null,
-    name: string | null,
-    bio: string | null,
-    location: string | null,
-    website: string | null
-) => {
-    const res = await http.patch(
-        `/users/edit-profile`,
-        {
-            cover: coverImage,
-            avatar: avatarImage,
-            name: name,
-            bio: bio,
-            location: location,
-            website: website,
-        },
-        GETREQUESTOPTIONS_WITH_MULTIFROM()
-    );
-
-    if (res.status === 200) {
-        const contextStr = localStorage.getItem('context');
-        if (contextStr) {
-            const context = JSON.parse(contextStr);
-            const updatedUser = {
-                ...context.user,
-                name: res.data.user.name,
-                avatar: res.data.user.avatar,
-                coverImage: res.data.user.coverImage,
-                website: res.data.user.website,
-            };
-            const updatedContext = {
-                ...context,
-                user: updatedUser,
-            };
-            localStorage.setItem('context', JSON.stringify(updatedContext));
-        } else {
-            console.log('Context not found in local storage');
-        }
-    }
-
-    return res.data;
 };

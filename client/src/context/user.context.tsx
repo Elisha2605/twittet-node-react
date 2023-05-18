@@ -1,7 +1,6 @@
 import { getNewContext } from '../api/auth.api';
 import React, { useCallback, useEffect, useState } from 'react';
 import { getAuthUserInfo } from '../api/user.api';
-import { getAuthUserFollows } from '../api/follow.api';
 
 export interface StoredContext {
     isLoggedIn: boolean;

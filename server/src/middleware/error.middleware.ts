@@ -7,6 +7,7 @@ export default function errorHandler(
     next: NextFunction
 ) {
     console.error(err.stack);
+
     if (res.headersSent) {
         return next(err);
     }

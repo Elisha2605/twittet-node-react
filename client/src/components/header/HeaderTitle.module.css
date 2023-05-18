@@ -7,16 +7,6 @@
     font-weight: var(--font-weight-600);
 }
 
-.isProtectedTitle {
-    display: flex;
-    align-items: center;
-}
-
-.isProtectedTitle img {
-    width: 2rem;
-    height: 1rem;
-}
-
 .subtitle {
     font-size: var(--font-size-sm);
     color: var(--color-secondary);

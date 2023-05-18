@@ -5,13 +5,12 @@ import styles from './ArrowLeftIcon.module.css';
 
 interface ArrowLeftIconProps {
     className?: string;
-    onClick?: () => void;
 }
 
-const ArrowLeftIcon: FC<ArrowLeftIconProps> = ({ className, onClick }) => {
+const ArrowLeftIcon: FC<ArrowLeftIconProps> = ({ className }) => {
     return (
         <React.Fragment>
-            <FontAwesomeIcon icon={faArrowLeft} className={`${styles.faArrowLeft} ${className}`} onClick={onClick} />
+            <FontAwesomeIcon icon={faArrowLeft} className={`${styles.faArrowLeft} ${className}`} />
         </React.Fragment>
     );
 };

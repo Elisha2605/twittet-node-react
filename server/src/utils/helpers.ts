@@ -10,8 +10,3 @@ export const CustomError = (
     error.statusCode = statusCode;
     return error;
 };
-
-export const ValidationError = (status: number, message: string) => {
-    const validate = { status, message };
-    return validate;
-};

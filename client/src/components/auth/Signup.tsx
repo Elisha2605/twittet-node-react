@@ -1,9 +1,8 @@
-import React, { FC, useContext, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import styles from "./Signup.module.css";
 import SignupForm from "./SignupForm";
 import { useForm } from "react-hook-form";
 import { singup } from "../../api/auth.api";
-import { ModalContext } from "../../context/modal.context";
 
 
 const Signup: FC<{}> = ({ }) => {
@@ -11,8 +10,6 @@ const Signup: FC<{}> = ({ }) => {
     const [ form, setForm ] = useState();
     const [serverError, setServerError] = useState('');
     const [isLoading, setLoading] = useState(false);
-
-    const { openModal } = useContext(ModalContext);
 
 
     const { register, handleSubmit, reset, getValues, formState: { errors } } = useForm({
@@ -48,7 +45,6 @@ const Signup: FC<{}> = ({ }) => {
             return;
         }
         console.log(formData);
-        openModal('Login')
         setForm(formData)
         setLoading(false)
     });

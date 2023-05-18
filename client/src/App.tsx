@@ -3,65 +3,37 @@ import styles from './App.module.css';
 import Navigation from './components/navigation/Navigation';
 import Layout from './Layout.module.css';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import Profile from './pages/profile/Profile';
-import Explore from './pages/explore/Explore';
-import Bookmarks from './pages/bookmarks/Bookmarks';
-import Notifications from './pages/notification/Notifications';
-import Message from './pages/messages/Messages';
-import Index from './pages/index/Index';
+import Profile from './pages/Profile';
+import Explore from './pages/Explore';
+import Bookmarks from './pages/Bookmarks';
+import Notifications from './pages/Notifications';
+import Message from './pages/Messages';
+import Index from './pages/Index';
 import AuthContext, { StoredContext } from './context/user.context';
 import TwitterIcon from './components/icons/TwitterIcon';
-import Home from './pages/home/Home';
+import Home from './pages/Home';
 import { ModalContext } from './context/modal.context';
-import Following from './pages/follow/Following';
-import Follower from './pages/follow/Follower';
-import { deleteTweet } from './api/tweet.api';
-import { IMAGE_TWEET_BASE_URL, TWEET_MENU } from './constants/common.constants';
-import FormNavigationTweet from './pages/tweet/tweet-modals/NavigationTweetModal';
-import EditTweetModal from './pages/tweet/tweet-modals/EditTweetModal';
-import TweetPage from './pages/tweet/TweetPage';
-import TweetPageNoImage from './pages/tweet/TweetPageNoImage';
-import FollowerRequests from './pages/follow/FollowerRequests';
+import OtherProfile from './pages/OtherProfile';
 
 function App() {
 
-    const [showBackground, setShowBackground] = useState(false); // Add state to control whether to show the blue background
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [previewImage, setPreviewImage] = useState<string | null>(null);
+    const [onAddTweet, setOnAddTweets] = useState<any[]>([]);
+    const [value, setValue] = useState('');
 
-    // Home Form states
-    const [selectedFileHome, setSelectedFileHome] = useState<File | null>(null);
-    const [previewImageHome, setPreviewImageHome] = useState<string | null>(null);
-    const [valueHome, setValueHome] = useState('');
-
-    // Modal Form states
     const [selectedFileModal, setSelectedFileModal] = useState<File | null>(null);
     const [previewImageModal, setPreviewImageModal] = useState<string | null>(null);
     const [valueModal, setValueModal] = useState('');
-    
-    const [onEditTweet, setOnEditTweets] = useState<any[]>([]);
 
-    // cross-components states
-    const [onAddTweet, setOnAddTweets] = useState<any[]>([]);
-    const [onDeleteTweet, setOnDeleteTweet] = useState<any[]>([]);
-    const [editTweetModal, setEditTweetModal] = useState<any>('');
 
-    // Tweet Edit modal
-    const [valueEditModal, setValueEditModal] = useState('');
-    const [previewEditImageModal, setPreviewEditImageModal] = useState<string | null>(null);
+    const { modalOpen } = useContext(ModalContext);
 
-    // useContexts
-    const { modalOpen, openModal } = useContext(ModalContext);
     const context = useContext(AuthContext);
     let ctx: StoredContext = context.getUserContext();
 
-    const handleAddTweet = (tweet: any) => {
-        setOnAddTweets((prevTweets) => [tweet, ...prevTweets]);
-    };
+    const [showBackground, setShowBackground] = useState(false); // Add state to control whether to show the blue background
 
-    const handleEditTweet = (editedTweet: any) => {
-        setOnEditTweets(editedTweet)
-    }
-    
-    // On Login blue background
     const handleLoginSuccess = () => {
         setShowBackground(true); // Set the showBackground state to true when login is successful
         setTimeout(() => {
@@ -69,17 +41,20 @@ function App() {
         }, 1000)
     };
 
-    //// Temp functions - start //
+    const handleAddTweet = (tweet: any) => {
+        setOnAddTweets((prevTweets) => [tweet, ...prevTweets]);
+    };
+    
+    //// new functions
     const handleTextAreaOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const val = e.target?.value;
         if (modalOpen) {
             setValueModal(val)
-            setValueEditModal(val)
         } else {
-            setValueHome(val);
+            setValue(val);
         }
     };
-    
+
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files && event.target.files[0];
         if (file) {
@@ -87,25 +62,24 @@ function App() {
                 setSelectedFileModal(file);
                 let imageUrl = URL.createObjectURL(file);
                 setPreviewImageModal(imageUrl);
-                setPreviewEditImageModal(imageUrl);
             } else {
-                setSelectedFileHome(file);
+                setSelectedFile(file);
                 let imageUrl = URL.createObjectURL(file);
-                setPreviewImageHome(imageUrl);
+                setPreviewImage(imageUrl);
             }
         }
     };
 
     const handleCanselPreviewImage = () => {
         if (modalOpen) {
-            setPreviewImageModal('');
+            setPreviewImageModal(null);
             setSelectedFileModal(null);
-            setPreviewEditImageModal('');
         } else {
-            setPreviewImageHome('');
-            setSelectedFileHome(null);
+            setPreviewImage(null);
+            setSelectedFile(null);
         }
-      };
+        setSelectedFile(null);
+    };
 
     const clearTweetForm = () => {
         if (modalOpen) {
@@ -113,26 +87,10 @@ function App() {
             setPreviewImageModal(null);
             setValueModal('');
         }
-        setSelectedFileHome(null);
-        setPreviewImageHome(null);
-        setValueHome('');
+        setSelectedFile(null);
+        setPreviewImage(null);
+        setValue('');
     }
-
-    const handleTweetMenuOptionClick = async (option: string, tweetId: string, tweet: any) => {
-        if (option === TWEET_MENU.delete) {
-            const res = await deleteTweet(tweetId);
-            const { tweet } = res;
-            setOnDeleteTweet(tweet);
-        } else if (option === TWEET_MENU.edit) {
-            openModal('edit-tweet-modal');
-            setEditTweetModal(tweet);
-            setValueEditModal(tweet.text);
-            const image = tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`;
-            setPreviewEditImageModal(image);
-            console.log(image);
-        } 
-    };
-    //// Temp functions - end ///
 
     // Index page
     if (!ctx?.isLoggedIn) {
@@ -163,8 +121,7 @@ function App() {
                 <div>
                     <BrowserRouter>
                         <div className={Layout.navigation}>
-                            <Navigation />
-                            <FormNavigationTweet 
+                            <Navigation 
                                 selectedFile={selectedFileModal}
                                 previewImage={previewImageModal}                                    
                                 value={valueModal}
@@ -173,32 +130,16 @@ function App() {
                                 handleCanselPreviewImage={handleCanselPreviewImage}
                                 handleImageUpload={handleImageUpload}
                                 onAddTweet={handleAddTweet}
-                                onEditTweet={handleEditTweet}
-                            />
-                            <EditTweetModal 
-                                selectedFile={selectedFileModal}
-                                previewImage={previewEditImageModal}                                    
-                                value={valueEditModal}
-                                clearTweetForm={clearTweetForm}
-                                handleTextAreaOnChange={handleTextAreaOnChange}
-                                handleCanselPreviewImage={handleCanselPreviewImage}
-                                handleImageUpload={handleImageUpload}
-                                onEditTweet={handleEditTweet}
-                                
-                                editTweetModal={editTweetModal}
                             />
                         </div>
                         <div className={Layout.page}>
                             <Routes>
                                 <Route path="/" element={
                                     <Home
-                                        onClickTweetMenu={handleTweetMenuOptionClick}
-                                        onDeleteTweet={onDeleteTweet}
                                         onAddTweet={onAddTweet}
-                                        onEditTweet={onEditTweet}
-                                        selectedFile={selectedFileHome}
-                                        previewImage={previewImageHome}                                    
-                                        value={valueHome}
+                                        selectedFile={selectedFile}
+                                        previewImage={previewImage}                                    
+                                        value={value}
                                         handleTextAreaOnChange={handleTextAreaOnChange}
                                         handleCanselPreviewImage={handleCanselPreviewImage}
                                         handleImageUpload={handleImageUpload} 
@@ -213,19 +154,13 @@ function App() {
                                 <Route path="/message" element={<Message />} />
                                 <Route
                                     path="/bookmarks"
-                                    element={<Bookmarks onClickTweetMenu={handleTweetMenuOptionClick} />}
+                                    element={<Bookmarks />}
                                 />
-                                <Route path="/profile/:id" element={<Profile 
-                                    onAddTweet={onAddTweet} 
-                                    onDeleteTweet={onDeleteTweet} 
-                                    onEditTweet={onEditTweet}
-                                    onClickTweetMenu={handleTweetMenuOptionClick} />} 
+                                <Route
+                                    path="/user-profile/:id"
+                                    element={<OtherProfile />}
                                 />
-                                <Route path="/following/:id" element={<Following />} />
-                                <Route path="/followers/:id" element={<Follower />} />
-                                <Route path="/tweet/image/:id" element={ <TweetPage />} />
-                                <Route path="/tweet/:id" element={ <TweetPageNoImage />} />
-                                <Route path="/follower-requests" element={ <FollowerRequests />} />
+                                <Route path="/profile" element={<Profile />} />
                                 <Route
                                     path="*"
                                     element={<Navigate to="/" replace={true} />}

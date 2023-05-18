@@ -22,6 +22,16 @@ export interface Status {
     user?: IUser | UserEmail;
 }
 
+interface Tokens {
+    token: string;
+    refreshToken: string;
+}
+
+interface NewTokens {
+    newToken: string;
+    newRefreshToken: string;
+}
+
 export const signup = async (
     email: string,
     name: string,

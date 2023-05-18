@@ -11,7 +11,6 @@
     --color-secondary: #657786;
     --color-white: #ffffff;
     --color-black: #000000;
-    --color-pink: #F91980;
     --color-error: #fb3b1e;
     --color-green: #27bb6a;
     
@@ -24,16 +23,7 @@
     --color-secondary-lighter: #f2f4f6;
     --color-black-light: #282828;
     --color-black-lighter: #484848;
-    --color-pink-lighter: #f9198115;
-    --color-green-lighter: #edfef3; 
-    --color-error-light: #ffece9;
-
-    /* color transparent */
-    --color-black-transparent: #0000008a;
-
-    /* color transparent hoeever */
-    --color-black-transparent-hover: #626262ad;
-
+    --color-green-lighter: #e9fff2; 
 
     /* button color */
     --color-btn-disabled: #7accff;
@@ -44,7 +34,6 @@
     --font-size-xl: 1.5rem;
     --font-size-lg: 1.2rem;
     --font-size-md: 1rem;
-    --font-size-ms: 0.9rem;
     --font-size-sm: 0.8rem;
     --font-size-xs: 0.7rem;
 
@@ -65,8 +54,12 @@
     --border-round: 4rem;
 }
 
-/* for dark mode */
 
+
+
+
+
+/* for dark mode */
 /* * {
     background: rgb(42, 42, 42);
     color: white !important;
