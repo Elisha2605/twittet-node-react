@@ -14,7 +14,7 @@ import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAt, faChevronDown, faEarthAfrica, faLock, faUserCheck } from '@fortawesome/free-solid-svg-icons';
 import PopUpMenu from '../ui/PopUpMenu';
-import { IMAGE_AVATAR_BASE_URL, IMAGE_TWEET_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, IMAGE_TWEET_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY, TWEET_TYPE } from '../../constants/common.constants';
 import { searchUsers } from '../../api/user.api';
 import UserInfo from '../ui/UserInfo';
 import useClickOutSide from '../../hooks/useClickOutSide';
@@ -66,7 +66,8 @@ const FormRetweet: FC<FormRetweetProps> = ({
 
     classNameTextErea,
 }) => {
-
+    
+    console.log(tweet);
 
 
     const [inputValue, setInputValue] = useState('');
@@ -86,6 +87,19 @@ const FormRetweet: FC<FormRetweetProps> = ({
     const username = tweet?.user?.username;
     const avatar = tweet?.user?.avatar;
     const isVerfied = tweet?.user?.isVerified;
+
+    // reTweet
+    const { retweet } = tweet;
+    const retweetId = retweet?.tweet?._id;
+    const retweetCreatedAt = getTimeDifference(new Date(retweet?.tweet?.createdAt).getTime());
+    const retweetImage = retweet?.tweet?.image;
+    const retweetText = retweet?.tweet?.text;
+
+    const retweetUserId = retweet?.user?._id;
+    const retweetUserName = retweet?.user?.name;
+    const retweetUserUsername = retweet?.user?.username;
+    const isVerfiedRetweetUser = retweet?.user?.isVerified;
+    const retweetUserAvatar = retweet?.user?.avatar;
 
     // close searech result on click outside
     useClickOutSide(searchResultsRef, setShowSuggestions);  
@@ -229,10 +243,51 @@ const FormRetweet: FC<FormRetweetProps> = ({
                         <img id={imagePreview!} src={imagePreview!} alt='preview tweet img' />
                     </div>
                 )}
+
+                {!text && tweet.type === TWEET_TYPE.reTweet ? (
+                    <div className={styles.retweetContainer}>
+                        <UserInfoRetweet
+                            userId={retweetUserId}
+                            tweet={retweet}
+                            avatar={
+                                avatar
+                                    ? `${IMAGE_AVATAR_BASE_URL}/${retweetUserAvatar}`
+                                    : undefined
+                            }
+                            name={retweetUserName}
+                            username={retweetUserUsername}
+                            isVerified={isVerfiedRetweetUser}
+                            time={retweetCreatedAt}
+                            isOption={true}
+                            className={styles.userInfoRetweet}
+                        />
+                        <div
+                            className={`${styles.body} ${hasRetweetAndTweetImage ? styles.reTweetWithImageBody : ''}`}
+                            key={tweetId}
+                        >
+                            <p className={`${styles.reTweetText} ${hasRetweetAndTweetImage ? styles.reTweetWithImageText : ''}`}>
+                                {renderColoredText(retweetText && retweetText.length > 150 ? retweetText.substring(0, 150) + '....' : retweetText)}
+                            </p>
+                            {retweetImage && (
+                                <div className={`${styles.reTweetImage} ${hasRetweetAndTweetImage ? styles.reTweetWithImageImage : ''}`}>
+                                    <img
+                                        src={
+                                            retweetImage
+                                                ? `${IMAGE_TWEET_BASE_URL}/${retweetImage}`
+                                                : undefined
+                                        }
+                                        alt=""
+                                    />
+                                </div>
+                            )}
+                        </div>           
+                    </div>
+                ): (
+
                 <div className={styles.retweetContainer}>
                     <UserInfoRetweet
-                        userId={tweetId}
-                        tweet={tweet}
+                        userId={userId}
+                        tweet={tweet.retweet}
                         avatar={
                             avatar
                                 ? `${IMAGE_AVATAR_BASE_URL}/${avatar}`
@@ -244,7 +299,6 @@ const FormRetweet: FC<FormRetweetProps> = ({
                         time={createdAt}
                         isOption={true}
                         className={styles.userInfoRetweet}
-                        isNavigate={true}
                     />
                     <div
                         className={`${styles.body} ${hasRetweetAndTweetImage ? styles.reTweetWithImageBody : ''}`}
@@ -267,6 +321,10 @@ const FormRetweet: FC<FormRetweetProps> = ({
                         )}
                     </div>           
                 </div>
+
+                )}
+
+
                  {/* {tweetReply} */}
 
                 {isFocused || isImageSelected ? (

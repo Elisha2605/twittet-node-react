@@ -1,7 +1,7 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import styles from './RetweetModal.module.css';
 import Avatar, { Size } from '../../../components/ui/Avatar';
-import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY, TWEET_TYPE } from '../../../constants/common.constants';
 import { ModalContext } from '../../../context/modal.context';
 import Modal from '../../../components/ui/Modal';
 import AuthContext from '../../../context/user.context';
@@ -72,6 +72,7 @@ const RetweetModal: FC<RetweetModalProps> = ({
             : null;
         const res = await retweet(originalTweet?._id, text, selectedFile, tweetAudience, tweetReply);
         const { tweet }: any = res;
+
         if (authUser) {
             const newTweet = {
                 _id: tweet._id,
