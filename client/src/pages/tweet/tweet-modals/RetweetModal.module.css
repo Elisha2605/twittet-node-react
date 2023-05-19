@@ -19,17 +19,8 @@
     padding: 0 !important;
 }
 
-.formSection textarea {
-    margin-top: 0.8rem;
-}
-
 .modalContainer {
     position: absolute !important;
     /* top: 7rem !important; */
     max-width: 37.5rem !important;
-}
-
-
-.classNameTextErea {
-    margin-bottom: 3rem;
 }

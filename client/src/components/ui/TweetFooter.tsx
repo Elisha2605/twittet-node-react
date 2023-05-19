@@ -8,7 +8,6 @@ import PopUpMenu from "./PopUpMenu";
 import { reTweetIcon, reTweetOptions, shareIcon, shareOptions } from "../../data/menuOptions";
 import { saveTweetToBookmark } from "../../api/bookmark.api";
 import { useLocation, useNavigate } from 'react-router-dom';
-import { TWEET_MENU } from "../../constants/common.constants";
 import { ModalContext } from "../../context/modal.context";
 
 interface TweetFooterProps {

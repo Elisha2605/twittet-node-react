@@ -28,6 +28,8 @@ function App() {
 
     const [showBackground, setShowBackground] = useState(false); // Add state to control whether to show the blue background
 
+    const [tweet, setTweet] = useState<any>();
+
     // Home Form states
     const [selectedFileHome, setSelectedFileHome] = useState<File | null>(null);
     const [previewImageHome, setPreviewImageHome] = useState<string | null>(null);
@@ -138,6 +140,7 @@ function App() {
 
         } else if (option === TWEET_MENU.quoteTweet) {
             // changle the name of the states
+            setTweet(tweet)
             openModal('retweet-modal')
             setEditTweetModal(tweet);
             setValueEditModal(tweet.text);
@@ -200,6 +203,7 @@ function App() {
                                 editTweetModal={editTweetModal}
                             />
                             <RetweetModal 
+                                tweet={tweet}
                                 selectedFile={selectedFileModal}
                                 previewImage={previewEditImageModal}                                    
                                 value={valueEditModal}

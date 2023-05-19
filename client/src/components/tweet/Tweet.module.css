@@ -20,6 +20,7 @@
 
 .body {
     margin-top: -1.5rem;
+    width: 100%;
 }
 
 .tweet {
@@ -79,12 +80,14 @@
 }
 
 .reTweetText {
-    padding: 0.2rem 1rem 1rem 1rem;
+    padding: 0.2rem 0 0 1rem;
+    margin-top: -0.5rem;
 }
 
 .retweetContainer:hover {
     background: var(--color-secondary-dark);
 }
+
 
 .reTweetImage {
     width: 100%;
@@ -98,6 +101,10 @@
     border-radius: 0 0 1rem 1rem;
 }
 
+.retweetBody {
+    margin-top: -0.4rem;
+}
+
 /* Re-tweet with image */
 .reTweetWithImageBody {
     display: flex;
@@ -107,7 +114,7 @@
 
 }
 .reTweetWithImageImage {
-    width: 6rem;
+    max-width: 6rem;
     height: 6rem;
 }
 .reTweetWithImageImage img {

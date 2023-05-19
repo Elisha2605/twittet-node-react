@@ -1,5 +1,4 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
-import PopUpMenu from './PopUpMenu';
 import styles from './UserInfoRetweet.module.css';
 import Certified from '../../assets/certified.svg';
 import { useNavigate } from 'react-router-dom';
@@ -60,19 +59,11 @@ const UserInfoRetweet: FC<UserInfoRetweetProps> = ({
         getAuthUser();
     }, []);
 
-    const navigate = useNavigate();
-
-    const onNavigateToProfile = () => {
-        if (isNavigate) {
-            navigate(`/profile/${userId}`)
-        }
-    }
-
     return (
         <React.Fragment>
             <div className={`${styles.container} ${isOnHover ? styles.onHoverUser : ''}`}>
                 {avatar && (
-                    <div className={styles.avatar} onClick={onNavigateToProfile}>
+                    <div className={styles.avatar}>
                         <a href={link}>
                             <img src={avatar} alt="" />
                         </a>
@@ -82,21 +73,21 @@ const UserInfoRetweet: FC<UserInfoRetweetProps> = ({
                     {isOption ? (
                         <div className={styles.userInfoOptionWrapper}>
                             <div className={styles.userInfo}>
-                                <p className={styles.name} onClick={onNavigateToProfile}>
+                                <p className={styles.name}>
                                     {/* this is for TweetReply */}
                                     {isReply && name.length > 6 ? name.substring(0, 6) + '...' : name}{' '}
                                     {isVerified && (
                                         <img className={styles.certifiedIcon} src={Certified} alt="" />
                                     )}
                                 </p>
-                                <p className={styles.username} onClick={onNavigateToProfile}>
+                                <p className={styles.username} >
                                     @{isReply && username.length > 6 ? username.substring(0, 6) + '...' : username} {time && ` · ${time}`}{' '}
                                 </p>
                             </div>
                         </div>
                     ) : (
                         <>
-                            <div className={styles.userInfo} onClick={onNavigateToProfile}>
+                            <div className={styles.userInfo}>
                                 <p className={styles.name}>
                                 {name}{' '}
                                 {isVerified && (

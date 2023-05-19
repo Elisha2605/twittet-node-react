@@ -181,12 +181,12 @@ const Tweet: FC<TweetProps> = ({
                                     isNavigate={true}
                                 />
                                 <div
-                                    className={`${styles.body} ${hasRetweetAndTweetImage ? styles.reTweetWithImageBody : ''}`}
+                                    className={`${styles.retweetBody} ${hasRetweetAndTweetImage ? styles.reTweetWithImageBody : ''}`}
                                     key={retweetId}
                                     onClick={goToTweetPage}
                                 >
                                     <p className={`${styles.reTweetText} ${hasRetweetAndTweetImage ? styles.reTweetWithImageText : ''}`}>
-                                        {renderColoredText(retweetText)}
+                                        {renderColoredText(retweetText.length > 150 ? retweetText.substring(0, 150) + '...' : retweetText)}
                                     </p>
                                     {retweetImage && (
                                         <div className={`${styles.reTweetImage} ${hasRetweetAndTweetImage ? styles.reTweetWithImageImage : ''}`}>

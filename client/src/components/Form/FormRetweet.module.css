@@ -3,7 +3,10 @@
     resize: none;
     width: 100%;
     font-family: inherit;
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-200);
+    margin-top: 0.8rem;
+    margin-bottom: 1rem;
 }
 .textarea:focus {
     outline: none;
@@ -77,34 +80,6 @@
     transition: 0.1s ease-in-out;
 }
 
-/* WHO CAN REPLY BOX */
-.tweetReplyOptions {
-    position: relative;
-    top: -1rem;
-    left: -13.7rem;
-}
-
-.tweetReplyPopUpBox {
-    width: 22rem;
-}
-
-.horizontalLine {
-    border: none;
-    border-top: var(--border-light);
-    margin: 10px 0;
-}
-
-.footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 1rem;
-}
-
-.icons {
-    display: flex;
-}
-
 .previewImage {
     position: relative;
     width: 100%;
@@ -123,16 +98,30 @@
     background-color: var(--color-black-light);
 }
 
-.cancelBtn:hover {
-    background-color: var(--color-black-lighter);
-    transition: 0.1s ease-in-out;
+/* WHO CAN REPLY BOX */
+.tweetReplyOptions {
+    position: relative;
+    bottom: 13.5rem;
+    left: -14.5rem;
 }
 
-.highlighted {
-    background-color: var(--color-primary);
-    color: var(--color-primary);;
-    font-weight: bold;
-}  
+.tweetReplyPopUpBox {
+    width: 22rem;
+}
+
+.horizontalLine {
+    border: none;
+    border-top: var(--border-light);
+    margin: 10px 0;
+    width: 100%;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
 
 .searchResults {
     width: 60%;
@@ -142,4 +131,46 @@
     border-radius: 1rem;
     overflow: hidden;
     z-index: 90;
+}
+
+/* Re-tweet with no image */
+
+.retweetContainer {
+
+    border-radius: 1rem;
+    border: 1.5px solid var(--color-secondary-light);
+}
+
+.reTweetText {
+    padding: 0 1rem 1rem 1rem;
+}
+
+.reTweetImage {
+    width: 100%;
+    height: 15rem;
+}
+
+.reTweetImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0 0 1rem 1rem;
+}
+
+/* Re-tweet with image */
+.reTweetWithImageBody {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    padding: 0.2rem 1rem 0.8rem 1rem;
+
+}
+.reTweetWithImageImage {
+    width: 6rem;
+    height: 6rem;
+}
+.reTweetWithImageImage img {
+    width: 100%;
+    height: 100%;
+    border-radius: 1rem;
 }

@@ -7,12 +7,11 @@ import Modal from '../../../components/ui/Modal';
 import AuthContext from '../../../context/user.context';
 import { TweetAudienceType, TweetReplyType } from '../../../types/tweet.types';
 import { editTweet } from '../../../api/tweet.api';
-import FormTweetEdit from '../../../components/form/FormTweetEdit';
 import FormRetweet from '../../../components/form/FormRetweet';
 
 interface RetweetModalProps {
+    tweet: any,
     value: string;
-    
     selectedFile: File | null
     previewImage: string | null
 
@@ -26,6 +25,7 @@ interface RetweetModalProps {
 }
 
 const RetweetModal: FC<RetweetModalProps> = ({ 
+    tweet,
     value,
     selectedFile,
     previewImage,
@@ -143,8 +143,10 @@ const RetweetModal: FC<RetweetModalProps> = ({
                         className={''}
                     />
                     <FormRetweet
+                        tweet={tweet}
                         value={value ? value : ''}
                         tweetTextRef={tweetTextRef}
+                        selectedFile={selectedFile}
                         imagePreview={previewImage}
                         isFocused={true}
                         tweetReplyValue={tweetReply}

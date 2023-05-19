@@ -151,40 +151,40 @@ const FormTweetEdit: FC<FormTweetEditProps> = ({
                     onChange={(e: any) => {
                         handleInputChange(e)
                         onChageImage(e);
-                    }}
-                    placeholder="What's happening?"
-                    ref={tweetTextRef}
-                    rows={1}
-                    value={inputValue}
-                    />
-                    {showSuggestions && (
-                        <div>
-                            <div
-                                ref={searchResultsRef}
-                                className={styles.searchResults}
-                            >
-                                {searchResults.map((user: any) => (
-                                    <div 
-                                        key={user._id}
-                                        onClick={() => handleUserClick(user.username)}
-                                        >
-                                    <UserInfo
-                                            userId={user?._id}
-                                            avatar={
-                                                user?.avatar &&
-                                                `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`
-                                            }
-                                            name={user?.name}
-                                            username={user?.username}
-                                            isVerified={user?.isVerified}
-                                            isOnHover={true}
-                                            isNavigate={false}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
+                }}
+                placeholder="What's happening?"
+                ref={tweetTextRef}
+                rows={1}
+                value={inputValue}
+                />
+                {showSuggestions && (
+                    <div>
+                        <div
+                            ref={searchResultsRef}
+                            className={styles.searchResults}
+                        >
+                            {searchResults.map((user: any) => (
+                                <div 
+                                    key={user._id}
+                                    onClick={() => handleUserClick(user.username)}
+                                    >
+                                <UserInfo
+                                        userId={user?._id}
+                                        avatar={
+                                            user?.avatar &&
+                                            `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`
+                                        }
+                                        name={user?.name}
+                                        username={user?.username}
+                                        isVerified={user?.isVerified}
+                                        isOnHover={true}
+                                        isNavigate={false}
+                                    />
+                                </div>
+                            ))}
                         </div>
-                    )}
+                    </div>
+                )}
                 {isFocused || isImageSelected ? (
                     <PopUpMenu 
                             title={'Who can reply?'}
