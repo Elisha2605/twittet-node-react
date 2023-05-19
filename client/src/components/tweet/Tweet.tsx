@@ -101,9 +101,6 @@ const Tweet: FC<TweetProps> = ({
 
     const hasRetweetAndTweetImage =  retweetImage && tweetImage;
 
-    useEffect(() => {
-        console.log(tweet);
-    }, [tweet])
     return (
         <React.Fragment>
             <div className={`${styles.container}`} key={tweetId}>
@@ -310,6 +307,7 @@ const Tweet: FC<TweetProps> = ({
                     likes={tweet.totalLikes > 0 ? tweet.totalLikes : ''}
                     views={'466'}
                     onClickRetweet={onClickRetweet}
+                    onClick={() => onClickLike(tweet)}
                     isLiked={isLiked}
                 />
             </div>

@@ -113,7 +113,6 @@ const Home: React.FC<HomeProps> = ({
         const handleNewTweetFromModal = () => {
             // Add new tweet from NavigationTweet to state
             if (authUser?.avatar) {
-                console.log(onAddTweet[0]);
                 setTweets((prevTweets) => [onAddTweet[0], ...prevTweets]);
             }
         };
@@ -224,13 +223,11 @@ const Home: React.FC<HomeProps> = ({
     }, [likedTweet]);
 
     const onClickLike = async (tweet: any) => {
-        const res: any = await likeTweet(tweet._id);;
+        const res: any = await likeTweet(tweet?._id);
         const { likedTweet } = res;
         console.log(likedTweet);
         setLikedTweet(likedTweet)
     }
-
-    console.log(tweets);
     
     return (
         <React.Fragment>
@@ -297,7 +294,7 @@ const Home: React.FC<HomeProps> = ({
                         <div className={styles.main}>
                             {memoizedFollowTweets.map((tweet: any) => (
                                 <Tweet
-                                    key={tweet._id}
+                                    key={tweet?._id}
                                     tweet={tweet}
                                     onClickMenu={onClickTweetMenu!}
                                     onClickLike={onClickLike}

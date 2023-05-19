@@ -17,13 +17,12 @@ interface TweetFooterProps {
     likes: string;
     views: string;
     onClick?: (tweet: string) => void;
-    // onClickShare?: ()
     isTweetReply?: boolean;
     isLiked?: boolean;
     onClickRetweet?: Function;
 }
 
-const TweetFooter: FC<TweetFooterProps> = ({ 
+const TweetFooter: FC<TweetFooterProps> = ({
     tweet,
 
     replies,

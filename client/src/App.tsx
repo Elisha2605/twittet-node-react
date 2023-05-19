@@ -78,6 +78,23 @@ function App() {
     };
 
     //// Temp functions - start //
+    const handleTextAreaRetweetOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const val = e.target?.value;
+        if (modalOpen) {
+            setValueRetweetModal(val)
+        }
+    };
+    const handleRetweetImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files && event.target.files[0];
+        if (file) {
+            if (modalOpen) {
+                setSelectedFileRetweetModal(file);
+                let imageUrl = URL.createObjectURL(file);
+                setPreviewImageRetweetModal(imageUrl);
+            }
+        }
+    };
+
     const handleTextAreaOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const val = e.target?.value;
         if (modalOpen) {
@@ -87,7 +104,6 @@ function App() {
             setValueHome(val);
         }
     };
-    
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files && event.target.files[0];
         if (file) {
@@ -213,9 +229,9 @@ function App() {
                                 previewImage={previewEditImageModal}                                    
                                 value={valueEditModal}
                                 clearTweetForm={clearTweetForm}
-                                handleTextAreaOnChange={handleTextAreaOnChange}
+                                handleTextAreaOnChange={handleTextAreaRetweetOnChange}
                                 handleCanselPreviewImage={handleCanselPreviewImage}
-                                handleImageUpload={handleImageUpload}
+                                handleImageUpload={handleRetweetImageUpload}
                                 onAddTweet={handleAddTweet}
                                 
                                 editTweetModal={editTweetModal}
