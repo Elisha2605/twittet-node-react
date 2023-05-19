@@ -12,6 +12,7 @@ import { getUserSavedTweets } from '../../api/bookmark.api';
 import Tweet from '../../components/tweet/Tweet';
 import { likeTweet } from '../../api/like.api';
 import AuthContext from '../../context/user.context';
+import BookmarkImage from '../../assets/bookmark.png';
 
 interface BookmarkProps {
     onClickTweetMenu: Function;
@@ -21,6 +22,8 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
     const [authUser, setAuthUser] = useState<any>(null);
     const [savedTweets, setSavedTweets] = useState<any[]>([]);
     const [likedTweet, setLikedTweet] = useState<any>();
+
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const ctx = useContext(AuthContext);
     useEffect(() => {
@@ -35,6 +38,7 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
         const getSavedTweets = async () => {
             const { tweets } = await getUserSavedTweets();
             setSavedTweets(tweets);
+            setIsLoading(false);
         };
         getSavedTweets();
     }, []);
@@ -98,9 +102,7 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
                             <div className={styles.emptyBookmarksWrapper}>
                                 <div className={styles.emptyBookmarksImage}>
                                     <img
-                                        src={
-                                            'https://abs.twimg.com/responsive-web/client-web/book-in-bird-cage-800x400.v1.71804389.png'
-                                        }
+                                        src={BookmarkImage}
                                         alt=""
                                     />
                                     <div

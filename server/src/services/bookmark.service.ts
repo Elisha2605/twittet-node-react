@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import { fetchUserSavedTweets } from 'src/aggregations/bookmark/fetchUserSavedTweets.aggregation';
 import Bookmark from 'src/model/bookmark.model';
 import Tweet from 'src/model/tweet.model';
 import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
@@ -8,86 +8,7 @@ export const getUserSavedTweets = async (
     userId: string
 ): Promise<ApiResponse<any>> => {
     try {
-        const savedTweets = await Bookmark.aggregate([
-            {
-                $match: {
-                    user: new mongoose.Types.ObjectId(userId),
-                },
-            },
-            {
-                $lookup: {
-                    from: 'Tweet',
-                    localField: 'tweet',
-                    foreignField: '_id',
-                    as: 'tweet',
-                },
-            },
-            {
-                $unwind: '$tweet',
-            },
-            {
-                $lookup: {
-                    from: 'User',
-                    localField: 'tweet.user',
-                    foreignField: '_id',
-                    as: 'user',
-                },
-            },
-            {
-                $unwind: '$user',
-            },
-            {
-                $lookup: {
-                    from: 'Like',
-                    localField: 'tweet._id',
-                    foreignField: 'tweet',
-                    as: 'likes',
-                },
-            },
-            {
-                $unwind: {
-                    path: '$likes',
-                    preserveNullAndEmptyArrays: true,
-                },
-            },
-            {
-                $project: {
-                    _id: '$tweet._id',
-                    user: {
-                        _id: '$user._id',
-                        name: '$user.name',
-                        username: '$user.username',
-                        avatar: '$user.avatar',
-                        coverImage: '$user.coverImage',
-                        isVerified: '$user.isVerified',
-                        isProtected: '$user.isProtected',
-                    },
-                    image: '$tweet.image',
-                    text: '$tweet.text',
-                    audience: '$tweet.audience',
-                    reply: '$tweet.reply',
-                    createdAt: '$createdAt',
-                    updatedAt: '$updatedAt',
-                    likes: '$likes.likes',
-                    totalLikes: {
-                        $cond: {
-                            if: {
-                                $isArray: '$likes.likes',
-                            },
-                            then: {
-                                $size: '$likes.likes',
-                            },
-                            else: 0,
-                        },
-                    },
-                },
-            },
-            {
-                $sort: {
-                    createdAt: -1,
-                },
-            },
-        ]).exec();
+        const savedTweets = await fetchUserSavedTweets(userId);
 
         return {
             success: true,

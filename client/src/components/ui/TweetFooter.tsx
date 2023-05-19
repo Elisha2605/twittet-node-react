@@ -8,7 +8,7 @@ import PopUpMenu from "./PopUpMenu";
 import { reTweetIcon, reTweetOptions, shareIcon, shareOptions } from "../../data/menuOptions";
 import { saveTweetToBookmark } from "../../api/bookmark.api";
 import { useLocation, useNavigate } from 'react-router-dom';
-import { TWEET_TYPE } from "../../constants/common.constants";
+import { TWEET_AUDIENCE, TWEET_TYPE } from "../../constants/common.constants";
 import AuthContext from "../../context/user.context";
 
 interface TweetFooterProps {
@@ -71,7 +71,11 @@ const TweetFooter: FC<TweetFooterProps> = ({
     }  
 
     // can't tweet if it's another user's retweet with quote.
-    const canRetweet = (tweet?.text || tweet?.image) && tweet?.type === TWEET_TYPE.reTweet && authUser?._id !== tweet?.user?._id
+    const canRetweet = 
+        (tweet?.text || tweet?.image) && 
+        tweet?.type === TWEET_TYPE.reTweet && 
+        authUser?._id !== tweet?.user?._id ||
+        (tweet?.audience === TWEET_AUDIENCE.twitterCircle)
 
     return (
         <React.Fragment>

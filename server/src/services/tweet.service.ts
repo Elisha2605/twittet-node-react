@@ -280,8 +280,17 @@ export const getUserTweets = async (
     try {
         const tweets = await Tweet.aggregate([
             {
-                $match: {
-                    user: new mongoose.Types.ObjectId(userId),
+                $lookup: {
+                    from: 'TwitterCircle',
+                    localField: 'user',
+                    foreignField: 'user',
+                    as: 'twitterCircle',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$twitterCircle',
+                    preserveNullAndEmptyArrays: true,
                 },
             },
             {
@@ -297,6 +306,31 @@ export const getUserTweets = async (
             },
             {
                 $lookup: {
+                    from: 'Tweet',
+                    localField: 'originalTweet',
+                    foreignField: '_id',
+                    as: 'retweet',
+                },
+            },
+            {
+                $unwind: { path: '$retweet', preserveNullAndEmptyArrays: true },
+            },
+            {
+                $lookup: {
+                    from: 'User',
+                    localField: 'retweet.user',
+                    foreignField: '_id',
+                    as: 'tweetOwner',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$tweetOwner',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $lookup: {
                     from: 'Like',
                     localField: '_id',
                     foreignField: 'tweet',
@@ -307,9 +341,57 @@ export const getUserTweets = async (
                 $unwind: { path: '$likes', preserveNullAndEmptyArrays: true },
             },
             {
+                $match: {
+
+                    $or: [
+                        {
+                            audience: TWEET_AUDIENCE.everyone,
+                        },
+                        {
+                            audience: TWEET_AUDIENCE.twitterCircle,
+                            $expr: {
+                                $cond: {
+                                    if: {
+                                        $eq: [
+                                            new mongoose.Types.ObjectId(userId),
+                                            '$twitterCircle.user',
+                                        ],
+                                    },
+                                    then: true,
+                                    else: {
+                                        $in: [
+                                            new mongoose.Types.ObjectId(userId),
+                                            '$twitterCircle.members',
+                                        ],
+                                    },
+                                },
+                            },
+                        },
+                    ],
+                    'user._id': new mongoose.Types.ObjectId(userId),
+                },
+            },
+            {
+                $sort: {
+                    createdAt: -1,
+                },
+            },
+            {
                 $project: {
                     _id: 1,
                     type: 1,
+                    retweet: {
+                        tweet: '$retweet',
+                        user: {
+                            _id: '$tweetOwner._id',
+                            name: '$tweetOwner.name',
+                            username: '$tweetOwner.username',
+                            avatar: '$tweetOwner.avatar',
+                            coverImage: '$tweetOwner.coverImage',
+                            isVerified: '$tweetOwner.isVerified',
+                            isProtected: '$tweetOwner.isProtected',
+                        },
+                    },
                     user: {
                         _id: '$user._id',
                         name: '$user.name',
@@ -323,9 +405,11 @@ export const getUserTweets = async (
                     text: 1,
                     audience: 1,
                     reply: 1,
+                    mentions: 1,
                     createdAt: 1,
                     updatedAt: 1,
                     likes: '$likes.likes',
+                    replyCount: 1,
                     totalLikes: {
                         $cond: {
                             if: {
@@ -339,12 +423,8 @@ export const getUserTweets = async (
                     },
                 },
             },
-            {
-                $sort: {
-                    createdAt: -1,
-                },
-            },
         ]).exec();
+
         if (tweets.length === 0) {
             return {
                 success: true,
@@ -395,6 +475,20 @@ export const getFollowTweets = async (
         const tweets = await Tweet.aggregate([
             {
                 $lookup: {
+                    from: 'TwitterCircle',
+                    localField: 'user',
+                    foreignField: 'user',
+                    as: 'twitterCircle',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$twitterCircle',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $lookup: {
                     from: 'User',
                     localField: 'user',
                     foreignField: '_id',
@@ -403,6 +497,31 @@ export const getFollowTweets = async (
             },
             {
                 $unwind: '$user',
+            },
+            {
+                $lookup: {
+                    from: 'Tweet',
+                    localField: 'originalTweet',
+                    foreignField: '_id',
+                    as: 'retweet',
+                },
+            },
+            {
+                $unwind: { path: '$retweet', preserveNullAndEmptyArrays: true },
+            },
+            {
+                $lookup: {
+                    from: 'User',
+                    localField: 'retweet.user',
+                    foreignField: '_id',
+                    as: 'tweetOwner',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$tweetOwner',
+                    preserveNullAndEmptyArrays: true,
+                },
             },
             {
                 $lookup: {
@@ -416,9 +535,56 @@ export const getFollowTweets = async (
                 $unwind: { path: '$likes', preserveNullAndEmptyArrays: true },
             },
             {
+                $match: {
+                    'user._id': { $in: followingIds },
+                    $or: [
+                        {
+                            audience: TWEET_AUDIENCE.everyone,
+                        },
+                        {
+                            audience: TWEET_AUDIENCE.twitterCircle,
+                            $expr: {
+                                $cond: {
+                                    if: {
+                                        $eq: [
+                                            new mongoose.Types.ObjectId(userId),
+                                            '$twitterCircle.user',
+                                        ],
+                                    },
+                                    then: true,
+                                    else: {
+                                        $in: [
+                                            new mongoose.Types.ObjectId(userId),
+                                            '$twitterCircle.members',
+                                        ],
+                                    },
+                                },
+                            },
+                        },
+                    ],
+                },
+            },
+            {
+                $sort: {
+                    createdAt: -1,
+                },
+            },
+            {
                 $project: {
                     _id: 1,
                     type: 1,
+                    retweet: {
+                        tweet: '$retweet',
+                        user: {
+                            _id: '$tweetOwner._id',
+                            name: '$tweetOwner.name',
+                            username: '$tweetOwner.username',
+                            avatar: '$tweetOwner.avatar',
+                            coverImage: '$tweetOwner.coverImage',
+                            isVerified: '$tweetOwner.isVerified',
+                            isProtected: '$tweetOwner.isProtected',
+                        },
+                    },
                     user: {
                         _id: '$user._id',
                         name: '$user.name',
@@ -432,9 +598,11 @@ export const getFollowTweets = async (
                     text: 1,
                     audience: 1,
                     reply: 1,
+                    mentions: 1,
                     createdAt: 1,
                     updatedAt: 1,
                     likes: '$likes.likes',
+                    replyCount: 1,
                     totalLikes: {
                         $cond: {
                             if: {
@@ -446,16 +614,6 @@ export const getFollowTweets = async (
                             else: 0,
                         },
                     },
-                },
-            },
-            {
-                $match: {
-                    'user._id': { $in: followingIds },
-                },
-            },
-            {
-                $sort: {
-                    createdAt: -1,
                 },
             },
         ]).exec();
