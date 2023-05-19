@@ -66,9 +66,6 @@ const FormRetweet: FC<FormRetweetProps> = ({
 
     classNameTextErea,
 }) => {
-    
-    console.log(tweet);
-
 
     const [inputValue, setInputValue] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -263,7 +260,7 @@ const FormRetweet: FC<FormRetweetProps> = ({
                         />
                         <div
                             className={`${styles.body} ${hasRetweetAndTweetImage ? styles.reTweetWithImageBody : ''}`}
-                            key={tweetId}
+                            key={retweetId}
                         >
                             <p className={`${styles.reTweetText} ${hasRetweetAndTweetImage ? styles.reTweetWithImageText : ''}`}>
                                 {renderColoredText(retweetText && retweetText.length > 150 ? retweetText.substring(0, 150) + '....' : retweetText)}

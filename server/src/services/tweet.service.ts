@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import { TWEET_AUDIENCE, TWEET_TYPE } from 'src/constants/tweet.constants';
 import Follow from 'src/model/follow.model';
 import Like from 'src/model/like.model';
@@ -538,460 +538,42 @@ export const reTweet = async (
 ): Promise<ApiResponse<any>> => {
     try {
         const tweet = await Tweet.findById(tweetId);
-        const retweetedTweet = await Tweet.findById(tweetId);
+        const retweetedTweet = await Tweet.findById(tweet.originalTweet);
         const user = await User.findById(userId);
 
-        // Retweet a tweet without a quoate
-        if (!text && tweet.type === TWEET_TYPE.reTweet && retweetedTweet) {
-            console.log('********');
-            console.log('text No');
-            const newTweet = new Tweet({
-                type: TWEET_TYPE.reTweet,
-                originalTweet: retweetedTweet.originalTweet,
-                user: user._id,
-                audience: retweetedTweet.audience,
-                reply: retweetedTweet.reply,
-            });
-
-            const savedReTweet = await newTweet.save();
-            if (!savedReTweet) {
-                throw CustomError('Could not create tweet', 500);
-            }
-
-            const tweets = await Tweet.aggregate([
-                {
-                    $lookup: {
-                        from: 'TwitterCircle',
-                        localField: 'user',
-                        foreignField: 'user',
-                        as: 'twitterCircle',
-                    },
-                },
-                {
-                    $unwind: {
-                        path: '$twitterCircle',
-                        preserveNullAndEmptyArrays: true,
-                    },
-                },
-                {
-                    $lookup: {
-                        from: 'User',
-                        localField: 'user',
-                        foreignField: '_id',
-                        as: 'user',
-                    },
-                },
-                {
-                    $unwind: '$user',
-                },
-                {
-                    $lookup: {
-                        from: 'Tweet',
-                        localField: 'originalTweet',
-                        foreignField: '_id',
-                        as: 'retweet',
-                    },
-                },
-                {
-                    $unwind: {
-                        path: '$retweet',
-                        preserveNullAndEmptyArrays: true,
-                    },
-                },
-                {
-                    $lookup: {
-                        from: 'User',
-                        localField: 'retweet.user',
-                        foreignField: '_id',
-                        as: 'tweetOwner',
-                    },
-                },
-                {
-                    $unwind: {
-                        path: '$tweetOwner',
-                        preserveNullAndEmptyArrays: true,
-                    },
-                },
-                {
-                    $lookup: {
-                        from: 'Like',
-                        localField: '_id',
-                        foreignField: 'tweet',
-                        as: 'likes',
-                    },
-                },
-                {
-                    $unwind: {
-                        path: '$likes',
-                        preserveNullAndEmptyArrays: true,
-                    },
-                },
-                {
-                    $match: {
-                        _id: savedReTweet._id,
-                    },
-                },
-                {
-                    $sort: {
-                        createdAt: -1,
-                    },
-                },
-                {
-                    $project: {
-                        _id: 1,
-                        type: 1,
-                        retweet: {
-                            tweet: '$retweet',
-                            user: {
-                                _id: '$tweetOwner._id',
-                                name: '$tweetOwner.name',
-                                username: '$tweetOwner.username',
-                                avatar: '$tweetOwner.avatar',
-                                coverImage: '$tweetOwner.coverImage',
-                                isVerified: '$tweetOwner.isVerified',
-                                isProtected: '$tweetOwner.isProtected',
-                            },
-                        },
-                        user: {
-                            _id: '$user._id',
-                            name: '$user.name',
-                            username: '$user.username',
-                            avatar: '$user.avatar',
-                            coverImage: '$user.coverImage',
-                            isVerified: '$user.isVerified',
-                            isProtected: '$user.isProtected',
-                        },
-                        image: 1,
-                        text: 1,
-                        audience: 1,
-                        reply: 1,
-                        mentions: 1,
-                        createdAt: 1,
-                        updatedAt: 1,
-                        likes: '$likes.likes',
-                        replyCount: 1,
-                        totalLikes: {
-                            $cond: {
-                                if: {
-                                    $isArray: '$likes.likes',
-                                },
-                                then: {
-                                    $size: '$likes.likes',
-                                },
-                                else: 0,
-                            },
-                        },
-                    },
-                },
-            ]).exec();
-
-            return {
-                success: true,
-                message: 'Successfully created tweet',
-                status: 200,
-                payload: tweets[0],
-            };
+        let newTweet: any;
+        if (
+            !text &&
+            !image &&
+            tweet.type === TWEET_TYPE.reTweet &&
+            retweetedTweet
+        ) {
+            newTweet = createRetweetWithoutQuote(tweet, user);
+            console.log('hello');
+        } else if (
+            text &&
+            tweet.type === TWEET_TYPE.reTweet &&
+            retweetedTweet
+        ) {
+            newTweet = createRetweetWithQuote(tweet, user, text, image);
+        } else {
+            newTweet = createRetweet(
+                tweet,
+                userId,
+                text,
+                image,
+                audience,
+                reply
+            );
+            console.log('haha');
         }
-
-        ////////////////////////////////////// 2
-        if (text && tweet.type === TWEET_TYPE.reTweet && retweetedTweet) {
-            console.log('********');
-            console.log('text Ok');
-            const newTweet = new Tweet({
-                type: TWEET_TYPE.reTweet,
-                originalTweet: retweetedTweet.originalTweet,
-                user: user._id,
-                text: text,
-                image: image,
-                audience: retweetedTweet.audience,
-                reply: retweetedTweet.reply,
-            });
-
-            const savedReTweet = await newTweet.save();
-            if (!savedReTweet) {
-                throw CustomError('Could not create tweet', 500);
-            }
-
-            const tweets = await Tweet.aggregate([
-                {
-                    $lookup: {
-                        from: 'TwitterCircle',
-                        localField: 'user',
-                        foreignField: 'user',
-                        as: 'twitterCircle',
-                    },
-                },
-                {
-                    $unwind: {
-                        path: '$twitterCircle',
-                        preserveNullAndEmptyArrays: true,
-                    },
-                },
-                {
-                    $lookup: {
-                        from: 'User',
-                        localField: 'user',
-                        foreignField: '_id',
-                        as: 'user',
-                    },
-                },
-                {
-                    $unwind: '$user',
-                },
-                {
-                    $lookup: {
-                        from: 'Tweet',
-                        localField: 'originalTweet',
-                        foreignField: '_id',
-                        as: 'retweet',
-                    },
-                },
-                {
-                    $unwind: {
-                        path: '$retweet',
-                        preserveNullAndEmptyArrays: true,
-                    },
-                },
-                {
-                    $lookup: {
-                        from: 'User',
-                        localField: 'retweet.user',
-                        foreignField: '_id',
-                        as: 'tweetOwner',
-                    },
-                },
-                {
-                    $unwind: {
-                        path: '$tweetOwner',
-                        preserveNullAndEmptyArrays: true,
-                    },
-                },
-                {
-                    $lookup: {
-                        from: 'Like',
-                        localField: '_id',
-                        foreignField: 'tweet',
-                        as: 'likes',
-                    },
-                },
-                {
-                    $unwind: {
-                        path: '$likes',
-                        preserveNullAndEmptyArrays: true,
-                    },
-                },
-                {
-                    $match: {
-                        _id: savedReTweet._id,
-                    },
-                },
-                {
-                    $sort: {
-                        createdAt: -1,
-                    },
-                },
-                {
-                    $project: {
-                        _id: 1,
-                        type: 1,
-                        retweet: {
-                            tweet: '$retweet',
-                            user: {
-                                _id: '$tweetOwner._id',
-                                name: '$tweetOwner.name',
-                                username: '$tweetOwner.username',
-                                avatar: '$tweetOwner.avatar',
-                                coverImage: '$tweetOwner.coverImage',
-                                isVerified: '$tweetOwner.isVerified',
-                                isProtected: '$tweetOwner.isProtected',
-                            },
-                        },
-                        user: {
-                            _id: '$user._id',
-                            name: '$user.name',
-                            username: '$user.username',
-                            avatar: '$user.avatar',
-                            coverImage: '$user.coverImage',
-                            isVerified: '$user.isVerified',
-                            isProtected: '$user.isProtected',
-                        },
-                        image: 1,
-                        text: 1,
-                        audience: 1,
-                        reply: 1,
-                        mentions: 1,
-                        createdAt: 1,
-                        updatedAt: 1,
-                        likes: '$likes.likes',
-                        replyCount: 1,
-                        totalLikes: {
-                            $cond: {
-                                if: {
-                                    $isArray: '$likes.likes',
-                                },
-                                then: {
-                                    $size: '$likes.likes',
-                                },
-                                else: 0,
-                            },
-                        },
-                    },
-                },
-            ]).exec();
-
-            return {
-                success: true,
-                message: 'Successfully created tweet',
-                status: 200,
-                payload: tweets[0],
-            };
-        }
-
-        
-    /////////////////////////////////////////// 3
-
-        const newTweet = new Tweet({
-            type: TWEET_TYPE.reTweet,
-            originalTweet: tweet._id,
-            user: userId,
-            text: text,
-            image: image,
-            audience: audience,
-            reply: reply,
-        });
 
         const savedReTweet = await newTweet.save();
         if (!savedReTweet) {
             throw CustomError('Could not create tweet', 500);
         }
-        console.log('********');
-        console.log('text 3');
-        const tweets = await Tweet.aggregate([
-            {
-                $lookup: {
-                    from: 'TwitterCircle',
-                    localField: 'user',
-                    foreignField: 'user',
-                    as: 'twitterCircle',
-                },
-            },
-            {
-                $unwind: {
-                    path: '$twitterCircle',
-                    preserveNullAndEmptyArrays: true,
-                },
-            },
-            {
-                $lookup: {
-                    from: 'User',
-                    localField: 'user',
-                    foreignField: '_id',
-                    as: 'user',
-                },
-            },
-            {
-                $unwind: '$user',
-            },
-            {
-                $lookup: {
-                    from: 'Tweet',
-                    localField: 'originalTweet',
-                    foreignField: '_id',
-                    as: 'retweet',
-                },
-            },
-            {
-                $unwind: {
-                    path: '$retweet',
-                    preserveNullAndEmptyArrays: true,
-                },
-            },
-            {
-                $lookup: {
-                    from: 'User',
-                    localField: 'retweet.user',
-                    foreignField: '_id',
-                    as: 'tweetOwner',
-                },
-            },
-            {
-                $unwind: {
-                    path: '$tweetOwner',
-                    preserveNullAndEmptyArrays: true,
-                },
-            },
-            {
-                $lookup: {
-                    from: 'Like',
-                    localField: '_id',
-                    foreignField: 'tweet',
-                    as: 'likes',
-                },
-            },
-            {
-                $unwind: {
-                    path: '$likes',
-                    preserveNullAndEmptyArrays: true,
-                },
-            },
-            {
-                $match: {
-                    _id: savedReTweet._id,
-                },
-            },
-            {
-                $sort: {
-                    createdAt: -1,
-                },
-            },
-            {
-                $project: {
-                    _id: 1,
-                    type: 1,
-                    retweet: {
-                        tweet: '$retweet',
-                        user: {
-                            _id: '$tweetOwner._id',
-                            name: '$tweetOwner.name',
-                            username: '$tweetOwner.username',
-                            avatar: '$tweetOwner.avatar',
-                            coverImage: '$tweetOwner.coverImage',
-                            isVerified: '$tweetOwner.isVerified',
-                            isProtected: '$tweetOwner.isProtected',
-                        },
-                    },
-                    user: {
-                        _id: '$user._id',
-                        name: '$user.name',
-                        username: '$user.username',
-                        avatar: '$user.avatar',
-                        coverImage: '$user.coverImage',
-                        isVerified: '$user.isVerified',
-                        isProtected: '$user.isProtected',
-                    },
-                    image: 1,
-                    text: 1,
-                    audience: 1,
-                    reply: 1,
-                    mentions: 1,
-                    createdAt: 1,
-                    updatedAt: 1,
-                    likes: '$likes.likes',
-                    replyCount: 1,
-                    totalLikes: {
-                        $cond: {
-                            if: {
-                                $isArray: '$likes.likes',
-                            },
-                            then: {
-                                $size: '$likes.likes',
-                            },
-                            else: 0,
-                        },
-                    },
-                },
-            },
-        ]).exec();
+
+        const tweets = await getTweetAggregate(savedReTweet._id);
 
         return {
             success: true,
@@ -1156,4 +738,182 @@ export const deleteTweet = async (
         };
         return Promise.reject(errorResponse);
     }
+};
+
+export const createRetweetWithoutQuote = (tweet: any, user: any) => {
+    return new Tweet({
+        type: TWEET_TYPE.reTweet,
+        originalTweet: tweet.originalTweet,
+        user: user._id,
+        audience: tweet.audience,
+        reply: tweet.reply,
+    });
+};
+
+export const createRetweetWithQuote = (
+    tweet: any,
+    user: any,
+    text: string,
+    image: string
+) => {
+    return new Tweet({
+        type: TWEET_TYPE.reTweet,
+        originalTweet: tweet.originalTweet,
+        user: user._id,
+        text: text,
+        image: image,
+        audience: tweet.audience,
+        reply: tweet.reply,
+    });
+};
+
+export const createRetweet = (
+    tweet: any,
+    userId: string,
+    text: string,
+    image: string,
+    audience: string,
+    reply: string
+) => {
+    return new Tweet({
+        type: TWEET_TYPE.reTweet,
+        originalTweet: tweet._id,
+        user: userId,
+        text: text,
+        image: image,
+        audience: audience,
+        reply: reply,
+    });
+};
+
+//////// helper function ///
+export const getTweetAggregate = async (tweetId: Types.ObjectId) => {
+    const tweets = await Tweet.aggregate([
+        {
+            $lookup: {
+                from: 'TwitterCircle',
+                localField: 'user',
+                foreignField: 'user',
+                as: 'twitterCircle',
+            },
+        },
+        {
+            $unwind: {
+                path: '$twitterCircle',
+                preserveNullAndEmptyArrays: true,
+            },
+        },
+        {
+            $lookup: {
+                from: 'User',
+                localField: 'user',
+                foreignField: '_id',
+                as: 'user',
+            },
+        },
+        {
+            $unwind: '$user',
+        },
+        {
+            $lookup: {
+                from: 'Tweet',
+                localField: 'originalTweet',
+                foreignField: '_id',
+                as: 'retweet',
+            },
+        },
+        {
+            $unwind: {
+                path: '$retweet',
+                preserveNullAndEmptyArrays: true,
+            },
+        },
+        {
+            $lookup: {
+                from: 'User',
+                localField: 'retweet.user',
+                foreignField: '_id',
+                as: 'tweetOwner',
+            },
+        },
+        {
+            $unwind: {
+                path: '$tweetOwner',
+                preserveNullAndEmptyArrays: true,
+            },
+        },
+        {
+            $lookup: {
+                from: 'Like',
+                localField: '_id',
+                foreignField: 'tweet',
+                as: 'likes',
+            },
+        },
+        {
+            $unwind: {
+                path: '$likes',
+                preserveNullAndEmptyArrays: true,
+            },
+        },
+        {
+            $match: {
+                _id: tweetId,
+            },
+        },
+        {
+            $sort: {
+                createdAt: -1,
+            },
+        },
+        {
+            $project: {
+                _id: 1,
+                type: 1,
+                retweet: {
+                    tweet: '$retweet',
+                    user: {
+                        _id: '$tweetOwner._id',
+                        name: '$tweetOwner.name',
+                        username: '$tweetOwner.username',
+                        avatar: '$tweetOwner.avatar',
+                        coverImage: '$tweetOwner.coverImage',
+                        isVerified: '$tweetOwner.isVerified',
+                        isProtected: '$tweetOwner.isProtected',
+                    },
+                },
+                user: {
+                    _id: '$user._id',
+                    name: '$user.name',
+                    username: '$user.username',
+                    avatar: '$user.avatar',
+                    coverImage: '$user.coverImage',
+                    isVerified: '$user.isVerified',
+                    isProtected: '$user.isProtected',
+                },
+                image: 1,
+                text: 1,
+                audience: 1,
+                reply: 1,
+                mentions: 1,
+                createdAt: 1,
+                updatedAt: 1,
+                likes: '$likes.likes',
+                replyCount: 1,
+                totalLikes: {
+                    $cond: {
+                        if: {
+                            $isArray: '$likes.likes',
+                        },
+                        then: {
+                            $size: '$likes.likes',
+                        },
+                        else: 0,
+                    },
+                },
+            },
+        },
+    ]).exec();
+
+    return tweets;
 };

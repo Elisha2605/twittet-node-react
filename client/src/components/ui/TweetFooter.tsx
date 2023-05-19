@@ -2,12 +2,14 @@ import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faArrowUpFromBracket, faBookmark, faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons'
 import { faChartSimple, faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { FC, useContext } from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import styles from "./TweetFooter.module.css";
 import PopUpMenu from "./PopUpMenu";
 import { reTweetIcon, reTweetOptions, shareIcon, shareOptions } from "../../data/menuOptions";
 import { saveTweetToBookmark } from "../../api/bookmark.api";
 import { useLocation, useNavigate } from 'react-router-dom';
+import { TWEET_TYPE } from "../../constants/common.constants";
+import AuthContext from "../../context/user.context";
 
 interface TweetFooterProps {
     tweet?: any;
@@ -34,9 +36,20 @@ const TweetFooter: FC<TweetFooterProps> = ({
     isLiked,
     onClickRetweet
 }) => {
+    
+    const [authUser, setAuthUser] = useState<any>(null);
 
     const location = useLocation();
     const navigate = useNavigate();
+
+    const ctx = useContext(AuthContext);
+    useEffect(() => {
+        const getAuthUser = async () => {
+            const { user } = ctx.getUserContext();
+            setAuthUser(user);
+        }
+        getAuthUser();
+    }, []);
 
     const handleLike = (tweet: any) => {
         onClick!(tweet);
@@ -57,6 +70,9 @@ const TweetFooter: FC<TweetFooterProps> = ({
         }
     }  
 
+    // can't tweet if it's another user's retweet with quote.
+    const canRetweet = (tweet?.text || tweet?.image) && tweet?.type === TWEET_TYPE.reTweet && authUser?._id !== tweet?.user?._id
+
     return (
         <React.Fragment>
             <div className={`${styles.container} ${isTweetReply ? styles.containerOnTweetReply : ''}`}>
@@ -70,7 +86,8 @@ const TweetFooter: FC<TweetFooterProps> = ({
                         isMenuIcon={false}
                         options={reTweetOptions!}
                         icons={reTweetIcon}
-                        onClick={(option, tweet) =>
+                        isDisable={canRetweet}
+                        onClick={(option, tweet: any) =>
                             onClickRetweet!(option, tweet)
                         }
                         className={styles.retweetPopUp}
