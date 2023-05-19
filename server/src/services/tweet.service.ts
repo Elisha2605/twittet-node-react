@@ -549,7 +549,6 @@ export const reTweet = async (
             retweetedTweet
         ) {
             newTweet = createRetweetWithoutQuote(tweet, user);
-            console.log('hello');
         } else if (
             text &&
             tweet.type === TWEET_TYPE.reTweet &&
@@ -565,7 +564,6 @@ export const reTweet = async (
                 audience,
                 reply
             );
-            console.log('haha');
         }
 
         const savedReTweet = await newTweet.save();
