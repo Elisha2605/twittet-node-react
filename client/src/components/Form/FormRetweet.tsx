@@ -14,7 +14,7 @@ import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAt, faChevronDown, faEarthAfrica, faLock, faUserCheck } from '@fortawesome/free-solid-svg-icons';
 import PopUpMenu from '../ui/PopUpMenu';
-import { IMAGE_AVATAR_BASE_URL, IMAGE_TWEET_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY, TWEET_TYPE } from '../../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, IMAGE_TWEET_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
 import { searchUsers } from '../../api/user.api';
 import UserInfo from '../ui/UserInfo';
 import useClickOutSide from '../../hooks/useClickOutSide';
@@ -43,7 +43,6 @@ interface FormRetweetProps {
     onClickReplyMenu?: Function;
 
     classNameTextErea?: string;
-    isReplay?: boolean;    
 }
 
 const FormRetweet: FC<FormRetweetProps> = ({
@@ -66,7 +65,6 @@ const FormRetweet: FC<FormRetweetProps> = ({
     onClickReplyMenu,
 
     classNameTextErea,
-    isReplay
 }) => {
 
 
@@ -74,7 +72,6 @@ const FormRetweet: FC<FormRetweetProps> = ({
     const [inputValue, setInputValue] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [searchResults, setSearchResults] = useState<any[]>([]);
-    const [showPreviewImage, setShowPreviewImage] = useState(false);
 
     const searchResultsRef = useRef<HTMLDivElement>(null);
 
@@ -254,7 +251,7 @@ const FormRetweet: FC<FormRetweetProps> = ({
                         key={tweetId}
                     >
                         <p className={`${styles.reTweetText} ${hasRetweetAndTweetImage ? styles.reTweetWithImageText : ''}`}>
-                            {renderColoredText(text.length > 150 ? text.substring(0, 150) + '....' : text)}
+                            {renderColoredText(text && text.length > 150 ? text.substring(0, 150) + '....' : text)}
                         </p>
                         {tweetImage && (
                             <div className={`${styles.reTweetImage} ${hasRetweetAndTweetImage ? styles.reTweetWithImageImage : ''}`}>
@@ -320,7 +317,7 @@ const FormRetweet: FC<FormRetweetProps> = ({
                         value={'Tweet'}
                         type={ButtonType.primary}
                         size={ButtonSize.small}
-                        isDisabled={value.length > 0 || imagePreview ? false : true}
+                        isDisabled={false}
                         onClick={() => setIsFocused(false)}
                     />
                 </div>

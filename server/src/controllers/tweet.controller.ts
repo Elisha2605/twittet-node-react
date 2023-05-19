@@ -126,10 +126,6 @@ export const reTweetController = asyncHandler(
             res.status(400).json({ InvalidInputError: 'Invalid Input' });
             return;
         }
-        if (text === undefined && image === null) {
-            res.status(400).json({ InvalidInputError: 'Invalid Input' });
-            return;
-        }
         if (text !== undefined && text.length >= 300) {
             res.status(400).json({
                 InvalidInput: 'Tweet input must be less that 280',

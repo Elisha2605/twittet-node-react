@@ -14,6 +14,18 @@
     margin-left: 3.7rem;
 }
 
+.whoRetweeted {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    top: 0.5rem;
+    left: 1.8rem;
+    font-size: var(--font-size-ms);
+    font-weight: var(--font-weight-500);
+    color: var(--color-secondary);
+}
+
 .userInfo {
     margin-top: -1rem;
 }

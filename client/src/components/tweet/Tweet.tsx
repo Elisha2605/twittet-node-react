@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TweetFooter from '../ui/TweetFooter';
 import UserInfo from '../ui/UserInfo';
@@ -17,6 +17,9 @@ import UserIcon from '../icons/UserIcon';
 import AtIcon from '../icons/AtIcon';
 import { tweetMenuOptions, tweetMenuIcons } from '../../data/menuOptions';
 import UserInfoRetweet from '../ui/UserInfoRetweet';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRepeat } from '@fortawesome/free-solid-svg-icons';
+import AuthContext from '../../context/user.context';
 
 interface TweetProps {
     tweet?: any;
@@ -35,6 +38,9 @@ const Tweet: FC<TweetProps> = ({
     isLiked,
     isReply = false,
 }) => {
+
+    const [authUser, setAuthUser] = useState<any>(null);
+
 
     // regular tweet
     const tweetId = tweet?._id;
@@ -63,6 +69,15 @@ const Tweet: FC<TweetProps> = ({
 
 
     let navigate = useNavigate();
+
+    const ctx = useContext(AuthContext);
+    useEffect(() => {
+        const getAuthUser = async () => {
+            const { user } = ctx.getUserContext();
+            setAuthUser(user);
+        }
+        getAuthUser();
+    }, []);
 
     const renderColoredText = (text: string) => {
         const words = text ? text.split(' ') : [];
@@ -105,8 +120,18 @@ const Tweet: FC<TweetProps> = ({
         <React.Fragment>
             <div className={`${styles.container}`} key={tweetId}>
 
-                {tweet.type === TWEET_TYPE.reTweet ? (
+                {tweet?.type === TWEET_TYPE.reTweet ? (
                     <>
+                        {!tweetImage && !text && (
+                            <div className={styles.whoRetweeted}>
+                                <FontAwesomeIcon icon={faRepeat} className={styles.faRepeat} />
+                                {authUser?._id === userId ? (
+                                    <div>You Retweeted</div>
+                                ): (
+                                    <p>{name} Retweeted</p>
+                                )}
+                            </div>
+                        )}
                         <UserInfo
                             userId={userId}
                             tweet={tweet}
@@ -186,7 +211,7 @@ const Tweet: FC<TweetProps> = ({
                                     onClick={goToTweetPage}
                                 >
                                     <p className={`${styles.reTweetText} ${hasRetweetAndTweetImage ? styles.reTweetWithImageText : ''}`}>
-                                        {renderColoredText(retweetText.length > 150 ? retweetText.substring(0, 150) + '...' : retweetText)}
+                                        {renderColoredText(retweetText && retweetText.length > 150 ? retweetText.substring(0, 150) + '...' : retweetText)}
                                     </p>
                                     {retweetImage && (
                                         <div className={`${styles.reTweetImage} ${hasRetweetAndTweetImage ? styles.reTweetWithImageImage : ''}`}>
