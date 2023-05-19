@@ -254,7 +254,7 @@ const FormRetweet: FC<FormRetweetProps> = ({
                         key={tweetId}
                     >
                         <p className={`${styles.reTweetText} ${hasRetweetAndTweetImage ? styles.reTweetWithImageText : ''}`}>
-                            {renderColoredText(text)}
+                            {renderColoredText(text.length > 150 ? text.substring(0, 150) + '....' : text)}
                         </p>
                         {tweetImage && (
                             <div className={`${styles.reTweetImage} ${hasRetweetAndTweetImage ? styles.reTweetWithImageImage : ''}`}>

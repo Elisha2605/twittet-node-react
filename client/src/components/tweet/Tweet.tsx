@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TweetFooter from '../ui/TweetFooter';
 import UserInfo from '../ui/UserInfo';
@@ -101,6 +101,9 @@ const Tweet: FC<TweetProps> = ({
 
     const hasRetweetAndTweetImage =  retweetImage && tweetImage;
 
+    useEffect(() => {
+        console.log(tweet);
+    }, [tweet])
     return (
         <React.Fragment>
             <div className={`${styles.container}`} key={tweetId}>

@@ -6,11 +6,11 @@ import { ModalContext } from '../../../context/modal.context';
 import Modal from '../../../components/ui/Modal';
 import AuthContext from '../../../context/user.context';
 import { TweetAudienceType, TweetReplyType } from '../../../types/tweet.types';
-import { editTweet } from '../../../api/tweet.api';
+import { retweet } from '../../../api/tweet.api';
 import FormRetweet from '../../../components/form/FormRetweet';
 
 interface RetweetModalProps {
-    tweet: any,
+    originalTweet: any,
     value: string;
     selectedFile: File | null
     previewImage: string | null
@@ -18,14 +18,15 @@ interface RetweetModalProps {
     handleTextAreaOnChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     handleCanselPreviewImage: () => void;
     handleImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    onEditTweet: (tweet: any) => void;
+
     clearTweetForm: () => void;
 
+    onAddTweet: any, 
     editTweetModal: any,
 }
 
 const RetweetModal: FC<RetweetModalProps> = ({ 
-    tweet,
+    originalTweet,
     value,
     selectedFile,
     previewImage,
@@ -33,9 +34,10 @@ const RetweetModal: FC<RetweetModalProps> = ({
     handleTextAreaOnChange,
     handleCanselPreviewImage,
     handleImageUpload,
-    onEditTweet,
+    
     clearTweetForm,
-
+    
+    onAddTweet, 
     editTweetModal,
 }) => {
 
@@ -64,36 +66,28 @@ const RetweetModal: FC<RetweetModalProps> = ({
     }, [editTweetModal])
 
     const handleSubmitTweet = async (e: React.FormEvent) => {
-        console.log({hello: editTweetModal});
         e.preventDefault();
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
             : null;
-        const res = await editTweet(editTweetModal._id, text, selectedFile, tweetAudience, tweetReply);
+        const res = await retweet(originalTweet?._id, text, selectedFile, tweetAudience, tweetReply);
         const { tweet }: any = res;
         if (authUser) {
             const newTweet = {
                 _id: tweet._id,
+                type: tweet.type,
                 text: tweet.text,
-                user: {
-                    _id: authUser._id,
-                    avatar: authUser?.avatar ? authUser?.avatar : null,
-                    name: authUser?.name,
-                    username: authUser?.username,
-                    isVerified: authUser?.isVerified,
-                },
+                retweet: tweet.retweet,
+                user: tweet.user,
                 audience: tweet.audience,
                 reply: tweet.reply,
                 createdAt: tweet.createdAt,
                 image: tweet.image,
-                comments: [],
-                reposts: [],
-                likes: [],
             };
-            onEditTweet(newTweet)
+            onAddTweet(newTweet)
         }
         setIsFormFocused(false);
-        closeModal('edit-tweet-modal');
+        closeModal('retweet-modal');
         setTweetAudience(TWEET_AUDIENCE.everyone)
         setTweetReply(TWEET_REPLY.everyone)
         clearTweetForm();
@@ -143,7 +137,7 @@ const RetweetModal: FC<RetweetModalProps> = ({
                         className={''}
                     />
                     <FormRetweet
-                        tweet={tweet}
+                        tweet={originalTweet}
                         value={value ? value : ''}
                         tweetTextRef={tweetTextRef}
                         selectedFile={selectedFile}

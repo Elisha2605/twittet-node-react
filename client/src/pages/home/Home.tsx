@@ -113,6 +113,7 @@ const Home: React.FC<HomeProps> = ({
         const handleNewTweetFromModal = () => {
             // Add new tweet from NavigationTweet to state
             if (authUser?.avatar) {
+                console.log(onAddTweet[0]);
                 setTweets((prevTweets) => [onAddTweet[0], ...prevTweets]);
             }
         };
@@ -123,7 +124,7 @@ const Home: React.FC<HomeProps> = ({
         const handleEditTweetFromModal = () => {
             if (authUser) {
                 setTweets((prevTweets: any) => 
-                    prevTweets.map((tweet: any) => 
+                    prevTweets.map((tweet: any) =>
                         tweet?._id === onEditTweet?._id
                             ? { ...tweet, ...onEditTweet }
                             : tweet
@@ -228,6 +229,8 @@ const Home: React.FC<HomeProps> = ({
         console.log(likedTweet);
         setLikedTweet(likedTweet)
     }
+
+    console.log(tweets);
     
     return (
         <React.Fragment>

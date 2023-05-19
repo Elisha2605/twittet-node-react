@@ -8,7 +8,6 @@ import PopUpMenu from "./PopUpMenu";
 import { reTweetIcon, reTweetOptions, shareIcon, shareOptions } from "../../data/menuOptions";
 import { saveTweetToBookmark } from "../../api/bookmark.api";
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ModalContext } from "../../context/modal.context";
 
 interface TweetFooterProps {
     tweet?: any;
@@ -39,7 +38,6 @@ const TweetFooter: FC<TweetFooterProps> = ({
 
     const location = useLocation();
     const navigate = useNavigate();
-    const { openModal } = useContext(ModalContext);
 
     const handleLike = (tweet: any) => {
         onClick!(tweet);
@@ -58,16 +56,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
         } else if (!tweet?.image) {
             navigate(`/tweet/${tweet?._id}`)
         }
-    }
-
-    // const onReTweet = (option: any, id: string, tweet: any) => {
-    //     if(option === TWEET_MENU.retweet) {
-    //         console.log(tweet);
-    //         openModal('retweet-modal')
-    //     } else if (option === TWEET_MENU.quoteTweet) {
-    //         console.log('quote retweet clicked');
-    //     }
-    // }   
+    }  
 
     return (
         <React.Fragment>

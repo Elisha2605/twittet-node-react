@@ -51,6 +51,11 @@ function App() {
     const [valueEditModal, setValueEditModal] = useState('');
     const [previewEditImageModal, setPreviewEditImageModal] = useState<string | null>(null);
 
+    // Modal Form Retweet
+    const [selectedFileRetweetModal, setSelectedFileRetweetModal] = useState<File | null>(null);
+    const [previewImageRetweetModal, setPreviewImageRetweetModal] = useState<string | null>(null);
+    const [valueRetweetModal, setValueRetweetModal] = useState('');
+
     // useContexts
     const { modalOpen, openModal } = useContext(ModalContext);
     const context = useContext(AuthContext);
@@ -203,7 +208,7 @@ function App() {
                                 editTweetModal={editTweetModal}
                             />
                             <RetweetModal 
-                                tweet={tweet}
+                                originalTweet={tweet}
                                 selectedFile={selectedFileModal}
                                 previewImage={previewEditImageModal}                                    
                                 value={valueEditModal}
@@ -211,7 +216,7 @@ function App() {
                                 handleTextAreaOnChange={handleTextAreaOnChange}
                                 handleCanselPreviewImage={handleCanselPreviewImage}
                                 handleImageUpload={handleImageUpload}
-                                onEditTweet={handleEditTweet}
+                                onAddTweet={handleAddTweet}
                                 
                                 editTweetModal={editTweetModal}
                             />
