@@ -68,4 +68,4 @@ export const fetchTweetById = async (tweetId: string) => {
     ]).exec();
 
     return tweet;
-}
+};

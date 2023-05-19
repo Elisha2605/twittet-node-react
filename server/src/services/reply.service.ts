@@ -1,4 +1,4 @@
-import mongoose, { model } from 'mongoose';
+import mongoose from 'mongoose';
 import { TWEET_AUDIENCE, TWEET_REPLY } from 'src/constants/tweet.constants';
 import Follow from 'src/model/follow.model';
 import Reply from 'src/model/reply.model';
