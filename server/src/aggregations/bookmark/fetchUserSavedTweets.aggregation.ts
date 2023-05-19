@@ -70,6 +70,11 @@ export const fetchUserSavedTweets = async (userId: string) => {
             },
         },
         {
+            $sort: {
+                createdAt: -1,
+            },
+        },
+        {
             $project: {
                 _id: '$tweet._id',
                 type: '$tweet.type',
@@ -114,11 +119,6 @@ export const fetchUserSavedTweets = async (userId: string) => {
                         else: 0,
                     },
                 },
-            },
-        },
-        {
-            $sort: {
-                createdAt: -1,
             },
         },
     ]).exec();
