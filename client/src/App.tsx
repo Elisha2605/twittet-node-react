@@ -15,7 +15,7 @@ import Home from './pages/home/Home';
 import { ModalContext } from './context/modal.context';
 import Following from './pages/follow/Following';
 import Follower from './pages/follow/Follower';
-import { deleteTweet } from './api/tweet.api';
+import { deleteTweet, retweet } from './api/tweet.api';
 import { IMAGE_TWEET_BASE_URL, TWEET_MENU } from './constants/common.constants';
 import NavigationTweetModal from './pages/tweet/tweet-modals/NavigationTweetModal';
 import EditTweetModal from './pages/tweet/tweet-modals/EditTweetModal';
@@ -86,6 +86,7 @@ function App() {
             setValueHome(val);
         }
     };
+    
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files && event.target.files[0];
         if (file) {
@@ -138,9 +139,13 @@ function App() {
         } 
     };
 
-    const onReTweet = (option: any, tweet: any) => {
+    const onReTweet = async (option: any, tweet: any) => {
         if(option === TWEET_MENU.retweet) {
-            
+            const res = await retweet(tweet?._id, null, tweet.image, tweet.audience, tweet.reply);
+            const newTweet = {
+                ...res.tweet
+            };
+            handleAddTweet(newTweet)
         } else if (option === TWEET_MENU.quoteTweet) {
             // changle the name of the states
             setTweet(tweet)

@@ -75,15 +75,7 @@ const RetweetModal: FC<RetweetModalProps> = ({
 
         if (authUser) {
             const newTweet = {
-                _id: tweet._id,
-                type: tweet.type,
-                text: tweet.text,
-                retweet: tweet.retweet,
-                user: tweet.user,
-                audience: tweet.audience,
-                reply: tweet.reply,
-                createdAt: tweet.createdAt,
-                image: tweet.image,
+                ...tweet
             };
             onAddTweet(newTweet)
         }
