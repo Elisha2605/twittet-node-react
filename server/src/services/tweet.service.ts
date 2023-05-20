@@ -211,6 +211,7 @@ export const reTweet = async (
 
         let newTweet: any;
 
+        // undo retweet without quote.
         if (
             !tweet.text &&
             !tweet.image &&
@@ -220,7 +221,9 @@ export const reTweet = async (
             tweet.user.toString() === user._id.toString()
         ) {
             console.log(tweet._id);
+            await retweetedTweet.updateOne({ $inc: { retweetCount: -1 } });
             await tweet.deleteOne();
+
             return {
                 success: true,
                 message: 'Undone Retweet',
@@ -254,6 +257,7 @@ export const reTweet = async (
         }
 
         const savedReTweet = await newTweet.save();
+        await tweet.updateOne({ $inc: { retweetCount: 1 } });
         if (!savedReTweet) {
             throw CustomError('Could not create tweet', 500);
         }

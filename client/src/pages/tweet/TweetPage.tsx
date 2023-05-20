@@ -257,10 +257,6 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
         return tweet && savedTweets.some((t: any) => t._id === tweet._id)
     }
    
-
-    
-    
-
     return (
         <React.Fragment>
             <div className={styles.container}>
@@ -329,9 +325,11 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                                 </p>
                             </div>
                             <div className={styles.stats}>
-                                <p>
-                                    <span>332</span>Retweets
-                                </p>{' '}
+                                {tweet?.retweetCount > 0 && (    
+                                    <p>
+                                        <span>{tweet?.retweetCount}</span>Retweets
+                                    </p>
+                                )}{' '}
                                 <p>
                                     <span>61</span>Quotes
                                 </p>{' '}

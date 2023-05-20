@@ -298,9 +298,11 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                         </p>
                                     </div>
                                     <div className={styles.stats}>
-                                        <p>
-                                            <span>332</span>Retweets
-                                        </p>{' '}
+                                        {tweet?.retweetCount > 0 && (    
+                                            <p>
+                                                <span>{tweet?.retweetCount}</span>Retweets
+                                            </p>
+                                        )}{' '}
                                         <p>
                                             <span>61</span>Quotes
                                         </p>{' '}
