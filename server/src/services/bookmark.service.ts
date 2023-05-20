@@ -72,7 +72,7 @@ export const saveTweetToBookmark = async (
             success: true,
             message: 'Saved tweet',
             status: 200,
-            payload: savedTweet,
+            payload: tweet,
         };
     } catch (error) {
         const errorResponse: ErrorResponse = {

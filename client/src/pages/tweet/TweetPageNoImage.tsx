@@ -10,7 +10,6 @@ import HeaderTitle from '../../components/header/HeaderTitle';
 import {
     IMAGE_AVATAR_BASE_URL,
     TWEET_AUDIENCE,
-    TWEET_MENU,
     TWEET_REPLY,
 } from '../../constants/common.constants';
 import AuthContext from '../../context/user.context';
@@ -95,17 +94,6 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
         setLikedTweet(likedTweet);
     };
 
-    const handleTweetMenuOptionClick = async (
-        option: string,
-        tweetId: string,
-        tweet: any
-    ) => {
-        if (option === TWEET_MENU.delete) {
-            console.log('hello');
-        } else if (option === TWEET_MENU.edit) {
-        }
-    };
-
     const handleTextAreaOnChangeReply = (
         e: React.ChangeEvent<HTMLTextAreaElement>
     ) => {
@@ -158,6 +146,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
             reply: tweet.reply,
             createdAt: tweet.createdAt,
             image: tweet.image,
+            bookmarkCount: tweet.boomarkCount,
             comments: [],
             reposts: [],
             likes: [],
@@ -186,7 +175,6 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
     }, []);
 
     const isTwitterCircle = (userId: string): boolean => {
-        console.log(userId);
         if (
             authUser && tweet &&
             tweet?.user?._id !== authUser?._id &&
@@ -225,6 +213,19 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
 
     const onClickSaveAndUnsaveTweet = async () => {
         const res = await saveTweetToBookmark(tweet._id);
+        const bookmarkCount = res.tweet.bookmarkCount
+        
+        if (bookmarkCount === undefined) {
+            setTweet((prevTweet: any) => ({
+              ...prevTweet,
+              bookmarkCount: prevTweet.bookmarkCount - 1,
+            }));
+          } else {
+            setTweet((prevTweet: any) => ({
+              ...prevTweet,
+              bookmarkCount: bookmarkCount + 1,
+            }));
+          }
         console.log(res);
     }
 
@@ -267,7 +268,6 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                     className={styles.userInfo}
                                     options={tweetMenuOptions}
                                     icons={tweetMenuIcons}
-                                    onClickOption={handleTweetMenuOptionClick}
                                 />
                                 <div className={styles.asideContent}>
                                     <div className={styles.text}>

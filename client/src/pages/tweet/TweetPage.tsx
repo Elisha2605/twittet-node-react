@@ -228,6 +228,19 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
 
     const onClickSaveAndUnsaveTweet = async () => {
         const res = await saveTweetToBookmark(tweet._id);
+        const bookmarkCount = res.tweet.bookmarkCount
+        
+        if (bookmarkCount === undefined) {
+            setTweet((prevTweet: any) => ({
+              ...prevTweet,
+              bookmarkCount: prevTweet.bookmarkCount - 1,
+            }));
+          } else {
+            setTweet((prevTweet: any) => ({
+              ...prevTweet,
+              bookmarkCount: bookmarkCount + 1,
+            }));
+          }
         console.log(res);
     }
 
