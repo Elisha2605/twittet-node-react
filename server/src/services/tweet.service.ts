@@ -212,8 +212,8 @@ export const reTweet = async (
         let newTweet: any;
 
         if (
-            !text &&
-            !image &&
+            !tweet.text &&
+            !tweet.image &&
             retweetedTweet &&
             tweet &&
             tweet.type === TWEET_TYPE.reTweet &&
