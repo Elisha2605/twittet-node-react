@@ -12,7 +12,6 @@ import {
     NOTIFICATION_TYPE,
 } from 'src/constants/notification.constants';
 import TwitterCircle from './twitterCircle.model';
-import { Ibookmark } from './bookmark.model';
 
 export interface ITweet extends mongoose.Document {
     type: string;
@@ -24,6 +23,7 @@ export interface ITweet extends mongoose.Document {
     mentions: ObjectId[];
     originalTweet: ObjectId | string;
     replyCount: number;
+    retweetCount: number;
     bookmarkCount: number;
 }
 
@@ -71,6 +71,11 @@ export const tweetModel = {
         required: false,
     },
     replyCount: {
+        type: Number,
+        default: 0,
+        required: true,
+    },
+    retweetCount: {
         type: Number,
         default: 0,
         required: true,

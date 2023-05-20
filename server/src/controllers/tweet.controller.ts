@@ -16,9 +16,15 @@ export const getAllTweetsController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.user._id;
         try {
-            const { success, message, payload } = await getAllTweets(userId);
+            const { success, message, payload, status } = await getAllTweets(
+                userId
+            );
             if (success) {
-                res.status(200).json({ tweets: payload });
+                res.status(200).json({
+                    message: message,
+                    status: status,
+                    tweets: payload,
+                });
             } else {
                 res.status(500).json({ success, message });
             }
@@ -134,7 +140,7 @@ export const reTweetController = asyncHandler(
         }
 
         try {
-            const response = await reTweet(
+            const { success, message, payload, status } = await reTweet(
                 tweetId,
                 userId,
                 text,
@@ -142,14 +148,14 @@ export const reTweetController = asyncHandler(
                 audience,
                 reply
             );
-            const { payload } = response;
-            if (response.success) {
-                res.status(response.status).send({
-                    success: response.success,
-                    message: response.message,
-                    status: response.status,
+            if (success) {
+                res.status(200).json({
+                    message: message,
+                    status: status,
                     tweet: payload,
                 });
+            } else {
+                res.status(500).json({ success, message });
             }
         } catch (error) {
             res.status(error.status).json({

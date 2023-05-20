@@ -210,6 +210,25 @@ export const reTweet = async (
         const user = await User.findById(userId);
 
         let newTweet: any;
+
+        if (
+            !text &&
+            !image &&
+            retweetedTweet &&
+            tweet &&
+            tweet.type === TWEET_TYPE.reTweet &&
+            tweet.user.toString() === user._id.toString()
+        ) {
+            console.log(tweet._id);
+            await tweet.deleteOne();
+            return {
+                success: true,
+                message: 'Undone Retweet',
+                status: 200,
+                payload: [],
+            };
+        }
+
         if (
             !text &&
             !image &&
@@ -407,6 +426,15 @@ export const deleteTweet = async (
 };
 
 //////// helper function ///
+
+export const undoRetweet = async (tweet: any, user: any) => {
+    const removedTweet = await Tweet.findByIdAndDelete({
+        tweet: tweet._id,
+        user: user._id,
+    });
+    return removedTweet;
+};
+
 export const createRetweetWithoutQuote = (tweet: any, user: any) => {
     return new Tweet({
         type: TWEET_TYPE.reTweet,

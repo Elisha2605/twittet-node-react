@@ -68,6 +68,8 @@ function App() {
     const handleEditTweet = (editedTweet: any) => {
         setOnEditTweets(editedTweet)
     }
+
+    console.log();
     
     // On Login blue background
     const handleLoginSuccess = () => {
@@ -142,10 +144,15 @@ function App() {
     const onReTweet = async (option: any, tweet: any) => {
         if(option === TWEET_MENU.retweet) {
             const res = await retweet(tweet?._id, null, tweet.image, tweet.audience, tweet.reply);
-            const newTweet = {
-                ...res.tweet
-            };
-            handleAddTweet(newTweet)
+            if (res.message === "Undone Retweet") {
+                setOnDeleteTweet(tweet)
+            } else {
+                const newTweet = {
+                    ...res.tweet
+                };
+                handleAddTweet(newTweet)
+                console.log(res);
+            }
         } else if (option === TWEET_MENU.quoteTweet) {
             // changle the name of the states
             setTweet(tweet)
