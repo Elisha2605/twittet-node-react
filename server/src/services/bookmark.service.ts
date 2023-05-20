@@ -40,13 +40,14 @@ export const saveTweetToBookmark = async (
             throw CustomError('Tweet not found', 404);
         }
 
-        const aleardySavedTweet: any = await Bookmark.findOne({
+        const alreadySavedTweet: any = await Bookmark.findOneAndDelete({
             tweet: tweetId,
             user: userId,
         });
 
-        if (aleardySavedTweet) {
-            await aleardySavedTweet.deleteOne();
+        if (alreadySavedTweet) {
+            await tweet.updateOne({ $inc: { bookmarkCount: -1 } });
+
             return {
                 success: true,
                 message: 'Unsaved tweet!',
@@ -64,6 +65,8 @@ export const saveTweetToBookmark = async (
         if (!savedTweet) {
             throw CustomError('Could not save tweet to bookmark', 500);
         }
+
+        await tweet.updateOne({ $inc: { bookmarkCount: 1 } });
 
         return {
             success: true,

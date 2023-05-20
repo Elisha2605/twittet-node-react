@@ -221,6 +221,7 @@ export const createReply = async (
         if (!savedReply) {
             throw CustomError('Could not create reply', 500);
         }
+        await tweet.updateOne({ $inc: { replyCount: 1 } });
         const populatedReply = await newReply.populate({
             path: 'user',
             select: 'name username avatar coverImage isVerified isProtected',

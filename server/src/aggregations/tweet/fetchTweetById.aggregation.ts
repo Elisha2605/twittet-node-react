@@ -51,6 +51,7 @@ export const fetchTweetById = async (tweetId: string) => {
                 updatedAt: 1,
                 mentions: 1,
                 replyCount: 1,
+                bookmarkCount: 1,
                 likes: '$likes.likes',
                 totalLikes: {
                     $cond: {

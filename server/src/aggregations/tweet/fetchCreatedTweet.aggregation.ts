@@ -114,6 +114,7 @@ export const fetchCreatedTweet = async (tweetId: mongoose.Types.ObjectId) => {
                 updatedAt: 1,
                 likes: '$likes.likes',
                 replyCount: 1,
+                bookmarkCount: 1,
                 totalLikes: {
                     $cond: {
                         if: {

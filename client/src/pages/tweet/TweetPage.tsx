@@ -33,6 +33,7 @@ import { createTweetReply, getAllTweetReplies } from '../../api/reply.api';
 import { getAuthUserFollows } from '../../api/follow.api';
 import AtIcon from '../../components/icons/AtIcon';
 import UserIcon from '../../components/icons/UserIcon';
+import { saveTweetToBookmark } from '../../api/bookmark.api';
 
 interface TweetPageProps {}
 
@@ -225,6 +226,11 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
         return true;
     };
 
+    const onClickSaveAndUnsaveTweet = async () => {
+        const res = await saveTweetToBookmark(tweet._id);
+        console.log(res);
+    }
+
     return (
         <React.Fragment>
             <div className={styles.container}>
@@ -255,11 +261,11 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                     <div className={styles.footer}>
                         <TweetFooter
                             replies={tweet?.replyCount === 0 ? '' : tweet?.replyCount}
-                            retTweets={'123'}
+                            retTweets={''}
                             likes={
                                 tweet?.totalLikes > 0 ? tweet?.totalLikes : ''
                             }
-                            views={'453'}
+                            views={''}
                             onClick={onClickLike}
                             isLiked={tweet?.likes?.includes(authUser?._id)}
                         />
@@ -310,11 +316,13 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                                     </p>
                                 )}
                             </div>
-                            <div className={styles.bookmarks}>
-                                <p>
-                                    <span>332</span>Bookmarks
-                                </p>
-                            </div>
+                            {tweet?.bookmarkCount > 0 && (
+                                <div className={styles.bookmarks}>
+                                    <p>
+                                        <span>{tweet?.bookmarkCount}</span>Bookmarks
+                                    </p>
+                                </div>
+                            )}
                             <div className={styles.icons}>
                                 <div>
                                     <FontAwesomeIcon
@@ -345,7 +353,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                                         }
                                     />
                                 </div>
-                                <div>
+                                <div onClick={onClickSaveAndUnsaveTweet}>
                                     <FontAwesomeIcon
                                         icon={faBookmark}
                                         className={styles.faBookmark}

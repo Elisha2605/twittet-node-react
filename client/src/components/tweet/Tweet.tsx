@@ -330,7 +330,7 @@ const Tweet: FC<TweetProps> = ({
                     replies={tweet?.replyCount === 0 ? '' : tweet?.replyCount}
                     retTweets={''}
                     likes={tweet.totalLikes > 0 ? tweet.totalLikes : ''}
-                    views={'466'}
+                    views={''}
                     onClickRetweet={onClickRetweet}
                     onClick={() => onClickLike(tweet)}
                     isLiked={isLiked}

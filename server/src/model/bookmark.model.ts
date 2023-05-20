@@ -25,11 +25,11 @@ const bookmarkModel = {
 };
 
 const boomarkSchema = new mongoose.Schema<Ibookmark>(bookmarkModel);
+
 const Bookmark = mongoose.model<Ibookmark>(
     'Bookmark',
     boomarkSchema,
     'Bookmark'
 );
 Bookmark.on('error', handleError);
-
 export default Bookmark;
