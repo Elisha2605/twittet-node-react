@@ -17,11 +17,12 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    faBookmark,
+    faBookmark as faBookmarkRegular,
     faComment,
     faHeart,
 } from '@fortawesome/free-regular-svg-icons';
 import {
+    faBookmark as faBookMarkSolid,
     faArrowUpFromBracket,
     faRepeat,
 } from '@fortawesome/free-solid-svg-icons';
@@ -37,7 +38,7 @@ import { getAuthUserFollows } from '../../api/follow.api';
 import UserIcon from '../../components/icons/UserIcon';
 import AtIcon from '../../components/icons/AtIcon';
 import Tweet from '../../components/tweet/Tweet';
-import { saveTweetToBookmark } from '../../api/bookmark.api';
+import { getUserSavedTweets, saveTweetToBookmark } from '../../api/bookmark.api';
 
 interface TweetPageNoImageProps {}
 
@@ -58,6 +59,8 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
 
     const [followers, setFollowers] = useState<any>([]);
     const [followings, setFollowings] = useState<any>([]);
+
+    const [savedTweets, setSavedTweets] = useState<any>([])
 
     const navigate = useNavigate();
 
@@ -211,22 +214,36 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
         return true;
     };
 
+    // bookmark
+    useEffect(() => {
+        const getUserBookmarkList = async () => {
+            const { tweets }: any = await getUserSavedTweets();
+            setSavedTweets(tweets)
+            console.log(tweets);
+        };
+        getUserBookmarkList();
+    }, [])
     const onClickSaveAndUnsaveTweet = async () => {
         const res = await saveTweetToBookmark(tweet._id);
         const bookmarkCount = res.tweet.bookmarkCount
-        
         if (bookmarkCount === undefined) {
             setTweet((prevTweet: any) => ({
               ...prevTweet,
               bookmarkCount: prevTweet.bookmarkCount - 1,
             }));
+
           } else {
             setTweet((prevTweet: any) => ({
               ...prevTweet,
               bookmarkCount: bookmarkCount + 1,
             }));
           }
-        console.log(res);
+
+          const updatedSavedTweets = isSaved() ? savedTweets.filter((t: any) => t._id !== tweet._id) : [...savedTweets, tweet];
+          setSavedTweets(updatedSavedTweets);
+    }
+    const isSaved = (): boolean => {
+        return tweet && savedTweets.some((t: any) => t._id === tweet._id)
     }
 
     return (
@@ -335,7 +352,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                         </div>
                                         <div onClick={onClickSaveAndUnsaveTweet}>
                                             <FontAwesomeIcon
-                                                icon={faBookmark}
+                                                icon={isSaved() ? faBookMarkSolid : faBookmarkRegular}
                                                 className={styles.faBookmark}
                                             />
                                         </div>

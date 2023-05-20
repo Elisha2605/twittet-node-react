@@ -16,10 +16,13 @@ import UserInfo from '../../components/ui/UserInfo';
 import { tweetMenuIcons, tweetMenuOptions } from '../../data/menuOptions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    faBookmark,
+    faBookmark as faBookmarkRegular,
     faComment,
     faHeart,
 } from '@fortawesome/free-regular-svg-icons';
+import {
+    faBookmark as faBookmarkSolid,
+} from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
 import {
     faArrowUpFromBracket,
@@ -33,13 +36,12 @@ import { createTweetReply, getAllTweetReplies } from '../../api/reply.api';
 import { getAuthUserFollows } from '../../api/follow.api';
 import AtIcon from '../../components/icons/AtIcon';
 import UserIcon from '../../components/icons/UserIcon';
-import { saveTweetToBookmark } from '../../api/bookmark.api';
+import { getUserSavedTweets, saveTweetToBookmark } from '../../api/bookmark.api';
 
 interface TweetPageProps {}
 
 const TweetPage: FC<TweetPageProps> = ({}) => {
     const [tweet, setTweet] = useState<any>();
-    const [likedTweet, setLikedTweet] = useState<any>();
     const [authUser, setAuthUser] = useState<any>(null);
     const [isFormFocused, setIsFormFocused] = useState(false);
 
@@ -47,11 +49,13 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
-
+    
     const [tweetReplies, setTweetReplies] = useState<any[]>([]);
-
+    
     const [followers, setFollowers] = useState<any>([]);
     const [followings, setFollowings] = useState<any>([]);
+    
+    const [savedTweets, setSavedTweets] = useState<any>([])
 
     const previousPath = localStorage.getItem('active-nav');
     const goBack = () => {
@@ -92,17 +96,12 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
     const onClickLike = async () => {
         const res: any = await likeTweet(tweet?._id);
         const { likedTweet } = res;
-        setLikedTweet(likedTweet);
-    };
-
-    // Update Likes state
-    useEffect(() => {
         setTweet((prev: any) => ({
             ...prev,
             totalLikes: likedTweet?.likesCount,
             likes: likedTweet?.likes,
         }));
-    }, [likedTweet]);
+    };
 
     const handleTweetMenuOptionClick = async (
         option: string,
@@ -226,23 +225,41 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
         return true;
     };
 
+    // bookmark
+    useEffect(() => {
+        const getUserBookmarkList = async () => {
+            const { tweets }: any = await getUserSavedTweets();
+            setSavedTweets(tweets)
+            console.log(tweets);
+        };
+        getUserBookmarkList();
+    }, [])
     const onClickSaveAndUnsaveTweet = async () => {
         const res = await saveTweetToBookmark(tweet._id);
         const bookmarkCount = res.tweet.bookmarkCount
-        
         if (bookmarkCount === undefined) {
             setTweet((prevTweet: any) => ({
               ...prevTweet,
               bookmarkCount: prevTweet.bookmarkCount - 1,
             }));
+
           } else {
             setTweet((prevTweet: any) => ({
               ...prevTweet,
               bookmarkCount: bookmarkCount + 1,
             }));
           }
-        console.log(res);
+
+          const updatedSavedTweets = isSaved() ? savedTweets.filter((t: any) => t._id !== tweet._id) : [...savedTweets, tweet];
+          setSavedTweets(updatedSavedTweets);
     }
+    const isSaved = (): boolean => {
+        return tweet && savedTweets.some((t: any) => t._id === tweet._id)
+    }
+   
+
+    
+    
 
     return (
         <React.Fragment>
@@ -368,8 +385,8 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                                 </div>
                                 <div onClick={onClickSaveAndUnsaveTweet}>
                                     <FontAwesomeIcon
-                                        icon={faBookmark}
-                                        className={styles.faBookmark}
+                                        icon={isSaved() ? faBookmarkSolid : faBookmarkRegular}
+                                        className={`${styles.faBookmark}`}
                                     />
                                 </div>
                                 <div>
