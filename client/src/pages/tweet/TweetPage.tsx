@@ -320,9 +320,11 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                             <div className={styles.info}>
                                 <span>9:15 PM</span> · <span>May 5, 2023</span>{' '}
                                 ·{' '}
-                                <p>
-                                    <span>1.2M </span>Views
-                                </p>
+                                {tweet?.viewCount > 0 && (
+                                    <p>
+                                        <span>{tweet?.viewCount}</span> Views
+                                    </p>
+                                )}{' '}
                             </div>
                             <div className={styles.stats}>
                                 {tweet?.retweetCount > 0 && (    
@@ -336,9 +338,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                                 {tweet?.totalLikes > 0 && (
                                     <p>
                                         <span>
-                                            {tweet?.totalLikes > 0
-                                                ? tweet?.totalLikes
-                                                : ''}
+                                            {tweet?.totalLikes}
                                         </span>
                                         Likes
                                     </p>
