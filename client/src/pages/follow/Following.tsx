@@ -1,28 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
-import Aside from '../../components/aside/Aside';
-import SearchBar from '../../components/ui/SearchBar';
-import WhoToFollow from '../../components/ui/WhoToFollow';
-import Header from '../../components/header/Header';
 import styles from './Following.module.css';
-import Layout from '../../Layout.module.css';
-import HeaderTitle from '../../components/header/HeaderTitle';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
-import ArrowLeftIcon from '../../components/icons/ArrowLeftIcon';
 import UserInfo from '../../components/ui/UserInfo';
 import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
 import { ButtonSize, ButtonType } from '../../components/ui/Button';
-import HorizontalNavBar from '../../components/ui/HorizontalNavBar';
 import { getUserFollows } from '../../api/follow.api';
 import AuthContext from '../../context/user.context';
 import FollowButton from '../../components/ui/FollowButton';
 
 const Following = () => {
     const { id } = useParams<{ id: string }>();
-    const [user, setUser] = useState<any>();
     const [authUser, setAuthUser] = useState<any>(null);
     const [followings, setFollowings] = useState<any[]>([]);
-
 
     const navigate = useNavigate();
 
@@ -32,18 +22,9 @@ const Following = () => {
         const getAuthUser = async () => {
             const { user } = ctx.getUserContext();
             setAuthUser(user);
-        }
+        };
         getAuthUser();
     }, []);
-
-    useEffect(() => {
-        const userInfo = async () => {
-            const res = await getUserById(id!);
-            const { user } = res;
-            setUser(user);
-        };
-        userInfo();
-    }, [id]);
 
     // get Follow status
     useEffect(() => {
@@ -58,10 +39,17 @@ const Following = () => {
         <React.Fragment>
             <div className={styles.main}>
                 {followings.map((follow) => (
-                    <div key={follow._id} className={styles.followingItem} onClick={() => navigate(`/profile/${follow.user._id}`)}>    
+                    <div
+                        key={follow._id}
+                        className={styles.followingItem}
+                        onClick={() => navigate(`/profile/${follow.user._id}`)}
+                    >
                         <UserInfo
                             userId={follow.user._id}
-                            avatar={follow.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${follow.user?.avatar}`}
+                            avatar={
+                                follow.user?.avatar &&
+                                `${IMAGE_AVATAR_BASE_URL}/${follow.user?.avatar}`
+                            }
                             name={follow.user?.name}
                             isVerified={follow.user.isVerified}
                             username={follow.user?.username}
@@ -81,6 +69,5 @@ const Following = () => {
         </React.Fragment>
     );
 };
-
 
 export default Following;

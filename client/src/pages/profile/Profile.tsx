@@ -421,13 +421,13 @@ const Profile: FC<ProfileProps> = ({
                             </div>
 
                             <div className={styles.followStatus}>
-                                <NavLink to={`/follow/following/${id}`}>
+                                <NavLink to={`/follow-status/following/${id}`}>
                                     <p>
                                         {user?.followingCount ? user?.followingCount : 0}
                                         <span>Following</span>
                                     </p>
                                 </NavLink>
-                                <NavLink to={`/follow/follower/${id}`}>
+                                <NavLink to={`/follow-status/followers/${id}`}>
                                     <p>
                                         {user?.followerCount ? user?.followerCount : 0}
                                         <span>Followers</span>

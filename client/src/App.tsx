@@ -13,8 +13,6 @@ import AuthContext, { StoredContext } from './context/user.context';
 import TwitterIcon from './components/icons/TwitterIcon';
 import Home from './pages/home/Home';
 import { ModalContext } from './context/modal.context';
-import Following from './pages/follow/Following';
-import Follower from './pages/follow/Follower';
 import { deleteTweet, retweet } from './api/tweet.api';
 import { IMAGE_TWEET_BASE_URL, TWEET_MENU } from './constants/common.constants';
 import NavigationTweetModal from './pages/tweet/tweet-modals/NavigationTweetModal';
@@ -266,7 +264,7 @@ function App() {
                                     onEditTweet={onEditTweet}
                                     onClickTweetMenu={handleTweetMenuOptionClick} />} 
                                 />
-                                <Route path="/follow/:path/:id/*" element={<FollowStatus />} />
+                                <Route path="/follow-status/:path/:id/*" element={<FollowStatus />} />
                                 <Route path="/tweet/image/:id" element={ <TweetPage />} />
                                 <Route path="/tweet/:id" element={ <TweetPageNoImage />} />
                                 <Route path="/follower-requests" element={ <FollowerRequests />} />
