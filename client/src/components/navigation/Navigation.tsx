@@ -98,7 +98,7 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
             navigate('/follower-requests');
         }
         if (option === MORE_NAV_OPTION.settingsAndPrivacy) {
-            console.log(option);
+            navigate('/settings/account')
         }
         if (option === MORE_NAV_OPTION.display) {
             console.log(option);

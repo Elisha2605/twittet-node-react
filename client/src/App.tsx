@@ -22,6 +22,7 @@ import TweetPageNoImage from './pages/tweet/TweetPageNoImage';
 import FollowerRequests from './pages/follow/FollowerRequests';
 import RetweetModal from './pages/tweet/tweet-modals/RetweetModal';
 import FollowStatus from './pages/follow/FollowStatus';
+import Settings from './pages/settings/settings';
 
 function App() {
 
@@ -268,6 +269,7 @@ function App() {
                                 <Route path="/tweet/image/:id" element={ <TweetPage />} />
                                 <Route path="/tweet/:id" element={ <TweetPageNoImage />} />
                                 <Route path="/follower-requests" element={ <FollowerRequests />} />
+                                <Route path="/settings/:path" element={ <Settings />} />
                                 <Route
                                     path="*"
                                     element={<Navigate to="/" replace={true} />}
