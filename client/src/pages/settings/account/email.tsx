@@ -5,12 +5,35 @@ import AuthContext from '../../../context/user.context';
 import Header from '../../../components/header/Header';
 import HeaderTitle from '../../../components/header/HeaderTitle';
 import ArrowLeftIcon from '../../../components/icons/ArrowLeftIcon';
+import { useForm } from 'react-hook-form';
+import Button, { ButtonSize, ButtonType } from '../../../components/ui/Button';
 
 const Email: React.FC<{}> = () => {
     const [user, setUser] = useState<any>(null);
+    const [email, setName] = useState('');
+
 
     const navigate = useNavigate();
 
+    const [serverError, setServerError] = useState('');
+    const [isLoading, setLoading] = useState(false);
+
+    const { register, handleSubmit, reset, formState: { errors } } = useForm({
+        defaultValues: {
+            email: user?.email as string,
+        }
+    });
+
+    const handleSubmitForm = handleSubmit(async (data: any) => {   
+        setLoading(true);       
+        console.log(data);
+        setLoading(false)
+    });
+
+    useEffect(() => {
+        setName(user?.email || '');
+    }, [user])
+    
     // get auth user
     const ctx = useContext(AuthContext);
     useEffect(() => {
@@ -36,7 +59,38 @@ const Email: React.FC<{}> = () => {
                 </div>
             </Header>
             <div className={styles.main}>
-                Email setting
+                <form className={styles.formControl} onSubmit={handleSubmitForm}>
+                    {serverError.length > 0 && (
+                                <p className={styles.serverErrorMsg}>{serverError}</p>
+                            )} 
+                        <div className={`${styles.inputWrapper} ${errors.email ? styles.inputError : ''}`}>
+                            <input
+                                {...register("email", { required: "Email field is required." })}
+                                className={styles.formInput}
+                                type="text"
+                                id="email"
+                                name="email"
+                                placeholder=" "
+                                value={email}
+                                onChange={(e) => setName(e.target.value)}
+                                contentEditable={true}
+                            />
+                            <label className={styles.formLabel} htmlFor="email">
+                                Email
+                            </label>
+                            {errors.email && 
+                                <p className={styles.errorMsg}>{errors.email?.message}</p>
+                            }   
+                        </div> 
+                        <Button
+                            value={'Save'}
+                            type={ButtonType.primary}
+                            size={ButtonSize.small}
+                            isDisabled={email === user?.email ? true : false}
+                            className={styles.btn}
+                            onClick={() => {}}
+                        /> 
+                </form>
             </div>
         </React.Fragment>
     );
