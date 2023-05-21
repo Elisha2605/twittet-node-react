@@ -95,7 +95,7 @@ export const userModel = {
     isActive: {
         type: Boolean,
         default: true,
-        require: true,
+        required: true,
     },
     isVerified: {
         type: Boolean,

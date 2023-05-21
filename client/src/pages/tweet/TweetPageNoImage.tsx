@@ -222,7 +222,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
             console.log(tweets);
         };
         getUserBookmarkList();
-    }, [])
+    }, [tweet])
     const onClickSaveAndUnsaveTweet = async () => {
         const res = await saveTweetToBookmark(tweet._id);
         const bookmarkCount = res.tweet.bookmarkCount
@@ -303,15 +303,15 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                                 <span>{tweet?.retweetCount}</span>Retweets
                                             </p>
                                         )}{' '}
-                                        <p>
-                                            <span>61</span>Quotes
-                                        </p>{' '}
+                                         {tweet?.viewCount > 0 && (
+                                                <p>
+                                                    <span>{tweet?.viewCount}</span> Views
+                                                </p>
+                                        )}{' '}
                                         {tweet?.totalLikes > 0 && (
                                             <p>
                                                 <span>
-                                                    {tweet?.totalLikes > 0
-                                                        ? tweet?.totalLikes
-                                                        : ''}
+                                                    {tweet?.totalLikes}
                                                 </span>
                                                 Likes
                                             </p>

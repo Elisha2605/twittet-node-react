@@ -28,7 +28,6 @@ export enum TWEET_REPLY {
 }
 
 export enum MORE_NAV_OPTION {
-    connect = 'Connect',
     followRequests = 'Follow requests',
     settingsAndPrivacy = 'Settings and privacy',
     display = 'Display',

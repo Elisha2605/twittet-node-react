@@ -1,4 +1,4 @@
-import mongoose, { Types } from 'mongoose';
+import mongoose from 'mongoose';
 import { fetchCreatedTweet } from 'src/aggregations/tweet/fetchCreatedTweet.aggregation';
 import { fetchFollowerTweets } from 'src/aggregations/tweet/fetchFollowerTweets.aggregation';
 import { fetchTweetById } from 'src/aggregations/tweet/fetchTweetById.aggregation';
@@ -45,21 +45,24 @@ export const getAllTweets = async (
 
 export const getTweetById = async (tweetId: string): Promise<any> => {
     try {
-        const tweet = await fetchTweetById(tweetId);
+        const viewedTweet = await Tweet.findById(tweetId);
+        const tweet: any = await fetchTweetById(tweetId);
 
-        if (!tweet) {
+        if (!viewedTweet) {
             return {
                 success: true,
-                message: 'Not tweets found!',
+                message: 'Tweet not found!',
                 status: 404,
                 payload: {},
             };
         }
 
+        await viewedTweet.updateOne({ $inc: { viewCount: 1 } });
+
         if (!tweet) {
             return {
                 success: true,
-                message: 'Not tweets found!',
+                message: 'Tweet not found!',
                 status: 404,
                 payload: {},
             };

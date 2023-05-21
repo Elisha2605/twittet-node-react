@@ -2,7 +2,7 @@ import React, { FC, useContext, useEffect, useState } from 'react';
 import styles from './FollowerRequests.module.css';
 import AuthContext from '../../context/user.context';
 import UserInfo from '../../components/ui/UserInfo';
-import { approveFollowRequest, declineFollowRequest, getUserFollows, sendFollowRequest } from '../../api/follow.api';
+import { approveFollowRequest, declineFollowRequest, getUserFollows } from '../../api/follow.api';
 import Header from '../../components/header/Header';
 import Layout from '../../Layout.module.css';
 import SearchBar from '../../components/ui/SearchBar';
@@ -13,6 +13,7 @@ import HeaderTitle from '../../components/header/HeaderTitle';
 import { useNavigate } from 'react-router-dom';
 import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
 import FollowButton, { ButtonSize, ButtonType } from '../../components/ui/FollowButton';
+import ContentNotAvailable from '../../components/ui/ContentNotAvailable';
 
 
 interface FollowerRequestsProps {}
@@ -90,6 +91,9 @@ const FollowerRequests: FC<FollowerRequestsProps> = ({}) => {
                     </Header>
                     {/* Home page - start */}
                     <div className={styles.main}>
+                    {waitingRequests.length === 0 && (
+                        <ContentNotAvailable title={`You haven't recieved any follow request`} message='All your follow request will be shown here' />
+                    )}
                             {waitingRequests.map((waiting: any) => (
                                 <div key={waiting?.user?._id} className={styles.contentWrapper}>
                                     <div>

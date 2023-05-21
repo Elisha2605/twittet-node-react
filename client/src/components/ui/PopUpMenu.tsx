@@ -1,8 +1,8 @@
-import React, { FC, useContext, useEffect, useRef, useState } from 'react';
+import React, { FC, useContext, useRef, useState } from 'react';
 import MenuIcon from '../icons/MenuIcon';
 import styles from './PopUpMenu.module.css';
 import useClickOutSide from '../../hooks/useClickOutSide';
-import { TWEET_AUDIENCE, TWEET_MENU, TWEET_TYPE } from '../../constants/common.constants';
+import { TWEET_AUDIENCE, TWEET_MENU } from '../../constants/common.constants';
 import { ModalContext } from '../../context/modal.context';
 
 interface MenuPopUpProps {

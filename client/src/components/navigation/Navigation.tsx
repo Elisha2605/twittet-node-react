@@ -94,9 +94,6 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
     };
 
     const handleMoreOptions = (option: string) => {
-        if (option === MORE_NAV_OPTION.connect) {
-            console.log(option);
-        }
         if (option === MORE_NAV_OPTION.followRequests) {
             navigate('/follower-requests');
         }

@@ -108,6 +108,7 @@ export const fetchUserSavedTweets = async (userId: string) => {
                 updatedAt: '$tweet.updatedAt',
                 likes: '$likes.likes',
                 replyCount: '$tweet.replyCount',
+                viewCount: '$tweet.viewCount',
                 totalLikes: {
                     $cond: {
                         if: {
