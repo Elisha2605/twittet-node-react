@@ -222,7 +222,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
             console.log(tweets);
         };
         getUserBookmarkList();
-    }, [])
+    }, [tweet])
     const onClickSaveAndUnsaveTweet = async () => {
         const res = await saveTweetToBookmark(tweet._id);
         const bookmarkCount = res.tweet.bookmarkCount

@@ -134,6 +134,7 @@ export const fetchUserLikedTweet = async (userId: string) => {
                 mentions: 1,
                 createdAt: 1,
                 updatedAt: 1,
+                viewCount: 1,
                 likes: '$likes.likes',
                 replyCount: 1,
                 totalLikes: {

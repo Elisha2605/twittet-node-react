@@ -12,17 +12,17 @@ const twitterCirlceModel = {
     user: {
         type: Types.ObjectId,
         ref: 'User',
-        require: true,
+        required: true,
     },
     members: {
         type: [Types.ObjectId],
         ref: 'User',
-        require: true,
+        required: true,
     },
     count: {
         type: Number,
         default: 0,
-        require: true,
+        required: true,
     },
     createdAt: {
         type: Date,

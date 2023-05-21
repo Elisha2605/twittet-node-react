@@ -97,6 +97,7 @@ const Tweet: FC<TweetProps> = ({
         });
     };
 
+
     const goToTweetPage = () => {
         if (tweet?.image) {
             navigate(`/tweet/image/${tweet._id}`);
@@ -330,7 +331,7 @@ const Tweet: FC<TweetProps> = ({
                     replies={tweet?.replyCount === 0 ? '' : tweet?.replyCount}
                     retTweets={tweet?.retweetCount === 0 ? '' : tweet?.retweetCount}
                     likes={tweet.totalLikes > 0 ? tweet.totalLikes : ''}
-                    views={''}
+                    views={tweet.viewCount > 0 ? tweet.viewCount : ''}
                     onClickRetweet={onClickRetweet}
                     onClick={() => onClickLike(tweet)}
                     isLiked={isLiked}
