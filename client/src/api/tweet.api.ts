@@ -99,6 +99,36 @@ export const createTweet = async (
     }
 };
 
+export const retweet = async (
+    tweetId: string,
+    text: string | null,
+    image: File | null,
+    audience: string,
+    reply: string
+) => {
+    try {
+        const res = await http.post(
+            `/tweets/retweet/${tweetId}`,
+            {
+                text: text,
+                tweetImage: image,
+                audience: audience,
+                reply: reply,
+            },
+            GETREQUESTOPTIONS_WITH_MULTIFROM()
+        );
+        return res.data;
+    } catch (error: any) {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('context');
+            window.location.href = '/';
+        } else {
+            console.error(error);
+            throw error;
+        }
+    }
+};
+
 export const editTweet = async (
     tweetId: string,
     text: string | null,

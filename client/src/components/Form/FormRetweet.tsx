@@ -6,23 +6,27 @@ import {
     tweetReplyOptions,
     tweetReplyIcons 
 } from '../../data/menuOptions';
-import styles from './FormTweetEdit.module.css';
+import styles from './FormRetweet.module.css';
 import EmojiIcon from '../icons/EmojiIcon';
-import ImageIcon from '../icons/ImageIcon';
 import CalendarIcon from '../icons/CalendarIcon';
 import XmarkIcon from '../icons/XmarkIcon';
 import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAt, faChevronDown, faEarthAfrica, faLock, faUserCheck } from '@fortawesome/free-solid-svg-icons';
 import PopUpMenu from '../ui/PopUpMenu';
-import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, IMAGE_TWEET_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY, TWEET_TYPE } from '../../constants/common.constants';
 import { searchUsers } from '../../api/user.api';
 import UserInfo from '../ui/UserInfo';
 import useClickOutSide from '../../hooks/useClickOutSide';
+import UserInfoRetweet from '../ui/UserInfoRetweet';
+import { getTimeDifference } from '../../utils/helpers.utils';
+import ImageIcon from '../icons/ImageIcon';
 
-interface FormTweetEditProps {
+interface FormRetweetProps {
+    tweet: any;
     value: string;
     tweetTextRef: React.RefObject<HTMLTextAreaElement>;
+    selectedFile: File | null;
     imagePreview?: string | null;
     imagePreviewModal?: string | null;
     isFocused?: boolean;
@@ -39,12 +43,13 @@ interface FormTweetEditProps {
     onClickReplyMenu?: Function;
 
     classNameTextErea?: string;
-    isReplay?: boolean;    
 }
 
-const FormTweetEdit: FC<FormTweetEditProps> = ({
+const FormRetweet: FC<FormRetweetProps> = ({
+    tweet,
     value,
     tweetTextRef,
+    selectedFile,
     imagePreview,
     isFocused = false,
     setIsFocused,
@@ -60,14 +65,38 @@ const FormTweetEdit: FC<FormTweetEditProps> = ({
     onClickReplyMenu,
 
     classNameTextErea,
-    isReplay
 }) => {
 
-    const [inputValue, setInputValue] = useState(value);
+    const [inputValue, setInputValue] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [searchResults, setSearchResults] = useState<any[]>([]);
 
     const searchResultsRef = useRef<HTMLDivElement>(null);
+
+    // regular tweet
+    const tweetId = tweet?._id;
+    const createdAt = getTimeDifference(new Date(tweet?.createdAt).getTime());
+    const tweetImage = tweet?.image;
+    const text = tweet?.text;
+
+    const userId = tweet?.user?._id;
+    const name = tweet?.user?.name;
+    const username = tweet?.user?.username;
+    const avatar = tweet?.user?.avatar;
+    const isVerfied = tweet?.user?.isVerified;
+
+    // reTweet
+    const { retweet } = tweet;
+    const retweetId = retweet?.tweet?._id;
+    const retweetCreatedAt = getTimeDifference(new Date(retweet?.tweet?.createdAt).getTime());
+    const retweetImage = retweet?.tweet?.image;
+    const retweetText = retweet?.tweet?.text;
+
+    const retweetUserId = retweet?.user?._id;
+    const retweetUserName = retweet?.user?.name;
+    const retweetUserUsername = retweet?.user?.username;
+    const isVerfiedRetweetUser = retweet?.user?.isVerified;
+    const retweetUserAvatar = retweet?.user?.avatar;
 
     // close searech result on click outside
     useClickOutSide(searchResultsRef, setShowSuggestions);  
@@ -100,7 +129,7 @@ const FormTweetEdit: FC<FormTweetEditProps> = ({
 
     const handleUserClick = (username: string) => {
         setShowSuggestions(false);
-        const textarea = document.getElementById('form-edit') as HTMLTextAreaElement;
+        const textarea = document.getElementById('form-retweet') as HTMLTextAreaElement;
         if (textarea) {
           textarea.focus();
           const text = textarea.value;
@@ -112,8 +141,27 @@ const FormTweetEdit: FC<FormTweetEditProps> = ({
           }
         }
     };
+
+    const renderColoredText = (text: string) => {
+        const words = text ? text.split(' ') : [];
+        return words.map((word: any, index: any) => {
+            if (word.startsWith('@') || word.startsWith('#')) {
+                return (
+                    <a
+                        key={index}
+                        href={`http://127.0.0.1:3000/profile/${userId}`}
+                        className={styles.coloredText}
+                    >
+                        {word}{' '}
+                    </a>
+                );
+            }
+            return <span key={index}>{word} </span>;
+        });
+    };
       
     const isImageSelected = !!imagePreview;
+    const hasRetweetAndTweetImage = selectedFile;
 
     return (
         <React.Fragment>
@@ -147,15 +195,15 @@ const FormTweetEdit: FC<FormTweetEditProps> = ({
         
                 <textarea
                     className={`${styles.textarea} ${classNameTextErea}`}
-                    id="form-edit"
+                    id="form-retweet"
                     onChange={(e: any) => {
                         handleInputChange(e)
                         onChageImage(e);
-                }}
-                placeholder="What's happening?"
-                ref={tweetTextRef}
-                rows={1}
-                value={inputValue}
+                    }}
+                    placeholder="Add a comment!"
+                    ref={tweetTextRef}
+                    rows={1}
+                    value={inputValue}
                 />
                 {showSuggestions && (
                     <div>
@@ -185,6 +233,97 @@ const FormTweetEdit: FC<FormTweetEditProps> = ({
                         </div>
                     </div>
                 )}
+                {selectedFile && (
+                    <div className={styles.previewImage}>
+                        <XmarkIcon className={styles.cancelBtn} size={'lg'}
+                            onClick={onCancelImagePreview}/>
+                        <img id={imagePreview!} src={imagePreview!} alt='preview tweet img' />
+                    </div>
+                )}
+
+                {!text && tweet.type === TWEET_TYPE.reTweet ? (
+                    <div className={styles.retweetContainer}>
+                        <UserInfoRetweet
+                            userId={retweetUserId}
+                            tweet={retweet}
+                            avatar={
+                                avatar
+                                    ? `${IMAGE_AVATAR_BASE_URL}/${retweetUserAvatar}`
+                                    : undefined
+                            }
+                            name={retweetUserName}
+                            username={retweetUserUsername}
+                            isVerified={isVerfiedRetweetUser}
+                            time={retweetCreatedAt}
+                            isOption={true}
+                            className={styles.userInfoRetweet}
+                        />
+                        <div
+                            className={`${styles.body} ${hasRetweetAndTweetImage ? styles.reTweetWithImageBody : ''}`}
+                            key={retweetId}
+                        >
+                            <p className={`${styles.reTweetText} ${hasRetweetAndTweetImage ? styles.reTweetWithImageText : ''}`}>
+                                {renderColoredText(retweetText && retweetText.length > 150 ? retweetText.substring(0, 150) + '....' : retweetText)}
+                            </p>
+                            {retweetImage && (
+                                <div className={`${styles.reTweetImage} ${hasRetweetAndTweetImage ? styles.reTweetWithImageImage : ''}`}>
+                                    <img
+                                        src={
+                                            retweetImage
+                                                ? `${IMAGE_TWEET_BASE_URL}/${retweetImage}`
+                                                : undefined
+                                        }
+                                        alt=""
+                                    />
+                                </div>
+                            )}
+                        </div>           
+                    </div>
+                ): (
+
+                <div className={styles.retweetContainer}>
+                    <UserInfoRetweet
+                        userId={userId}
+                        tweet={tweet.retweet}
+                        avatar={
+                            avatar
+                                ? `${IMAGE_AVATAR_BASE_URL}/${avatar}`
+                                : undefined
+                        }
+                        name={name}
+                        username={username}
+                        isVerified={isVerfied}
+                        time={createdAt}
+                        isOption={true}
+                        className={styles.userInfoRetweet}
+                    />
+                    <div
+                        className={`${styles.body} ${hasRetweetAndTweetImage ? styles.reTweetWithImageBody : ''}`}
+                        key={tweetId}
+                    >
+                        <p className={`${styles.reTweetText} ${hasRetweetAndTweetImage ? styles.reTweetWithImageText : ''}`}>
+                            {renderColoredText(text && text.length > 150 ? text.substring(0, 150) + '....' : text)}
+                        </p>
+                        {tweetImage && (
+                            <div className={`${styles.reTweetImage} ${hasRetweetAndTweetImage ? styles.reTweetWithImageImage : ''}`}>
+                                <img
+                                    src={
+                                        tweetImage
+                                            ? `${IMAGE_TWEET_BASE_URL}/${tweetImage}`
+                                            : undefined
+                                    }
+                                    alt=""
+                                />
+                            </div>
+                        )}
+                    </div>           
+                </div>
+
+                )}
+
+
+                 {/* {tweetReply} */}
+
                 {isFocused || isImageSelected ? (
                     <PopUpMenu 
                             title={'Who can reply?'}
@@ -223,13 +362,6 @@ const FormTweetEdit: FC<FormTweetEditProps> = ({
                         <hr className={styles.horizontalLine} />
                     </PopUpMenu>
                 ) : null }
-                {imagePreview && (
-                    <div className={styles.previewImage}>
-                        <XmarkIcon className={styles.cancelBtn} size={'lg'}
-                            onClick={onCancelImagePreview}/>
-                        <img id={imagePreview} src={imagePreview} alt='preview tweet img' />
-                    </div>
-                )}
                 <div className={styles.footer}>
                     <div className={styles.icons}>
                         <ImageIcon onChange={onImageUpload} />
@@ -240,7 +372,7 @@ const FormTweetEdit: FC<FormTweetEditProps> = ({
                         value={'Tweet'}
                         type={ButtonType.primary}
                         size={ButtonSize.small}
-                        isDisabled={value.length > 0 || imagePreview ? false : true}
+                        isDisabled={false}
                         onClick={() => setIsFocused(false)}
                     />
                 </div>
@@ -249,4 +381,4 @@ const FormTweetEdit: FC<FormTweetEditProps> = ({
     );
 };
 
-export default FormTweetEdit;
+export default FormRetweet;

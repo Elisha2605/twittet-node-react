@@ -1,5 +1,11 @@
 import { ObjectId } from 'mongodb';
+import Bookmark from 'src/model/bookmark.model';
+import Follow from 'src/model/follow.model';
+import Like from 'src/model/like.model';
+import Notification from 'src/model/notification.model';
+import Reply from 'src/model/reply.model';
 import Tweet from 'src/model/tweet.model';
+import TwitterCircle from 'src/model/twitterCircle.model';
 import User from 'src/model/user.model';
 
 const users = [
@@ -62,10 +68,21 @@ export const seedUsers = async () => {
 
 export const clearDatabase = async () => {
     try {
-        const users = await User.deleteMany({});
         const tweets = await Tweet.deleteMany({});
-        console.log(users);
+        const bookmark = await Bookmark.deleteMany({});
+        const followers = await Follow.deleteMany({});
+        const likes = await Like.deleteMany({});
+        const notifications = await Notification.deleteMany({});
+        const replies = await Reply.deleteMany({});
+        const twitterCircle = await TwitterCircle.deleteMany({});
+
         console.log(tweets);
+        console.log(followers);
+        console.log(likes);
+        console.log(notifications);
+        console.log(replies);
+        console.log(twitterCircle);
+        console.log(bookmark);
     } catch (err) {
         console.error(err);
     }

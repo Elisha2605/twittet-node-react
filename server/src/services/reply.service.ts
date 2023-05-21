@@ -1,4 +1,4 @@
-import mongoose, { model } from 'mongoose';
+import mongoose from 'mongoose';
 import { TWEET_AUDIENCE, TWEET_REPLY } from 'src/constants/tweet.constants';
 import Follow from 'src/model/follow.model';
 import Reply from 'src/model/reply.model';
@@ -221,6 +221,7 @@ export const createReply = async (
         if (!savedReply) {
             throw CustomError('Could not create reply', 500);
         }
+        await tweet.updateOne({ $inc: { replyCount: 1 } });
         const populatedReply = await newReply.populate({
             path: 'user',
             select: 'name username avatar coverImage isVerified isProtected',

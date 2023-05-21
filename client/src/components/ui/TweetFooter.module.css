@@ -16,6 +16,7 @@
     gap: 0.2rem;
     padding-left: 3rem;
     color: var(--color-secondary);
+    
 }
 .itemOnTweetReply {
     padding-left: 1rem;
@@ -37,6 +38,11 @@
     border-radius: 50%;
     cursor: pointer;
     transition: 0.1s ease-in;
+}
+
+.faRepeat {
+    position: relative;
+    top: 3px;
 }
 
 .faComment:hover {

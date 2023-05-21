@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styles from './App.module.css';
 import Navigation from './components/navigation/Navigation';
 import Layout from './Layout.module.css';
@@ -15,17 +15,20 @@ import Home from './pages/home/Home';
 import { ModalContext } from './context/modal.context';
 import Following from './pages/follow/Following';
 import Follower from './pages/follow/Follower';
-import { deleteTweet } from './api/tweet.api';
+import { deleteTweet, retweet } from './api/tweet.api';
 import { IMAGE_TWEET_BASE_URL, TWEET_MENU } from './constants/common.constants';
-import FormNavigationTweet from './pages/tweet/tweet-modals/NavigationTweetModal';
+import NavigationTweetModal from './pages/tweet/tweet-modals/NavigationTweetModal';
 import EditTweetModal from './pages/tweet/tweet-modals/EditTweetModal';
 import TweetPage from './pages/tweet/TweetPage';
 import TweetPageNoImage from './pages/tweet/TweetPageNoImage';
 import FollowerRequests from './pages/follow/FollowerRequests';
+import RetweetModal from './pages/tweet/tweet-modals/RetweetModal';
 
 function App() {
 
     const [showBackground, setShowBackground] = useState(false); // Add state to control whether to show the blue background
+
+    const [tweet, setTweet] = useState<any>();
 
     // Home Form states
     const [selectedFileHome, setSelectedFileHome] = useState<File | null>(null);
@@ -48,6 +51,11 @@ function App() {
     const [valueEditModal, setValueEditModal] = useState('');
     const [previewEditImageModal, setPreviewEditImageModal] = useState<string | null>(null);
 
+    // Modal Form Retweet
+    const [selectedFileRetweetModal, setSelectedFileRetweetModal] = useState<File | null>(null);
+    const [previewImageRetweetModal, setPreviewImageRetweetModal] = useState<string | null>(null);
+    const [valueRetweetModal, setValueRetweetModal] = useState('');
+
     // useContexts
     const { modalOpen, openModal } = useContext(ModalContext);
     const context = useContext(AuthContext);
@@ -60,6 +68,8 @@ function App() {
     const handleEditTweet = (editedTweet: any) => {
         setOnEditTweets(editedTweet)
     }
+
+    console.log();
     
     // On Login blue background
     const handleLoginSuccess = () => {
@@ -69,7 +79,6 @@ function App() {
         }, 1000)
     };
 
-    //// Temp functions - start //
     const handleTextAreaOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const val = e.target?.value;
         if (modalOpen) {
@@ -129,10 +138,31 @@ function App() {
             setValueEditModal(tweet.text);
             const image = tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`;
             setPreviewEditImageModal(image);
-            console.log(image);
         } 
     };
-    //// Temp functions - end ///
+
+    const onReTweet = async (option: any, tweet: any) => {
+        if(option === TWEET_MENU.retweet) {
+            const res = await retweet(tweet?._id, null, tweet.image, tweet.audience, tweet.reply);
+            if (res.message === "Undone Retweet") {
+                setOnDeleteTweet(tweet)
+            } else {
+                const newTweet = {
+                    ...res.tweet
+                };
+                handleAddTweet(newTweet)
+                console.log(res);
+            }
+        } else if (option === TWEET_MENU.quoteTweet) {
+            // changle the name of the states
+            setTweet(tweet)
+            openModal('retweet-modal')
+            setEditTweetModal(tweet);
+            setValueEditModal(tweet.text);
+            const image = tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`;
+            setPreviewEditImageModal(image);
+        }
+    }  
 
     // Index page
     if (!ctx?.isLoggedIn) {
@@ -164,7 +194,7 @@ function App() {
                     <BrowserRouter>
                         <div className={Layout.navigation}>
                             <Navigation />
-                            <FormNavigationTweet 
+                            <NavigationTweetModal 
                                 selectedFile={selectedFileModal}
                                 previewImage={previewImageModal}                                    
                                 value={valueModal}
@@ -187,6 +217,19 @@ function App() {
                                 
                                 editTweetModal={editTweetModal}
                             />
+                            <RetweetModal 
+                                originalTweet={tweet}
+                                selectedFile={selectedFileModal}
+                                previewImage={previewEditImageModal}                                    
+                                value={valueEditModal}
+                                clearTweetForm={clearTweetForm}
+                                handleTextAreaOnChange={handleTextAreaOnChange}
+                                handleCanselPreviewImage={handleCanselPreviewImage}
+                                handleImageUpload={handleImageUpload}
+                                onAddTweet={handleAddTweet}
+                                
+                                editTweetModal={editTweetModal}
+                            />
                         </div>
                         <div className={Layout.page}>
                             <Routes>
@@ -203,6 +246,7 @@ function App() {
                                         handleCanselPreviewImage={handleCanselPreviewImage}
                                         handleImageUpload={handleImageUpload} 
                                         clearTweetForm={clearTweetForm}
+                                        onClickRetweet={onReTweet}
                                     />
                                 }/>
                                 <Route path="/explore" element={<Explore />} />

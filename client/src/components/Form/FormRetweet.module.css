@@ -1,0 +1,176 @@
+.textarea {
+    border: none;
+    resize: none;
+    width: 100%;
+    font-family: inherit;
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-200);
+    margin-top: 0.8rem;
+    margin-bottom: 1rem;
+}
+.textarea:focus {
+    outline: none;
+}
+
+.textarea::placeholder {
+    color: var(--color-secondary);
+}
+
+/* AUDIENCE */
+
+.tweetPrivacyOptions {
+    position: relative;
+    top: 0.5rem;
+    left: 9.2rem;
+}
+
+.privacyPopUpBox {
+    width: 20rem;
+}
+
+.everyone, .twitterCirlce, .replyPrivacyOptions, .onlyTweetCircle {
+    display: flex;
+    font-size: 0.9rem;
+    font-weight: var(--font-weight-600);
+    display: inline-block;
+    border-radius: 1rem;
+    color: var(--color-primary);
+    cursor: pointer;
+}
+
+.onlyTweetCircle {
+    color: var(--color-primary-light);
+}
+.onlyTweetCircle:hover {
+    background-color: transparent !important;
+}
+
+.twitterCirlce {
+    color: var(--color-green);
+    border: 1px solid var(--color-green) !important;
+}
+.twitterCirlce:hover {
+    background-color: var(--color-green-lighter) !important;
+    transition: 0.1s ease-in-out;
+}
+
+.everyone, .twitterCirlce {
+    border: var(--border-light);
+    margin-bottom: 1rem;
+    padding: 0 0.5rem;
+}
+
+.replyPrivacyOptions {
+    position: relative;
+    margin-top: 0.7rem;
+    right: 0.5rem;
+    padding: 0 0.7rem;
+}
+
+.everyone span:nth-child(1), 
+.twitterCirlce span:nth-child(1),
+.replyPrivacyOptions span:nth-child(1){
+    padding-right: 0.5rem;
+}
+
+.everyone:hover, 
+.twitterCirlce:hover, 
+.replyPrivacyOptions:hover {
+    background-color: var(--color-primary-lighter);
+    transition: 0.1s ease-in-out;
+}
+
+.previewImage {
+    position: relative;
+    width: 100%;
+}
+
+.previewImage img {
+    width: 100%;
+    border-radius: 1rem;
+    margin-top: 1rem;
+}
+.cancelBtn {
+    position: absolute;
+    left: 0.2rem;
+    top: 1.2rem;
+    color: var(--color-white);
+    background-color: var(--color-black-light);
+}
+
+/* WHO CAN REPLY BOX */
+.tweetReplyOptions {
+    position: relative;
+    bottom: 13.5rem;
+    left: -14.5rem;
+}
+
+.tweetReplyPopUpBox {
+    width: 22rem;
+}
+
+.horizontalLine {
+    border: none;
+    border-top: var(--border-light);
+    margin: 10px 0;
+    width: 100%;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.searchResults {
+    width: 60%;
+    position: absolute;
+    background: var(--color-white);
+    box-shadow: 0 0 0 1px rgba(15, 15, 15, 0.001), 0 8px 16px rgba(15, 15, 15, 0.4);
+    border-radius: 1rem;
+    overflow: hidden;
+    z-index: 90;
+}
+
+/* Re-tweet with no image */
+
+.retweetContainer {
+
+    border-radius: 1rem;
+    border: 1.5px solid var(--color-secondary-light);
+}
+
+.reTweetText {
+    padding: 0 1rem 1rem 1rem;
+}
+
+.reTweetImage {
+    width: 100%;
+    height: 15rem;
+}
+
+.reTweetImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0 0 1rem 1rem;
+}
+
+/* Re-tweet with image */
+.reTweetWithImageBody {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    padding: 0.2rem 1rem 0 1rem;
+
+}
+.reTweetWithImageImage {
+    max-width: 6rem;
+    height: 6rem;
+}
+.reTweetWithImageImage img {
+    width: 100%;
+    height: 100%;
+    border-radius: 1rem;
+}
