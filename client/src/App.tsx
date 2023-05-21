@@ -23,6 +23,7 @@ import TweetPage from './pages/tweet/TweetPage';
 import TweetPageNoImage from './pages/tweet/TweetPageNoImage';
 import FollowerRequests from './pages/follow/FollowerRequests';
 import RetweetModal from './pages/tweet/tweet-modals/RetweetModal';
+import FollowStatus from './pages/follow/FollowStatus';
 
 function App() {
 
@@ -265,8 +266,7 @@ function App() {
                                     onEditTweet={onEditTweet}
                                     onClickTweetMenu={handleTweetMenuOptionClick} />} 
                                 />
-                                <Route path="/following/:id" element={<Following />} />
-                                <Route path="/followers/:id" element={<Follower />} />
+                                <Route path="/follow/:path/:id/*" element={<FollowStatus />} />
                                 <Route path="/tweet/image/:id" element={ <TweetPage />} />
                                 <Route path="/tweet/:id" element={ <TweetPageNoImage />} />
                                 <Route path="/follower-requests" element={ <FollowerRequests />} />

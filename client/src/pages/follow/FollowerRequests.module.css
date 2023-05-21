@@ -35,6 +35,10 @@
     gap: 0.5rem;
 }
 
+.main {
+    position: relative;
+}
+
 .declineBtn, .acceptBtn {
     width: 8rem;
     border: 0;

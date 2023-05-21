@@ -56,62 +56,31 @@ const Following = () => {
 
     return (
         <React.Fragment>
-            <div className={Layout.mainSectionContainer}>
-                <div className={Layout.mainSection}>
-                    {/* Home page - start */}
-                    <Header border={true}>
-                        <div className={styles.headerItems}>
-                            <ArrowLeftIcon onClick={() => {navigate(-1)}} />
-                            <HeaderTitle
-                                title={user?.name}
-                                subTitle={`@${user?.username}`}
-                            />
-                        </div>
-                        <HorizontalNavBar className={styles.homeNaveBar}>
-                            <div className={styles.active}>
-                                Following
-                            </div>
-                            <div className={''} onClick={() => navigate(`/followers/${id}`)}>
-                                Followers
-                            </div>
-                        </HorizontalNavBar>
-                    </Header>
-
-                    <div className={styles.main}>
-                        {followings.map((follow) => (
-                            <div key={follow._id} className={styles.followingItem} onClick={() => navigate(`/profile/${follow.user._id}`)}>    
-                                <UserInfo
+            <div className={styles.main}>
+                {followings.map((follow) => (
+                    <div key={follow._id} className={styles.followingItem} onClick={() => navigate(`/profile/${follow.user._id}`)}>    
+                        <UserInfo
+                            userId={follow.user._id}
+                            avatar={follow.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${follow.user?.avatar}`}
+                            name={follow.user?.name}
+                            isVerified={follow.user.isVerified}
+                            username={follow.user?.username}
+                            className={styles.userInfoWrapper}
+                        >
+                            {authUser?._id !== follow.user._id && (
+                                <FollowButton
                                     userId={follow.user._id}
-                                    avatar={follow.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${follow.user?.avatar}`}
-                                    name={follow.user?.name}
-                                    isVerified={follow.user.isVerified}
-                                    username={follow.user?.username}
-                                    className={styles.userInfoWrapper}
-                                >
-                                    {authUser?._id !== follow.user._id && (
-                                        <FollowButton
-                                            userId={follow.user._id}
-                                            type={ButtonType.secondary}
-                                            size={ButtonSize.small}
-                                        />
-                                    )}
-                                </UserInfo>
-                            </div>
-                        ))}
+                                    type={ButtonType.secondary}
+                                    size={ButtonSize.small}
+                                />
+                            )}
+                        </UserInfo>
                     </div>
-                </div>
-                
-                <div>
-                    <Header border={false}>
-                        <SearchBar width={74} />
-                    </Header>
-                    <Aside className={styles.aside}>
-                        <WhoToFollow />
-                    </Aside>
-                </div>
+                ))}
             </div>
         </React.Fragment>
     );
 };
+
 
 export default Following;
