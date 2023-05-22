@@ -14,11 +14,18 @@ export const requestPasswordReset = async (
 ): Promise<ApiResponse<any>> => {
     try {
         const user = await User.findOne({ _id: userId, email: email });
-        console.log(`Password initiation: ${user.email}`);
+
 
         if (!user) {
-            throw CustomError('User does not exists', 400);
+            return {
+                success: true,
+                message: 'Email not found',
+                status: 404,
+                payload: {},
+            };
         }
+
+        console.log(`Password initiation: ${user.email}`);
 
         const expiry = new Date(new Date().getTime() + 30 * 60 * 1000);
 
@@ -56,6 +63,66 @@ export const requestPasswordReset = async (
             message: 'Successfully sent password reset request and Email',
             status: 200,
             payload: result,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};
+
+export const verifyPasswordVerificationToken = async (
+    userId: string,
+    token: string
+): Promise<ApiResponse<any>> => {
+    try {
+        const user = await User.findById(userId);
+
+        if (!user) {
+            throw CustomError('User does not exists', 400);
+        }
+
+        const verificationToken = await PasswordReset.findOne({
+            user: user._id,
+            token: token,
+        });
+
+        if (!verificationToken) {
+            return {
+                success: true,
+                message: 'Invalid password verification code',
+                status: 400,
+                payload: {},
+            };
+        }
+
+        if (verificationToken.isTokenUsed) {
+            return {
+                success: true,
+                message: 'password verification code already used',
+                status: 400,
+                payload: {},
+            };
+        }
+
+        if (verificationToken.expiry.getTime() < new Date().getTime()) {
+            return {
+                success: true,
+                message: 'Session expired',
+                status: 400,
+                payload: {},
+            };
+        }
+
+        return {
+            success: true,
+            message: 'Valid password code verification!',
+            status: 200,
+            payload: verificationToken.token,
         };
     } catch (error) {
         const errorResponse: ErrorResponse = {

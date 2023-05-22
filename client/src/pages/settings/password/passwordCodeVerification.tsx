@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../../context/user.context';
 import Button, { ButtonSize, ButtonType } from '../../../components/ui/Button';
 import { useForm } from 'react-hook-form';
+import { verifyPasswordVerificationToken } from '../../../api/passwordReset.api';
+
 
 const PassworConfirmation: React.FC<{}> = ({}) => {
     const [user, setUser] = useState<any>(null);
@@ -37,16 +39,21 @@ const PassworConfirmation: React.FC<{}> = ({}) => {
         getAuthUser();
     }, []);
 
-    const handleEmailClick = (settingName: string) => {
+    const handleNavigate = (settingName: string) => {
         navigate(`/settings/${settingName}`);
     };
 
     const handleSubmitForm = handleSubmit(async (data: any) => {
         setLoading(true);
         if (data) {
-            console.log(data);
-            handleEmailClick('password-reset')
-        }   
+            const { success, status, message, token } = await verifyPasswordVerificationToken(data.token);
+            if (status !== 200) {
+                setServerError(message);
+            } else if (success) {
+                localStorage.setItem('resetToken', token);
+                handleNavigate('password-reset');
+            }
+        }
         setLoading(false);
     });
 
@@ -86,7 +93,9 @@ const PassworConfirmation: React.FC<{}> = ({}) => {
                                 {...register('token', {
                                     required:
                                         'Code verification field is required.',
-                                    validate: (value) => value.length === 8 || "Invalid verification code"
+                                    validate: (value) =>
+                                        value.length === 8 ||
+                                        'Invalid verification code',
                                 })}
                                 className={styles.formInput}
                                 type="text"
@@ -113,6 +122,7 @@ const PassworConfirmation: React.FC<{}> = ({}) => {
                             isDisabled={email.length === 0}
                             className={styles.btn}
                             onClick={() => {}}
+                            loading={isLoading}
                         />
                     </form>
                 </Header>

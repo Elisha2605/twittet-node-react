@@ -31,6 +31,7 @@ export interface IUser extends mongoose.Document {
     refreshToken: mongoose.Types.DocumentArray<ISession>;
     setPassword: any;
     changePassword: any;
+    comparePassword: any;
 }
 
 export const userModel = {

@@ -17,6 +17,7 @@ import ProtectedSettings from './account/protectedSettings';
 import PassworConfirmation from './password/passwordCodeVerification';
 import PasswordReset from './password/passwordReset';
 
+
 const Settings = () => {
     const { path } = useParams<{ path: string }>();
 
@@ -35,6 +36,8 @@ const Settings = () => {
       
     };
 
+    
+
     const ctx = useContext(AuthContext);
     useEffect(() => {
         const getAuthUser = async () => {
@@ -44,7 +47,6 @@ const Settings = () => {
         getAuthUser();
     }, []);
     
-
     return (
         <React.Fragment>
             <div className={Layout.mainSectionSettings}>
@@ -99,7 +101,7 @@ const Settings = () => {
                         {path === 'protected' && <ProtectedSettings />}
 
                         {/* Password Settings */}
-                        {path === 'verification' && <PassworConfirmation />}
+                        {path === 'verification' && <PassworConfirmation /> }
                         {path === 'password-reset' && <PasswordReset />}
 
                     </div>

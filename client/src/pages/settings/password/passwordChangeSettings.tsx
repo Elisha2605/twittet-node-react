@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../../context/user.context';
 import Button, { ButtonSize, ButtonType } from '../../../components/ui/Button';
 import { useForm } from 'react-hook-form';
+import { requestPasswordReset } from '../../../api/passwordReset.api';
 
 const PasswordChangeSettings: React.FC<{ }> = ({ }) => {
     const [user, setUser] = useState<any>(null);
@@ -44,8 +45,14 @@ const PasswordChangeSettings: React.FC<{ }> = ({ }) => {
     const handleSubmitForm = handleSubmit(async (data: any) => {
         setLoading(true);
         if (data) {
-            
-            handleEmailClick('verification')
+            const { message, status, success } = await requestPasswordReset(data.email);
+            if (status !== 200) {
+                setServerError(message)
+                return;
+            }
+            if (success) {
+                handleEmailClick('verification')
+            }
         }   
         setLoading(false);
     });

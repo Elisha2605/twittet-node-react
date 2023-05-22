@@ -1,6 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
-import { requestPasswordReset, resetPassword } from 'src/services/passwordReset.service';
+import {
+    requestPasswordReset,
+    resetPassword,
+    verifyPasswordVerificationToken,
+} from 'src/services/passwordReset.service';
 
 export const requestPasswordResetController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -15,7 +19,31 @@ export const requestPasswordResetController = asyncHandler(
                     success: success,
                     status: status,
                     message: message,
-                    tweets: payload,
+                    request: payload,
+                });
+            } else {
+                res.status(status).json({ success, message });
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+export const verifyPasswordVerificationTokenController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req.user._id;
+        const token = req.params.token;
+
+        try {
+            const { success, message, status, payload } =
+                await verifyPasswordVerificationToken(userId, token);
+            if (success) {
+                res.json({
+                    success: success,
+                    status: status,
+                    message: message,
+                    token: payload,
                 });
             } else {
                 res.status(status).json({ success, message });
@@ -43,7 +71,7 @@ export const resetPasswordController = asyncHandler(
                     success: success,
                     status: status,
                     message: message,
-                    tweets: payload,
+                    reset: payload,
                 });
             } else {
                 res.status(status).json({ success, message });

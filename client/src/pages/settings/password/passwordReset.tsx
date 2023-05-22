@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../../context/user.context';
 import Button, { ButtonSize, ButtonType } from '../../../components/ui/Button';
 import { useForm } from 'react-hook-form';
+import { resetPassword } from '../../../api/passwordReset.api';
+import { logout } from '../../../api/auth.api';
 
 const PasswordReset: React.FC<{}> = ({}) => {
 
@@ -43,14 +45,24 @@ const PasswordReset: React.FC<{}> = ({}) => {
         getAuthUser();
     }, []);
 
+    const token = localStorage.getItem('resetToken');
+
     const handleSubmitForm = handleSubmit(async (data: any) => {
         setLoading(true);
         if (data) {
-            console.log(data);
 
-            // logout user
-        }
+        const { success, status, message } = await resetPassword(data.password, token as string) 
         setLoading(false);
+        
+        if (status !== 200) {
+            setServerError(message)
+            return;
+        }
+
+        if (success) {
+            await logout();
+        }
+        }
     });
 
     return (
@@ -161,6 +173,7 @@ const PasswordReset: React.FC<{}> = ({}) => {
                             size={ButtonSize.medium}
                             className={styles.btn}
                             onClick={() => {}}
+                            loading={isLoading}
                         />
                     </form>
                 </Header>
