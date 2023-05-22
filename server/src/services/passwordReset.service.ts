@@ -2,6 +2,11 @@ import PasswordReset from 'src/models/passwordReset.model';
 import User from 'src/models/user.model';
 import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
 import { CustomError, generatePasswordToken } from 'src/utils/helpers';
+import {
+    getEmailTemplateByName,
+    injectVariables,
+} from './emailTemplate.service';
+import { emailConfig, sendEmail } from 'src/config/nodemailer.config';
 
 export const requestPasswordReset = async (
     userId: string,
@@ -28,9 +33,27 @@ export const requestPasswordReset = async (
 
         const result = await newPasswordInitiation.save();
 
+        const emailTemplate = await getEmailTemplateByName('resetpassword');
+
+        const html = injectVariables(emailTemplate.html, {
+            token: token,
+        });
+
+        emailConfig();
+        const mailData = {
+            sender: emailTemplate.sender,
+            senderMail: 'customertwitter23@gmail.com',
+            recipients: [user.email],
+            subject: emailTemplate.subject,
+            textBody: '',
+            htmlBody: html,
+        };
+
+        sendEmail(mailData);
+
         return {
             success: true,
-            message: 'Successfully sent password reset request',
+            message: 'Successfully sent password reset request and Email',
             status: 200,
             payload: result,
         };
