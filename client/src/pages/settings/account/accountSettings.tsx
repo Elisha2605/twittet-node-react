@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../../../components/header/Header';
 import HeaderTitle from '../../../components/header/HeaderTitle';
 
-const AccountSettings: React.FC<{ path: string }> = ({ path }) => {
+const AccountSettings: React.FC<{ }> = ({ }) => {
     const [user, setUser] = useState<any>(null);
 
     const navigate = useNavigate();

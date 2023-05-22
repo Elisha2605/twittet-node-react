@@ -8,6 +8,6 @@ import { verifyUser } from 'src/utils/jwt.util';
 const passwordRouter = Router();
 
 passwordRouter.post('/request', verifyUser(), requestPasswordResetController);
-passwordRouter.post('/reset', verifyUser(), resetPasswordController);
+passwordRouter.patch('/reset', verifyUser(), resetPasswordController);
 
 export default passwordRouter;

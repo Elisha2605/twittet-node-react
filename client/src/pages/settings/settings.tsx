@@ -14,6 +14,8 @@ import AccountSettings from './account/accountSettings';
 import Email from './account/email';
 import Username from './account/username';
 import ProtectedSettings from './account/protectedSettings';
+import PassworConfirmation from './password/passwordCodeVerification';
+import PasswordReset from './password/passwordReset';
 
 const Settings = () => {
     const { path } = useParams<{ path: string }>();
@@ -87,7 +89,7 @@ const Settings = () => {
                     <Aside className={styles.aside}>
                     <div className={styles.test}>
                         {/* Navigation */}
-                        {path === 'account' && <AccountSettings path={path} />}
+                        {path === 'account' && <AccountSettings />}
                         {path === 'password-change' && <PasswordChangeSettings />}
                         {path === 'twitter-circle' && <TwitterCircleSettings />}
 
@@ -95,6 +97,10 @@ const Settings = () => {
                         {path === 'username' && <Username />}
                         {path === 'email' && <Email />}
                         {path === 'protected' && <ProtectedSettings />}
+
+                        {/* Password Settings */}
+                        {path === 'verification' && <PassworConfirmation />}
+                        {path === 'password-reset' && <PasswordReset />}
 
                     </div>
                     </Aside>

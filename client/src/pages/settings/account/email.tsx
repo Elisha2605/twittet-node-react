@@ -11,12 +11,12 @@ import Button, { ButtonSize, ButtonType } from '../../../components/ui/Button';
 const Email: React.FC<{}> = () => {
     const [user, setUser] = useState<any>(null);
     const [email, setName] = useState('');
+    const [serverError, setServerError] = useState('');
+    const [isLoading, setLoading] = useState(false);
 
 
     const navigate = useNavigate();
 
-    const [serverError, setServerError] = useState('');
-    const [isLoading, setLoading] = useState(false);
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         defaultValues: {

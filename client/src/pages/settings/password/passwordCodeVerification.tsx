@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import styles from './passwordChangeSettings.module.css';
+import styles from './passwordCodeVerification.module.css';
 import Header from '../../../components/header/Header';
 import ArrowLeftIcon from '../../../components/icons/ArrowLeftIcon';
 import HeaderTitle from '../../../components/header/HeaderTitle';
@@ -8,7 +8,7 @@ import AuthContext from '../../../context/user.context';
 import Button, { ButtonSize, ButtonType } from '../../../components/ui/Button';
 import { useForm } from 'react-hook-form';
 
-const PasswordChangeSettings: React.FC<{ }> = ({ }) => {
+const PassworConfirmation: React.FC<{}> = ({}) => {
     const [user, setUser] = useState<any>(null);
     const [email, setName] = useState('');
     const [serverError, setServerError] = useState('');
@@ -23,7 +23,7 @@ const PasswordChangeSettings: React.FC<{ }> = ({ }) => {
         formState: { errors },
     } = useForm({
         defaultValues: {
-            email: '',
+            token: '',
         },
     });
 
@@ -44,8 +44,8 @@ const PasswordChangeSettings: React.FC<{ }> = ({ }) => {
     const handleSubmitForm = handleSubmit(async (data: any) => {
         setLoading(true);
         if (data) {
-            
-            handleEmailClick('verification')
+            console.log(data);
+            handleEmailClick('password-reset')
         }   
         setLoading(false);
     });
@@ -61,12 +61,12 @@ const PasswordChangeSettings: React.FC<{ }> = ({ }) => {
                                     navigate(-1);
                                 }}
                             />
-                            <HeaderTitle title={'Change password'} />
+                            <HeaderTitle title={'We sent you a code'} />
                         </div>
                     </div>
                     <p className={styles.message}>
-                        Enter the email associated with your account to change
-                        your password.
+                        Check your email to get your verification code. Note
+                        that the verification code will expire in 30 minutes.
                     </p>
                     <form
                         className={styles.formControl}
@@ -79,32 +79,30 @@ const PasswordChangeSettings: React.FC<{ }> = ({ }) => {
                         )}
                         <div
                             className={`${styles.inputWrapper} ${
-                                errors.email ? styles.inputError : ''
+                                errors.token ? styles.inputError : ''
                             }`}
                         >
                             <input
-                                {...register('email', {
-                                    required: 'Email field is required.',
-                                    pattern: {
-                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                        message: 'Invalid email address',
-                                    },
+                                {...register('token', {
+                                    required:
+                                        'Code verification field is required.',
+                                    validate: (value) => value.length === 8 || "Invalid verification code"
                                 })}
                                 className={styles.formInput}
                                 type="text"
-                                id="email"
-                                name="email"
+                                id="token"
+                                name="token"
                                 placeholder=" "
                                 value={email}
                                 onChange={(e) => setName(e.target.value)}
                                 contentEditable={true}
                             />
-                            <label className={styles.formLabel} htmlFor="email">
-                                Email
+                            <label className={styles.formLabel} htmlFor="token">
+                                Enter your code
                             </label>
-                            {errors.email && (
+                            {errors.token && (
                                 <p className={styles.errorMsg}>
-                                    {errors.email?.message}
+                                    {errors.token?.message}
                                 </p>
                             )}
                         </div>
@@ -123,4 +121,4 @@ const PasswordChangeSettings: React.FC<{ }> = ({ }) => {
     );
 };
 
-export default PasswordChangeSettings;
+export default PassworConfirmation;
