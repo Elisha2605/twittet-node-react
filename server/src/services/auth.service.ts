@@ -1,5 +1,5 @@
 import { getRefreshToken, getToken, verifyToken } from 'src/utils/jwt.util';
-import User, { IUser } from 'src/model/user.model';
+import User, { IUser } from 'src/models/user.model';
 import { CustomError } from 'src/utils/helpers';
 import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
 

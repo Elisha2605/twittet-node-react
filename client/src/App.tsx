@@ -192,7 +192,7 @@ function App() {
              </div>} {/* Conditionally render the blue background */}
                 <div>
                     <BrowserRouter>
-                        <div className={Layout.navigation}>
+                        <div className={`${Layout.navigation}`}>
                             <Navigation />
                             <NavigationTweetModal 
                                 selectedFile={selectedFileModal}

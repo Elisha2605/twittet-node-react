@@ -150,7 +150,6 @@ const HomeEditTwitterCirlceModal: FC<HomeEditTwitterCirlceModalProps> = ({}) => 
                 )}
                 {activeTab === 'recommended' && (
                     <div className={styles.recommendation}>
-                        {}
                         <p className={styles.twitterCircleMsg}>
                             People won’t be notified when you edit your Twitter Circle. Anyone 
                             you add will be able to see your previous Twitter Circle Tweets
