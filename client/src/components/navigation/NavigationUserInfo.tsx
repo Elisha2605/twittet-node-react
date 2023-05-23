@@ -18,6 +18,7 @@ const NavigationUserInfo: FC<NavigationUserInfoProps> = ({
     menuIcons,
     onClickOption
 }) => {
+
     return (
         <React.Fragment>
             <div className={`${styles.container}`}>

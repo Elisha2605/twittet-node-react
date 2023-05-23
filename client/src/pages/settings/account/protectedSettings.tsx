@@ -29,10 +29,17 @@ const ProtectedSettings: React.FC<{}> = () => {
 
     }, [ctx]);
 
+    const handleIsProtectedClick = (settingName: string) => {
+        navigate(`/settings/${settingName}`);
+    };
+
     const handleToggle = async (value: boolean) => {
         setIsUserProtected(value)
+        
         if (user) {
             await editProtected(value);
+            handleIsProtectedClick('protected'); //this will update the protected icon in the nav
+            navigate(-1); // prevents pushing the history forward
         }
     };
 

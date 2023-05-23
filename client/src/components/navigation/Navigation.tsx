@@ -25,7 +25,6 @@ import {
     navUserMenuOptions,
 } from '../../data/menuOptions';
 import {
-    IMAGE_AVATAR_BASE_URL,
     MORE_NAV_OPTION,
 } from '../../constants/common.constants';
 import { ModalContext } from '../../context/modal.context';

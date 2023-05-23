@@ -69,7 +69,6 @@ const UserInfo: FC<UserInfoProps> = ({
             navigate(`/profile/${userId}`)
         }
     }
-    
 
     return (
         <React.Fragment>
@@ -94,11 +93,11 @@ const UserInfo: FC<UserInfoProps> = ({
                                         <img src={faLockSolid} alt="" />
                                     </div>
                                 )}
-                                <div>
+                                <span>
                                     {isVerified && (
                                         <img className={styles.certifiedIcon} src={Certified} alt="" />
                                     )}
-                                </div>
+                                </span>
                                
                                 <p className={styles.username} onClick={onNavigateToProfile}>
                                     @{isReply && username.length > 6 ? username.substring(0, 6) + '...' : username} {time && ` · ${time}`}{' '}
@@ -122,9 +121,9 @@ const UserInfo: FC<UserInfoProps> = ({
                                 <p className={styles.name}>
                                 {name}{' '}
                                 {user?.isProtected && (
-                                    <div className={styles.isProtected}>
+                                    <span className={styles.isProtected}>
                                         <img src={faLockSolid} alt="" />
-                                    </div>
+                                    </span>
                                 )}
                                 {isVerified && (
                                         <img className={styles.certifiedIcon} src={Certified} alt="" />

@@ -181,7 +181,6 @@ export const editUsernameController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.user._id;
         const username = req.body.username;
-        console.log(req);
         if (!username) {
             res.status(400).json({ InvalidInputError: 'Invalid Input' });
         }

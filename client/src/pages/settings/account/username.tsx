@@ -17,7 +17,6 @@ const Username: React.FC<{}> = () => {
     const navigate = useNavigate();
 
     const [serverError, setServerError] = useState('');
-    const [isLoading, setLoading] = useState(false);
     
     // get auth user
     const ctx = useContext(AuthContext);
@@ -35,24 +34,24 @@ const Username: React.FC<{}> = () => {
         }
     });
     
-    const checUsernameExistence = async (email: string): Promise<boolean> => {
+    const checUsernameExistence = async (username: string): Promise<boolean> => {
         try {
-            const { success, usernames } = await searchUserByUserName(email);
+            const { success, usernames } = await searchUserByUserName(username);
 
             return success && usernames.length > 0;
         } catch (error) {
-            console.log('Error checking email existence:', error);
+            console.log('Error checking username existence:', error);
             return false;
         }
     };
 
-    const handleChangeEmail = async (e: ChangeEvent<HTMLInputElement>) => {
-        const inputEmail = e.target.value;
-        setUsername(inputEmail);
+    const handleChangeUsername = async (e: ChangeEvent<HTMLInputElement>) => {
+        const inputUsername = e.target.value;
+        setUsername(inputUsername);
 
-        if (inputEmail !== user?.email) {
-            const emailExists = await checUsernameExistence(inputEmail);
-            if (emailExists) {
+        if (inputUsername !== user?.username) {
+            const usernameExists = await checUsernameExistence(inputUsername);
+            if (usernameExists) {
                 setServerError('That username has been taken. Please choose another.');
             } else if (username.length < 5) {
                 setServerError('Your username must be longer than 4 characters.');
@@ -66,15 +65,13 @@ const Username: React.FC<{}> = () => {
         }
     };
 
-    const handleEmailClick = (settingName: string) => {
+    const handleUsernameClick = (settingName: string) => {
         navigate(`/settings/${settingName}`);
     };
 
     const handleSubmitForm = handleSubmit(async (data: any) => {
-        setLoading(true);
         if (data) {
             if (serverError || (username === user?.username)) {
-                setLoading(false);
                 return; 
               }
 
@@ -86,10 +83,9 @@ const Username: React.FC<{}> = () => {
             }
 
             if (success) {
-                handleEmailClick('account');
+                handleUsernameClick('account');
             }
         }
-        setLoading(false);
     });
 
 
@@ -125,7 +121,7 @@ const Username: React.FC<{}> = () => {
                                 name="username"
                                 placeholder=" "
                                 value={username}
-                                onChange={handleChangeEmail}
+                                onChange={handleChangeUsername}
                                 contentEditable={true}
                                 autoComplete="off"
                             />
