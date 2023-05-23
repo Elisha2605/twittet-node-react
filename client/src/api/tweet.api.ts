@@ -34,10 +34,10 @@ export const getTweetById = async (tweetId: string) => {
     }
 };
 
-export const getUserTweets = async () => {
+export const getUserTweets = async (userId: string) => {
     try {
         const res = await http.get(
-            '/tweets/user-tweets',
+            `/tweets/user-tweets/${userId}`,
             GETREQUESTOPTIONS()
         );
         return res.data;

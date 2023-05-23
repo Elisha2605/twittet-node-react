@@ -102,7 +102,7 @@ const Profile: FC<ProfileProps> = ({
     // fetch user tweets
     useEffect(() => {
         const fetchUserTweets = async () => {
-            const res = await getUserTweets();
+            const res = await getUserTweets(id as string);
             const { tweets } = res;
 
             const medias = tweets
