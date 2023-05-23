@@ -1,5 +1,5 @@
-import Follow from 'src/model/follow.model';
-import User, { IUser } from 'src/model/user.model';
+import Follow from 'src/models/follow.model';
+import User, { IUser } from 'src/models/user.model';
 import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
 import { CustomError } from 'src/utils/helpers';
 

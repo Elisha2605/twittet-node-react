@@ -249,10 +249,6 @@ const Home: React.FC<HomeProps> = ({
         );
     }, [likedTweet]);
 
-    useEffect(() => {
-        console.log(tweets);
-    }, [tweets])
-
     const onClickLike = async (tweet: any) => {
         const res: any = await likeTweet(tweet?._id);
         const { likedTweet } = res;

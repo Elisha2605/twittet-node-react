@@ -13,6 +13,8 @@ const Following = () => {
     const { id } = useParams<{ id: string }>();
     const [authUser, setAuthUser] = useState<any>(null);
     const [followings, setFollowings] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
 
     const navigate = useNavigate();
 
@@ -20,8 +22,10 @@ const Following = () => {
     const ctx = useContext(AuthContext);
     useEffect(() => {
         const getAuthUser = async () => {
+            setIsLoading(true);
             const { user } = ctx.getUserContext();
             setAuthUser(user);
+            setIsLoading(false);
         };
         getAuthUser();
     }, []);
@@ -29,43 +33,47 @@ const Following = () => {
     // get Follow status
     useEffect(() => {
         const getAuthUserFollowStatus = async () => {
+            setIsLoading(true);
             const { followings } = await getUserFollows(id!);
             setFollowings(followings);
+            setIsLoading(false);
         };
         getAuthUserFollowStatus();
     }, [id]);
 
     return (
         <React.Fragment>
-            <div className={styles.main}>
-                {followings.map((follow) => (
-                    <div
-                        key={follow._id}
-                        className={styles.followingItem}
-                        onClick={() => navigate(`/profile/${follow.user._id}`)}
-                    >
-                        <UserInfo
-                            userId={follow.user._id}
-                            avatar={
-                                follow.user?.avatar &&
-                                `${IMAGE_AVATAR_BASE_URL}/${follow.user?.avatar}`
-                            }
-                            name={follow.user?.name}
-                            isVerified={follow.user.isVerified}
-                            username={follow.user?.username}
-                            className={styles.userInfoWrapper}
+            {!isLoading && authUser && (
+                <div className={styles.main}>
+                    {followings.map((following) => (
+                        <div
+                            key={following._id}
+                            className={styles.followingItem}
+                            onClick={() => navigate(`/profile/${following.user._id}`)}
                         >
-                            {authUser?._id !== follow.user._id && (
-                                <FollowButton
-                                    userId={follow.user._id}
-                                    type={ButtonType.secondary}
-                                    size={ButtonSize.small}
-                                />
+                            {!isLoading && authUser && (
+                                <UserInfo
+                                    user={following.user}
+                                    avatar={
+                                        following.user?.avatar &&
+                                        `${IMAGE_AVATAR_BASE_URL}/${following.user?.avatar}`
+                                    }
+                                    name={following.user?.name}
+                                    isVerified={following.user.isVerified}
+                                    username={following.user?.username}
+                                    className={styles.userInfoWrapper}
+                                >
+                                    <FollowButton
+                                        userId={following.user._id}
+                                        type={ButtonType.secondary}
+                                        size={ButtonSize.small}
+                                    />
+                                </UserInfo>
                             )}
-                        </UserInfo>
-                    </div>
-                ))}
-            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
         </React.Fragment>
     );
 };

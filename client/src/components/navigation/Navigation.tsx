@@ -98,7 +98,7 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
             navigate('/follower-requests');
         }
         if (option === MORE_NAV_OPTION.settingsAndPrivacy) {
-            console.log(option);
+            navigate('/settings/account')
         }
         if (option === MORE_NAV_OPTION.display) {
             console.log(option);
@@ -260,16 +260,10 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                 />
 
                 <NavigationUserInfo
-                    id={authUser?.id}
+                    user={authUser}
                     menuOptions={navUserMenuOptions}
                     menuIcons={navUseMenuIcons}
                     onClickOption={handleMenuOptionClick}
-                    avatar={
-                        authUser?.avatar &&
-                        `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`
-                    }
-                    name={authUser?.name}
-                    username={authUser?.username}
                 />
             </div>
         </React.Fragment>

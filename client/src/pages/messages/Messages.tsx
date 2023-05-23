@@ -15,7 +15,7 @@ const Message = () => {
     
     return (
         <React.Fragment>
-            <div className={Layout.mainSectionSectionMessageContainer}>
+            <div className={Layout.mainSectionMessageContainer}>
                 <div className={Layout.mainSection}>
                     {/* Home page - start */}
                         <Header>

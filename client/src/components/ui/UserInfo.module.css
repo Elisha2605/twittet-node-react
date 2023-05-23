@@ -31,6 +31,18 @@
     width: 100%;
 }   
 
+.isProtected {
+    display: flex;
+    align-items: center;
+}
+
+
+.isProtected img {
+    width: 1rem;
+    height: 1rem;
+}
+
+
 /* userInfoOption */
 .userInfoOptionWrapper {
     position: relative;
@@ -58,6 +70,8 @@
 }
 
 .name {
+    display: flex;
+    gap: 0.3rem;
     font-weight: var(--font-weight-600);
 }
 

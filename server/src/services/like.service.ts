@@ -1,7 +1,7 @@
 import { fetchUserLikedTweet } from 'src/aggregations/like/fetchUserLikedTweet.aggregrate';
-import Like from 'src/model/like.model';
-import Tweet from 'src/model/tweet.model';
-import User from 'src/model/user.model';
+import Like from 'src/models/like.model';
+import Tweet from 'src/models/tweet.model';
+import User from 'src/models/user.model';
 import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
 import { CustomError } from 'src/utils/helpers';
 

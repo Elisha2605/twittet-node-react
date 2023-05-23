@@ -19,7 +19,7 @@ const FollowStatus = () => {
 
     const navigate = useNavigate();
 
-    const handleTabClick = (tab: any) => {
+    const handleTabClick = (tab: string) => {
         navigate(`/follow-status/${tab}/${id}`);
     };
 

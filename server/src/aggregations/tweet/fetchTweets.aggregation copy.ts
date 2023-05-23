@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { TWEET_AUDIENCE } from 'src/constants/tweet.constants';
-import Tweet from 'src/model/tweet.model';
+import Tweet from 'src/models/tweet.model';
 
 export const getTweets = async (userId: string) => {
     const tweets = await Tweet.aggregate([

@@ -1,12 +1,14 @@
 import { ObjectId } from 'mongodb';
-import Bookmark from 'src/model/bookmark.model';
-import Follow from 'src/model/follow.model';
-import Like from 'src/model/like.model';
-import Notification from 'src/model/notification.model';
-import Reply from 'src/model/reply.model';
-import Tweet from 'src/model/tweet.model';
-import TwitterCircle from 'src/model/twitterCircle.model';
-import User from 'src/model/user.model';
+import Bookmark from 'src/models/bookmark.model';
+import Follow from 'src/models/follow.model';
+import Like from 'src/models/like.model';
+import Notification from 'src/models/notification.model';
+import Reply from 'src/models/reply.model';
+import Tweet from 'src/models/tweet.model';
+import TwitterCircle from 'src/models/twitterCircle.model';
+import User from 'src/models/user.model';
+import fs from 'fs';
+import EmailTemplate from 'src/models/emailTemplate.model';
 
 const users = [
     {
@@ -66,6 +68,20 @@ export const seedUsers = async () => {
     }
 };
 
+export const seedEmailTemplates = async () => {
+    const templates = [
+        {
+            name: 'resetpassword',
+            html: fs
+                .readFileSync('./server/src/emails/resetpassword.html')
+                .toString(),
+            sender: 'Fake Twitter',
+            subject: 'Reset your password for ',
+        },
+    ];
+    await EmailTemplate.insertMany(templates);
+};
+
 export const clearDatabase = async () => {
     try {
         const tweets = await Tweet.deleteMany({});
@@ -75,6 +91,7 @@ export const clearDatabase = async () => {
         const notifications = await Notification.deleteMany({});
         const replies = await Reply.deleteMany({});
         const twitterCircle = await TwitterCircle.deleteMany({});
+        const emailTemplate = await EmailTemplate.deleteMany({});
 
         console.log(tweets);
         console.log(followers);
@@ -83,6 +100,7 @@ export const clearDatabase = async () => {
         console.log(replies);
         console.log(twitterCircle);
         console.log(bookmark);
+        console.log(emailTemplate);
     } catch (err) {
         console.error(err);
     }

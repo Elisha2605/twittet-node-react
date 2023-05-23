@@ -1,0 +1,35 @@
+.headerContainerRight {
+    width: 100%;
+    height: 3.5rem;
+    margin-left: 0.3rem;
+}
+
+.headerWrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.headerWrapper svg {
+    position: relative;
+    top: 0.3rem;
+}
+
+.main {
+    margin: 1rem;
+}
+
+.message {
+    color: var(--color-secondary);
+    font-size: var(--font-size-ms);
+}
+
+.switchInput {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.item span {
+    color: var(--color-secondary);
+}

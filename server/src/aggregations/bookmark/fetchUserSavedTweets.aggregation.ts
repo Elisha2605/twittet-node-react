@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import Bookmark from 'src/model/bookmark.model';
+import Bookmark from 'src/models/bookmark.model';
 
 export const fetchUserSavedTweets = async (userId: string) => {
     const tweets = await Bookmark.aggregate([
