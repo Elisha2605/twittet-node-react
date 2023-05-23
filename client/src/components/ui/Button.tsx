@@ -53,6 +53,10 @@ const Button: FC<ButtonProps> = ({
         allStyles = styles.secondarySmall;
     }
 
+    if (type === ButtonType.secondary && size === ButtonSize.big) {
+        allStyles = styles.secondaryBig;
+    }
+
     if (type === ButtonType.tietary && size === ButtonSize.small) {
         allStyles = styles.tietary;
     }

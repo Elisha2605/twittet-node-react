@@ -15,7 +15,7 @@ const AccountSettings: React.FC<{ }> = ({ }) => {
 
     const handleEmailClick = (settingName: string) => {
         navigate(`/settings/${settingName}`);
-      };
+    };
     
 
     // get auth user

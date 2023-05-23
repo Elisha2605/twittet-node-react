@@ -15,7 +15,6 @@ export const requestPasswordReset = async (
     try {
         const user = await User.findOne({ _id: userId, email: email });
 
-
         if (!user) {
             return {
                 success: true,
@@ -155,7 +154,7 @@ export const resetPassword = async (
         if (!resetRequest || !resetRequest.token) {
             return {
                 success: true,
-                message: 'Invalid password verification code',
+                message: 'Password reset requeres verification',
                 status: 400,
                 payload: {},
             };

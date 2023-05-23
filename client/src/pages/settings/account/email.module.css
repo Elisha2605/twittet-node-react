@@ -16,11 +16,16 @@
 }
 
 .main {
-    margin: 1rem;
+    position: relative;
+    margin: 2rem 1rem;
 }
 
 
 /* input - duplicated code */
+.serverErrorMsg {
+    position: absolute;
+    top: -2rem;
+}
 .inputWrapper {
     position: relative;
     display: flex;

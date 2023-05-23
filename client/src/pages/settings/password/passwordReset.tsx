@@ -115,7 +115,7 @@ const PasswordReset: React.FC<{}> = ({}) => {
                                     },
                                 })}
                                 className={styles.formInput}
-                                type="text"
+                                type="password"
                                 id="password"
                                 name="password"
                                 placeholder=" "
@@ -148,7 +148,7 @@ const PasswordReset: React.FC<{}> = ({}) => {
                                     },
                                 })}
                                 className={styles.formInput}
-                                type="text"
+                                type="password"
                                 id="passwordConfirm"
                                 name="passwordConfirm"
                                 placeholder=" "
@@ -169,8 +169,8 @@ const PasswordReset: React.FC<{}> = ({}) => {
 
                         <Button
                             value={'Change password'}
-                            type={ButtonType.primary}
-                            size={ButtonSize.medium}
+                            type={ButtonType.secondary}
+                            size={ButtonSize.big}
                             className={styles.btn}
                             onClick={() => {}}
                             loading={isLoading}

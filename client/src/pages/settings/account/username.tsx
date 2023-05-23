@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
 import styles from './username.module.css';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../../context/user.context';
@@ -7,6 +7,7 @@ import HeaderTitle from '../../../components/header/HeaderTitle';
 import ArrowLeftIcon from '../../../components/icons/ArrowLeftIcon';
 import { useForm } from 'react-hook-form';
 import Button, { ButtonSize, ButtonType } from '../../../components/ui/Button';
+import { editUserName, searchUserByUserName } from '../../../api/user.api';
 
 const Username: React.FC<{}> = () => {
     const [user, setUser] = useState<any>(null);
@@ -17,22 +18,7 @@ const Username: React.FC<{}> = () => {
 
     const [serverError, setServerError] = useState('');
     const [isLoading, setLoading] = useState(false);
-
-    const { register, handleSubmit, reset, formState: { errors } } = useForm({
-        defaultValues: {
-            username: user?.username as string,
-        }
-    });
-
-    const handleSubmitForm = handleSubmit(async (data: any) => {   
-        setLoading(true);       
-        console.log(data);
-        setLoading(false)
-    });
-
-    useEffect(() => {
-        setUsername(user?.username || '');
-    }, [user])
+    
     // get auth user
     const ctx = useContext(AuthContext);
     useEffect(() => {
@@ -42,6 +28,74 @@ const Username: React.FC<{}> = () => {
         };
         getAuthUser();
     }, []);
+    
+    const { register, handleSubmit, reset, formState: { errors } } = useForm({
+        defaultValues: {
+            username: '',
+        }
+    });
+    
+    const checUsernameExistence = async (email: string): Promise<boolean> => {
+        try {
+            const { success, usernames } = await searchUserByUserName(email);
+
+            return success && usernames.length > 0;
+        } catch (error) {
+            console.log('Error checking email existence:', error);
+            return false;
+        }
+    };
+
+    const handleChangeEmail = async (e: ChangeEvent<HTMLInputElement>) => {
+        const inputEmail = e.target.value;
+        setUsername(inputEmail);
+
+        if (inputEmail !== user?.email) {
+            const emailExists = await checUsernameExistence(inputEmail);
+            if (emailExists) {
+                setServerError('That username has been taken. Please choose another.');
+            } else if (username.length < 5) {
+                setServerError('Your username must be longer than 4 characters.');
+            } else if (username.length > 15) {
+                setServerError('Your username must be shorter than 15 characters.')
+            } else {
+                setServerError('');
+            }
+        } else {
+            setServerError('');
+        }
+    };
+
+    const handleEmailClick = (settingName: string) => {
+        navigate(`/settings/${settingName}`);
+    };
+
+    const handleSubmitForm = handleSubmit(async (data: any) => {
+        setLoading(true);
+        if (data) {
+            if (serverError || (username === user?.username)) {
+                setLoading(false);
+                return; 
+              }
+
+            const { success, message, status } = await editUserName(username);
+
+            if (status !== 200) {
+                setServerError(message);
+                return;
+            }
+
+            if (success) {
+                handleEmailClick('account');
+            }
+        }
+        setLoading(false);
+    });
+
+
+    useEffect(() => {
+        setUsername(user?.username || '');
+    }, [user])
 
     return (
         <React.Fragment>
@@ -71,8 +125,9 @@ const Username: React.FC<{}> = () => {
                                 name="username"
                                 placeholder=" "
                                 value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                onChange={handleChangeEmail}
                                 contentEditable={true}
+                                autoComplete="off"
                             />
                             <label className={styles.formLabel} htmlFor="username">
                                 Username

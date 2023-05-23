@@ -6,9 +6,11 @@ import Header from '../../../components/header/Header';
 import HeaderTitle from '../../../components/header/HeaderTitle';
 import ArrowLeftIcon from '../../../components/icons/ArrowLeftIcon';
 import ToggleSwitch from '../../../components/ui/ToggleSwitch';
+import { editProtected } from '../../../api/user.api';
 
 const ProtectedSettings: React.FC<{}> = () => {
     const [user, setUser] = useState<any>(null);
+    const [isUserProtected, setIsUserProtected] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
 
@@ -27,8 +29,11 @@ const ProtectedSettings: React.FC<{}> = () => {
 
     }, [ctx]);
 
-    const handleToggle = (value: boolean) => {
-        console.log('Toggle value:', value);
+    const handleToggle = async (value: boolean) => {
+        setIsUserProtected(value)
+        if (user) {
+            await editProtected(value);
+        }
     };
 
     return (
@@ -55,7 +60,7 @@ const ProtectedSettings: React.FC<{}> = () => {
                         <>     
                             <div className={styles.item}>
                                 <p>Protect your account</p>
-                                <span>{user?.isProtected ? 'On' : 'Off'}</span>
+                                <span>{isUserProtected ? 'On' : 'Off'}</span>
                             </div>
                                 <ToggleSwitch
                                 onToggle={handleToggle}
