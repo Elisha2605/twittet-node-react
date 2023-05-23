@@ -45,26 +45,26 @@ const Following = () => {
         <React.Fragment>
             {!isLoading && authUser && (
                 <div className={styles.main}>
-                    {followings.map((follow) => (
+                    {followings.map((following) => (
                         <div
-                            key={follow._id}
+                            key={following._id}
                             className={styles.followingItem}
-                            onClick={() => navigate(`/profile/${follow.user._id}`)}
+                            onClick={() => navigate(`/profile/${following.user._id}`)}
                         >
                             {!isLoading && authUser && (
                                 <UserInfo
-                                    userId={follow.user._id}
+                                    user={following.user}
                                     avatar={
-                                        follow.user?.avatar &&
-                                        `${IMAGE_AVATAR_BASE_URL}/${follow.user?.avatar}`
+                                        following.user?.avatar &&
+                                        `${IMAGE_AVATAR_BASE_URL}/${following.user?.avatar}`
                                     }
-                                    name={follow.user?.name}
-                                    isVerified={follow.user.isVerified}
-                                    username={follow.user?.username}
+                                    name={following.user?.name}
+                                    isVerified={following.user.isVerified}
+                                    username={following.user?.username}
                                     className={styles.userInfoWrapper}
                                 >
                                     <FollowButton
-                                        userId={follow.user._id}
+                                        userId={following.user._id}
                                         type={ButtonType.secondary}
                                         size={ButtonSize.small}
                                     />

@@ -260,16 +260,10 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                 />
 
                 <NavigationUserInfo
-                    id={authUser?.id}
+                    user={authUser}
                     menuOptions={navUserMenuOptions}
                     menuIcons={navUseMenuIcons}
                     onClickOption={handleMenuOptionClick}
-                    avatar={
-                        authUser?.avatar &&
-                        `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`
-                    }
-                    name={authUser?.name}
-                    username={authUser?.username}
                 />
             </div>
         </React.Fragment>

@@ -47,7 +47,7 @@ const Follower: React.FC<{}> = () => {
                         }
                     >
                         <UserInfo
-                            userId={id}
+                            user={follower.user}
                             avatar={
                                 follower?.user?.avatar &&
                                 `${IMAGE_AVATAR_BASE_URL}/${follower?.user?.avatar}`

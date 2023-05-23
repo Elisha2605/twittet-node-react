@@ -19,4 +19,4 @@ export const injectVariables = (html: string, variables?: any) => {
         }
     }
     return html;
-}
+};

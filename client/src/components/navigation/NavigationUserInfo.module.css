@@ -51,3 +51,18 @@
     top: -4.5rem;
     left: 2rem;
 }
+
+.name {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.isProtected {
+    display: flex;
+    align-items: center;
+}
+
+.isProtected img {
+    width: 1rem;
+    height: 1rem;
+}

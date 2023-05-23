@@ -124,7 +124,7 @@ const TwitterCircleSettings: React.FC<{}> = () => {
                                     }
                                 >
                                     <UserInfo
-                                        userId={member?._id}
+                                        user={member}
                                         avatar={
                                             member?.avatar &&
                                             `${IMAGE_AVATAR_BASE_URL}/${member?.avatar}`

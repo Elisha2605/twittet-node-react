@@ -26,7 +26,6 @@ const NotificationsLike: FC<NotificationsLikeProps> = ({
                         userId={likes?.user?._id}
                         avatar={likes?.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${likes?.user?.avatar}`}
                         name={likes?.user?.name}
-                        isProtected={likes?.user?.isProtected}
                         isVerified={likes?.user?.isVerified}
                         username={likes?.user?.username}
                         className={styles.userInfoWrapper}
