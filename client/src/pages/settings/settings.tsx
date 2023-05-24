@@ -88,8 +88,8 @@ const Settings = () => {
                 <div>
                     {/* Aside - start */}
                     
-                    <Aside className={styles.aside}>
-                    <div className={styles.test}>
+                    <Aside className={styles.asideContainer}>
+                    <div className={styles.asideWrapper}>
                         {/* Navigation */}
                         {path === 'account' && <AccountSettings />}
                         {path === 'password-change' && <PasswordChangeSettings />}

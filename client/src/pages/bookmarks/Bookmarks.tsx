@@ -135,12 +135,12 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
                     </div>
                 </div>
                 {/* Home page - start */}
-                <div>
+                <div className={Layout.aside}>
                     {/* Aside - start */}
-                    <Header border={false}>
-                        <SearchBar width={74} />
-                    </Header>
                     <Aside className={styles.aside}>
+                    <Header border={false}>
+                        <SearchBar />
+                    </Header>
                         <WhoToFollow />
                     </Aside>
                     {/* Aside - end */}

@@ -26,7 +26,7 @@
 }
 
 .liked {
-    color: var(--color-error);
+    color: var(--color-pink);
 }
 
 .faComment,
@@ -75,4 +75,8 @@
 
 .hoverPink:hover {
     color: var(--color-pink);
+}
+
+.hasRetweeted {
+    color: var(--color-green);
 }

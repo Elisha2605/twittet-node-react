@@ -18,13 +18,15 @@
 
 .detailIcon {
     float: right;
-    margin-top: 0.5rem;
 }
 
 .aside {
-    width: 100%;
+    width: 90%;
     height: 100vh; /* when many - messages remove this*/
     overflow-x: hidden;
+    border-color: var(--color-secondary-light);    
+    border-style: solid;
+    border-width: 0 1px 0 0;
 }
 
 .userToInfo {

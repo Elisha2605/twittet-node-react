@@ -4,8 +4,6 @@ import styles from './UserInfo.module.css';
 import Certified from '../../assets/certified.svg';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../context/user.context';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLock } from '@fortawesome/free-solid-svg-icons';
 import faLockSolid from '../../assets/faLock-solid.svg';
 
 
@@ -120,7 +118,7 @@ const UserInfo: FC<UserInfoProps> = ({
                             <div className={styles.userInfo} onClick={onNavigateToProfile}>
                                 <p className={styles.name}>
                                 {name}{' '}
-                                {user?.isProtected && (
+                                {tweet?.user?.isProtected && (
                                     <span className={styles.isProtected}>
                                         <img src={faLockSolid} alt="" />
                                     </span>

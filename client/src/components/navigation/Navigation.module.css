@@ -1,4 +1,6 @@
 .container {
+    display: flex;
+    flex-direction: column;
     height: 100%;
     padding-left: 5rem;
 }
@@ -13,8 +15,9 @@
     margin-bottom: 1rem;
 }
 
-.userInfo {
-    margin-top: 6rem;
+.navigationUser {
+    position: absolute;
+    bottom: 0;
 }
 
 .bookmarks svg {

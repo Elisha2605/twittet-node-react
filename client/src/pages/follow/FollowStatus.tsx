@@ -73,11 +73,11 @@ const FollowStatus = () => {
                     </div>
                 </div>
 
-                <div>
+                <div className={Layout.aside}>
+                    <Aside className={styles.aside}>
                     <Header border={false}>
                         <SearchBar width={74} />
                     </Header>
-                    <Aside className={styles.aside}>
                         <WhoToFollow />
                     </Aside>
                 </div>

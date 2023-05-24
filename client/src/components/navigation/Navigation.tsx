@@ -257,13 +257,15 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                     size={ButtonSize.medium}
                     onClick={() => openModal('main-tweet-modal')}
                 />
-
+            
+            <div className={styles.navigationUser}>
                 <NavigationUserInfo
                     user={authUser}
                     menuOptions={navUserMenuOptions}
                     menuIcons={navUseMenuIcons}
                     onClickOption={handleMenuOptionClick}
                 />
+            </div>
             </div>
         </React.Fragment>
     );

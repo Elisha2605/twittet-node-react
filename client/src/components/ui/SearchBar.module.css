@@ -1,4 +1,5 @@
 .container {
+    width: 100%;
     position: relative;
     margin-top: 0.5rem;
     margin-bottom: 1rem;
@@ -51,4 +52,11 @@
     font-size: var(--font-size-ms);
     height: 5rem;
     padding: 1rem;
+}
+
+/* form bigger sceens */
+@media (min-width: 1441px) {
+    .input{
+        width: 100%;
+    }
 }

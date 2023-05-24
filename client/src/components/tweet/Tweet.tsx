@@ -27,6 +27,7 @@ interface TweetProps {
     onClickRetweet?: Function;
     onClickLike: (tweet: any) => void;
     isLiked?: boolean;
+    isRetweet?: boolean;
     isReply?: boolean;
 }
 
@@ -36,11 +37,11 @@ const Tweet: FC<TweetProps> = ({
     onClickRetweet,
     onClickLike,
     isLiked,
-    isReply = false,
+    isReply,
+    isRetweet = false,
 }) => {
 
     const [authUser, setAuthUser] = useState<any>(null);
-
 
     // regular tweet
     const tweetId = tweet?._id;
@@ -66,7 +67,6 @@ const Tweet: FC<TweetProps> = ({
     const retweetUserUsername = retweet?.user?.username;
     const isVerfiedRetweetUser = retweet?.user?.isVerified;
     const retweetUserAvatar = retweet?.user?.avatar;
-
 
     let navigate = useNavigate();
 
@@ -335,6 +335,7 @@ const Tweet: FC<TweetProps> = ({
                     onClickRetweet={onClickRetweet}
                     onClick={() => onClickLike(tweet)}
                     isLiked={isLiked}
+                    isRetweet={isRetweet}
                 />
             </div>
         </React.Fragment>

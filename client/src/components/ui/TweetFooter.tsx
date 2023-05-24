@@ -30,6 +30,7 @@ interface TweetFooterProps {
     onClick?: (tweet: string) => void;
     isTweetReply?: boolean;
     isLiked?: boolean;
+    isRetweet?: boolean;
     onClickRetweet?: Function;
 }
 
@@ -43,6 +44,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
     onClick,
     isTweetReply,
     isLiked,
+    isRetweet,
     onClickRetweet,
 }) => {
     const [authUser, setAuthUser] = useState<any>(null);
@@ -89,6 +91,10 @@ const TweetFooter: FC<TweetFooterProps> = ({
             authUser?._id !== tweet?.user?._id) ||
         tweet?.audience === TWEET_AUDIENCE.twitterCircle;
 
+        useEffect(() => {
+            console.log(isRetweet);
+        }, [isRetweet])
+
     return (
         <React.Fragment>
             <div
@@ -108,6 +114,32 @@ const TweetFooter: FC<TweetFooterProps> = ({
                     />
                     <p>{replies}</p>
                 </div>
+
+                {isRetweet ? (
+                    <div
+                    className={`${styles.item} ${styles.hoverGreen} ${
+                        isTweetReply ? styles.itemOnTweetReply : ''
+                    } ${styles.hasRetweeted}`}
+                >
+                    <PopUpMenu
+                        value={tweet}
+                        isMenuIcon={false}
+                        options={reTweetOptions!}
+                        icons={reTweetIcon}
+                        isDisable={canRetweet}
+                        onClick={(option, tweet: any) =>
+                            onClickRetweet!(option, tweet)
+                        }
+                        className={styles.retweetPopUp}
+                    >
+                        <FontAwesomeIcon
+                            icon={faRepeat}
+                            className={styles.faRepeat}
+                        />
+                    </PopUpMenu>
+                    <p>{retTweets}</p>
+                </div>
+                ): (
                 <div
                     className={`${styles.item} ${styles.hoverGreen} ${
                         isTweetReply ? styles.itemOnTweetReply : ''
@@ -131,35 +163,20 @@ const TweetFooter: FC<TweetFooterProps> = ({
                     </PopUpMenu>
                     <p>{retTweets}</p>
                 </div>
-                {isLiked ? (
-                    <div
-                        className={`${styles.item} ${styles.liked} ${
-                            styles.hoverPink
-                        } ${isTweetReply ? styles.itemOnTweetReply : ''}`}
-                        onClick={handleLike}
-                    >
-                        <FontAwesomeIcon
-                            icon={faHeartSolid}
-                            color={'var(--color-pink)'}
-                            className={styles.faHeart}
-                        />
-                        <p>{likes}</p>
-                    </div>
-                ) : (
-                    <div
-                        className={`${styles.item} ${styles.hoverPink} ${
-                            isTweetReply ? styles.itemOnTweetReply : ''
-                        }`}
-                        onClick={handleLike}
-                    >
-                        <FontAwesomeIcon
-                            icon={faHeart}
-                            className={styles.faHeart}
-                        />
-                        <p>{likes}</p>
-                    </div>
                 )}
-
+                
+                <div
+                    className={`${styles.item} ${isLiked ? styles.liked : styles.item} ${
+                        styles.hoverPink
+                    } ${isTweetReply ? styles.itemOnTweetReply : ''}`}
+                    onClick={handleLike}
+                >
+                    <FontAwesomeIcon
+                        icon={isLiked ? faHeartSolid : faHeart}
+                        className={styles.faHeart}
+                    />
+                    <p>{likes}</p>
+                </div>
                 <div
                     className={`${styles.item} ${styles.hoverBlue} ${
                         isTweetReply ? styles.itemOnTweetReply : ''

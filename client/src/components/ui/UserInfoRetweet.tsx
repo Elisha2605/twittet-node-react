@@ -1,10 +1,11 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import styles from './UserInfoRetweet.module.css';
 import Certified from '../../assets/certified.svg';
-import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../context/user.context';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
+import faLockSolid from '../../assets/faLock-solid.svg';
+
 
 interface UserInfoRetweetProps {
     tweet?: any;
@@ -76,10 +77,17 @@ const UserInfoRetweet: FC<UserInfoRetweetProps> = ({
                                 <p className={styles.name}>
                                     {/* this is for TweetReply */}
                                     {isReply && name.length > 6 ? name.substring(0, 6) + '...' : name}{' '}
-                                    {isVerified && (
+                                </p>
+                                {tweet?.user?.isProtected && (
+                                    <div className={styles.isProtected}>
+                                        <img src={faLockSolid} alt="" />
+                                    </div>
+                                )}
+                                <span>
+                                {isVerified && (
                                         <img className={styles.certifiedIcon} src={Certified} alt="" />
                                     )}
-                                </p>
+                                </span>
                                 <p className={styles.username} >
                                     @{isReply && username.length > 6 ? username.substring(0, 6) + '...' : username} {time && ` · ${time}`}{' '}
                                 </p>

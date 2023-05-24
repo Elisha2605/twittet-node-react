@@ -326,6 +326,7 @@ const Home: React.FC<HomeProps> = ({
                                         authUser?._id
                                     )}
                                     onClickRetweet={onClickRetweet}
+                                    isRetweet={tweet?.retweets?.includes(authUser?._id)}
                                 />
                             ))}
                         </div>
@@ -347,11 +348,11 @@ const Home: React.FC<HomeProps> = ({
                         </div>
                     )}
                 </div>
-                <div>
-                    <Header border={false}>
-                        <SearchBar width={74} />
-                    </Header>
+                <div className={Layout.aside}>
                     <Aside className={styles.aside}>
+                    <Header border={false}>
+                        <SearchBar />
+                    </Header>
                         <WhoToFollow />
                     </Aside>
                 </div>

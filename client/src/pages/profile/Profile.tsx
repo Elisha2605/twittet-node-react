@@ -535,11 +535,11 @@ const Profile: FC<ProfileProps> = ({
                     </div>
                 </div>
                 {/* Home page - start */}
-                <div>
-                    <Header border={false}>
-                        <SearchBar width={74} />
-                    </Header>
+                <div className={Layout.aside}>
                     <Aside className={styles.aside}>
+                    <Header border={false}>
+                        <SearchBar />
+                    </Header>
                         <WhoToFollow />
                     </Aside>
                 </div>
