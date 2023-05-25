@@ -12,7 +12,7 @@
     "start:server": "nodemon --exec ts-node -r dotenv/config -r tsconfig-paths/register dist/index.js",
     "dev": "concurrently --kill-others-on-fail \"npm run lint && npm run start:server\" \"cd client && npm start\"",
 
-    "start": "concurrently \"node --exec ts-node -r dotenv/config -r tsconfig-paths/register dist/index.js\" \"cd build/client && npm start\"",
+    "start": "concurrently \"node --exec ts-node -r dotenv/config -r tsconfig-paths/register dist/index.js\" \"cd client && npm start\"",
 
     "build": "npm run build:server && npm run build:client",
     "test": "echo \"Error: no test specified\" && exit 1",
