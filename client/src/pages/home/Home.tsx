@@ -23,7 +23,7 @@ import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
 import AuthContext from '../../context/user.context';
 import { likeTweet } from '../../api/like.api';
 import HomeEditTwitterCirlceModal from './home-modals/HomeEditTwitterCirlceModal';
-import FormTweet from '../../components/from/FormTweet';
+import FormTweet from '../../components/form/FormTweet';
 
 interface HomeProps {
     value: string;
