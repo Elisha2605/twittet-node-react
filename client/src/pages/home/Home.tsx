@@ -3,7 +3,6 @@ import Aside from '../../components/aside/Aside';
 import Avatar, { Size } from '../../components/ui/Avatar';
 import SearchBar from '../../components/ui/SearchBar';
 import WhoToFollow from '../../components/ui/WhoToFollow';
-import FormTweet from '../../components/form/FormTweet';
 import Header from '../../components/header/Header';
 import Tweet from '../../components/tweet/Tweet';
 import styles from './Home.module.css';
@@ -24,6 +23,7 @@ import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
 import AuthContext from '../../context/user.context';
 import { likeTweet } from '../../api/like.api';
 import HomeEditTwitterCirlceModal from './home-modals/HomeEditTwitterCirlceModal';
+import FormTweet from '../../components/from/FormTweet';
 
 interface HomeProps {
     value: string;
