@@ -9,7 +9,7 @@
     "build:client": "cd client && npm run build",
     "build:server": "tsc -p ./tsconfig.json",
     "start:client": "cd client && npm start",
-    "start:server": "nodemon --exec ts-node -r dotenv/config -r tsconfig-paths/register dist/index.js",
+    "start:server": "node dist/index.js",
     "dev": "concurrently --kill-others-on-fail \"npm run lint && npm run start:server\" \"cd client && npm start\"",
     "start": "concurrently --kill-others-on-fail \"npm run start:server\" \"cd client && npm start\"",
     "build": "npm run build:server && npm run build:client",
