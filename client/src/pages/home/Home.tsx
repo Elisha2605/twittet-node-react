@@ -3,6 +3,7 @@ import Aside from '../../components/aside/Aside';
 import Avatar, { Size } from '../../components/ui/Avatar';
 import SearchBar from '../../components/ui/SearchBar';
 import WhoToFollow from '../../components/ui/WhoToFollow';
+import FormTweet from '../../components/form/FormTweet';
 import Header from '../../components/header/Header';
 import Tweet from '../../components/tweet/Tweet';
 import styles from './Home.module.css';
@@ -292,6 +293,21 @@ const Home: React.FC<HomeProps> = ({
                             }
                             size={Size.small}
                             className={''}
+                        />
+                        <FormTweet
+                            value={value}
+                            tweetTextRef={tweetTextRef}
+                            imagePreview={previewImage}
+                            isFocused={isFormFocused}
+                            tweetAudienceValue={tweetAudience}
+                            tweetReplyValue={tweetReply}
+                            setIsFocused={setIsFormFocused}
+                            onSubmit={(e: any) => handleSubmitTweet(e)}
+                            onImageUpload={handleImageUpload}
+                            onCancelImagePreview={handleCanselPreviewImage}
+                            onChageTextArea={handleTextAreaOnChange}
+                            onClickAudienceMenu={handleTweetAudienceOptions}
+                            onClickReplyMenu={handleTweetReyplyOptions}
                         />
                     </div>
                     {/* Twitter Circle Modal */}
