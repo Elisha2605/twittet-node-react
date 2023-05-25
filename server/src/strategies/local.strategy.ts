@@ -9,7 +9,7 @@ passport.use(
     )
 );
 
-passport.serializeUser((user, done) => {
+passport.serializeUser((user: any, done) => {
     const sessionUser = {
         id: user._id,
     };
