@@ -31,6 +31,7 @@ export interface IUser extends mongoose.Document {
     refreshToken: mongoose.Types.DocumentArray<ISession>;
     setPassword: any;
     changePassword: any;
+    comparePassword: any;
 }
 
 export const userModel = {
@@ -95,7 +96,7 @@ export const userModel = {
     isActive: {
         type: Boolean,
         default: true,
-        require: true,
+        required: true,
     },
     isVerified: {
         type: Boolean,

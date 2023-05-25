@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import styles from './ContentNotAvailable.module.css';
 
 
-const ContentNotAvailable: FC<{ title: string, message?: string, }> = ({ title, message }) => {
+const ContentNotAvailable: FC<{ title: string, message: string, }> = ({ title, message }) => {
 
     return (
         <React.Fragment>

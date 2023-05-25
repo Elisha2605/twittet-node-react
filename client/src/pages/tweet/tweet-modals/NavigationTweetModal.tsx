@@ -23,7 +23,7 @@ interface NavigationTweetProp {
     clearTweetForm: () => void;
 }
 
-const FormNavigationTweet: FC<NavigationTweetProp> = ({ 
+const NavigationTweetModal: FC<NavigationTweetProp> = ({ 
     value,
     selectedFile,
     previewImage,
@@ -154,4 +154,4 @@ const FormNavigationTweet: FC<NavigationTweetProp> = ({
     );
 };
 
-export default FormNavigationTweet;
+export default NavigationTweetModal;

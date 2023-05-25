@@ -10,7 +10,6 @@ import HeaderTitle from '../../components/header/HeaderTitle';
 import {
     IMAGE_AVATAR_BASE_URL,
     TWEET_AUDIENCE,
-    TWEET_MENU,
     TWEET_REPLY,
 } from '../../constants/common.constants';
 import AuthContext from '../../context/user.context';
@@ -18,11 +17,12 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    faBookmark,
+    faBookmark as faBookmarkRegular,
     faComment,
     faHeart,
 } from '@fortawesome/free-regular-svg-icons';
 import {
+    faBookmark as faBookMarkSolid,
     faArrowUpFromBracket,
     faRepeat,
 } from '@fortawesome/free-solid-svg-icons';
@@ -32,13 +32,13 @@ import { getTweetById } from '../../api/tweet.api';
 import { tweetMenuIcons, tweetMenuOptions } from '../../data/menuOptions';
 import Avatar, { Size } from '../../components/ui/Avatar';
 import FormReply from '../../components/form/FormReplyTweet';
-import TweetReply from '../../components/tweet/TweetReply';
 import { likeTweet } from '../../api/like.api';
 import { createTweetReply, getAllTweetReplies } from '../../api/reply.api';
 import { getAuthUserFollows } from '../../api/follow.api';
 import UserIcon from '../../components/icons/UserIcon';
 import AtIcon from '../../components/icons/AtIcon';
 import Tweet from '../../components/tweet/Tweet';
+import { getUserSavedTweets, saveTweetToBookmark } from '../../api/bookmark.api';
 
 interface TweetPageNoImageProps {}
 
@@ -59,6 +59,8 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
 
     const [followers, setFollowers] = useState<any>([]);
     const [followings, setFollowings] = useState<any>([]);
+
+    const [savedTweets, setSavedTweets] = useState<any>([])
 
     const navigate = useNavigate();
 
@@ -93,17 +95,6 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
         const res: any = await likeTweet(tweet?._id);
         const { likedTweet } = res;
         setLikedTweet(likedTweet);
-    };
-
-    const handleTweetMenuOptionClick = async (
-        option: string,
-        tweetId: string,
-        tweet: any
-    ) => {
-        if (option === TWEET_MENU.delete) {
-            console.log('hello');
-        } else if (option === TWEET_MENU.edit) {
-        }
     };
 
     const handleTextAreaOnChangeReply = (
@@ -158,6 +149,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
             reply: tweet.reply,
             createdAt: tweet.createdAt,
             image: tweet.image,
+            bookmarkCount: tweet.boomarkCount,
             comments: [],
             reposts: [],
             likes: [],
@@ -186,7 +178,6 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
     }, []);
 
     const isTwitterCircle = (userId: string): boolean => {
-        console.log(userId);
         if (
             authUser && tweet &&
             tweet?.user?._id !== authUser?._id &&
@@ -222,6 +213,38 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
         }
         return true;
     };
+
+    // bookmark
+    useEffect(() => {
+        const getUserBookmarkList = async () => {
+            const { tweets }: any = await getUserSavedTweets();
+            setSavedTweets(tweets)
+            console.log(tweets);
+        };
+        getUserBookmarkList();
+    }, [tweet])
+    const onClickSaveAndUnsaveTweet = async () => {
+        const res = await saveTweetToBookmark(tweet._id);
+        const bookmarkCount = res.tweet.bookmarkCount
+        if (bookmarkCount === undefined) {
+            setTweet((prevTweet: any) => ({
+              ...prevTweet,
+              bookmarkCount: prevTweet.bookmarkCount - 1,
+            }));
+
+          } else {
+            setTweet((prevTweet: any) => ({
+              ...prevTweet,
+              bookmarkCount: bookmarkCount + 1,
+            }));
+          }
+
+          const updatedSavedTweets = isSaved() ? savedTweets.filter((t: any) => t._id !== tweet._id) : [...savedTweets, tweet];
+          setSavedTweets(updatedSavedTweets);
+    }
+    const isSaved = (): boolean => {
+        return tweet && savedTweets.some((t: any) => t._id === tweet._id)
+    }
 
     return (
         <React.Fragment>
@@ -262,7 +285,6 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                     className={styles.userInfo}
                                     options={tweetMenuOptions}
                                     icons={tweetMenuIcons}
-                                    onClickOption={handleTweetMenuOptionClick}
                                 />
                                 <div className={styles.asideContent}>
                                     <div className={styles.text}>
@@ -276,25 +298,29 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                         </p>
                                     </div>
                                     <div className={styles.stats}>
-                                        <p>
-                                            <span>332</span>Retweets
-                                        </p>{' '}
-                                        <p>
-                                            <span>61</span>Quotes
-                                        </p>{' '}
+                                        {tweet?.retweetCount > 0 && (    
+                                            <p>
+                                                <span>{tweet?.retweetCount}</span>Retweets
+                                            </p>
+                                        )}{' '}
+                                         {tweet?.viewCount > 0 && (
+                                                <p>
+                                                    <span>{tweet?.viewCount}</span> Views
+                                                </p>
+                                        )}{' '}
                                         {tweet?.totalLikes > 0 && (
                                             <p>
                                                 <span>
-                                                    {tweet?.totalLikes > 0
-                                                        ? tweet?.totalLikes
-                                                        : ''}
+                                                    {tweet?.totalLikes}
                                                 </span>
                                                 Likes
                                             </p>
                                         )}{' '}
-                                        <p>
-                                            <span>332</span>Bookmarks
-                                        </p>
+                                        {tweet?.bookmarkCount > 0 && (
+                                            <p>
+                                                <span>{tweet?.bookmarkCount}</span>Bookmarks
+                                            </p>
+                                        )}
                                     </div>
                                     <div className={styles.icons}>
                                         <div>
@@ -326,9 +352,9 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                                 }
                                             />
                                         </div>
-                                        <div>
+                                        <div onClick={onClickSaveAndUnsaveTweet}>
                                             <FontAwesomeIcon
-                                                icon={faBookmark}
+                                                icon={isSaved() ? faBookMarkSolid : faBookmarkRegular}
                                                 className={styles.faBookmark}
                                             />
                                         </div>
@@ -551,11 +577,11 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                     </div>
                 </div>
                 {/* Home page - start */}
-                <div>
+                <div className={Layout.aside}>
+                    <Aside className={styles.aside}>
                     <Header border={false}>
                         <SearchBar width={74} />
                     </Header>
-                    <Aside className={styles.aside}>
                         <WhoToFollow />
                     </Aside>
                 </div>

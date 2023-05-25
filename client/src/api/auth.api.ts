@@ -87,6 +87,7 @@ export const logout = async () => {
         localStorage.removeItem('activeTab-notification');
         localStorage.removeItem('activeTab-profile');
         localStorage.removeItem('activeTab-profile');
+        localStorage.removeItem('resetToken');
         window.location.href = '/';
     }
     return res.data;

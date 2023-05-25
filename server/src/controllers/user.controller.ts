@@ -6,6 +6,11 @@ import {
     getAuthUserInfo,
     searchUsers,
     editUserProfile,
+    editUserName,
+    editEmail,
+    editProtected,
+    searchUserByEmail,
+    searchUserByUserName,
 } from 'src/services/user.service';
 import { validate_name, validate_website } from 'src/utils/validation.util';
 
@@ -90,6 +95,52 @@ export const searchUsersController = asyncHandler(
     }
 );
 
+export const searchUserByEmailController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const searchTerm = req.query.q?.toString().trim();
+
+        try {
+            const { success, message, status, payload } =
+                await searchUserByEmail(searchTerm);
+            if (success) {
+                res.json({
+                    success: success,
+                    status: status,
+                    message: message,
+                    emails: payload,
+                });
+            } else {
+                res.status(status).json({ success, message });
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+export const searchUserByUserNameController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const searchTerm = req.query.q?.toString().trim();
+
+        try {
+            const { success, message, status, payload } =
+                await searchUserByUserName(searchTerm);
+            if (success) {
+                res.json({
+                    success: success,
+                    status: status,
+                    message: message,
+                    usernames: payload,
+                });
+            } else {
+                res.status(status).json({ success, message });
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
 export const editUserProfileController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.user._id; // needs validation
@@ -119,6 +170,102 @@ export const editUserProfileController = asyncHandler(
                 });
             } else {
                 res.status(status).json({ success, message });
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+export const editUsernameController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req.user._id;
+        const username = req.body.username;
+        if (!username) {
+            res.status(400).json({ InvalidInputError: 'Invalid Input' });
+        }
+        try {
+            const { success, message, status, payload } = await editUserName(
+                userId,
+                username
+            );
+            if (success) {
+                res.status(200).json({
+                    success: success,
+                    message: message,
+                    status: status,
+                    user: payload,
+                });
+            } else {
+                res.status(status).json({
+                    success: success,
+                    message: message,
+                    status: status,
+                });
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+export const editEmailController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req.user._id;
+        const email = req.body.email;
+        if (!email) {
+            res.status(400).json({ InvalidInputError: 'Invalid Input' });
+        }
+        try {
+            const { success, message, status, payload } = await editEmail(
+                userId,
+                email
+            );
+            if (success) {
+                res.status(200).json({
+                    success: success,
+                    message: message,
+                    status: status,
+                    user: payload,
+                });
+            } else {
+                res.status(status).json({
+                    success: success,
+                    message: message,
+                    status: status,
+                });
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+export const editProtectedController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req.user._id;
+        const isProtected = req.body.isProtected;
+        if (isProtected.length === 0) {
+            res.status(400).json({ InvalidInputError: 'Invalid Input' });
+        }
+        try {
+            const { success, message, status, payload } = await editProtected(
+                userId,
+                isProtected
+            );
+            if (success) {
+                res.status(200).json({
+                    success: success,
+                    message: message,
+                    status: status,
+                    user: payload,
+                });
+            } else {
+                res.status(status).json({
+                    success: success,
+                    message: message,
+                    status: status,
+                });
             }
         } catch (error) {
             next(error);

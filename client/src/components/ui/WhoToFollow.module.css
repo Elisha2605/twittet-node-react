@@ -1,5 +1,5 @@
 .container {
-    width: 90%;
+    width: 100%;
     background: var(--color-secondary-lighter);
     /* padding: 1rem; */
     border-radius: 1rem;
@@ -18,8 +18,17 @@
     font-weight: var(--font-weight-500);
 }
 
-
 .userInfo:hover {
     background: var(--color-secondary-light);
     cursor: pointer;
+}
+
+/* form bigger sceens */
+@media (min-width: 1441px) {
+    .container {
+        width: 50%;
+        background: var(--color-secondary-lighter);
+        /* padding: 1rem; */
+        border-radius: 1rem;
+    }
 }

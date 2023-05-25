@@ -125,7 +125,7 @@ const HomeEditTwitterCirlceModal: FC<HomeEditTwitterCirlceModalProps> = ({}) => 
                        {members && members.map((member: any) => (
                             <div key={member?._id} className={styles.followingItem} onClick={() => navigate(`/profile/${member?._id}`)}>   
                                 <UserInfo
-                                   userId={member?._id}
+                                   user={member}
                                    avatar={member?.avatar && `${IMAGE_AVATAR_BASE_URL}/${member?.avatar}`}
                                    isVerified={member?.isVerified}
                                    name={member?.name}
@@ -150,7 +150,6 @@ const HomeEditTwitterCirlceModal: FC<HomeEditTwitterCirlceModalProps> = ({}) => 
                 )}
                 {activeTab === 'recommended' && (
                     <div className={styles.recommendation}>
-                        {}
                         <p className={styles.twitterCircleMsg}>
                             People won’t be notified when you edit your Twitter Circle. Anyone 
                             you add will be able to see your previous Twitter Circle Tweets
@@ -158,7 +157,7 @@ const HomeEditTwitterCirlceModal: FC<HomeEditTwitterCirlceModalProps> = ({}) => 
                          {followings && followings.map((following: any) => (
                             <div key={following?._id} className={styles.followingItem} onClick={() => navigate(`/profile/${following.user._id}`)}>   
                                 <UserInfo
-                                   userId={following?._id}
+                                   user={following?.user}
                                    avatar={following?.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${following?.user?.avatar}`}
                                    isVerified={following?.user?.isVerified}
                                    name={following?.user?.name}

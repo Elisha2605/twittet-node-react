@@ -14,18 +14,18 @@
     margin-left: 22rem;
 }
 
-.mainSectionContainer,
-.mainSectionSectionMessageContainer 
-{
+.mainSectionContainer {
     display: grid;
     grid-template-columns: 1.9fr 1.5fr;
     gap: 2rem;
     height: 100vh;
 }
 
-.mainSectionSectionMessageContainer {
+.mainSectionMessageContainer, .mainSectionSettings {
+    display: grid;
     grid-template-columns: 1fr 1.5fr;
-    padding-right: 6rem;
+    width: 90%;
+    height: 100vh;
 }
 
 .mainSection {
@@ -38,6 +38,10 @@
     border-width: 0 1px 0 0;
     scrollbar-width: none;
     -ms-overflow-style: none;
+}
+
+.aside {
+    width: 73%;
 }
 
 ::-webkit-scrollbar {
@@ -56,28 +60,36 @@
 ::-webkit-scrollbar-thumb:hover {
     background-color: #555;
 }
+/* 1440px laptop */
 
-/* @media only screen and (min-width: 1440px) {
+/* form bigger sceens */
+@media (min-width: 1441px) {
     .navigation {
-        position: fixed;
-        top: 0;
-        left: 13rem;
-        height: 100%;
-        width: 22rem;
-        border-right-color: var(--color-secondary-light);
-        border-style: solid;
-        border-width: 0 1px 0 0;
+        width: 21rem;
+        left: 14rem;
     }
+
     .page {
-        margin-right: 22rem;
-        position: relative;
-        left: 13rem;
+        margin-left: 35rem;
     }
     
-    .mainSectionContainer,
-    .mainSectionSectionMessageContainer 
-    {
+    .mainSectionContainer {
         display: grid;
-        grid-template-columns: 1.9fr 1.5fr;
+        grid-template-columns: 1.9fr 2.3fr;
+        gap: 2rem;
+        height: 100vh;
     }
-} */
+
+    .mainSectionMessageContainer, .mainSectionSettings {
+        width: 70%;
+        grid-template-columns: 1fr 1.5fr;
+    }
+
+    .aside {
+        width: 95%;
+    }
+
+    .aside input {
+        width: 50%;
+    }
+}

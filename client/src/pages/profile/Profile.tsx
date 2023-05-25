@@ -19,7 +19,6 @@ import {
 } from '../../constants/common.constants';
 import { getMonthName, getYear } from '../../utils/helpers.utils';
 import AuthContext from '../../context/user.context';
-import { getUserFollows, sendFollowRequest } from '../../api/follow.api';
 import { NavLink, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
@@ -103,7 +102,7 @@ const Profile: FC<ProfileProps> = ({
     // fetch user tweets
     useEffect(() => {
         const fetchUserTweets = async () => {
-            const res = await getUserTweets();
+            const res = await getUserTweets(id as string);
             const { tweets } = res;
 
             const medias = tweets
@@ -421,13 +420,13 @@ const Profile: FC<ProfileProps> = ({
                             </div>
 
                             <div className={styles.followStatus}>
-                                <NavLink to={`/following/${id}`}>
+                                <NavLink to={`/follow-status/following/${id}`}>
                                     <p>
                                         {user?.followingCount ? user?.followingCount : 0}
                                         <span>Following</span>
                                     </p>
                                 </NavLink>
-                                <NavLink to={`/followers/${id}`}>
+                                <NavLink to={`/follow-status/followers/${id}`}>
                                     <p>
                                         {user?.followerCount ? user?.followerCount : 0}
                                         <span>Followers</span>
@@ -536,11 +535,11 @@ const Profile: FC<ProfileProps> = ({
                     </div>
                 </div>
                 {/* Home page - start */}
-                <div>
-                    <Header border={false}>
-                        <SearchBar width={74} />
-                    </Header>
+                <div className={Layout.aside}>
                     <Aside className={styles.aside}>
+                    <Header border={false}>
+                        <SearchBar />
+                    </Header>
                         <WhoToFollow />
                     </Aside>
                 </div>

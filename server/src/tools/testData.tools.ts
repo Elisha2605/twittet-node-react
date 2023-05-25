@@ -1,6 +1,14 @@
 import { ObjectId } from 'mongodb';
-import Tweet from 'src/model/tweet.model';
-import User from 'src/model/user.model';
+import Bookmark from 'src/models/bookmark.model';
+import Follow from 'src/models/follow.model';
+import Like from 'src/models/like.model';
+import Notification from 'src/models/notification.model';
+import Reply from 'src/models/reply.model';
+import Tweet from 'src/models/tweet.model';
+import TwitterCircle from 'src/models/twitterCircle.model';
+import User from 'src/models/user.model';
+import fs from 'fs';
+import EmailTemplate from 'src/models/emailTemplate.model';
 
 const users = [
     {
@@ -60,12 +68,39 @@ export const seedUsers = async () => {
     }
 };
 
+export const seedEmailTemplates = async () => {
+    const templates = [
+        {
+            name: 'resetpassword',
+            html: fs
+                .readFileSync('./server/src/emails/resetpassword.html')
+                .toString(),
+            sender: 'Fake Twitter',
+            subject: 'Reset your password for ',
+        },
+    ];
+    await EmailTemplate.insertMany(templates);
+};
+
 export const clearDatabase = async () => {
     try {
-        const users = await User.deleteMany({});
         const tweets = await Tweet.deleteMany({});
-        console.log(users);
+        const bookmark = await Bookmark.deleteMany({});
+        const followers = await Follow.deleteMany({});
+        const likes = await Like.deleteMany({});
+        const notifications = await Notification.deleteMany({});
+        const replies = await Reply.deleteMany({});
+        const twitterCircle = await TwitterCircle.deleteMany({});
+        const emailTemplate = await EmailTemplate.deleteMany({});
+
         console.log(tweets);
+        console.log(followers);
+        console.log(likes);
+        console.log(notifications);
+        console.log(replies);
+        console.log(twitterCircle);
+        console.log(bookmark);
+        console.log(emailTemplate);
     } catch (err) {
         console.error(err);
     }

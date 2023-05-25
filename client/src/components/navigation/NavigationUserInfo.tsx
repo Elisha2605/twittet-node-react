@@ -1,39 +1,45 @@
 import React, { FC } from 'react';
 import styles from './NavigationUserInfo.module.css';
 import PopUpMenu from '../ui/PopUpMenu';
+import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
+import faLockSolid from '../../assets/faLock-solid.svg';
+
 
 interface NavigationUserInfoProps {
-    id: string;
-    avatar: string | undefined;
-    name: string;
-    username: string;
+    user: any;
     menuOptions: string[];
     menuIcons?: Record<string, React.ReactNode>;
     onClickOption: Function;
 }
 
 const NavigationUserInfo: FC<NavigationUserInfoProps> = ({
-    id,
-    avatar,
-    name,
-    username,
+    user,
     menuOptions,
     menuIcons,
     onClickOption
 }) => {
+
     return (
         <React.Fragment>
             <div className={`${styles.container}`}>
                 <div className={styles.avatar}>
-                    <img src={avatar} alt="" />
+                    <img src={user?.avatar &&
+                        `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`} alt="" />
                 </div>
                 <div className={`${styles.userWrapper}`}>
                     <div className={styles.userInfo}>
-                        <p className={styles.firstname}>{name}</p>
-                        <p className={styles.username}>@{username}</p>
+                        <div className={styles.name}>
+                            <p className={styles.firstname}>{user?.name}</p>
+                            {user?.isProtected && (
+                                <div className={styles.isProtected}>
+                                    <img src={faLockSolid} alt="" />
+                                </div>
+                            )}
+                        </div>
+                        <p className={styles.username}>@{user?.username}</p>
                     </div>
                     <PopUpMenu 
-                        itemId={id}
+                        itemId={user?._id}
                         options={menuOptions!}
                         icons={menuIcons!}
                         onClick={(menuOptions, id) => 

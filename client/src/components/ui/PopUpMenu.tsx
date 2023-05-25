@@ -1,8 +1,8 @@
-import React, { FC, useContext, useEffect, useRef, useState } from 'react';
+import React, { FC, useContext, useRef, useState } from 'react';
 import MenuIcon from '../icons/MenuIcon';
 import styles from './PopUpMenu.module.css';
 import useClickOutSide from '../../hooks/useClickOutSide';
-import { TWEET_AUDIENCE } from '../../constants/common.constants';
+import { TWEET_AUDIENCE, TWEET_MENU } from '../../constants/common.constants';
 import { ModalContext } from '../../context/modal.context';
 
 interface MenuPopUpProps {
@@ -46,9 +46,14 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
         setShowMenu(!showMenu);
     };
 
-    const handleOptionClick = (option: string, id: string, value?: any) => {
+    const handleOnClickOptionMenu = (option: string, id: string, value?: any) => {
         setShowMenu(false);
         onClick(option, id, value);
+    };
+
+    const handleRetweetClick = (option: string, value?: any) => {
+        setShowMenu(false);
+        onClick(option, value);
     };
 
     useClickOutSide(menuRef, setShowMenu)
@@ -90,8 +95,13 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
                                             ? styles.delete
                                             : ''
                                     } ${options.includes(TWEET_AUDIENCE.twitterCircle) ? styles.test : ''}`}
-                                    onClick={() =>
-                                        handleOptionClick(option, itemId!, value!)
+                                    onClick={() => {
+                                            if (option === TWEET_MENU.retweet || option === TWEET_MENU.quoteTweet) {
+                                                handleRetweetClick(option, value);
+                                            } else {
+                                                handleOnClickOptionMenu(option, itemId!, value!);
+                                            }
+                                        }
                                     }
                                 >
                                     {icons && icons[option]}

@@ -11,21 +11,21 @@
     --color-secondary: #657786;
     --color-white: #ffffff;
     --color-black: #000000;
-    --color-pink: #F91980;
+    --color-pink: #f91980;
     --color-error: #fb3b1e;
     --color-green: #27bb6a;
-    
 
     /* color hover */
     --color-primary-darker: #0d8cce;
     --color-primary-light: #8ac7e8;
     --color-primary-lighter: rgb(225, 242, 252);
-    --color-secondary-light: #eef0f3;
+    --color-secondary-light: #e1e8ed;
+    --color-secondary-dark: #ccd6dd57;
     --color-secondary-lighter: #f2f4f6;
-    --color-black-light: #282828;
+    --color-black-light: #2b2b2b;
     --color-black-lighter: #484848;
     --color-pink-lighter: #f9198115;
-    --color-green-lighter: #edfef3; 
+    --color-green-lighter: #edfef3;
     --color-error-light: #ffece9;
 
     /* color transparent */
@@ -34,13 +34,13 @@
     /* color transparent hoeever */
     --color-black-transparent-hover: #626262ad;
 
-
     /* button color */
     --color-btn-disabled: #7accff;
 
     /* font-size */
 
     --font-size-2xl: 2rem;
+    --font-size-1xl: 1.6rem;
     --font-size-xl: 1.5rem;
     --font-size-lg: 1.2rem;
     --font-size-md: 1rem;
@@ -56,7 +56,7 @@
     --font-weight-500: 500;
     --font-weight-400: 400;
     --font-weight-300: 400;
-    
+
     /* border */
     --border-color: #ececec;
     --border-light: 1px solid var(--border-color);
@@ -138,12 +138,12 @@ h2 {
     font-weight: 400;
 }
 
-button{
-	background: none;
-	color: inherit;
-	border: none;
-	padding: 0;
-	font: inherit;
-	cursor: pointer;
-	outline: inherit;
+button {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
 }

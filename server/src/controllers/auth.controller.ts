@@ -15,7 +15,7 @@ import {
 } from 'src/utils/jwt.util';
 import passport from 'passport';
 import { IVerifyOptions } from 'passport-local';
-import User from 'src/model/user.model';
+import User from 'src/models/user.model';
 
 const router = express.Router();
 

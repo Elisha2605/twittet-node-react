@@ -15,7 +15,7 @@ const Message = () => {
     
     return (
         <React.Fragment>
-            <div className={Layout.mainSectionSectionMessageContainer}>
+            <div className={Layout.mainSectionMessageContainer}>
                 <div className={Layout.mainSection}>
                     {/* Home page - start */}
                         <Header>
@@ -40,10 +40,10 @@ const Message = () => {
                     {/* Home page - start */}
                 <div>
                    {/* Aside - start */}
+                    <Aside className={styles.aside}>
                     <Header border={false} clasName={styles.asideHeader} >
                         <DetailIcon className={styles.detailIcon} />
                     </Header>
-                    <Aside className={styles.aside}>
                         <div className={styles.userToInfo}>
                             <Avatar size={Size.medium} path={`${IMAGE_AVATAR_BASE_URL}/default-avatar.jpg`} className={''} />
                             <p className={styles.fullname}>Aïcha Haïdara</p>

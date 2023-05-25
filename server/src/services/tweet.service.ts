@@ -1,8 +1,14 @@
 import mongoose from 'mongoose';
+import { fetchCreatedTweet } from 'src/aggregations/tweet/fetchCreatedTweet.aggregation';
+import { fetchFollowerTweets } from 'src/aggregations/tweet/fetchFollowerTweets.aggregation';
+import { fetchTweetById } from 'src/aggregations/tweet/fetchTweetById.aggregation';
+import { getTweets } from 'src/aggregations/tweet/fetchTweets.aggregation';
+import { fetchUserTweets } from 'src/aggregations/tweet/fetchUserTweets.aggregation';
 import { TWEET_AUDIENCE, TWEET_TYPE } from 'src/constants/tweet.constants';
-import Follow from 'src/model/follow.model';
-import Like from 'src/model/like.model';
-import Tweet from 'src/model/tweet.model';
+import Follow from 'src/models/follow.model';
+import Like from 'src/models/like.model';
+import Tweet from 'src/models/tweet.model';
+import User from 'src/models/user.model';
 import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
 import { CustomError } from 'src/utils/helpers';
 
@@ -10,113 +16,7 @@ export const getAllTweets = async (
     userId: string
 ): Promise<ApiResponse<any>> => {
     try {
-        const tweets = await Tweet.aggregate([
-            {
-                $lookup: {
-                    from: 'TwitterCircle',
-                    localField: 'user',
-                    foreignField: 'user',
-                    as: 'twitterCircle',
-                },
-            },
-            {
-                $unwind: {
-                    path: '$twitterCircle',
-                    preserveNullAndEmptyArrays: true,
-                },
-            },
-            {
-                $lookup: {
-                    from: 'User',
-                    localField: 'user',
-                    foreignField: '_id',
-                    as: 'user',
-                },
-            },
-            {
-                $unwind: '$user',
-            },
-            {
-                $lookup: {
-                    from: 'Like',
-                    localField: '_id',
-                    foreignField: 'tweet',
-                    as: 'likes',
-                },
-            },
-            {
-                $unwind: { path: '$likes', preserveNullAndEmptyArrays: true },
-            },
-            {
-                $match: {
-                    $or: [
-                        {
-                            audience: TWEET_AUDIENCE.everyone,
-                        },
-                        {
-                            audience: TWEET_AUDIENCE.twitterCircle,
-                            $expr: {
-                                $cond: {
-                                    if: {
-                                        $eq: [
-                                            new mongoose.Types.ObjectId(userId),
-                                            '$twitterCircle.user',
-                                        ],
-                                    },
-                                    then: true,
-                                    else: {
-                                        $in: [
-                                            new mongoose.Types.ObjectId(userId),
-                                            '$twitterCircle.members',
-                                        ],
-                                    },
-                                },
-                            },
-                        },
-                    ],
-                },
-            },
-            {
-                $sort: {
-                    createdAt: -1,
-                },
-            },
-            {
-                $project: {
-                    _id: 1,
-                    type: 1,
-                    user: {
-                        _id: '$user._id',
-                        name: '$user.name',
-                        username: '$user.username',
-                        avatar: '$user.avatar',
-                        coverImage: '$user.coverImage',
-                        isVerified: '$user.isVerified',
-                        isProtected: '$user.isProtected',
-                    },
-                    image: 1,
-                    text: 1,
-                    audience: 1,
-                    reply: 1,
-                    mentions: 1,
-                    createdAt: 1,
-                    updatedAt: 1,
-                    likes: '$likes.likes',
-                    replyCount: 1,
-                    totalLikes: {
-                        $cond: {
-                            if: {
-                                $isArray: '$likes.likes',
-                            },
-                            then: {
-                                $size: '$likes.likes',
-                            },
-                            else: 0,
-                        },
-                    },
-                },
-            },
-        ]).exec();
+        const tweets = await getTweets(userId);
 
         if (tweets.length === 0) {
             return {
@@ -145,75 +45,24 @@ export const getAllTweets = async (
 
 export const getTweetById = async (tweetId: string): Promise<any> => {
     try {
-        const tweet = await Tweet.aggregate([
-            {
-                $match: {
-                    _id: new mongoose.Types.ObjectId(tweetId),
-                },
-            },
-            {
-                $lookup: {
-                    from: 'User',
-                    localField: 'user',
-                    foreignField: '_id',
-                    as: 'user',
-                },
-            },
-            {
-                $unwind: '$user',
-            },
-            {
-                $lookup: {
-                    from: 'Like',
-                    localField: '_id',
-                    foreignField: 'tweet',
-                    as: 'likes',
-                },
-            },
-            {
-                $unwind: { path: '$likes', preserveNullAndEmptyArrays: true },
-            },
-            {
-                $project: {
-                    _id: 1,
-                    type: 1,
-                    user: {
-                        _id: '$user._id',
-                        name: '$user.name',
-                        username: '$user.username',
-                        avatar: '$user.avatar',
-                        coverImage: '$user.coverImage',
-                        isVerified: '$user.isVerified',
-                        isProtected: '$user.isProtected',
-                    },
-                    image: 1,
-                    text: 1,
-                    audience: 1,
-                    reply: 1,
-                    createdAt: 1,
-                    updatedAt: 1,
-                    mentions: 1,
-                    replyCount: 1,
-                    likes: '$likes.likes',
-                    totalLikes: {
-                        $cond: {
-                            if: {
-                                $isArray: '$likes.likes',
-                            },
-                            then: {
-                                $size: '$likes.likes',
-                            },
-                            else: 0,
-                        },
-                    },
-                },
-            },
-        ]).exec();
+        const viewedTweet = await Tweet.findById(tweetId);
+        const tweet: any = await fetchTweetById(tweetId);
+
+        if (!viewedTweet) {
+            return {
+                success: true,
+                message: 'Tweet not found!',
+                status: 404,
+                payload: {},
+            };
+        }
+
+        await viewedTweet.updateOne({ $inc: { viewCount: 1 } });
 
         if (!tweet) {
             return {
                 success: true,
-                message: 'Not tweets found!',
+                message: 'Tweet not found!',
                 status: 404,
                 payload: {},
             };
@@ -240,73 +89,8 @@ export const getUserTweets = async (
     userId: string
 ): Promise<ApiResponse<any>> => {
     try {
-        const tweets = await Tweet.aggregate([
-            {
-                $match: {
-                    user: new mongoose.Types.ObjectId(userId),
-                },
-            },
-            {
-                $lookup: {
-                    from: 'User',
-                    localField: 'user',
-                    foreignField: '_id',
-                    as: 'user',
-                },
-            },
-            {
-                $unwind: '$user',
-            },
-            {
-                $lookup: {
-                    from: 'Like',
-                    localField: '_id',
-                    foreignField: 'tweet',
-                    as: 'likes',
-                },
-            },
-            {
-                $unwind: { path: '$likes', preserveNullAndEmptyArrays: true },
-            },
-            {
-                $project: {
-                    _id: 1,
-                    type: 1,
-                    user: {
-                        _id: '$user._id',
-                        name: '$user.name',
-                        username: '$user.username',
-                        avatar: '$user.avatar',
-                        coverImage: '$user.coverImage',
-                        isVerified: '$user.isVerified',
-                        isProtected: '$user.isProtected',
-                    },
-                    image: 1,
-                    text: 1,
-                    audience: 1,
-                    reply: 1,
-                    createdAt: 1,
-                    updatedAt: 1,
-                    likes: '$likes.likes',
-                    totalLikes: {
-                        $cond: {
-                            if: {
-                                $isArray: '$likes.likes',
-                            },
-                            then: {
-                                $size: '$likes.likes',
-                            },
-                            else: 0,
-                        },
-                    },
-                },
-            },
-            {
-                $sort: {
-                    createdAt: -1,
-                },
-            },
-        ]).exec();
+        const tweets = await fetchUserTweets(userId);
+
         if (tweets.length === 0) {
             return {
                 success: true,
@@ -354,73 +138,7 @@ export const getFollowTweets = async (
         );
 
         // Find all tweets from users in the followings array
-        const tweets = await Tweet.aggregate([
-            {
-                $lookup: {
-                    from: 'User',
-                    localField: 'user',
-                    foreignField: '_id',
-                    as: 'user',
-                },
-            },
-            {
-                $unwind: '$user',
-            },
-            {
-                $lookup: {
-                    from: 'Like',
-                    localField: '_id',
-                    foreignField: 'tweet',
-                    as: 'likes',
-                },
-            },
-            {
-                $unwind: { path: '$likes', preserveNullAndEmptyArrays: true },
-            },
-            {
-                $project: {
-                    _id: 1,
-                    type: 1,
-                    user: {
-                        _id: '$user._id',
-                        name: '$user.name',
-                        username: '$user.username',
-                        avatar: '$user.avatar',
-                        coverImage: '$user.coverImage',
-                        isVerified: '$user.isVerified',
-                        isProtected: '$user.isProtected',
-                    },
-                    image: 1,
-                    text: 1,
-                    audience: 1,
-                    reply: 1,
-                    createdAt: 1,
-                    updatedAt: 1,
-                    likes: '$likes.likes',
-                    totalLikes: {
-                        $cond: {
-                            if: {
-                                $isArray: '$likes.likes',
-                            },
-                            then: {
-                                $size: '$likes.likes',
-                            },
-                            else: 0,
-                        },
-                    },
-                },
-            },
-            {
-                $match: {
-                    'user._id': { $in: followingIds },
-                },
-            },
-            {
-                $sort: {
-                    createdAt: -1,
-                },
-            },
-        ]).exec();
+        const tweets = await fetchFollowerTweets(userId, followingIds);
 
         if (tweets.length === 0) {
             return {
@@ -500,34 +218,69 @@ export const reTweet = async (
 ): Promise<ApiResponse<any>> => {
     try {
         const tweet = await Tweet.findById(tweetId);
+        const retweetedTweet = await Tweet.findById(tweet.originalTweet);
+        const user = await User.findById(userId);
 
-        const newTweet = new Tweet({
-            type: TWEET_TYPE.reTweet,
-            originalTweet: tweet._id,
-            user: userId,
-            text: text,
-            image: image,
-            audience: audience,
-            reply: reply,
-        });
+        let newTweet: any;
+
+        // undo retweet without quote.
+        if (
+            !tweet.text &&
+            !tweet.image &&
+            retweetedTweet &&
+            tweet &&
+            tweet.type === TWEET_TYPE.reTweet &&
+            tweet.user.toString() === user._id.toString()
+        ) {
+            console.log(tweet._id);
+            await retweetedTweet.updateOne({ $inc: { retweetCount: -1 } });
+            await tweet.deleteOne();
+
+            return {
+                success: true,
+                message: 'Undone Retweet',
+                status: 200,
+                payload: [],
+            };
+        }
+
+        if (
+            !text &&
+            !image &&
+            tweet.type === TWEET_TYPE.reTweet &&
+            retweetedTweet
+        ) {
+            newTweet = createRetweetWithoutQuote(tweet, user);
+        } else if (
+            text &&
+            tweet.type === TWEET_TYPE.reTweet &&
+            retweetedTweet
+        ) {
+            newTweet = createRetweetWithQuote(tweet, user, text, image);
+        } else {
+            newTweet = createRetweet(
+                tweet,
+                userId,
+                text,
+                image,
+                audience,
+                reply
+            );
+        }
 
         const savedReTweet = await newTweet.save();
+        await tweet.updateOne({ $inc: { retweetCount: 1 } });
         if (!savedReTweet) {
             throw CustomError('Could not create tweet', 500);
         }
 
-        // change this to aggregate function.
-        const populatedTweet = await newTweet.populate({
-            path: 'user',
-            select: 'name username avatar coverImage isVerified isProtected',
-            model: 'User',
-        });
+        const tweets = await fetchCreatedTweet(savedReTweet._id);
 
         return {
             success: true,
             message: 'Successfully created tweet',
             status: 200,
-            payload: populatedTweet,
+            payload: tweets[0],
         };
     } catch (error) {
         const errorResponse: ErrorResponse = {
@@ -686,4 +439,60 @@ export const deleteTweet = async (
         };
         return Promise.reject(errorResponse);
     }
+};
+
+//////// helper function ///
+
+export const undoRetweet = async (tweet: any, user: any) => {
+    const removedTweet = await Tweet.findByIdAndDelete({
+        tweet: tweet._id,
+        user: user._id,
+    });
+    return removedTweet;
+};
+
+export const createRetweetWithoutQuote = (tweet: any, user: any) => {
+    return new Tweet({
+        type: TWEET_TYPE.reTweet,
+        originalTweet: tweet.originalTweet,
+        user: user._id,
+        audience: tweet.audience,
+        reply: tweet.reply,
+    });
+};
+
+export const createRetweetWithQuote = (
+    tweet: any,
+    user: any,
+    text: string,
+    image: string
+) => {
+    return new Tweet({
+        type: TWEET_TYPE.reTweet,
+        originalTweet: tweet.originalTweet,
+        user: user._id,
+        text: text,
+        image: image,
+        audience: tweet.audience,
+        reply: tweet.reply,
+    });
+};
+
+export const createRetweet = (
+    tweet: any,
+    userId: string,
+    text: string,
+    image: string,
+    audience: string,
+    reply: string
+) => {
+    return new Tweet({
+        type: TWEET_TYPE.reTweet,
+        originalTweet: tweet._id,
+        user: userId,
+        text: text,
+        image: image,
+        audience: audience,
+        reply: reply,
+    });
 };

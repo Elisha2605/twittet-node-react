@@ -31,5 +31,4 @@ const Bookmark = mongoose.model<Ibookmark>(
     'Bookmark'
 );
 Bookmark.on('error', handleError);
-
 export default Bookmark;
