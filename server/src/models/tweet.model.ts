@@ -21,11 +21,8 @@ export interface ITweet extends mongoose.Document {
     audience: string;
     reply: string;
     mentions: ObjectId[];
-    originalTweet: ObjectId | string;
     replyCount: number;
-    retweetCount: number;
-    bookmarkCount: number;
-    viewCount: number;
+    originalTweet: ObjectId | string;
 }
 
 export const tweetModel = {
@@ -63,33 +60,18 @@ export const tweetModel = {
         {
             type: Types.ObjectId,
             ref: 'User',
-            required: false,
+            require: false,
         },
     ],
-    originalTweet: {
-        type: Types.ObjectId,
-        ref: 'Tweet',
-        required: false,
-    },
     replyCount: {
         type: Number,
         default: 0,
         required: true,
     },
-    retweetCount: {
-        type: Number,
-        default: 0,
-        required: true,
-    },
-    bookmarkCount: {
-        type: Number,
-        default: 0,
-        required: true,
-    },
-    viewCount: {
-        type: Number,
-        default: 0,
-        required: true,
+    originalTweet: {
+        type: Types.ObjectId,
+        ref: 'Tweet',
+        required: false,
     },
 };
 

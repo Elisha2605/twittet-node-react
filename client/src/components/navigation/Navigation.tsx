@@ -25,10 +25,6 @@ import {
     navUserMenuOptions,
 } from '../../data/menuOptions';
 import {
-<<<<<<< HEAD
-    IMAGE_AVATAR_BASE_URL,
-=======
->>>>>>> dev
     MORE_NAV_OPTION,
 } from '../../constants/common.constants';
 import { ModalContext } from '../../context/modal.context';
@@ -97,21 +93,11 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
     };
 
     const handleMoreOptions = (option: string) => {
-<<<<<<< HEAD
-        if (option === MORE_NAV_OPTION.connect) {
-            console.log(option);
-        }
-=======
->>>>>>> dev
         if (option === MORE_NAV_OPTION.followRequests) {
             navigate('/follower-requests');
         }
         if (option === MORE_NAV_OPTION.settingsAndPrivacy) {
-<<<<<<< HEAD
-            console.log(option);
-=======
             navigate('/settings/account')
->>>>>>> dev
         }
         if (option === MORE_NAV_OPTION.display) {
             console.log(option);
