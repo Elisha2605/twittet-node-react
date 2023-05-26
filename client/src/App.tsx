@@ -74,9 +74,10 @@ function App() {
     // On Login blue background
     const handleLoginSuccess = () => {
         setShowBackground(true); // Set the showBackground state to true when login is successful
-        setTimeout(() => {
+        const loginTimemout =  setTimeout(() => {
             setShowBackground(false); // Set the showBackground state to false after 1.5 seconds
         }, 1000)
+        clearTimeout(loginTimemout);
     };
 
     const handleTextAreaOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

@@ -17,6 +17,7 @@ export const useMessageHook = (defaultTimer: number = 3000) => {
       timeout = setTimeout(() => {
         setMessage(null);
       }, timer);
+      clearTimeout(timeout)
     }
 
     return () => {
