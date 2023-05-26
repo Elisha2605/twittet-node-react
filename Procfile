@@ -1,1 +1,1 @@
-web: node dist/index.js
+web: node tsconfig-paths/register dist/index.js
