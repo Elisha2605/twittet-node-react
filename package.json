@@ -11,13 +11,10 @@
     "start:client": "cd client && npm start",
     "start:server": "nodemon --exec ts-node -r dotenv/config -r tsconfig-paths/register dist/index.js",
     "dev": "concurrently --kill-others-on-fail \"npm run lint && npm run start:server\" \"cd client && npm start\"",
-
     "start": "concurrently \"node --exec ts-node -r dotenv/config -r tsconfig-paths/register dist/index.js\" \"cd client && npm start\"",
-
     "build": "npm run build:server && npm run build:client",
     "test": "echo \"Error: no test specified\" && exit 1",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
-
     "seed": "ts-node -r dotenv/config -r tsconfig-paths/register server/src/config/seed.config.ts",
     "seed:clean": "npm run seed clean",
     "seed:users": "npm run seed users",
@@ -71,9 +68,9 @@
     "@types/uuid": "^9.0.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
+    "concurrently": "^7.6.0",
     "connect-mongo": "^5.0.0",
     "connect-mongodb-session": "^3.1.1",
-    "concurrently": "^7.6.0",
     "cookie-parser": "^1.4.6",
     "crypto-js": "^4.1.1",
     "dotenv": "^16.0.3",
