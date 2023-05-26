@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const http = axios.create({
-    baseURL: 'https://fake-twitter.herokuapp.com/',
+    baseURL: 'https://fake-twitter.herokuapp.com/api',
     timeout: 30000,
 });
 
