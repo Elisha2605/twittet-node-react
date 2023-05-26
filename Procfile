@@ -1,1 +1,1 @@
-web: node tsconfig-paths/register dist/index.js
+web: node --exec ts-node -r dotenv/config -r tsconfig-paths/register dist/index.js
