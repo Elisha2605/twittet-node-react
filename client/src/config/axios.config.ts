@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const API = process.env.NODE_ENV === 'production' ? 'https://yourapp.herokuapp.com/api' : 'http://localhost:5000/api';
+
 const http = axios.create({
-    baseURL: 'http://localhost:4000/api',
+    baseURL: API,
     timeout: 30000,
 });
 
