@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = process.env.NODE_ENV === 'production' ? 'https://yourapp.herokuapp.com/api' : 'http://localhost:5000/api';
+const API = process.env.NODE_ENV === 'production' ? 'https://fake-twitter.herokuapp.com/api' : 'http://localhost:5000/api';
 
 const http = axios.create({
     baseURL: API,
