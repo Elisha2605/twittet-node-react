@@ -4,7 +4,7 @@ import {
     getAllTweetRepliesController,
     getReplyByIdController,
 } from '../../src/controllers/reply.controller';
-import upload from 'src/middleware/multer.middleware';
+import upload from '../../src/middleware/multer.middleware';
 
 import { verifyUser } from '../../src/utils/jwt.util';
 
