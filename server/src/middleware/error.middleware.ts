@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { mailError } from './email.middleware.js';
+import { mailError } from './email.middleware';
 
 export default function errorHandler(
     err: Error,

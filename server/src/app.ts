@@ -8,8 +8,8 @@ import mongoSession from 'connect-mongodb-session';
 import httpContext from 'express-http-context';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-// import 'src/strategies/jwt.strategy';
-// import 'src/strategies/local.strategy';
+import 'src/strategies/jwt.strategy';
+import 'src/strategies/local.strategy';
 import './types/user.type';
 import errorHandler from './middleware/error.middleware';
 import { loggerMiddleware } from './middleware/logger.middleware';
@@ -24,61 +24,12 @@ import replyRouter from './routes/reply.routes';
 import notificationRouter from './routes/notification.routes';
 import twitterCircleRouter from './routes/twitterCircle.routes';
 import passwordRouter from './routes/passwordReset.routes';
-import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import User from 'src/models/user.model';
-import { Strategy as LocalStrategy } from 'passport-local';
 
 dotenv.config();
 
 const app: Application = express();
 
 dbConn();
-
-
-
-dotenv.config();
-
-const opts = {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: process.env.JWT_SECRET,
-};
-
-passport.use(
-    new JwtStrategy(opts, async (jwt_payload: any, done: any) => {
-        try {
-            const user = await User.findOne({ _id: jwt_payload._id });
-            if (user) {
-                return done(null, user);
-            } else {
-                return done(null, false);
-            }
-        } catch (error) {
-            return done(error, false);
-        }
-    })
-);
-
-passport.deserializeUser(function (user: any, done) {
-    done(null, user);
-});
-
-
-
-
-passport.use(
-    new LocalStrategy(
-        { usernameField: 'email', passwordField: 'password' },
-        User.authenticate()
-    )
-);
-
-passport.serializeUser((user: any, done) => {
-    const sessionUser = {
-        id: user._id,
-    };
-    done(null, sessionUser);
-});
-
 
 app.use(passport.initialize());
 
