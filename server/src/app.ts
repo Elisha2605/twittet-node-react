@@ -93,6 +93,21 @@ app.use('/api/password-reset', passwordRouter);
 
 const __dirname = path.resolve(path.dirname(''));
 
+app.use(express.static(path.resolve(__dirname, 'client', 'build')));
+// Step 2:
+// app.get('*', function (request, response) {
+//     response.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+// });
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, 'client/build')));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    });
+}
+
+
 app.use('/avatar', express.static(path.join(__dirname, 'uploads', 'avatar')));
 app.use('/cover', express.static(path.join(__dirname, 'uploads', 'cover')));
 app.use(
@@ -104,20 +119,9 @@ app.use(
     express.static(path.join(__dirname, 'uploads', 'replyImage'))
 );
 
-// if (process.env.NODE_ENV === 'production') {
-//     app.use(express.static(path.join(__dirname, 'client/build')));
-
-//     app.get('*', (req, res) => {
-//         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-//     });
-// }
 
 // Step 1:
-app.use(express.static(path.resolve(__dirname, 'client', 'build')));
-// Step 2:
-app.get('*', function (request, response) {
-    response.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-});
+
 
 // ERROR - REQUEST HANDLING
 app.use(errorHandler);
