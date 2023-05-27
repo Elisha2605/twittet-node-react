@@ -3,14 +3,14 @@ import {
     TWEET_AUDIENCE,
     TWEET_REPLY,
     TWEET_TYPE,
-} from 'src/constants/tweet.constants';
-import { handleError } from 'src/utils/db.util';
+} from '../../src/constants/tweet.constants';
+import { handleError } from '../../src/utils/db.util';
 import User from './user.model';
 import Notification, { INotification } from './notification.model';
 import {
     NOTIFICATION_MESSAGE,
     NOTIFICATION_TYPE,
-} from 'src/constants/notification.constants';
+} from '../../src/constants/notification.constants';
 import TwitterCircle from './twitterCircle.model';
 
 export interface ITweet extends mongoose.Document {

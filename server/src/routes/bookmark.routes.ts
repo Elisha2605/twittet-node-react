@@ -2,8 +2,8 @@ import { Router } from 'express';
 import {
     getUserSavedTweetController,
     saveTweetToBookmarkController,
-} from 'src/controllers/bookmark.controller';
-import { verifyUser } from 'src/utils/jwt.util';
+} from '../../src/controllers/bookmark.controller';
+import { verifyUser } from '../../src/utils/jwt.util';
 
 const bookmarkRouter = Router();
 

@@ -1,7 +1,7 @@
-import { fetchUserInfo } from 'src/aggregations/user/fetchUserInfo.aggregation';
-import User from 'src/models/user.model';
-import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
-import { CustomError } from 'src/utils/helpers';
+import { fetchUserInfo } from '../../src/aggregations/user/fetchUserInfo.aggregation';
+import User from '../../src/models/user.model';
+import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
+import { CustomError } from '../../src/utils/helpers';
 
 export const getAllUsers = async (): Promise<any> => {
     try {

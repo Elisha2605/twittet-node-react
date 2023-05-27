@@ -1,14 +1,14 @@
 import { ObjectId } from 'mongodb';
-import Bookmark from 'src/models/bookmark.model';
-import Follow from 'src/models/follow.model';
-import Like from 'src/models/like.model';
-import Notification from 'src/models/notification.model';
-import Reply from 'src/models/reply.model';
-import Tweet from 'src/models/tweet.model';
-import TwitterCircle from 'src/models/twitterCircle.model';
-import User from 'src/models/user.model';
+import Bookmark from '../../src/models/bookmark.model';
+import Follow from '../../src/models/follow.model';
+import Like from '../../src/models/like.model';
+import Notification from '../../src/models/notification.model';
+import Reply from '../../src/models/reply.model';
+import Tweet from '../../src/models/tweet.model';
+import TwitterCircle from '../../src/models/twitterCircle.model';
+import User from '../../src/models/user.model';
 import fs from 'fs';
-import EmailTemplate from 'src/models/emailTemplate.model';
+import EmailTemplate from '../../src/models/emailTemplate.model';
 
 const users = [
     {

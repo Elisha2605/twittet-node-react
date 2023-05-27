@@ -1,7 +1,7 @@
-import Follow from 'src/models/follow.model';
-import User, { IUser } from 'src/models/user.model';
-import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
-import { CustomError } from 'src/utils/helpers';
+import Follow from '../../src/models/follow.model';
+import User, { IUser } from '../../src/models/user.model';
+import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
+import { CustomError } from '../../src/utils/helpers';
 
 export const getUserFollows = async (userId: string): Promise<any> => {
     try {

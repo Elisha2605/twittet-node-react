@@ -11,7 +11,7 @@ import {
     editProtected,
     searchUserByEmail,
     searchUserByUserName,
-} from 'src/services/user.service';
+} from '../../src/services/user.service';
 import { validate_name, validate_website } from 'src/utils/validation.util';
 
 export const users = asyncHandler(

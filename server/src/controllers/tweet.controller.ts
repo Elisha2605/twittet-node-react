@@ -10,7 +10,7 @@ import {
     getUserTweets,
     reTweet,
     updateTweetAudience,
-} from 'src/services/tweet.service';
+} from '../../src/services/tweet.service';
 
 export const getAllTweetsController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {

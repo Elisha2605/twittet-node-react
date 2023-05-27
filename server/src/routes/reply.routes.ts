@@ -3,10 +3,10 @@ import {
     createReplyController,
     getAllTweetRepliesController,
     getReplyByIdController,
-} from 'src/controllers/reply.controller';
+} from '../../src/controllers/reply.controller';
 import upload from 'src/middleware/multer.middleware';
 
-import { verifyUser } from 'src/utils/jwt.util';
+import { verifyUser } from '../../src/utils/jwt.util';
 
 const replyRouter = Router();
 

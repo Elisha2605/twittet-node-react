@@ -3,7 +3,7 @@ import asyncHandler from 'express-async-handler';
 import {
     getUserSavedTweets,
     saveTweetToBookmark,
-} from 'src/services/bookmark.service';
+} from '../../src/services/bookmark.service';
 
 export const getUserSavedTweetController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {

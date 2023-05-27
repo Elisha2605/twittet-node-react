@@ -1,10 +1,13 @@
 import mongoose from 'mongoose';
-import { TWEET_AUDIENCE, TWEET_REPLY } from 'src/constants/tweet.constants';
-import Follow from 'src/models/follow.model';
-import Reply from 'src/models/reply.model';
-import Tweet from 'src/models/tweet.model';
-import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
-import { CustomError } from 'src/utils/helpers';
+import {
+    TWEET_AUDIENCE,
+    TWEET_REPLY,
+} from '../../src/constants/tweet.constants';
+import Follow from '../../src/models/follow.model';
+import Reply from '../../src/models/reply.model';
+import Tweet from '../../src/models/tweet.model';
+import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
+import { CustomError } from '../../src/utils/helpers';
 
 export const getAllTweetReplies = async (
     tweetId: string

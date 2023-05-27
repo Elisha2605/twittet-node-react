@@ -3,8 +3,8 @@ import {
     verifyPasswordVerificationTokenController,
     requestPasswordResetController,
     resetPasswordController,
-} from 'src/controllers/passwordReset.controller';
-import { verifyUser } from 'src/utils/jwt.util';
+} from '../../src/controllers/passwordReset.controller';
+import { verifyUser } from '../../src/utils/jwt.util';
 
 const passwordRouter = Router();
 

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import Tweet from 'src/models/tweet.model';
+import Tweet from '../../../src/models/tweet.model';
 
 export const fetchCreatedTweet = async (tweetId: mongoose.Types.ObjectId) => {
     const tweet = await Tweet.aggregate([

@@ -4,7 +4,7 @@ import {
     createReply,
     getAllTweetReplies,
     getReplyById,
-} from 'src/services/reply.service';
+} from '../../src/services/reply.service';
 
 export const getAllTweetRepliesController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {

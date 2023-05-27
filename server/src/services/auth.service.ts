@@ -1,7 +1,11 @@
-import { getRefreshToken, getToken, verifyToken } from 'src/utils/jwt.util';
-import User, { IUser } from 'src/models/user.model';
-import { CustomError } from 'src/utils/helpers';
-import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
+import {
+    getRefreshToken,
+    getToken,
+    verifyToken,
+} from '../../src/utils/jwt.util';
+import User, { IUser } from '../../src/models/user.model';
+import { CustomError } from '../../src/utils/helpers';
+import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
 
 export interface UserSingUpInfo {
     email: string;

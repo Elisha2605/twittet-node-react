@@ -1,4 +1,4 @@
-import { UserContext } from 'src/types/user.type';
+import { UserContext } from '../../src/types/user.type';
 import express, { NextFunction, Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import {

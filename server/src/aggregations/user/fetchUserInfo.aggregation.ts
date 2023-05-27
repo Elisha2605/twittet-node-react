@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import User from 'src/models/user.model';
+import User from '../../../src/models/user.model';
 
 export const fetchUserInfo = async (userId: string) => {
     const user = await User.aggregate([

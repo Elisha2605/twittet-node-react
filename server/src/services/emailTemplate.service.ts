@@ -1,4 +1,4 @@
-import EmailTemplate from 'src/models/emailTemplate.model';
+import EmailTemplate from '../../src/models/emailTemplate.model';
 import he from 'he';
 
 export const getEmailTemplateByName = async (name: string) => {

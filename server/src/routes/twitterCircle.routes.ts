@@ -2,8 +2,8 @@ import { Router } from 'express';
 import {
     addUserToTwitterCircleController,
     getUserTwitterCircleMembersController,
-} from 'src/controllers/twitterCircle.controller';
-import { verifyUser } from 'src/utils/jwt.util';
+} from '../../src/controllers/twitterCircle.controller';
+import { verifyUser } from '../../src/utils/jwt.util';
 
 const twitterCircleRouter = Router();
 

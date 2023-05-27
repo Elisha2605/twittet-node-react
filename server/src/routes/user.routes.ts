@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { verifyUser } from 'src/utils/jwt.util';
+import { verifyUser } from '../../src/utils/jwt.util';
 import {
     editEmailController,
     editProtectedController,
@@ -12,8 +12,8 @@ import {
     searchUserByUserNameController,
     searchUsersController,
     users,
-} from 'src/controllers/user.controller';
-import upload from 'src/middleware/multer.middleware';
+} from '../../src/controllers/user.controller';
+import upload from '../../src/middleware/multer.middleware';
 
 const userRouter = Router();
 

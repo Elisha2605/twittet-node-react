@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
-import { getUserLikedTweet, likeTweet } from 'src/services/like.service';
+import { getUserLikedTweet, likeTweet } from '../../src/services/like.service';
 
 export const getUserLikedTweetsController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {

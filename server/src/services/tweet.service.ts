@@ -1,16 +1,19 @@
 import mongoose from 'mongoose';
-import { fetchCreatedTweet } from 'src/aggregations/tweet/fetchCreatedTweet.aggregation';
-import { fetchFollowerTweets } from 'src/aggregations/tweet/fetchFollowerTweets.aggregation';
-import { fetchTweetById } from 'src/aggregations/tweet/fetchTweetById.aggregation';
-import { getTweets } from 'src/aggregations/tweet/fetchTweets.aggregation';
-import { fetchUserTweets } from 'src/aggregations/tweet/fetchUserTweets.aggregation';
-import { TWEET_AUDIENCE, TWEET_TYPE } from 'src/constants/tweet.constants';
-import Follow from 'src/models/follow.model';
-import Like from 'src/models/like.model';
-import Tweet from 'src/models/tweet.model';
-import User from 'src/models/user.model';
-import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
-import { CustomError } from 'src/utils/helpers';
+import { fetchCreatedTweet } from '../../src/aggregations/tweet/fetchCreatedTweet.aggregation';
+import { fetchFollowerTweets } from '../../src/aggregations/tweet/fetchFollowerTweets.aggregation';
+import { fetchTweetById } from '../../src/aggregations/tweet/fetchTweetById.aggregation';
+import { getTweets } from '../../src/aggregations/tweet/fetchTweets.aggregation';
+import { fetchUserTweets } from '../../src/aggregations/tweet/fetchUserTweets.aggregation';
+import {
+    TWEET_AUDIENCE,
+    TWEET_TYPE,
+} from '../../src/constants/tweet.constants';
+import Follow from '../../src/models/follow.model';
+import Like from '../../src/models/like.model';
+import Tweet from '../../src/models/tweet.model';
+import User from '../../src/models/user.model';
+import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
+import { CustomError } from '../../src/utils/helpers';
 
 export const getAllTweets = async (
     userId: string

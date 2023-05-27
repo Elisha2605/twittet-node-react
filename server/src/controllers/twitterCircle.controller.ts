@@ -3,7 +3,7 @@ import asyncHandler from 'express-async-handler';
 import {
     addUserToTwitterCircle,
     getUserTwitterCircleMembers,
-} from 'src/services/twitterCircle.service';
+} from '../../src/services/twitterCircle.service';
 
 export const getUserTwitterCircleMembersController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {

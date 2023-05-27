@@ -1,7 +1,7 @@
-import TwitterCircle from 'src/models/twitterCircle.model';
-import User from 'src/models/user.model';
-import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
-import { CustomError } from 'src/utils/helpers';
+import TwitterCircle from '../../src/models/twitterCircle.model';
+import User from '../../src/models/user.model';
+import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
+import { CustomError } from '../../src/utils/helpers';
 
 export const getUserTwitterCircleMembers = async (
     userId: string

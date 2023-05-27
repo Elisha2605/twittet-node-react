@@ -1,5 +1,5 @@
 import mongoose, { ObjectId, Types } from 'mongoose';
-import { handleError } from 'src/utils/db.util';
+import { handleError } from '../../src/utils/db.util';
 
 export interface IPasswordReset extends mongoose.Document {
     user_id: ObjectId | string;

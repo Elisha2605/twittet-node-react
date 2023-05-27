@@ -5,8 +5,8 @@ import {
     followRequestController,
     getAuthUserFollowsController,
     getUserFollowsController,
-} from 'src/controllers/follow.controller';
-import { verifyUser } from 'src/utils/jwt.util';
+} from '../../src/controllers/follow.controller';
+import { verifyUser } from '../../src/utils/jwt.util';
 
 const followRouter = Router();
 

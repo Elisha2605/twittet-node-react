@@ -4,7 +4,7 @@ import {
     requestPasswordReset,
     resetPassword,
     verifyPasswordVerificationToken,
-} from 'src/services/passwordReset.service';
+} from '../../src/services/passwordReset.service';
 
 export const requestPasswordResetController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {

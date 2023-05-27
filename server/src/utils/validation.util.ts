@@ -1,4 +1,4 @@
-import { DOMAIN_CODES } from 'src/data/country-code.data';
+import { DOMAIN_CODES } from '../../src/data/country-code.data';
 import { CustomError } from './helpers';
 
 export const validate_name = (value: string) => {

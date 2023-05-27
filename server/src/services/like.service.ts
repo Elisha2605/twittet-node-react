@@ -1,9 +1,9 @@
-import { fetchUserLikedTweet } from 'src/aggregations/like/fetchUserLikedTweet.aggregrate';
-import Like from 'src/models/like.model';
-import Tweet from 'src/models/tweet.model';
-import User from 'src/models/user.model';
-import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
-import { CustomError } from 'src/utils/helpers';
+import { fetchUserLikedTweet } from '../../src/aggregations/like/fetchUserLikedTweet.aggregrate';
+import Like from '../../src/models/like.model';
+import Tweet from '../../src/models/tweet.model';
+import User from '../../src/models/user.model';
+import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
+import { CustomError } from '../../src/utils/helpers';
 
 export const getUserLikedTweet = async (
     userId: string

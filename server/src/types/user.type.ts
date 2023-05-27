@@ -1,4 +1,4 @@
-import { IUser } from 'src/models/user.model';
+import { IUser } from '../../src/models/user.model';
 
 export interface UserContext {
     isLoggedIn: boolean;

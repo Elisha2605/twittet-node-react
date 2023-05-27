@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import { NOTIFICATION_TYPE } from 'src/constants/notification.constants';
-import Notification from 'src/models/notification.model';
-import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
+import { NOTIFICATION_TYPE } from '../../src/constants/notification.constants';
+import Notification from '../../src/models/notification.model';
+import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
 
 export const getLikesNotification = async (
     userId: string

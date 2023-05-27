@@ -1,8 +1,8 @@
-import { fetchUserSavedTweets } from 'src/aggregations/bookmark/fetchUserSavedTweets.aggregation';
-import Bookmark from 'src/models/bookmark.model';
-import Tweet from 'src/models/tweet.model';
-import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
-import { CustomError } from 'src/utils/helpers';
+import { fetchUserSavedTweets } from '../../src/aggregations/bookmark/fetchUserSavedTweets.aggregation';
+import Bookmark from '../../src/models/bookmark.model';
+import Tweet from '../../src/models/tweet.model';
+import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
+import { CustomError } from '../../src/utils/helpers';
 
 export const getUserSavedTweets = async (
     userId: string

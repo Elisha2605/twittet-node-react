@@ -1,12 +1,12 @@
-import PasswordReset from 'src/models/passwordReset.model';
-import User from 'src/models/user.model';
-import { ApiResponse, ErrorResponse } from 'src/types/apiResponse.types';
-import { CustomError, generatePasswordToken } from 'src/utils/helpers';
+import PasswordReset from '../../src/models/passwordReset.model';
+import User from '../../src/models/user.model';
+import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
+import { CustomError, generatePasswordToken } from '../../src/utils/helpers';
 import {
     getEmailTemplateByName,
     injectVariables,
 } from './emailTemplate.service';
-import { emailConfig, sendEmail } from 'src/config/nodemailer.config';
+import { emailConfig, sendEmail } from '../../src/config/nodemailer.config';
 
 export const requestPasswordReset = async (
     userId: string,

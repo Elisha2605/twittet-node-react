@@ -5,7 +5,7 @@ import {
     declineFollowRequest,
     getUserFollows,
     sendFollowRequest,
-} from 'src/services/follow.service';
+} from '../../src/services/follow.service';
 
 export const getUserFollowsController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {

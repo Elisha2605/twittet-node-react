@@ -2,8 +2,8 @@ import mongoose, { ObjectId, Types } from 'mongoose';
 import { handleError } from 'src/utils/db.util';
 import Notification from './notification.model';
 import Tweet from './tweet.model';
-import { NOTIFICATION_TYPE } from 'src/constants/notification.constants';
-import { NOTIFICATION_MESSAGE } from 'src/constants/notification.constants';
+import { NOTIFICATION_TYPE } from '../../src/constants/notification.constants';
+import { NOTIFICATION_MESSAGE } from '../../src/constants/notification.constants';
 
 export interface Ilike extends mongoose.Document {
     tweet: ObjectId | string;

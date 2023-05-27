@@ -3,7 +3,7 @@ import asyncHandler from 'express-async-handler';
 import {
     getMentionsNotification,
     getLikesNotification,
-} from 'src/services/notification.service';
+} from '../../src/services/notification.service';
 
 export const getLikesNotificationController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {

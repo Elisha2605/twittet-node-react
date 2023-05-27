@@ -4,9 +4,9 @@ import {
     logIn,
     logOUt,
     singUp,
-} from 'src/controllers/auth.controller';
-import { verifyUser } from 'src/utils/jwt.util';
-import upload from 'src/middleware/multer.middleware';
+} from '../../src/controllers/auth.controller';
+import { verifyUser } from '../../src/utils/jwt.util';
+import upload from '../../src/middleware/multer.middleware';
 
 const authRouter = Router();
 

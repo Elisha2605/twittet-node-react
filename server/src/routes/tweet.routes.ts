@@ -9,9 +9,9 @@ import {
     getUserTweetsController,
     reTweetController,
     updateAudienceController,
-} from 'src/controllers/tweet.controller';
-import { verifyUser } from 'src/utils/jwt.util';
-import upload from 'src/middleware/multer.middleware';
+} from '../../src/controllers/tweet.controller';
+import { verifyUser } from '../../src/utils/jwt.util';
+import upload from '../../src/middleware/multer.middleware';
 
 const tweetRouter = Router();
 
