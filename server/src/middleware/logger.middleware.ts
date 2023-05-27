@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { getLogger } from 'src/config/logger.config';
+import { getLogger } from 'src/config/logger.config.js';
 
 const logger = getLogger();
 

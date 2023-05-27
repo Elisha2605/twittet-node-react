@@ -1,4 +1,4 @@
-import { emailConfig, sendEmail } from 'src/config/nodemailer.config';
+import { emailConfig, sendEmail } from 'src/config/nodemailer.config.js';
 
 export const mailError = (err: any, req: any) => {
     emailConfig();

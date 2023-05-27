@@ -1,4 +1,4 @@
-import nodemailer, { Transporter } from 'nodemailer';
+import nodemailer, { Transporter } from 'nodemailer.js';
 import dotenv from 'dotenv';
 import validator from 'email-validator';
 
