@@ -15,6 +15,6 @@
         "server/src/**/*.ts",
         "server/src/types/*.ts",
         "index.ts"
-    ],
+, "server/src/strategies/jwt.strategy.js"    ],
     "exclude": ["node_modules", ".vscode"]
 }
