@@ -93,11 +93,11 @@ app.use('/api/password-reset', passwordRouter);
 
 const __dirname = path.resolve(path.dirname(''));
 
-app.use(express.static(path.resolve(__dirname, 'client', 'build')));
-// Step 2:
-app.get('*', function (request, response) {
-    response.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-});
+// app.use(express.static(path.resolve(__dirname, 'client', 'build')));
+// // Step 2:
+// app.get('*', function (request, response) {
+//     response.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+// });
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, 'client/build')));
