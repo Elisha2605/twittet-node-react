@@ -12,7 +12,10 @@ import {
     searchUserByEmail,
     searchUserByUserName,
 } from '../../src/services/user.service';
-import { validate_name, validate_website } from 'src/utils/validation.util';
+import {
+    validate_name,
+    validate_website,
+} from '../../src/utils/validation.util';
 
 export const users = asyncHandler(
     async (_req: Request, res: Response, next: NextFunction) => {
