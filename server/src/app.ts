@@ -40,13 +40,16 @@ app.use(express.json());
 app.use(httpContext.middleware);
 
 const corsOptions = {
-    origin: true,
+    origin: ['https://fake-twitter.herokuapp.com'],
     credentials: true,
     optionSuccessStatus: 200,
     allowedHeaders:
         'Content-Type, Authorization, Access-Control-Allow-Credentials',
+    methods: 'GET, POST, PUT, DELETE, OPTIONS', // Add the necessary methods here
 };
 app.use(cors(corsOptions));
+
+app.options('*', cors(corsOptions));
 
 const MongoDBStore = mongoSession(session);
 
