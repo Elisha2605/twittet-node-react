@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { handleError } from 'src/utils/db.util';
+import { handleError } from '../../src/utils/db.util';
 
 export interface IEmailTemplate extends mongoose.Document {
     name: string;

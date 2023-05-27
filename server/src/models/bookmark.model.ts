@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import mongoose, { Types } from 'mongoose';
-import { handleError } from 'src/utils/db.util';
+import { handleError } from '../../src/utils/db.util';
 
 export interface Ibookmark extends mongoose.Document {
     user: ObjectId | string;

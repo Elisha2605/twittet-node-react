@@ -1,5 +1,5 @@
 import mongoose, { Types, ObjectId } from 'mongoose';
-import { handleError } from 'src/utils/db.util';
+import { handleError } from '../../src/utils/db.util';
 
 export interface INotification extends mongoose.Document {
     type: string;
