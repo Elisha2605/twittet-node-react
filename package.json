@@ -2,9 +2,6 @@
   "name": "configuration",
   "version": "1.0.0",
   "description": "",
-  "engines": {
-    "node": "19.4.0"
-  },
   "main": "dist/index.js",
   "scripts": {
     "lint": "eslint --ext .ts .",
@@ -14,12 +11,12 @@
     "start:client": "cd client && npm start",
     "start:server": "nodemon --exec ts-node -r dotenv/config -r tsconfig-paths/register dist/index.js",
     "dev": "concurrently --kill-others-on-fail \"npm run lint && npm run start:server\" \"cd client && npm start\"",
-    
-    "start": "node -r dotenv/config -r tsconfig-paths/register dist/index.js",
+
+    "start": "concurrently \"node -r dotenv/config -r tsconfig-paths/register dist/index.js\" \"cd client && npm start\"",
 
     "build": "npm run build:server && npm run build:client",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false tsc && npm install --prefix client && npm run start --prefix client",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
 
     "seed": "ts-node -r dotenv/config -r tsconfig-paths/register server/src/config/seed.config.ts",
     "seed:clean": "npm run seed clean",
@@ -49,11 +46,15 @@
     "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.55.0",
+    "consola": "^2.15.3",
+    "cors": "^2.8.5",
     "eslint": "^8.36.0",
     "eslint-config-prettier": "^8.7.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "express": "^4.18.2",
     "nodemon": "^2.0.21",
     "prettier": "^2.8.4",
+    "q": "^1.5.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
   },
@@ -74,13 +75,9 @@
     "connect-mongodb-session": "^3.1.1",
     "concurrently": "^7.6.0",
     "cookie-parser": "^1.4.6",
-    "consola": "^2.15.3",
-    "q": "^1.5.1",
-    "cors": "^2.8.5",
     "crypto-js": "^4.1.1",
     "dotenv": "^16.0.3",
     "email-validator": "^2.0.4",
-    "express": "^4.18.2",
     "express-async-handler": "^1.2.0",
     "express-http-context": "^1.2.4",
     "express-session": "^1.17.3",
