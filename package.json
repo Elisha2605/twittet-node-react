@@ -15,7 +15,8 @@
     "start:server": "nodemon --exec ts-node -r dotenv/config -r tsconfig-paths/register dist/index.js",
     "dev": "concurrently --kill-others-on-fail \"npm run lint && npm run start:server\" \"cd client && npm start\"",
 
-    "start": "nodemon --exec ts-node -r dotenv/config -r tsconfig-paths/register dist/index.js",
+    "start": "ts-node -r dotenv/config -r tsconfig-paths/register dist/index.js",
+
     "build": "npm run build:server && npm run build:client",
     "test": "echo \"Error: no test specified\" && exit 1",
     "heroku-postbuild": "tsc",
@@ -96,8 +97,6 @@
     "routes": "^2.1.0",
     "tsconfig-paths": "^4.1.2",
     "uuid": "^9.0.0",
-    "winston": "^3.8.2",
-    "nodemon": "^2.0.21"
-
+    "winston": "^3.8.2"
   }
 }
