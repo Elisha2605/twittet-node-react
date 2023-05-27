@@ -19,7 +19,7 @@
 
     "build": "npm run build:server && npm run build:client",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "heroku-postbuild": "tsc && npm install --prefix client && npm run start --prefix client",
+    "heroku-postbuild": "npm install --prefix client && npm run start --prefix client",
 
     "seed": "ts-node -r dotenv/config -r tsconfig-paths/register server/src/config/seed.config.ts",
     "seed:clean": "npm run seed clean",
