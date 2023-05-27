@@ -1,5 +1,5 @@
 import mongoose, { ObjectId, Types } from 'mongoose';
-import { handleError } from 'src/utils/db.util';
+import { handleError } from '../../src/utils/db.util';
 import Notification from './notification.model';
 import Tweet from './tweet.model';
 import { NOTIFICATION_TYPE } from '../../src/constants/notification.constants';
