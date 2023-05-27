@@ -6,16 +6,16 @@ import {
     login,
     logout,
     // getUserContext,
-} from 'src/services/auth.service';
+} from '../../src/services/auth.service';
 import {
     COOKIE_OPTIONS,
     getRefreshToken,
     getToken,
     verifyToken,
-} from 'src/utils/jwt.util';
+} from '../../src/utils/jwt.util';
 import passport from 'passport';
 import { IVerifyOptions } from 'passport-local';
-import User from 'src/models/user.model';
+import User from '../../src/models/user.model';
 
 const router = express.Router();
 
