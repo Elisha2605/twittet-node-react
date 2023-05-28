@@ -59,7 +59,7 @@ const Index: FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
                     <div className={styles.termsAndService}>
                         <p>
                             This is a fake/clone Twitter app. It's part of my web development Bachelor 
-                            Exam 2023. Feel free to sign up with a fake
+                            Exam 2023. Feel free to sign up with a fake{' '}
                             <span>email address</span> and{' '}
                             <span>password</span>. By singing up, you agree to the{' '}
                             <span>Terms of Service</span> and{' '} <span>Privacy Policy</span>, 
