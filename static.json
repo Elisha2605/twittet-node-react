@@ -1,0 +1,6 @@
+{
+    "root": "uploads",
+    "routes": {
+        "/**": "index.html"
+    }
+}

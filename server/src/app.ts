@@ -92,22 +92,17 @@ app.use('/api/password-reset', passwordRouter);
 // SERVING STATIC FILES
 
 const __dirname = path.resolve(path.dirname(''));
-// Step 1:
-app.use(express.static(path.resolve(__dirname, 'client', 'build')));
-// Step 2:
-app.get('*', function (request, response) {
-    response.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-});
+const __distPath = path.resolve(path.dirname(''));
 
-app.use('/avatar', express.static(path.join(__dirname, 'uploads', 'avatar')));
-app.use('/cover', express.static(path.join(__dirname, 'uploads', 'cover')));
+app.use('/avatar', express.static(path.join(__distPath, 'uploads', 'avatar')));
+app.use('/cover', express.static(path.join(__distPath, 'uploads', 'cover')));
 app.use(
     '/tweetImage',
-    express.static(path.join(__dirname, 'uploads', 'tweetImage'))
+    express.static(path.join(__distPath, 'uploads', 'tweetImage'))
 );
 app.use(
     '/replyImage',
-    express.static(path.join(__dirname, 'uploads', 'replyImage'))
+    express.static(path.join(__distPath, 'uploads', 'replyImage'))
 );
 
 // if (process.env.NODE_ENV === 'production') {
@@ -118,7 +113,12 @@ app.use(
 //     });
 // }
 
-
+// Step 1:
+app.use(express.static(path.resolve(__dirname, 'client', 'build')));
+// Step 2:
+app.get('*', function (request, response) {
+    response.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+});
 
 // ERROR - REQUEST HANDLING
 app.use(errorHandler);
