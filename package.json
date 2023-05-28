@@ -14,9 +14,9 @@
 
     "start": "concurrently \"node -r dotenv/config -r tsconfig-paths/register dist/index.js\" \"cd client && npm start\"",
 
-    "build": "npm run build:server && npm run build:client",
+    "build": "npm run build:server && npm run build:client && cp -R uploads dist/server/src",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "heroku-postbuild": "cp -R uploads build/uploads && npm install --prefix client && npm run build --prefix client && tsc",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client && NPM_CONFIG_PRODUCTION=false tsc",
 
     "seed": "ts-node -r dotenv/config -r tsconfig-paths/register server/src/config/seed.config.ts",
     "seed:clean": "npm run seed clean",

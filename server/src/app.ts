@@ -92,7 +92,7 @@ app.use('/api/password-reset', passwordRouter);
 // SERVING STATIC FILES
 
 const __dirname = path.resolve(path.dirname(''));
-const __distPath = path.resolve(path.dirname(''));
+const __distPath = path.resolve(path.dirname('dist/server/src'));
 
 app.use('/avatar', express.static(path.join(__distPath, 'uploads', 'avatar')));
 app.use('/cover', express.static(path.join(__distPath, 'uploads', 'cover')));
