@@ -114,7 +114,7 @@ export const editUserProfile = async (
     location: string | null,
     website: string | null
 ) => {
-    const res = await http.patch(
+    const res = await http.put(
         `/users/edit-profile`,
         {
             cover: coverImage,

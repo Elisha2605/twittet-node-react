@@ -21,22 +21,24 @@ tweetRouter.get('/follower-tweets', verifyUser(), getFollowTweetsController);
 tweetRouter.get('/tweet/:id', verifyUser(), getTweetByIdController);
 tweetRouter.post(
     '/create',
-    upload.single('tweetImage'),
-    uploadToS3('tweetImage'),
     verifyUser(),
+    upload.fields([{ name: 'tweetImage', maxCount: 1 }]),
+    uploadToS3(['tweetImage']),
     createTweetController
 );
 tweetRouter.post(
     '/retweet/:id',
-    upload.single('tweetImage'),
     verifyUser(),
+    upload.fields([{ name: 'tweetImage', maxCount: 1 }]),
+    uploadToS3(['tweetImage']),
     reTweetController
 );
 
 tweetRouter.put(
     '/edit/:id',
     verifyUser(),
-    upload.single('tweetImage'),
+    upload.fields([{ name: 'tweetImage', maxCount: 1 }]),
+    uploadToS3(['tweetImage']),
     editTweetController
 );
 

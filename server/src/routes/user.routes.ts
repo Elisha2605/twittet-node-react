@@ -13,7 +13,7 @@ import {
     searchUsersController,
     users,
 } from '../../src/controllers/user.controller';
-import upload from '../../src/middleware/multer.middleware';
+import upload, { uploadToS3 } from '../../src/middleware/multer.middleware';
 
 const userRouter = Router();
 
@@ -27,18 +27,25 @@ userRouter.get(
     verifyUser(),
     searchUserByUserNameController
 );
-userRouter.patch(
+userRouter.put(
     '/edit-profile',
     upload.fields([
         { name: 'cover', maxCount: 1 },
         { name: 'avatar', maxCount: 1 },
     ]),
+    uploadToS3(['cover', 'avatar']),
     verifyUser(),
     editUserProfileController
 );
 userRouter.patch('/username', verifyUser(), editUsernameController);
 userRouter.patch('/email', verifyUser(), editEmailController);
 userRouter.patch('/is-protected', verifyUser(), editProtectedController);
-userRouter.post('/upload', upload.single('avatar'), verifyUser(), image);
+userRouter.post(
+    '/upload',
+    upload.single('avatar'),
+    uploadToS3('avatar'),
+    verifyUser(),
+    image
+);
 
 export default userRouter;

@@ -34,13 +34,35 @@ const upload = multer({
     },
 });
 
-// Upload middleware function
-const uploadToS3 = (folder: string) => (req: any, res: any, next: any) => {
-    if (!req.file) {
-        return next();
-    }
+const uploadToS3 =
+    (folders: string | string[]) => async (req: any, res: any, next: any) => {
+        if (!req.files) {
+            return next();
+        }
 
-    const file = req.file;
+        const files = req.files as {
+            [fieldname: string]: Express.Multer.File[];
+        };
+
+        try {
+            if (Array.isArray(folders)) {
+                for (const folder of folders) {
+                    const fileArray = files[folder];
+                    if (fileArray) {
+                        for (const file of fileArray) {
+                            await uploadFileToS3(file, folder);
+                        }
+                    }
+                }
+            }
+
+            next();
+        } catch (err) {
+            next(err);
+        }
+    };
+
+const uploadFileToS3 = async (file: Express.Multer.File, folder: string) => {
     const uuid = uuidv4();
     const fileExtension = path.extname(file.originalname);
     const filename = `${file.fieldname}-${uuid}${fileExtension}`;
@@ -53,15 +75,10 @@ const uploadToS3 = (folder: string) => (req: any, res: any, next: any) => {
         ContentType: file.mimetype,
     };
 
-    s3.upload(params, (err: Error, data: any) => {
-        if (err) {
-            return next(err);
-        }
+    await s3.upload(params).promise();
 
-        // Add the S3 URL to the request body or any other desired location
-        req.file.filename = filename;
-        next();
-    });
+    // Add the S3 URL to the request body or any other desired location
+    file.filename = filename;
 };
 
 export { uploadToS3 };

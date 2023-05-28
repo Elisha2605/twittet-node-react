@@ -76,11 +76,11 @@ export const createTweetController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.user._id;
         const text = req.body.text;
-        const image = req.file ? req.file.filename : null;
+        const image = req.files?.['tweetImage']?.[0]?.filename ?? null;
         const audience = req.body.audience;
         const reply = req.body.reply;
 
-        console.log(req.body);
+        console.log(image);
 
         if (text === undefined && image === null) {
             res.status(400).json({ InvalidInputError: 'Invalid Input' });
@@ -126,7 +126,7 @@ export const reTweetController = asyncHandler(
         const tweetId = req.params.id;
         const userId = req.user._id;
         const text = req.body.text;
-        const image = req.file ? req.file.filename : null;
+        const image = req.files?.['tweetImage']?.[0]?.filename ?? null;
         const audience = req.body.audience;
         const reply = req.body.reply;
 
@@ -175,7 +175,7 @@ export const editTweetController = asyncHandler(
         const tweetId = req.params.id;
         const userId = req.user._id;
         const text = req.body.text;
-        const image = req.file ? req.file.filename : null;
+        const image = req.files?.['tweetImage']?.[0]?.filename ?? null;
         const audience = req.body.audience;
         const reply = req.body.reply;
 

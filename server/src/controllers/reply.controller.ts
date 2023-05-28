@@ -58,7 +58,7 @@ export const createReplyController = asyncHandler(
         const tweetId = req.params.id;
         const userId = req.user._id;
         const text = req.body.text;
-        const image = req.file ? req.file.filename : null;
+        const image = req.files?.['replyImage']?.[0]?.filename ?? null;
 
         if (text === undefined && image === null) {
             res.status(400).json({ InvalidInputError: 'Invalid Input' });
