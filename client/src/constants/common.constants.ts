@@ -1,7 +1,11 @@
-export const IMAGE_AVATAR_BASE_URL = `http://localhost:4000/avatar`
-export const IMAGE_COVER_BASE_URL = `http://localhost:4000/cover`
-export const IMAGE_TWEET_BASE_URL = `http://localhost:4000/tweetImage`
-export const IMAGE_TWEET_REPLY_BASE_URL = `http://localhost:4000/replyImage`
+// export const IMAGE_AVATAR_BASE_URL = `http://localhost:4000/avatar`
+// export const IMAGE_COVER_BASE_URL = `http://localhost:4000/cover`
+// export const IMAGE_TWEET_BASE_URL = `http://localhost:4000/tweetImage`
+// export const IMAGE_TWEET_REPLY_BASE_URL = `http://localhost:4000/replyImage`
+export const IMAGE_AVATAR_BASE_URL = `https://fake-twitter-uploads.s3.amazonaws.com/avatar`
+export const IMAGE_COVER_BASE_URL = `https://fake-twitter-uploads.s3.amazonaws.com/cover`
+export const IMAGE_TWEET_BASE_URL = `https://fake-twitter-uploads.s3.amazonaws.com/tweetImage`
+export const IMAGE_TWEET_REPLY_BASE_URL = `https://fake-twitter-uploads.s3.amazonaws.com/replyImage`
 
 export enum TWEET_TYPE {
     regular = 'Regular',
