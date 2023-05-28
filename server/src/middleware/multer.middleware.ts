@@ -59,7 +59,7 @@ const uploadToS3 = (folder: string) => (req: any, res: any, next: any) => {
         }
 
         // Add the S3 URL to the request body or any other desired location
-        req.s3Url = data.Location;
+        req.file.filename = filename;
         next();
     });
 };
