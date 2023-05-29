@@ -23,8 +23,8 @@ const NavigationUserInfo: FC<NavigationUserInfoProps> = ({
         <React.Fragment>
             <div className={`${styles.container}`}>
                 <div className={styles.avatar}>
-                    <img src={user?.avatar &&
-                        `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`} alt="" />
+                    <img src={user?.avatar ?
+                        `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}` : `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`} alt="" />
                 </div>
                 <div className={`${styles.userWrapper}`}>
                     <div className={styles.userInfo}>
