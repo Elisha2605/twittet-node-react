@@ -3,7 +3,7 @@ import axios from 'axios';
 const API = process.env.NODE_ENV === 'production' ? 'https://fake-twitter.herokuapp.com/api' : 'http://localhost:4000/api';
 
 const http = axios.create({
-    baseURL: 'https://fake-twitter.herokuapp.com/api',
+    baseURL: API,
     timeout: 30000,
 });
 

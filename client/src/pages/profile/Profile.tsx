@@ -29,6 +29,7 @@ import { ModalContext } from '../../context/modal.context';
 import ProfileEditModal from './profile-modals/ProfileEditModal';
 import { faLink, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import FollowButton from '../../components/ui/FollowButton';
+import LoadingRing from '../../components/ui/LoadingRing';
 
 interface ProfileProps {
     onAddTweet: any;
@@ -58,7 +59,6 @@ const Profile: FC<ProfileProps> = ({
     const [userTweets, setUserTweets] = useState<any[]>([]);
     const [userTweetsMedia, setUserTweetsMedia] = useState<any[]>([]);
     const [userLikedTweets, setUserLikedTweets] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
 
     const [likedTweet, setLikedTweet] = useState<any>();
 
@@ -83,16 +83,6 @@ const Profile: FC<ProfileProps> = ({
         userInfo();
     }, [id]);
 
-    // get Follow status (consider putting this in the userContext)
-    useEffect(() => {
-        if (authUser) {
-            const fetchUserFollowStatus = async () => {
-                setLoading(false)
-            };
-            fetchUserFollowStatus();
-        }
-    }, [authUser, id]);
-    
 
     // Set active tab in local storage
     useEffect(() => {
@@ -306,55 +296,55 @@ const Profile: FC<ProfileProps> = ({
 
                     <div className={styles.main}>
                         {/* *** MAIN - START *** */}
-                        <div className={styles.imageWrapper}>
-                            <div className={styles.coverImage}>
-                                <img
-                                    src={
-                                        user?.coverImage
-                                            ? `${IMAGE_COVER_BASE_URL}/${user?.coverImage}`
-                                            : undefined
-                                    }
-                                    alt=""
-                                />
-                            </div>
-                            <div className={styles.profileImage}>
-                                <img
-                                    src={
-                                        user?.avatar
-                                            ? `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`
-                                            : undefined
-                                    }
-                                    alt=""
-                                />
-                            </div>
-                            {authUser?._id === id! ? (
-                                <Button
-                                    className={styles.editProfileBtn}
-                                    value={'Edit profile'}
-                                    type={ButtonType.tietary}
-                                    size={ButtonSize.small}
-                                    onClick={() => {
-                                        openModal('profile-edit-modal');
-                                    }}
-                                />
-                            ) : (
-                                <>
-                                {!loading && (
-                                    <FollowButton
-                                        userId={user?._id}
-                                        type={ButtonType.secondary}
-                                        size={ButtonSize.small}
-                                        className={styles.editProfileBtn}
+                        {user && (
+                            <div className={styles.imageWrapper}>
+                                <div className={styles.coverImage}>
+                                    <img
+                                        src={
+                                            user?.coverImage
+                                                ? `${IMAGE_COVER_BASE_URL}/${user?.coverImage}`
+                                                : undefined
+                                        }
+                                        alt=""
                                     />
+                                </div>
+                                <div className={styles.profileImage}>
+                                    <img
+                                        src={
+                                            user?.avatar
+                                                ? `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`
+                                                : undefined
+                                        }
+                                        alt=""
+                                    />
+                                </div>
+                                {authUser?._id === id! ? (
+                                    <Button
+                                        className={styles.editProfileBtn}
+                                        value={'Edit profile'}
+                                        type={ButtonType.tietary}
+                                        size={ButtonSize.small}
+                                        onClick={() => {
+                                            openModal('profile-edit-modal');
+                                        }}
+                                    />
+                                ) : (
+                                    <>
+                                        <FollowButton
+                                            userId={user?._id}
+                                            type={ButtonType.secondary}
+                                            size={ButtonSize.small}
+                                            className={styles.editProfileBtn}
+                                        />
+                                    </>
                                 )}
-                                </>
-                            )}
-                            <ProfileEditModal
-                                user={user}
-                                editedObject={object}
-                                onCallBackEdit={getEditedUser}
-                            />
-                        </div>
+                                <ProfileEditModal
+                                    user={user}
+                                    editedObject={object}
+                                    onCallBackEdit={getEditedUser}
+                                />
+                            </div>
+                        )}
                         <div className={styles.userInfo}>
                             {!user?.isProtected ? (
                                 <p className={styles.firstname}>{user?.name}</p>

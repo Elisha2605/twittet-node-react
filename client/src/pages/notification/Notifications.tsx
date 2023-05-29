@@ -8,7 +8,10 @@ import HorizontalNavBar from '../../components/ui/HorizontalNavBar';
 import SearchBar from '../../components/ui/SearchBar';
 import Aside from '../../components/aside/Aside';
 import WhoToFollow from '../../components/ui/WhoToFollow';
-import { getLikesNotification, getMentionsNotification } from '../../api/notification.api';
+import {
+    getLikesNotification,
+    getMentionsNotification,
+} from '../../api/notification.api';
 import { NOTIFICATION_TYPE } from '../../constants/common.constants';
 import NotificationsLike from './NotificationsLike';
 import Tweet from '../../components/tweet/Tweet';
@@ -17,58 +20,61 @@ import { likeTweet } from '../../api/like.api';
 import ContentNotAvailable from '../../components/ui/ContentNotAvailable';
 
 const Notification = () => {
-
     const [authUser, setAuthUser] = useState<any>(null);
-    
-    const [activeTab, setActiveTab] = useState(localStorage.getItem('activeTab-notification') || 'all');
+
+    const [activeTab, setActiveTab] = useState(
+        localStorage.getItem('activeTab-notification') || 'all'
+    );
     const [likedTweet, setLikedTweet] = useState<any>();
     const [allNotifications, setAllNotifications] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState<any>(null);
 
-
-    
     const ctx = useContext(AuthContext);
     useEffect(() => {
         const getAuthUser = async () => {
             const { user } = ctx.getUserContext();
             setAuthUser(user);
-        }
+        };
         getAuthUser();
     }, []);
 
-
-     // Set active tab in local storage
+    // Set active tab in local storage
     useEffect(() => {
         localStorage.setItem('activeTab-notification', activeTab);
     }, [activeTab]);
 
     useEffect(() => {
         const getAllNotifications = async () => {
-          const likes = await getLikesNotification();
-          const mentions = await getMentionsNotification();
-      
-          // combining likes and mentions into a single array
-          const allNotifications = [...likes.notifications, ...mentions.notifications];
-      
-          // sorting the combined array based on timestamp in descending order
-          allNotifications.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      
-          setAllNotifications(allNotifications);
-        };
-      
-        getAllNotifications();
-      }, []);
-      
-      useEffect(() => {
-        console.log(allNotifications);
-      }, [allNotifications])
+            setIsLoading(true);
+            const likes = await getLikesNotification();
+            const mentions = await getMentionsNotification();
 
-       // On like tweet
+            // combining likes and mentions into a single array
+            const allNotifications = [
+                ...likes.notifications,
+                ...mentions.notifications,
+            ];
+
+            // sorting the combined array based on timestamp in descending order
+            allNotifications.sort(
+                (a, b) =>
+                    new Date(b.createdAt).getTime() -
+                    new Date(a.createdAt).getTime()
+            );
+            setAllNotifications(allNotifications);
+            setIsLoading(false);
+        };
+
+        getAllNotifications();
+    }, []);
+
+    // On like tweet
     const onClickLike = async (tweet: any) => {
-        const res: any = await likeTweet(tweet._id);;
+        const res: any = await likeTweet(tweet._id);
         const { likedTweet } = res;
         console.log(likedTweet);
-        setLikedTweet(likedTweet)
-    }
+        setLikedTweet(likedTweet);
+    };
 
     useEffect(() => {
         setAllNotifications((prevTweets: any) =>
@@ -83,81 +89,113 @@ const Notification = () => {
             )
         );
     }, [likedTweet]);
-    
+
     return (
         <React.Fragment>
             <div className={Layout.mainSectionContainer}>
                 <div className={Layout.mainSection}>
                     {/* Home page - start */}
-                        <Header border={true}>
-                            <div className={styles.headerWrapper}>
-                                <HeaderTitle title={'Notifications'} />
-                                <GearIcon />
+                    <Header border={true}>
+                        <div className={styles.headerWrapper}>
+                            <HeaderTitle title={'Notifications'} />
+                            <GearIcon />
+                        </div>
+                        <HorizontalNavBar className={styles.NotificationNav}>
+                            <div
+                                className={
+                                    activeTab === 'all' ? styles.active : ''
+                                }
+                                onClick={() => setActiveTab('all')}
+                            >
+                                All
                             </div>
-                            <HorizontalNavBar className={styles.NotificationNav}>
-                                <div className={activeTab === 'all' ? styles.active : ''}
-                                    onClick={() => setActiveTab('all')}
-                                >
-                                    All
-                                </div>
-                                <div className={activeTab === 'mentions' ? styles.active : ''}
-                                    onClick={() => setActiveTab('mentions')}
-                                >
-                                    Mentions
-                                </div>
-                            </HorizontalNavBar>
-                        </Header>
+                            <div
+                                className={
+                                    activeTab === 'mentions'
+                                        ? styles.active
+                                        : ''
+                                }
+                                onClick={() => setActiveTab('mentions')}
+                            >
+                                Mentions
+                            </div>
+                        </HorizontalNavBar>
+                    </Header>
                     {/* Home page - start */}
                     {activeTab === 'all' && (
                         <div className={styles.main}>
-                            {allNotifications.length === 0 && (
-                                <ContentNotAvailable title={"You don't have notificaitons - yet!"} message={'All your notifications will be shown here!'} />
-                            )}
-                        {allNotifications.map((notification: any) => 
-                            <div key={notification._id}>
-                                {notification.type === NOTIFICATION_TYPE.like ? (
-                                     <NotificationsLike likes={notification} />
-                                ): (notification.type === NOTIFICATION_TYPE.mention) ? (
-                                    <Tweet
-                                        key={notification?._id}
-                                        tweet={notification}
-                                        onClickMenu={() => {}}
-                                        onClickLike={onClickLike}
-                                        isLiked={notification?.likes?.includes(authUser?._id)}
+                            {!isLoading &&
+                                allNotifications.length > 0 &&
+                                allNotifications.map((notification: any) => (
+                                    <div key={notification._id}>
+                                        {notification.type ===
+                                        NOTIFICATION_TYPE.like ? (
+                                            <NotificationsLike
+                                                likes={notification}
+                                            />
+                                        ) : notification.type ===
+                                          NOTIFICATION_TYPE.mention ? (
+                                            <Tweet
+                                                key={notification?._id}
+                                                tweet={notification}
+                                                onClickMenu={() => {}}
+                                                onClickLike={onClickLike}
+                                                isLiked={notification?.likes?.includes(
+                                                    authUser?._id
+                                                )}
+                                            />
+                                        ) : null}
+                                    </div>
+                                ))}
+                            {!isLoading &&  allNotifications.length < 1 && (
+                                <ContentNotAvailable
+                                    title={
+                                        "You don't have notificaitons - yet!"
+                                    }
+                                    message={
+                                        'All your notifications will be shown here!'
+                                    }
                                 />
-                                ): null } 
-                            </div>
-                        )}
-                      </div>
-                      
+                            )}
+                        </div>
                     )}
                     {activeTab === 'mentions' && (
                         <div className={styles.main}>
-                            {allNotifications.length === 0 && (
-                                <ContentNotAvailable title={"You haven't been metioned - yet!"} message={'Here you will find all tweets in which people mentioned you!'} />
-                            )}
-                            {allNotifications.map((notification: any) => 
-                            <div key={notification._id}>
-                                {notification.type === NOTIFICATION_TYPE.mention ? (
-                                    <Tweet
-                                        key={notification?._id}
-                                        tweet={notification}
-                                        onClickMenu={() => {}}
-                                        onClickLike={() => {}}
-                                        isLiked={notification?.likes?.includes(authUser?._id)}
+                            {!isLoading &&  allNotifications.length < 1 && (
+                                <ContentNotAvailable
+                                    title={"You haven't been metioned - yet!"}
+                                    message={
+                                        'Here you will find all tweets in which people mentioned you!'
+                                    }
                                 />
-                                ): null }
-                            </div>
-                        )}
+                            )}
+                            {!isLoading &&
+                                allNotifications.length > 0 &&
+                                allNotifications.map((notification: any) => (
+                                    <div key={notification._id}>
+                                        {notification.type ===
+                                        NOTIFICATION_TYPE.mention ? (
+                                            <Tweet
+                                                key={notification?._id}
+                                                tweet={notification}
+                                                onClickMenu={() => {}}
+                                                onClickLike={() => {}}
+                                                isLiked={notification?.likes?.includes(
+                                                    authUser?._id
+                                                )}
+                                            />
+                                        ) : null}
+                                    </div>
+                                ))}
                         </div>
                     )}
                 </div>
-                    {/* Home page - start */}
+                {/* Home page - start */}
                 <div className={Layout.aside}>
                     <Aside className={styles.aside}>
-                    <Header border={false}>
-                        <SearchBar />
-                    </Header>
+                        <Header border={false}>
+                            <SearchBar />
+                        </Header>
                         <WhoToFollow />
                     </Aside>
                 </div>

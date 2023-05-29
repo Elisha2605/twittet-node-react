@@ -91,10 +91,6 @@ const TweetFooter: FC<TweetFooterProps> = ({
             authUser?._id !== tweet?.user?._id) ||
         tweet?.audience === TWEET_AUDIENCE.twitterCircle;
 
-        useEffect(() => {
-            console.log(isRetweet);
-        }, [isRetweet])
-
     return (
         <React.Fragment>
             <div

@@ -24,6 +24,7 @@ import AuthContext from '../../context/user.context';
 import { likeTweet } from '../../api/like.api';
 import HomeEditTwitterCirlceModal from './home-modals/HomeEditTwitterCirlceModal';
 import FormTweet from '../../components/form/FormTweet';
+import LoadingRing from '../../components/ui/LoadingRing';
 
 interface HomeProps {
     value: string;
@@ -61,6 +62,7 @@ const Home: React.FC<HomeProps> = ({
     const [tweets, setTweets] = useState<any[]>([]);
     const [followingTweets, setFollowingTweets] = useState<any[]>([]);
     const [authUser, setAuthUser] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState<any>(null);
 
     const [isFormFocused, setIsFormFocused] = useState(false);
     const [activeTab, setActiveTab] = useState(
@@ -90,18 +92,25 @@ const Home: React.FC<HomeProps> = ({
     // fetching Tweets
     useEffect(() => {
         const fetchTweets = async () => {
+            setIsLoading(true);
+            if (tweets.length > 0) {
+                setIsLoading(false);
+                return;
+            }
             try {
                 if (authUser) {
                     const { tweets } = await getAllTweets();
                     setTweets(tweets);
+                    setIsLoading(false);
                 }
             } catch (error) {
                 // Handle the error here, e.g., display an error message or set default values for tweets
                 console.error('Error fetching tweets:', error);
+                setIsLoading(false);
             }
         };
         fetchTweets();
-    }, [authUser]);
+    }, [authUser, tweets.length]);
     const memoizedTweets = useMemo(() => tweets, [tweets]);
 
     useEffect(() => {
@@ -316,7 +325,7 @@ const Home: React.FC<HomeProps> = ({
                     </>
                     {activeTab === 'for-you' && (
                         <div className={styles.main}>
-                            {memoizedTweets.map((tweet: any) => (
+                            {!isLoading && memoizedTweets.map((tweet: any) => (
                                 <Tweet
                                     key={tweet._id}
                                     tweet={tweet}
@@ -329,6 +338,7 @@ const Home: React.FC<HomeProps> = ({
                                     isRetweet={tweet?.retweets?.includes(authUser?._id)}
                                 />
                             ))}
+                            {isLoading && tweets.length >= 24 ? <LoadingRing size={'small'} />: null}
                         </div>
                     )}
                     {activeTab === 'following' && (

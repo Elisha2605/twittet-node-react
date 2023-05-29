@@ -4,7 +4,7 @@ import TweetFooter from '../ui/TweetFooter';
 import UserInfo from '../ui/UserInfo';
 import styles from './TweetReply.module.css';
 import { getTimeDifference } from '../../utils/helpers.utils';
-import { IMAGE_AVATAR_BASE_URL, IMAGE_TWEET_REPLY_BASE_URL } from '../../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, IMAGE_AVATAR_DEFAULT, IMAGE_TWEET_REPLY_BASE_URL } from '../../constants/common.constants';
 import { 
     tweetMenuOptions, 
     tweetMenuIcons, 
@@ -55,7 +55,7 @@ const Tweet: FC<TweetProps> = ({
                     <UserInfo
                         userId={userId}
                         tweet={tweet}
-                        avatar={avatar ? `${IMAGE_AVATAR_BASE_URL}/${avatar}` : undefined}
+                        avatar={avatar ? `${IMAGE_AVATAR_BASE_URL}/${avatar}` : `${IMAGE_AVATAR_BASE_URL}/${IMAGE_AVATAR_DEFAULT}`}
                         name={name}
                         username={username}
                         isVerified={isVerfied}

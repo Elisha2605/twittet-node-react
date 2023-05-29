@@ -7,7 +7,7 @@ export const IMAGE_COVER_BASE_URL = `https://fake-twitter-uploads.s3.amazonaws.c
 export const IMAGE_TWEET_BASE_URL = `https://fake-twitter-uploads.s3.amazonaws.com/tweetImage`
 export const IMAGE_TWEET_REPLY_BASE_URL = `https://fake-twitter-uploads.s3.amazonaws.com/replyImage`
 
-export const IMAGE_AVATAR_DEFAULT = `https://fake-twitter-uploads.s3.amazonaws.com/avatar/default-avatar.jpg`
+export const IMAGE_AVATAR_DEFAULT = 'default-avatar.jpg'
 export const IMAGE_COVER_DEFAULT = `https://fake-twitter-uploads.s3.amazonaws.com/avatar/default-cover.jpg`
 
 export enum TWEET_TYPE {

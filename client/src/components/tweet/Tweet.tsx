@@ -6,6 +6,7 @@ import styles from './Tweet.module.css';
 import { getTimeDifference } from '../../utils/helpers.utils';
 import {
     IMAGE_AVATAR_BASE_URL,
+    IMAGE_AVATAR_DEFAULT,
     IMAGE_TWEET_BASE_URL,
     IMAGE_TWEET_REPLY_BASE_URL,
     TWEET_AUDIENCE,
@@ -138,7 +139,7 @@ const Tweet: FC<TweetProps> = ({
                             avatar={
                                 avatar
                                     ? `${IMAGE_AVATAR_BASE_URL}/${avatar}`
-                                    : undefined
+                                    : `${IMAGE_AVATAR_BASE_URL}/${IMAGE_AVATAR_DEFAULT}`
                             }
                             name={name}
                             username={username}
@@ -249,7 +250,7 @@ const Tweet: FC<TweetProps> = ({
                             avatar={
                                 avatar
                                     ? `${IMAGE_AVATAR_BASE_URL}/${avatar}`
-                                    : undefined
+                                    : `${IMAGE_AVATAR_BASE_URL}/${IMAGE_AVATAR_DEFAULT}`
                             }
                             name={name}
                             username={username}
