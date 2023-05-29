@@ -15,8 +15,9 @@
     "start:server": "nodemon --exec ts-node -r dotenv/config -r tsconfig-paths/register index.ts",
 
     "dev": "concurrently --kill-others-on-fail \"npm run lint && npm run start:server\" \"cd client && npm start\"",
+    
     "start": "node dist/index.js",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false tsc && NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
+    "heroku-postbuild": "tsc && npm install --prefix client && npm run build --prefix client",
 
     "seed": "ts-node -r dotenv/config -r tsconfig-paths/register server/src/config/seed.config.ts",
     "seed:clean": "npm run seed clean",
