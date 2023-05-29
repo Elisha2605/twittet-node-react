@@ -39,34 +39,15 @@ export const userModel = {
         type: String,
         unique: true,
         required: true,
-        validate: {
-            validator: (v: string) => {
-                return v !== undefined;
-            },
-            message: (props: any) => `${props.path} is required.`,
-        },
     },
     name: {
         type: String,
-        unique: false, // change to true
-        required: false, // change to true
-        validate: {
-            validator: (v: string) => {
-                return v !== undefined;
-            },
-            message: (props: any) => `${props.path} is required.`,
-        },
+        required: true,
     },
     username: {
         type: String,
-        unique: false, // change to true
-        required: false, // change to true
-        validate: {
-            validator: (v: string) => {
-                return v !== undefined;
-            },
-            message: (props: any) => `${props.path} is required.`,
-        },
+        unique: true,
+        required: true,
     },
     avatar: {
         type: String,
@@ -101,16 +82,17 @@ export const userModel = {
     isVerified: {
         type: Boolean,
         default: false,
-        required: true,
+        required: false,
     },
     isProtected: {
         type: Boolean,
         default: false,
-        required: true,
+        required: false,
     },
     authStrategy: {
         type: String,
         default: 'local',
+        required: true,
     },
     refreshToken: {
         type: [sessionSchema],

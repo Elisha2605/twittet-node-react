@@ -219,7 +219,6 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
         const getUserBookmarkList = async () => {
             const { tweets }: any = await getUserSavedTweets();
             setSavedTweets(tweets)
-            console.log(tweets);
         };
         getUserBookmarkList();
     }, [tweet])

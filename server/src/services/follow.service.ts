@@ -326,7 +326,7 @@ async function handleUnprotectedFollowRequest(
         const result = await Promise.all([receiver.save(), sender.save()]);
         return {
             success: true,
-            message: 'Following!',
+            message: 'Following',
             status: 200,
             payload: result,
         };
@@ -345,7 +345,7 @@ async function handleUnprotectedFollowRequest(
         const result = await Promise.all([receiver.save(), sender.save()]);
         return {
             success: true,
-            message: 'Following!',
+            message: 'Following',
             status: 200,
             payload: result,
         };
@@ -366,7 +366,7 @@ async function handleUnprotectedFollowRequest(
         const result = await Promise.all([receiver.save(), sender.save()]);
         return {
             success: true,
-            message: 'Following!',
+            message: 'Following',
             status: 200,
             payload: result,
         };
@@ -387,7 +387,7 @@ async function handleUnprotectedFollowRequest(
         const result = await Promise.all([receiver.save(), sender.save()]);
         return {
             success: true,
-            message: 'Following!',
+            message: 'Following',
             status: 200,
             payload: result,
         };

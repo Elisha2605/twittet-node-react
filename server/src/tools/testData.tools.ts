@@ -16,27 +16,93 @@ const users = [
         email: 'a@a.com',
         name: 'Aïcha Haïdara',
         username: 'aicha_ngoma',
-        avatar: 'avatar-1.jpg',
-        coverImage: 'cover-1.jpg',
         password: '123',
+        avatar: 'test1-f.jpg',
+        coverImage: 'c1.jpg',
+        isVerified: true,
+        isProtected: false,
+        bio: `🎤 Singer/Songwriter. Channeling my emotions into 
+            lyrics and melodies that resonate with your soul. 
+            Let's embark on a musical journey together. 🎶`,
+        location: 'Helsinki, Finland 🇫🇮',
+        website: 'https://www.daracoaching.com',
     },
     {
         _id: new ObjectId(),
-        email: 'e@e.com',
-        name: 'Elisha Ngoma',
-        username: 'e_ngoma26',
-        avatar: 'avatar-2.jpg',
-        coverImage: 'cover-2.jpg',
+        email: 'b@b.com',
+        name: 'Bella Johansen',
+        username: 'bella_j',
         password: '123',
+        avatar: 'test2-f.jpg',
+        coverImage: 'c2.jpg',
+        isVerified: false,
+        isProtected: false,
+        bio: `Social Advisor | Empowering individuals and 
+            organizations to maximize their online presence. 
+            Strategizing impactful digital campaigns for a connected world.`,
+        location: 'Aalborg',
+        website: null,
     },
     {
         _id: new ObjectId(),
         email: 'c@c.com',
-        name: 'Florence',
-        username: 'floflo',
-        avatar: 'avatar-3.jpg',
-        coverImage: 'cover-3.jpg',
+        name: 'Carole leclerc',
+        username: 'coroleclerc493',
         password: '123',
+        avatar: 'test3-f.jpg',
+        coverImage: 'c3.jpg',
+        isVerified: true,
+        isProtected: false,
+        bio: `Fashion is my passion, and I'm ready to create stunning visuals together. 💃✨`,
+        location: 'Paris, France',
+        website: 'https://carole.com',
+    },
+
+    {
+        _id: new ObjectId(),
+        email: 'd@d.com',
+        name: 'Daniel Crogh',
+        username: 'dany889',
+        password: '123',
+        avatar: 'test1-m.jpg',
+        coverImage: 'c4.jpg',
+        isVerified: false,
+        isProtected: true,
+        bio: `Architect | Designing spaces that blend functionality and beauty, shaping the world around us.`,
+        location: 'Poland',
+        website: 'https://www.danielcrogh.com',
+    },
+    {
+        _id: new ObjectId(),
+        email: 'e@e.com',
+        name: 'Ezekiel Morgan',
+        username: 'ezekMor',
+        password: '123',
+        avatar: 'test2-m.jpg',
+        coverImage: 'c5.jpg',
+        isVerified: false,
+        isProtected: false,
+        bio: `Embracing the thrill of the unknown, 
+            seeking breathtaking landscapes and 
+            unforgettable experiences.`,
+        location: 'Poland',
+        website: null,
+    },
+    {
+        _id: new ObjectId(),
+        email: 'f@f.com',
+        name: 'Frank Dupon',
+        username: 'frankdupon',
+        password: '123',
+        avatar: 'test3-m.jpg',
+        coverImage: 'c6.jpg',
+        isVerified: false,
+        isProtected: false,
+        bio: `✍️ Écrivain Français | Plongeant dans les dédales 
+            de la langue française, explorant les recoins de 
+            l'imaginaire pour tisser des histoires captivantes.`,
+        location: 'Lion',
+        website: 'https://frank-lecrivain.com',
     },
 ];
 
@@ -56,6 +122,11 @@ export const seedUsers = async () => {
                 name: user.name,
                 username: user.username,
                 coverImage: user.coverImage,
+                isVerified: user.isVerified,
+                isProtected: user.isProtected,
+                bio: user.bio,
+                location: user.location,
+                website: null,
             });
             await User.register(newUser, user.password);
             console.log(`User with ID '${user._id}' created successfully...`);
@@ -92,6 +163,7 @@ export const clearDatabase = async () => {
         const replies = await Reply.deleteMany({});
         const twitterCircle = await TwitterCircle.deleteMany({});
         const emailTemplate = await EmailTemplate.deleteMany({});
+        const users = await User.deleteMany({});
 
         console.log(tweets);
         console.log(followers);
@@ -101,6 +173,7 @@ export const clearDatabase = async () => {
         console.log(twitterCircle);
         console.log(bookmark);
         console.log(emailTemplate);
+        console.log(users);
     } catch (err) {
         console.error(err);
     }

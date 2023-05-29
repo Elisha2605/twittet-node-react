@@ -42,8 +42,13 @@ const FollowButton: FC<FollowButtonProps> = ({
     onClick,
 }) => {
     const [authUser, setAuthUser] = useState<any>(null);
-    const [isFollowing, setIsFollowing] = useState<boolean>();
-    const [isloading, setIsLoading] = useState<boolean>(true);
+    // const [isFollowing, setIsFollowing] = useState<boolean>();
+    // const [isPending, setIsPending] = useState<boolean>();
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    const [followings, setFollowings] = useState<any>([]);
+    const [pendings, setPendings] = useState<any>([]);
+    const [buttonText, setButtonText] = useState<string>('Follow');
 
     let allStyles = styles.primary;
 
@@ -77,14 +82,12 @@ const FollowButton: FC<FollowButtonProps> = ({
     }, []);
 
     const getAuthUserFollowStatus = async () => {
-        setIsLoading(true); // remove the comment to get a spinner
-        const { followings } = await getUserFollows(authUser?._id!);
-        if (
-            followings &&
-            followings.some((following: any) => following.user._id === userId)
-        ) {
-            setIsFollowing(true);
-        }
+        setIsLoading(true);
+        const { followings, pendings } = await getUserFollows(authUser?._id!);
+
+        setFollowings(followings);
+        setPendings(pendings);
+
         setIsLoading(false);
     };
 
@@ -99,27 +102,66 @@ const FollowButton: FC<FollowButtonProps> = ({
     ) => {
         e.stopPropagation();
         const res = await sendFollowRequest(userId!);
-        console.log(res);
 
-        setIsFollowing(!isFollowing);
+        // Check the response and update the button text accordingly
+        if (res.success) {
+            if (res.message === 'Following') {
+                setButtonText('Following');
+            } else if (res.message === 'Pending') {
+                setButtonText('Pending');
+            } else {
+                setButtonText('Follow');
+            }
+        }
+        console.log(res);
     };
+
+    const isFollowing = (): boolean => {
+        return (
+            followings &&
+            followings.some((following: any) => following.user._id === userId)
+        );
+    };
+
+    const isPending = (): boolean => {
+        return (
+            pendings &&
+            pendings.some((pending: any) => pending.user._id === userId)
+        );
+    };
+
+    useEffect(() => {
+        if (isFollowing()) {
+            setButtonText('Following');
+        } else if (isPending()) {
+            setButtonText('Pending');
+        } else {
+            setButtonText('Follow');
+        }
+    }, [followings, pendings]);
 
     return (
         <React.Fragment>
-            {!isloading && (
-                <button
-                    className={`${className} ${allStyles} ${styles[type!]} ${
-                        loading ? styles.loading : ''
-                    } ${isDisabled && styles.disabled}
-                    ${isFollowing ? styles.followBtn : ''}
-                    `}
-                    onClick={(e: any) => handleFollowRequest(e)}
-                    onMouseEnter={onMouseEnter}
-                    onMouseLeave={onMouseLeave}
-                    disabled={isDisabled}
-                >
-                    {isFollowing ? 'Following' : 'Follow'}
-                </button>
+            {!isLoading && (
+                <>
+                {authUser?._id !== userId && (
+                    <button
+                        className={`${className} ${allStyles} ${
+                            styles[type!]
+                        } ${loading ? styles.loading : ''} ${
+                            isDisabled && styles.disabled
+                        }
+                        ${isFollowing() ? styles.followBtn : ''}
+                        `}
+                        onClick={(e: any) => handleFollowRequest(e)}
+                        onMouseEnter={onMouseEnter}
+                        onMouseLeave={onMouseLeave}
+                        disabled={isDisabled}
+                    >
+                        {buttonText}
+                    </button>
+                )}
+                </>
             )}
         </React.Fragment>
     );
