@@ -65,9 +65,9 @@ const SearchBar: FC<SearchBarProps> = ({ width, isButton, classNameContainer, cl
                         }}
                     >
                         {searchResults.map((user: any) => (
-                            <>
+                            <div key={user?._id}>
                             {isButton ? (
-                                <div key={user._id} onClick={onClickBtn}>
+                                <div key={user?._id} onClick={onClickBtn}>
                                 <UserInfo
                                         userId={user?._id}
                                         avatar={
@@ -81,7 +81,7 @@ const SearchBar: FC<SearchBarProps> = ({ width, isButton, classNameContainer, cl
                                     />
                                 </div>
                             ): (
-                                <div key={user._id} onClick={() => navigate(`/profile/${user._id}`)}>
+                                <div key={user?._id} onClick={() => navigate(`/profile/${user._id}`)}>
                                     <UserInfo
                                         userId={user?._id}
                                         avatar={
@@ -96,7 +96,7 @@ const SearchBar: FC<SearchBarProps> = ({ width, isButton, classNameContainer, cl
                                 </div>
                             )} 
                                 
-                            </>
+                            </div>
                         ))}
                     </div>
                 )}

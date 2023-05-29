@@ -323,7 +323,7 @@ const Home: React.FC<HomeProps> = ({
                     <>
                         <HomeEditTwitterCirlceModal />
                     </>
-                    {activeTab === 'for-you' && (
+                    {activeTab === 'for-you' && (   
                         <div className={styles.main}>
                             {!isLoading && memoizedTweets.map((tweet: any) => (
                                 <Tweet

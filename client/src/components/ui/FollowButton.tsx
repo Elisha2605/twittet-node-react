@@ -24,8 +24,6 @@ interface FollowButtonProps {
     loading?: Boolean;
     isDisabled?: boolean;
     className?: string;
-    onMouseEnter?: React.MouseEventHandler<HTMLButtonElement>;
-    onMouseLeave?: React.MouseEventHandler<HTMLButtonElement>;
     onClick?: Function;
 }
 
@@ -37,8 +35,6 @@ const FollowButton: FC<FollowButtonProps> = ({
     loading = false,
     isDisabled = false,
     className,
-    onMouseEnter,
-    onMouseLeave,
     onClick,
 }) => {
     const [authUser, setAuthUser] = useState<any>(null);
@@ -138,7 +134,8 @@ const FollowButton: FC<FollowButtonProps> = ({
         } else {
             setButtonText('Follow');
         }
-    }, [followings, pendings]);
+    }, [followings, pendings,]);
+
 
     return (
         <React.Fragment>
@@ -154,8 +151,8 @@ const FollowButton: FC<FollowButtonProps> = ({
                         ${isFollowing() ? styles.followBtn : ''}
                         `}
                         onClick={(e: any) => handleFollowRequest(e)}
-                        onMouseEnter={onMouseEnter}
-                        onMouseLeave={onMouseLeave}
+                        onMouseEnter={() => {}}
+                        onMouseLeave={() => {}}
                         disabled={isDisabled}
                     >
                         {buttonText}

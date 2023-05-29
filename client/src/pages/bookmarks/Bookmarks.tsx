@@ -23,7 +23,7 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
     const [savedTweets, setSavedTweets] = useState<any[]>([]);
     const [likedTweet, setLikedTweet] = useState<any>();
 
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const ctx = useContext(AuthContext);
     useEffect(() => {
@@ -36,6 +36,7 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
 
     useEffect(() => {
         const getSavedTweets = async () => {
+            setIsLoading(true)
             const { tweets } = await getUserSavedTweets();
             setSavedTweets(tweets);
             setIsLoading(false);
@@ -98,7 +99,7 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
                     </Header>
                     {/* Home page - start */}
                     <div className={styles.main}>
-                        {savedTweets.length === 0 && (
+                        {!isLoading && savedTweets.length === 0 && (
                             <div className={styles.emptyBookmarksWrapper}>
                                 <div className={styles.emptyBookmarksImage}>
                                     <img
@@ -122,7 +123,7 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
                         )}
 
                         {/* tweets - start */}
-                        {savedTweets.map((tweet: any) => (
+                        {!isLoading && savedTweets.map((tweet: any) => (
                             <Tweet
                                 key={tweet?._id}
                                 tweet={tweet}

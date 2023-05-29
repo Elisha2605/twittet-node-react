@@ -121,7 +121,7 @@ const UserInfo: FC<UserInfoProps> = ({
                             <div className={styles.userInfo} onClick={onNavigateToProfile}>
                                 <p className={styles.name}>
                                 {name}{' '}
-                                {tweet?.user?.isProtected && (
+                                {user?.isProtected && (
                                     <span className={styles.isProtected}>
                                         <img src={faLockSolid} alt="" />
                                     </span>

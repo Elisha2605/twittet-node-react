@@ -1,51 +1,53 @@
-import React from "react";
-import Button, { ButtonSize, ButtonType } from "./Button";
-import UserInfo from "./UserInfo";
+import React, { useEffect, useState } from 'react';
+import Button, { ButtonSize, ButtonType } from './Button';
+import UserInfo from './UserInfo';
 
-
-import styles from "./WhoToFollow.module.css";
+import styles from './WhoToFollow.module.css';
+import { getAllUsers } from '../../api/user.api';
+import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
+import { useNavigate } from 'react-router-dom';
 
 const WhoToFollow = () => {
+    const [users, setUsers] = useState<any[]>([]);
 
-const onFollow = () => {
-    // DOTO
-}
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            const { users } = await getAllUsers();
+            setUsers(users);
+        };
+        fetchUsers();
+    }, []);
 
     return (
         <React.Fragment>
             <div className={styles.container}>
                 <h2 className={styles.title}>Who to follow</h2>
-                <div className={styles.userInfo}>
-                    <UserInfo avatar={"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"}
-                    name={"Aïcha"}
-                    username={"aicha4355"}                    >
-                    <Button value={'Follow'} type={ButtonType.secondary} size={ButtonSize.small}  onClick={onFollow} />    
-                    </UserInfo>
-                </div>
-                <div className={styles.userInfo}>
-                    <UserInfo avatar={"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"}
-                    name={"Aïcha"}
-                    username={"aicha4355"}                     >
-                    <Button value={'Follow'} type={ButtonType.secondary} size={ButtonSize.small}  onClick={onFollow} />    
-                    </UserInfo>
-                </div>
-                <div className={styles.userInfo}>
-                    <UserInfo avatar={"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"}
-                    name={"Aïcha"}
-                    username={"aicha4355"}                     >
-                    <Button value={'Follow'} type={ButtonType.secondary} size={ButtonSize.small}  onClick={onFollow} />    
-                    </UserInfo>
-                </div>
-                <div className={styles.userInfo}>
-                    <UserInfo avatar={"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"}
-                    name={"Aïcha"}
-                    username={"aicha4355"}                    >
-                    <Button value={'Follow'} type={ButtonType.secondary} size={ButtonSize.small}  onClick={onFollow} />    
-                    </UserInfo>
-                </div>
+                {users.length > 0 &&
+                    users.map((user: any) => (
+                        <div key={user?._id} className={styles.userInfo} onClick={() => navigate(`/profile/${user?._id}`)}>
+                            <UserInfo
+                                user={user}
+                                userId={user?._id}
+                                avatar={
+                                    user?.avatar
+                                        ? `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`
+                                        : undefined
+                                }
+                                name={user?.name}
+                                username={user?.username}
+                                isNavigate={true}
+                                isVerified={user?.isVerfied}
+                                isProtected={user?.isProtected}
+                            >
+                                {/* <Button value={'Follow'} type={ButtonType.secondary} size={ButtonSize.small}  onClick={onFollow} />     */}
+                            </UserInfo>
+                        </div>
+                    ))}
             </div>
         </React.Fragment>
-    )
-}
+    );
+};
 
 export default WhoToFollow;

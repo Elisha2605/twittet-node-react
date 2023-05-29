@@ -6,16 +6,11 @@ import {
 
 export const getAllUsers = async () => {
     try {
-        const res = await http.get('/users');
+        const res = await http.get('/users', GETREQUESTOPTIONS());
         return res.data;
     } catch (error: any) {
-        if (error.response && error.response.status === 401) {
-            localStorage.removeItem('context');
-            window.location.href = '/';
-        } else {
-            console.error(error);
-            throw error;
-        }
+        console.error(error);
+        throw error;
     }
 };
 
