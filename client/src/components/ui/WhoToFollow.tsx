@@ -38,7 +38,7 @@ const WhoToFollow = () => {
                                 name={user?.name}
                                 username={user?.username}
                                 isNavigate={true}
-                                isVerified={user?.isVerfied}
+                                isVerified={user?.isVerified}
                                 isProtected={user?.isProtected}
                             >
                                 {/* <Button value={'Follow'} type={ButtonType.secondary} size={ButtonSize.small}  onClick={onFollow} />     */}

@@ -123,6 +123,7 @@ const handleProtectedFollowRequest = async (
             receiver.followers = receiver.followers.filter(
                 (item: any) => item.user.toString() !== follower._id.toString()
             );
+            receiver.followerCount = receiver.followers.length;
 
             // Remove leader._id from sender.pendings array
             sender.pendings = sender.pendings.filter(
@@ -131,6 +132,7 @@ const handleProtectedFollowRequest = async (
             sender.followings = sender.followings.filter(
                 (item: any) => item.user.toString() !== leader._id.toString()
             );
+            sender.followingCount = sender.followings.length;
 
             // Save the updated documents
             const result = await Promise.all([receiver.save(), sender.save()]);
@@ -141,9 +143,6 @@ const handleProtectedFollowRequest = async (
                 payload: result,
             };
         }
-
-        // unfollow if user is protected
-        // if ((receiver && receiver.followers.some((item: any) => item.user.toString)))
 
         if (!receiver && !sender) {
             // Both the receiver and sender do not exist
@@ -420,6 +419,7 @@ export const approveFollowRequest = async (
 
         // put the sender ID in the receiver followers array
         receiver.followers.push({ user: sender.user._id });
+        receiver.followerCount = receiver.followers.length;
 
         // remove the sender ID from the receiver waitings array
         receiver.waitings = receiver.waitings.filter(
@@ -428,6 +428,7 @@ export const approveFollowRequest = async (
 
         // put the receiver ID in the sender followings array
         sender.followings.push({ user: receiver.user._id });
+        sender.followingCount = sender.followings.length;
 
         // remove the receiver ID from the sender pendings array
         sender.pendings = sender.pendings.filter(

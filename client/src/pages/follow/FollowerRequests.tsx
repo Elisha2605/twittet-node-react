@@ -98,11 +98,13 @@ const FollowerRequests: FC<FollowerRequestsProps> = ({}) => {
                                 <div key={waiting?.user?._id} className={styles.contentWrapper}>
                                     <div>
                                         <UserInfo
+                                            user={waiting?.user}
                                             userId={waiting?.user?._id}
                                             avatar={waiting?.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${waiting?.user?.avatar}`}
                                             name={waiting?.user?.name}
                                             username={waiting?.user?.username}
                                             isVerified={waiting?.user?.isVerified}
+                                            isProtected={waiting?.user?.isProtected}
                                         />
                                         {responses[waiting?.user?._id]?.approved && (
                                             <p className={styles.followsYou}>Follows you</p>
