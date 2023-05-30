@@ -388,6 +388,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                                 <div onClick={onClickSaveAndUnsaveTweet}>
                                     <FontAwesomeIcon
                                         icon={isSaved() ? faBookmarkSolid : faBookmarkRegular}
+                                        color={isSaved() ? 'var(--color-primary)': ''}
                                         className={`${styles.faBookmark}`}
                                     />
                                 </div>

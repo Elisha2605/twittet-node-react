@@ -21,6 +21,7 @@ import UserInfoRetweet from '../ui/UserInfoRetweet';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRepeat } from '@fortawesome/free-solid-svg-icons';
 import AuthContext from '../../context/user.context';
+import { getAuthUserFollows } from '../../api/follow.api';
 
 interface TweetProps {
     tweet?: any;
@@ -43,6 +44,8 @@ const Tweet: FC<TweetProps> = ({
 }) => {
 
     const [authUser, setAuthUser] = useState<any>(null);
+    const [followers, setFollowers] = useState<any>([]);
+    const [followings, setFollowings] = useState<any>([]);
 
     // regular tweet
     const tweetId = tweet?._id;
@@ -116,6 +119,39 @@ const Tweet: FC<TweetProps> = ({
     }
 
     const hasRetweetAndTweetImage =  retweetImage && tweetImage;
+
+    useEffect(() => {
+        const fetchAuthUserData = async () => {
+            const { followers, followings } = await getAuthUserFollows();
+            setFollowers(followers);
+            setFollowings(followings)
+        };
+        fetchAuthUserData();
+    }, []);
+
+    const isOnlyPeopleYouFollow = (userId: string): boolean => {
+        if (followers &&
+            tweet?.user?._id !== authUser?._id &&
+            tweet?.reply === TWEET_REPLY.peopleYouFollow &&
+            followers.some((following: any) => following?.user?._id === userId)
+        ) {
+            return true;
+        }
+        return false;
+    };
+
+    const isMention = (userId: string): boolean => {
+        if (
+            tweet &&
+            tweet.mentions &&
+            tweet?.user?._id !== authUser?._id &&
+            !tweet.mentions.includes(userId)
+        ) {
+            return false;
+        }
+        return true;
+    };
+
 
     return (
         <React.Fragment>
@@ -297,8 +333,7 @@ const Tweet: FC<TweetProps> = ({
                         </div>
                     </>
                 )}
-
-
+                
                 {tweet.audience === TWEET_AUDIENCE.twitterCircle ? (
                     <div className={styles.twitterCircle}>
                         <span className={styles.icon}>
@@ -309,15 +344,15 @@ const Tweet: FC<TweetProps> = ({
                             this Tweet
                         </span>
                     </div>
-                ) : tweet.reply === TWEET_REPLY.peopleYouFollow ? (
+                ) : tweet.reply === TWEET_REPLY.peopleYouFollow && isOnlyPeopleYouFollow(userId) ? (
                     <div className={styles.tweetReply}>
                         <span className={styles.icon}>
                             <UserIcon isSmall={true} />
                         </span>{' '}
                         <span>You can reply to this conversation</span>
                     </div>
-                ) : (
-                    tweet.reply === TWEET_REPLY.onlyPeopleYouMention && (
+                ) : (tweet.reply === TWEET_REPLY.onlyPeopleYouMention  && isMention(authUser?._id)) && (
+                     (
                         <div className={styles.tweetReply}>
                             <span className={styles.icon}>
                                 <AtIcon isSmall={true} />
