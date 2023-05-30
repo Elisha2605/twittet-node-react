@@ -22,8 +22,8 @@ interface ProfileEditModalProps {
 
 const ProfileEditModal: FC<ProfileEditModalProps> = ({
     user,
-    onCallBackEdit,
     editedObject,
+    onCallBackEdit,
 }) => {
     const [selectedCoverFile, setSelectedCoverFile] = useState<File | null>(
         null

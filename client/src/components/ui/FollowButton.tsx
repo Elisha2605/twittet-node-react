@@ -1,6 +1,5 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import styles from './FollowButton.module.css';
-import LoadingRing from './LoadingRing';
 import { getUserFollows, sendFollowRequest } from '../../api/follow.api';
 import AuthContext from '../../context/user.context';
 
@@ -18,6 +17,7 @@ export enum ButtonSize {
 
 interface FollowButtonProps {
     userId?: string;
+    user?: any;
     value?: any;
     type?: ButtonType;
     size: ButtonSize;
@@ -25,10 +25,13 @@ interface FollowButtonProps {
     isDisabled?: boolean;
     className?: string;
     onClick?: Function;
+    followStatus?: any;
+    onFollowCallback?: (followStatus: any) => void;
 }
 
 const FollowButton: FC<FollowButtonProps> = ({
     userId,
+    user,
     value,
     type,
     size,
@@ -36,6 +39,8 @@ const FollowButton: FC<FollowButtonProps> = ({
     isDisabled = false,
     className,
     onClick,
+    followStatus,
+    onFollowCallback
 }) => {
     const [authUser, setAuthUser] = useState<any>(null);
     // const [isFollowing, setIsFollowing] = useState<boolean>();
@@ -98,7 +103,6 @@ const FollowButton: FC<FollowButtonProps> = ({
     ) => {
         e.stopPropagation();
         const res = await sendFollowRequest(userId!);
-
         // Check the response and update the button text accordingly
         if (res.success) {
             if (res.message === 'Following') {
@@ -109,7 +113,9 @@ const FollowButton: FC<FollowButtonProps> = ({
                 setButtonText('Follow');
             }
         }
-        console.log(res);
+        // Passing this to the Parent components
+        followStatus = res
+        onFollowCallback!(followStatus);
     };
 
     const isFollowing = (): boolean => {

@@ -83,7 +83,6 @@ const Profile: FC<ProfileProps> = ({
         userInfo();
     }, [id]);
 
-
     // Set active tab in local storage
     useEffect(() => {
         localStorage.setItem('activeTab-profile', activeTab);
@@ -261,6 +260,28 @@ const Profile: FC<ProfileProps> = ({
         setUser((prevUser: any) => ({ ...prevUser, ...editedUser }));
     };
 
+    const onFollowCallback = (followStatus: any) => {
+        if (followStatus.message === 'Following') {
+            setUser((prevUser: any) =>
+                prevUser?._id === followStatus.response[0].user 
+                    ? {
+                        ...prevUser,
+                        followerCount: prevUser.followerCount + 1,
+                      }
+                    : prevUser
+            );
+        } else if (followStatus.message === 'Unfollow') {
+            setUser((prevUser: any) =>
+                prevUser?._id === followStatus.response[0].user 
+                    ? {
+                        ...prevUser,
+                        followerCount: prevUser.followerCount - 1,
+                      }
+                    : prevUser
+            );
+        }
+    };
+
     return (
         <React.Fragment>
             <div className={Layout.mainSectionContainer}>
@@ -278,12 +299,10 @@ const Profile: FC<ProfileProps> = ({
                                 isProtected={user?.isProtected}
                                 subTitle={
                                     (activeTab === 'tweets' ||
-                                        activeTab === 'replies') &&
-                                    userTweets.length === 1
+                                        activeTab === 'replies')
                                         ? userTweets.length + ' tweet'
                                         : (activeTab === 'tweets' ||
-                                              activeTab === 'replies') &&
-                                          userTweets.length > 1
+                                              activeTab === 'replies')
                                         ? userTweets.length + ' tweets'
                                         : activeTab === 'media'
                                         ? userTweetsMedia.length + ' photos'
@@ -293,7 +312,6 @@ const Profile: FC<ProfileProps> = ({
                         </div>
                     </Header>
                     {/* *** HEADER - END *** */}
-
                     <div className={styles.main}>
                         {/* *** MAIN - START *** */}
                         {user && (
@@ -332,9 +350,11 @@ const Profile: FC<ProfileProps> = ({
                                     <>
                                         <FollowButton
                                             userId={user?._id}
+                                            user={user}
                                             type={ButtonType.secondary}
                                             size={ButtonSize.small}
                                             className={styles.editProfileBtn}
+                                            onFollowCallback={onFollowCallback}
                                         />
                                     </>
                                 )}
@@ -412,13 +432,17 @@ const Profile: FC<ProfileProps> = ({
                             <div className={styles.followStatus}>
                                 <NavLink to={`/follow-status/following/${id}`}>
                                     <p>
-                                        {user?.followingCount ? user?.followingCount : 0}
+                                        {user?.followingCount
+                                            ? user?.followingCount
+                                            : 0}
                                         <span>Following</span>
                                     </p>
                                 </NavLink>
                                 <NavLink to={`/follow-status/followers/${id}`}>
                                     <p>
-                                        {user?.followerCount ? user?.followerCount : 0}
+                                        {user?.followerCount
+                                            ? user?.followerCount
+                                            : 0}
                                         <span>Followers</span>
                                     </p>
                                 </NavLink>
@@ -527,9 +551,9 @@ const Profile: FC<ProfileProps> = ({
                 {/* Home page - start */}
                 <div className={Layout.aside}>
                     <Aside className={styles.aside}>
-                    <Header border={false}>
-                        <SearchBar />
-                    </Header>
+                        <Header border={false}>
+                            <SearchBar />
+                        </Header>
                         <WhoToFollow />
                     </Aside>
                 </div>
