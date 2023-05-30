@@ -24,9 +24,9 @@ import AuthContext from '../../context/user.context';
 
 interface TweetProps {
     tweet?: any;
-    onClickMenu: Function;
+    onClickMenu?: Function;
     onClickRetweet?: Function;
-    onClickLike: (tweet: any) => void;
+    onClickLike?: (tweet: any) => void;
     isLiked?: boolean;
     isRetweet?: boolean;
     isReply?: boolean;
@@ -333,7 +333,7 @@ const Tweet: FC<TweetProps> = ({
                     likes={tweet.totalLikes > 0 ? tweet.totalLikes : ''}
                     views={tweet.viewCount > 0 ? tweet.viewCount : ''}
                     onClickRetweet={onClickRetweet}
-                    onClick={() => onClickLike(tweet)}
+                    onClick={() => onClickLike!(tweet)}
                     isLiked={isLiked}
                     isRetweet={isRetweet}
                 />

@@ -22,14 +22,14 @@ import AuthContext from '../../context/user.context';
 import { NavLink, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
-import { getUserTweets } from '../../api/tweet.api';
+import { getUserTweetReplies, getUserTweets } from '../../api/tweet.api';
 import faLockSolid from '../../assets/faLock-solid.svg';
 import { getUserLikedTweets, likeTweet } from '../../api/like.api';
 import { ModalContext } from '../../context/modal.context';
 import ProfileEditModal from './profile-modals/ProfileEditModal';
 import { faLink, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import FollowButton from '../../components/ui/FollowButton';
-import LoadingRing from '../../components/ui/LoadingRing';
+import ContentNotAvailable from '../../components/ui/ContentNotAvailable';
 
 interface ProfileProps {
     onAddTweet: any;
@@ -59,6 +59,7 @@ const Profile: FC<ProfileProps> = ({
     const [userTweets, setUserTweets] = useState<any[]>([]);
     const [userTweetsMedia, setUserTweetsMedia] = useState<any[]>([]);
     const [userLikedTweets, setUserLikedTweets] = useState<any[]>([]);
+    const [userTweetReplies, setUserTweetReplies] = useState<any[]>([]);
 
     const [likedTweet, setLikedTweet] = useState<any>();
 
@@ -155,17 +156,18 @@ const Profile: FC<ProfileProps> = ({
 
     // On like tweet
     const onClickLike = async (tweet: any) => {
-        const res: any = await likeTweet(tweet._id);
-        const { likedTweet } = res;
+        const { likedTweet } = await likeTweet(tweet._id);
         setLikedTweet(likedTweet);
     };
 
     // get liked tweets
     useEffect(() => {
         const getLikedTweet = async () => {
-            const res: any = await getUserLikedTweets(id!);
-            const { tweets } = res;
+            const { tweets } = await getUserLikedTweets(id!);
+            const { replies } = await getUserTweetReplies();
+
             setUserLikedTweets(tweets);
+            setUserTweetReplies(replies);
         };
         getLikedTweet();
     }, [id]);
@@ -263,19 +265,19 @@ const Profile: FC<ProfileProps> = ({
     const onFollowCallback = (followStatus: any) => {
         if (followStatus.message === 'Following') {
             setUser((prevUser: any) =>
-                prevUser?._id === followStatus.response[0].user 
+                prevUser?._id === followStatus.response[0].user
                     ? {
-                        ...prevUser,
-                        followerCount: prevUser.followerCount + 1,
+                          ...prevUser,
+                          followerCount: prevUser.followerCount + 1,
                       }
                     : prevUser
             );
         } else if (followStatus.message === 'Unfollow') {
             setUser((prevUser: any) =>
-                prevUser?._id === followStatus.response[0].user 
+                prevUser?._id === followStatus.response[0].user
                     ? {
-                        ...prevUser,
-                        followerCount: prevUser.followerCount - 1,
+                          ...prevUser,
+                          followerCount: prevUser.followerCount - 1,
                       }
                     : prevUser
             );
@@ -298,11 +300,11 @@ const Profile: FC<ProfileProps> = ({
                                 title={user?.name}
                                 isProtected={user?.isProtected}
                                 subTitle={
-                                    (activeTab === 'tweets' ||
-                                        activeTab === 'replies')
+                                    activeTab === 'tweets' ||
+                                    activeTab === 'replies'
                                         ? userTweets.length + ' tweet'
-                                        : (activeTab === 'tweets' ||
-                                              activeTab === 'replies')
+                                        : activeTab === 'tweets' ||
+                                          activeTab === 'replies'
                                         ? userTweets.length + ' tweets'
                                         : activeTab === 'media'
                                         ? userTweetsMedia.length + ' photos'
@@ -485,44 +487,72 @@ const Profile: FC<ProfileProps> = ({
                         </HorizontalNavBar>
                         {activeTab === 'tweets' && (
                             <div className={styles.tweets}>
-                                {/* tweets - start */}
-                                {userTweets.map((tweet: any) => (
-                                    <Tweet
-                                        key={tweet?._id}
-                                        tweet={tweet}
-                                        onClickMenu={onClickTweetMenu}
-                                        onClickLike={onClickLike}
-                                        isLiked={tweet?.likes?.includes(
-                                            authUser?._id
-                                        )}
+                                {userTweets.length > 0 ? (
+                                    <>
+                                        {userTweets.map((tweet: any) => (
+                                            <Tweet
+                                                key={tweet?._id}
+                                                tweet={tweet}
+                                                onClickMenu={onClickTweetMenu}
+                                                onClickLike={onClickLike}
+                                                isLiked={tweet?.likes?.includes(
+                                                    authUser?._id
+                                                )}
+                                            />
+                                        ))}
+                                    </>
+                                ) : (
+                                    <ContentNotAvailable
+                                        title="You haven't posted any tweet yet"
+                                        message="You will find all our tweets here"
                                     />
-                                ))}
-                                {/* tweets - end */}
+                                )}
                             </div>
                         )}
                         {/* REPLIES - START */}
                         {activeTab === 'replies' && (
                             <div className={styles.main}>
-                                <PageUnderConstruction
-                                    message={'Will display - all tweet replies'}
-                                />
+                                {userTweetReplies.length > 0 ? (
+                                    <>
+                                        {userTweetReplies.map((tweet: any) => (
+                                            <Tweet
+                                                key={tweet._id}
+                                                tweet={tweet}
+                                            />
+                                        ))}
+                                    </>
+                                ) : (
+                                    <ContentNotAvailable
+                                        title="You haven't replyed to any tweet"
+                                        message="All your replies will show displayed here"
+                                    />
+                                )}
                             </div>
                         )}
                         {/* REPLIES - END */}
                         {/* MEDIA - START */}
                         {activeTab === 'media' && (
                             <div className={styles.main}>
-                                {userTweetsMedia.map((tweet: any) => (
-                                    <Tweet
-                                        key={tweet._id}
-                                        tweet={tweet}
-                                        onClickMenu={onClickTweetMenu}
-                                        onClickLike={onClickLike}
-                                        isLiked={tweet?.likes?.includes(
-                                            authUser?._id
-                                        )}
+                                {userTweetsMedia.length > 0 ? (
+                                    <>
+                                        {userTweetsMedia.map((tweet: any) => (
+                                            <Tweet
+                                                key={tweet._id}
+                                                tweet={tweet}
+                                                onClickMenu={onClickTweetMenu}
+                                                onClickLike={onClickLike}
+                                                isLiked={tweet?.likes?.includes(
+                                                    authUser?._id
+                                                )}
+                                            />
+                                        ))}
+                                    </>
+                                ) : (
+                                    <ContentNotAvailable
+                                        title="You don’t have any tweet with an image"
+                                        message="All your tweets which have images will be displayed here"
                                     />
-                                ))}
+                                )}
                             </div>
                         )}
                         {/* MEDIA - END */}
@@ -530,17 +560,26 @@ const Profile: FC<ProfileProps> = ({
                         {/* LIKES - START */}
                         {activeTab === 'likes' && (
                             <div className={styles.main}>
-                                {userLikedTweets.map((tweet: any) => (
-                                    <Tweet
-                                        key={tweet._id}
-                                        tweet={tweet}
-                                        onClickMenu={onClickTweetMenu}
-                                        onClickLike={onClickLike}
-                                        isLiked={tweet?.likes?.includes(
-                                            authUser?._id
-                                        )}
+                                {userLikedTweets.length > 0 ? (
+                                    <>
+                                        {userLikedTweets.map((tweet: any) => (
+                                            <Tweet
+                                                key={tweet._id}
+                                                tweet={tweet}
+                                                onClickMenu={onClickTweetMenu}
+                                                onClickLike={onClickLike}
+                                                isLiked={tweet?.likes?.includes(
+                                                    authUser?._id
+                                                )}
+                                            />
+                                        ))}
+                                    </>
+                                ) : (
+                                    <ContentNotAvailable
+                                        title="You don’t have any likes yet"
+                                        message="Tap the heart on any Tweet to show it some love. When you do, it’ll show up here."
                                     />
-                                ))}
+                                )}
                             </div>
                         )}
                         {/* LIKES - END */}

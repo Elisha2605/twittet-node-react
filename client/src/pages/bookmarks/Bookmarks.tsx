@@ -36,7 +36,7 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
 
     useEffect(() => {
         const getSavedTweets = async () => {
-            setIsLoading(true)
+            setIsLoading(true);
             const { tweets } = await getUserSavedTweets();
             setSavedTweets(tweets);
             setIsLoading(false);
@@ -44,14 +44,13 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
         getSavedTweets();
     }, []);
 
-
     // On like tweet
-   const onClickLike = async (tweet: any) => {
-        const res: any = await likeTweet(tweet._id);;
+    const onClickLike = async (tweet: any) => {
+        const res: any = await likeTweet(tweet._id);
         const { likedTweet } = res;
         console.log(likedTweet);
-        setLikedTweet(likedTweet)
-    }
+        setLikedTweet(likedTweet);
+    };
 
     useEffect(() => {
         setSavedTweets((prevTweets: any) =>
@@ -99,13 +98,24 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
                     </Header>
                     {/* Home page - start */}
                     <div className={styles.main}>
-                        {!isLoading && savedTweets.length === 0 && (
+                        {savedTweets.length > 0 ? (
+                            <>
+                                {savedTweets.map((tweet: any) => (
+                                    <Tweet
+                                        key={tweet?._id}
+                                        tweet={tweet}
+                                        onClickMenu={onClickTweetMenu}
+                                        onClickLike={onClickLike}
+                                        isLiked={tweet?.likes?.includes(
+                                            authUser?._id
+                                        )}
+                                    />
+                                ))}
+                            </>
+                        ) : (!isLoading && savedTweets.length === 0) && (
                             <div className={styles.emptyBookmarksWrapper}>
                                 <div className={styles.emptyBookmarksImage}>
-                                    <img
-                                        src={BookmarkImage}
-                                        alt=""
-                                    />
+                                    <img src={BookmarkImage} alt="" />
                                     <div
                                         className={styles.emptyBookmarksMessage}
                                     >
@@ -121,27 +131,15 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
                                 </div>
                             </div>
                         )}
-
-                        {/* tweets - start */}
-                        {!isLoading && savedTweets.map((tweet: any) => (
-                            <Tweet
-                                key={tweet?._id}
-                                tweet={tweet}
-                                onClickMenu={onClickTweetMenu}
-                                onClickLike={onClickLike}
-                                isLiked={tweet?.likes?.includes(authUser?._id)}
-                            />
-                        ))}
-                        {/* tweets - end */}
                     </div>
                 </div>
                 {/* Home page - start */}
                 <div className={Layout.aside}>
                     {/* Aside - start */}
                     <Aside className={styles.aside}>
-                    <Header border={false}>
-                        <SearchBar />
-                    </Header>
+                        <Header border={false}>
+                            <SearchBar />
+                        </Header>
                         <WhoToFollow />
                     </Aside>
                     {/* Aside - end */}
