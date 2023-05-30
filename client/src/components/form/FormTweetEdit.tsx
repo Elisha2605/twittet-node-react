@@ -39,7 +39,8 @@ interface FormTweetEditProps {
     onClickReplyMenu?: Function;
 
     classNameTextErea?: string;
-    isReplay?: boolean;    
+    isReplay?: boolean;
+    isLoading?: boolean;    
 }
 
 const FormTweetEdit: FC<FormTweetEditProps> = ({
@@ -60,7 +61,8 @@ const FormTweetEdit: FC<FormTweetEditProps> = ({
     onClickReplyMenu,
 
     classNameTextErea,
-    isReplay
+    isReplay,
+    isLoading
 }) => {
 
     const [inputValue, setInputValue] = useState(value);
@@ -240,8 +242,11 @@ const FormTweetEdit: FC<FormTweetEditProps> = ({
                         value={'Tweet'}
                         type={ButtonType.primary}
                         size={ButtonSize.small}
-                        isDisabled={value.length > 0 || imagePreview ? false : true}
+                        isDisabled={
+                            (value.length > 0 || imagePreview ? false : true) || (isLoading)
+                        }
                         onClick={() => setIsFocused(false)}
+                        loading={isLoading}
                     />
                 </div>
             </form>

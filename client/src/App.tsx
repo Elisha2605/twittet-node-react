@@ -23,6 +23,7 @@ import FollowerRequests from './pages/follow/FollowerRequests';
 import RetweetModal from './pages/tweet/tweet-modals/RetweetModal';
 import FollowStatus from './pages/follow/FollowStatus';
 import Settings from './pages/settings/settings';
+import HomeEditTwitterCirlceModal from './pages/home/home-modals/HomeEditTwitterCirlceModal';
 
 function App() {
 
@@ -232,6 +233,9 @@ function App() {
                                 editTweetModal={editTweetModal}
                             />
                         </div>
+                        <>
+                            <HomeEditTwitterCirlceModal />
+                        </>
                         <div className={Layout.page}>
                             <Routes>
                                 <Route path="/" element={

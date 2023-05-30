@@ -42,6 +42,8 @@ const EditTweetModal: FC<EditTweetProp> = ({
     const [tweetAudience, setTweetAudience] = useState<TweetAudienceType>(TWEET_AUDIENCE.everyone);
     const [tweetReply, setTweetReply] = useState<TweetReplyType>(TWEET_REPLY.everyone);
     const [authUser, setAuthUser] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
 
     const ctx = useContext(AuthContext);
     useEffect(() => {
@@ -63,8 +65,8 @@ const EditTweetModal: FC<EditTweetProp> = ({
     }, [editTweetModal])
 
     const handleSubmitTweet = async (e: React.FormEvent) => {
-        console.log({hello: editTweetModal});
         e.preventDefault();
+        setIsLoading(true);
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
             : null;
@@ -96,6 +98,7 @@ const EditTweetModal: FC<EditTweetProp> = ({
         setTweetAudience(TWEET_AUDIENCE.everyone)
         setTweetReply(TWEET_REPLY.everyone)
         clearTweetForm();
+        setIsLoading(false);
     };
 
     const handleTweetAudienceOptions = (options: string) => {
@@ -156,6 +159,7 @@ const EditTweetModal: FC<EditTweetProp> = ({
                         onClickAudienceMenu={handleTweetAudienceOptions}
                         onClickReplyMenu={handleTweetReyplyOptions}
                         classNameTextErea={styles.classNameTextErea}
+                        isLoading={isLoading}
                     />
                 </div>
             </Modal>

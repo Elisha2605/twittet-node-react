@@ -63,6 +63,7 @@ const Home: React.FC<HomeProps> = ({
     const [followingTweets, setFollowingTweets] = useState<any[]>([]);
     const [authUser, setAuthUser] = useState<any>(null);
     const [isLoading, setIsLoading] = useState<any>(null);
+    const [isOnSubmitLoading, setIsOnSubmitLoading] = useState<boolean>(false);
 
     const [isFormFocused, setIsFormFocused] = useState(false);
     const [activeTab, setActiveTab] = useState(
@@ -198,6 +199,7 @@ const Home: React.FC<HomeProps> = ({
 
     const handleSubmitTweet = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setIsOnSubmitLoading(true);
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
             : null;
@@ -231,6 +233,7 @@ const Home: React.FC<HomeProps> = ({
         setTweetAudience(TWEET_AUDIENCE.everyone);
         setTweetReply(TWEET_REPLY.everyone);
         clearTweetForm();
+        setIsOnSubmitLoading(false);
     };
 
     useEffect(() => {
@@ -317,12 +320,10 @@ const Home: React.FC<HomeProps> = ({
                             onChageTextArea={handleTextAreaOnChange}
                             onClickAudienceMenu={handleTweetAudienceOptions}
                             onClickReplyMenu={handleTweetReyplyOptions}
+                            isLoading={isOnSubmitLoading}
                         />
                     </div>
                     {/* Twitter Circle Modal */}
-                    <>
-                        <HomeEditTwitterCirlceModal />
-                    </>
                     {activeTab === 'for-you' && (   
                         <div className={styles.main}>
                             {!isLoading && memoizedTweets.map((tweet: any) => (

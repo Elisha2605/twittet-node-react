@@ -38,7 +38,8 @@ interface FormNavigationProps {
     onClickReplyMenu?: Function;
 
     classNameTextErea?: string;
-    isReplay?: boolean;    
+    isReplay?: boolean;   
+    isLoading?: boolean; 
 }
 
 const FormNavigation: FC<FormNavigationProps> = ({
@@ -58,7 +59,8 @@ const FormNavigation: FC<FormNavigationProps> = ({
     onClickReplyMenu,
 
     classNameTextErea,
-    isReplay
+    isReplay,
+    isLoading
 }) => {
 
     const [inputValue, setInputValue] = useState(value);
@@ -241,8 +243,11 @@ const FormNavigation: FC<FormNavigationProps> = ({
                         value={'Tweet'}
                         type={ButtonType.primary}
                         size={ButtonSize.small}
-                        isDisabled={value.length > 0 || imagePreview ? false : true}
+                        isDisabled={
+                            (value.length > 0 || imagePreview ? false : true) || (isLoading)
+                        }
                         onClick={() => {}}
+                        loading={isLoading}
                     />
                 </div>
             </form>

@@ -44,6 +44,7 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
     const [bio, setBio] = useState('');
     const [location, setLocation] = useState('');
     const [website, setWebsite] = useState('');
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const {
         register,
@@ -102,6 +103,7 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
     };
 
     const handleSubmitForm = handleSubmit(async (data: any) => {
+        setIsLoading(true);
         const { user } = await editUserProfile(
             selectedCoverFile,
             selectedAvatarFile,
@@ -128,7 +130,7 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
         setSelectedCoverFile(null);
         setSelectedAvatarFile(null);
         reset(); // clear form input values
-
+        setIsLoading(false);
     });
 
     return (
@@ -155,6 +157,7 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
                                 size={ButtonSize.small}
                                 onClick={() => {}}
                                 className={styles.button}
+                                loading={isLoading}
                             />
                         </div>
                     </div>

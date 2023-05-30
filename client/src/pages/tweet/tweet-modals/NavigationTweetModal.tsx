@@ -38,6 +38,7 @@ const NavigationTweetModal: FC<NavigationTweetProp> = ({
     const [tweetAudience, setTweetAudience] = useState<TweetAudienceType>(TWEET_AUDIENCE.everyone);
     const [tweetReply, setTweetReply] = useState<TweetReplyType>(TWEET_REPLY.everyone);
     const [authUser, setAuthUser] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const ctx = useContext(AuthContext);
     useEffect(() => {
@@ -54,8 +55,8 @@ const NavigationTweetModal: FC<NavigationTweetProp> = ({
     const { closeModal } = useContext(ModalContext);
     
     const handleSubmitTweet = async (e: React.FormEvent) => {
-        console.log('inside handleSubmitTweet');
         e.preventDefault();
+        setIsLoading(true);
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
             : null;
@@ -88,6 +89,7 @@ const NavigationTweetModal: FC<NavigationTweetProp> = ({
         setTweetAudience(TWEET_AUDIENCE.everyone)
         setTweetReply(TWEET_REPLY.everyone)
         clearTweetForm();
+        setIsLoading(false)
     };
 
     const handleTweetAudienceOptions = (options: string) => {
@@ -147,6 +149,7 @@ const NavigationTweetModal: FC<NavigationTweetProp> = ({
                         onClickAudienceMenu={handleTweetAudienceOptions}
                         onClickReplyMenu={handleTweetReyplyOptions}
                         classNameTextErea={styles.classNameTextErea}
+                        isLoading={isLoading}
                     />
                 </div>
             </Modal>
