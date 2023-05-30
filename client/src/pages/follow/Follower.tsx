@@ -38,7 +38,7 @@ const Follower: React.FC<{}> = () => {
         <React.Fragment>
             {/* FOR YOU - START */}
             <div className={styles.main}>
-                {followers.map((follower) => (
+                {followers && followers.map((follower) => (
                     <div
                         key={follower._id}
                         className={styles.followingItem}

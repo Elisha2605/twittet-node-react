@@ -55,7 +55,9 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
     const [followers, setFollowers] = useState<any>([]);
     const [followings, setFollowings] = useState<any>([]);
     
-    const [savedTweets, setSavedTweets] = useState<any>([])
+    const [savedTweets, setSavedTweets] = useState<any>([]);
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const previousPath = localStorage.getItem('active-nav');
     const goBack = () => {
@@ -143,6 +145,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
     };
 
     const handleSubmitTweet = async (e: React.FormEvent) => {
+        setIsLoading(true);
         e.preventDefault();
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
@@ -177,6 +180,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
         }));
         setTweetReplies((prevTweets) => [newTweet, ...prevTweets]);
         clearTweetForm();
+        setIsLoading(false);
     };
 
     useEffect(() => {
@@ -203,14 +207,14 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
     };
 
     const isOnlyPeopleYouFollow = (userId: string): boolean => {
-        if (
+        if (followers &&
             tweet?.user?._id !== authUser?._id &&
             tweet?.reply === TWEET_REPLY.peopleYouFollow &&
-            !followers.some((following: any) => following?.user?._id === userId)
+            followers.some((following: any) => following?.user?._id === userId)
         ) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     };
 
     const isMention = (userId: string): boolean => {
@@ -425,6 +429,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                                             onChageImage={
                                                 handleTextAreaOnChangeReply
                                             }
+                                            isLoading={isLoading}
                                         />
                                     </div>
                                 </>
@@ -459,6 +464,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                                             onChageImage={
                                                 handleTextAreaOnChangeReply
                                             }
+                                            isLoading={isLoading}
                                         />
                                     </div>
                                 </>
@@ -493,6 +499,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                                             onChageImage={
                                                 handleTextAreaOnChangeReply
                                             }
+                                            isLoading={isLoading}
                                         />
                                     </div>
                                 </>
@@ -578,6 +585,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                                             onChageImage={
                                                 handleTextAreaOnChangeReply
                                             }
+                                            isLoading={isLoading}
                                         />
                                     </div>
                                 </>

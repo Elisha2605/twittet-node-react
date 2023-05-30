@@ -61,6 +61,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
     const [followings, setFollowings] = useState<any>([]);
 
     const [savedTweets, setSavedTweets] = useState<any>([])
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
@@ -69,7 +70,6 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
      const getTweetReplies = async () => {
          const { user } = ctx.getUserContext();
          setAuthUser(user);
- 
          if (user) {
              const res = await getAllTweetReplies(id!);
              const { tweets } = res;
@@ -127,12 +127,10 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
 
     const handleSubmitTweet = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsLoading(true);
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
             : null;
-
-        console.log(text);
-        console.log(selectedFile);
         const res = await createTweetReply(id!, text!, selectedFile);
         const { tweet }: any = res;
         const newTweet = {
@@ -156,6 +154,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
         };
         setTweetReplies((prevTweets) => [newTweet, ...prevTweets]);
         clearTweetForm();
+        setIsLoading(false);
     };
 
     // Update Likes state
@@ -192,14 +191,14 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
     };
 
     const isOnlyPeopleYouFollow = (userId: string): boolean => {
-        if (
+        if (followers &&
             tweet?.user?._id !== authUser?._id &&
             tweet?.reply === TWEET_REPLY.peopleYouFollow &&
-            !followers.some((following: any) => following?.user?._id === userId)
+            followers.some((following: any) => following?.user?._id === userId)
         ) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     };
 
     const isMention = (userId: string): boolean => {
@@ -397,6 +396,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                                     onChageImage={
                                                         handleTextAreaOnChangeReply
                                                     }
+                                                    isLoading={isLoading}
                                                 />
                                             </div>
                                         </>
@@ -431,6 +431,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                                     onChageImage={
                                                         handleTextAreaOnChangeReply
                                                     }
+                                                    isLoading={isLoading}
                                                 />
                                             </div>
                                         </>
@@ -465,6 +466,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                                     onChageImage={
                                                         handleTextAreaOnChangeReply
                                                     }
+                                                    isLoading={isLoading}
                                                 />
                                             </div>
                                         </>
@@ -485,7 +487,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                                 </div>
                                             </div>
                                         </>
-                                    ) : !isMention(tweet && authUser?._id) &&
+                                    ) : !isMention(tweet && authUser?._id) && 
                                     tweet?.reply ===
                                         TWEET_REPLY.onlyPeopleYouMention ? (
                                         <>
@@ -550,6 +552,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                                     onChageImage={
                                                         handleTextAreaOnChangeReply
                                                     }
+                                                    isLoading={isLoading}
                                                 />
                                             </div>
                                         </>

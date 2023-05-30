@@ -27,6 +27,7 @@ interface FormReplyTweetProps {
     onClickReplyMenu?: Function;
 
     classNameTextErea?: string;   
+    isLoading?: boolean;
 }
 
 const FormReplyTweet: FC<FormReplyTweetProps> = ({
@@ -43,6 +44,7 @@ const FormReplyTweet: FC<FormReplyTweetProps> = ({
     onCancelImagePreview,
 
     classNameTextErea,
+    isLoading,
 }) => {
 
     // Adjust text erea with input value
@@ -98,6 +100,7 @@ const FormReplyTweet: FC<FormReplyTweetProps> = ({
                             size={ButtonSize.small}
                             isDisabled={value.length > 0 || imagePreview ? false : true}
                             onClick={() => setIsFocused(false)}
+                            loading={isLoading}
                         />
                     </div>
                 ): null}

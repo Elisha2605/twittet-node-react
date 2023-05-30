@@ -45,7 +45,7 @@ const Following = () => {
         <React.Fragment>
             {!isLoading && authUser && (
                 <div className={styles.main}>
-                    {followings.map((following) => (
+                    {followings && followings.map((following) => (
                         <div
                             key={following._id}
                             className={styles.followingItem}
