@@ -7,6 +7,7 @@ import {
     getAllTweets,
     getFollowTweets,
     getTweetById,
+    getUserTweetReplies,
     getUserTweets,
     reTweet,
     updateTweetAudience,
@@ -24,6 +25,27 @@ export const getAllTweetsController = asyncHandler(
                     message: message,
                     status: status,
                     tweets: payload,
+                });
+            } else {
+                res.status(500).json({ success, message });
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+export const getUserTweetRepliesController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req.user._id;
+        try {
+            const { success, message, payload, status } =
+                await getUserTweetReplies(userId);
+            if (success) {
+                res.status(200).json({
+                    message: message,
+                    status: status,
+                    replies: payload,
                 });
             } else {
                 res.status(500).json({ success, message });
