@@ -98,7 +98,9 @@ const FormReplyTweet: FC<FormReplyTweetProps> = ({
                             value={'Tweet'}
                             type={ButtonType.primary}
                             size={ButtonSize.small}
-                            isDisabled={value.length > 0 || imagePreview ? false : true}
+                            isDisabled={
+                                (value.length > 0 || imagePreview ? false : true) || (isLoading)
+                            }
                             onClick={() => setIsFocused(false)}
                             loading={isLoading}
                         />
