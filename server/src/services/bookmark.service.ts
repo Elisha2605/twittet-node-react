@@ -50,7 +50,7 @@ export const saveTweetToBookmark = async (
 
             return {
                 success: true,
-                message: 'Unsaved tweet!',
+                message: 'Removed',
                 status: 200,
                 payload: {},
             };
@@ -70,7 +70,7 @@ export const saveTweetToBookmark = async (
 
         return {
             success: true,
-            message: 'Saved tweet',
+            message: 'Added',
             status: 200,
             payload: tweet,
         };

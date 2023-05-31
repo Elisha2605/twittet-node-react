@@ -64,6 +64,7 @@ export const login = async (email: string, password: string) => {
                 isVerified: res.data.user.isVerified,
                 isProtected: res.data.user.isProtected,
                 createdAt: res.data.user.createdAt,
+                twitterCircleCount: res.data.user.twitterCircleCount,
             }
         };
         localStorage.setItem('context', JSON.stringify(contex));

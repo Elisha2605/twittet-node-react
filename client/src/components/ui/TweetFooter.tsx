@@ -19,6 +19,7 @@ import { saveTweetToBookmark } from '../../api/bookmark.api';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { TWEET_AUDIENCE, TWEET_TYPE } from '../../constants/common.constants';
 import AuthContext from '../../context/user.context';
+import { useMessage } from '../../context/successMessage.context';
 
 interface TweetFooterProps {
     tweet?: any;
@@ -51,7 +52,9 @@ const TweetFooter: FC<TweetFooterProps> = ({
 
     const location = useLocation();
     const navigate = useNavigate();
-
+    
+    const { showMessage } = useMessage();
+    
     const ctx = useContext(AuthContext);
     useEffect(() => {
         const getAuthUser = async () => {
@@ -69,10 +72,15 @@ const TweetFooter: FC<TweetFooterProps> = ({
         option: any,
         _id: string,
         tweet: any
-    ) => {
-        if (option === 'Bookmark' || option === 'Remove tweet') {
-            const res = await saveTweetToBookmark(tweet._id);
-            console.log(res);
+        ) => {
+
+        const res: any = await saveTweetToBookmark(tweet._id);
+            
+        if (res.message === 'Added') {
+            showMessage('Tweet added to your Bookmarks', 'success');
+        } else if (res.message === 'Removed') {
+            showMessage('Tweet removed from Bookmarks', 'success');
+
         }
     };
 

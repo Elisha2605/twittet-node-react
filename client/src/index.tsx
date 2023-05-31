@@ -5,18 +5,20 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthContextProvider } from './context/user.context';
 import { ModalProvider } from './context/modal.context';
-
+import { SuccessMessageProvider } from './context/successMessage.context';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 root.render(
     <React.StrictMode>
-            <AuthContextProvider>
-                <ModalProvider>
+        <AuthContextProvider>
+            <ModalProvider>
+                <SuccessMessageProvider>
                     <App />
-                </ModalProvider>
-            </AuthContextProvider>
+                </SuccessMessageProvider>
+            </ModalProvider>
+        </AuthContextProvider>
     </React.StrictMode>
 );
 

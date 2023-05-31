@@ -17,6 +17,7 @@ export interface StoredContext {
         isVerified: boolean;
         isProtected: boolean;
         createdAt: string | null;
+        twitterCircleCount: number | null;
     }
 }
 
@@ -34,6 +35,7 @@ const DEFAULT_CONTEXT: StoredContext = {
         isVerified: false,
         isProtected: false,
         createdAt: null,
+        twitterCircleCount: null,
     }
 };
 
@@ -80,6 +82,9 @@ export const AuthContextProvider = (props: any) => {
             }
             if (newContext.user.isProtected !== undefined && newContext.user.isProtected !== null) {
                 context.user.isProtected = newContext.user.isProtected;
+            }
+            if (newContext.user.twitterCircleCount !== undefined && newContext.user.twitterCircleCount !== null) {
+                context.user.twitterCircleCount = newContext.user.twitterCircleCount;
             }
             if (newContext.user.createdAt !== undefined && newContext.user.createdAt !== null) {
                 context.user.createdAt = newContext.user.createdAt;

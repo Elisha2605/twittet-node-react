@@ -22,9 +22,9 @@ import {
 import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
 import AuthContext from '../../context/user.context';
 import { likeTweet } from '../../api/like.api';
-import HomeEditTwitterCirlceModal from './home-modals/HomeEditTwitterCirlceModal';
 import FormTweet from '../../components/form/FormTweet';
 import LoadingRing from '../../components/ui/LoadingRing';
+import { useMessage } from '../../context/successMessage.context';
 
 interface HomeProps {
     value: string;
@@ -76,6 +76,8 @@ const Home: React.FC<HomeProps> = ({
         TWEET_REPLY.everyone
     );
 
+    const { showMessage } = useMessage();
+    
     const [likedTweet, setLikedTweet] = useState<any>();
 
     //new
@@ -228,6 +230,9 @@ const Home: React.FC<HomeProps> = ({
             reposts: [],
             likes: [],
         };
+        if (res.status) {
+            showMessage('Your tweet was sent', 'success');
+        }
         setTweets((prevTweets) => [newTweet, ...prevTweets]);
         setIsFormFocused(false);
         setTweetAudience(TWEET_AUDIENCE.everyone);

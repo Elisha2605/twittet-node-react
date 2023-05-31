@@ -29,6 +29,7 @@ export interface IUser extends mongoose.Document {
     isVerified: boolean;
     isProtected: boolean;
     refreshToken: mongoose.Types.DocumentArray<ISession>;
+    twitterCircleCount: number;
     setPassword: any;
     changePassword: any;
     comparePassword: any;
@@ -62,6 +63,11 @@ export const userModel = {
     bio: {
         type: String,
         default: null,
+        required: false,
+    },
+    twitterCircleCount: {
+        type: Number,
+        default: 0,
         required: false,
     },
     location: {

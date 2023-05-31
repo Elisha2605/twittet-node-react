@@ -1,0 +1,19 @@
+.message {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.8rem 2rem;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.success {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+.error {
+    background-color: red;
+    color: white;
+}

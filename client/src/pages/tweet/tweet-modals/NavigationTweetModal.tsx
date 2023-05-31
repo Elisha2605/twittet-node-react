@@ -8,6 +8,7 @@ import AuthContext from '../../../context/user.context';
 import { TweetAudienceType, TweetReplyType } from '../../../types/tweet.types';
 import { createTweet } from '../../../api/tweet.api';
 import FormNavigation from '../../../components/form/FormNavigationTweet';
+import { useMessage } from '../../../context/successMessage.context';
 
 interface NavigationTweetProp {
     value: string;
@@ -39,6 +40,8 @@ const NavigationTweetModal: FC<NavigationTweetProp> = ({
     const [tweetReply, setTweetReply] = useState<TweetReplyType>(TWEET_REPLY.everyone);
     const [authUser, setAuthUser] = useState<any>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const { showMessage } = useMessage();
 
     const ctx = useContext(AuthContext);
     useEffect(() => {
@@ -84,7 +87,9 @@ const NavigationTweetModal: FC<NavigationTweetProp> = ({
             };
             onAddTweet(newTweet)
         }
-
+        if (res.status) {
+            showMessage('Your tweet was sent', 'success');
+        }
         closeModal('main-tweet-modal');
         setTweetAudience(TWEET_AUDIENCE.everyone)
         setTweetReply(TWEET_REPLY.everyone)

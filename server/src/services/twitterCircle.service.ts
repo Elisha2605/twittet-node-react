@@ -67,6 +67,8 @@ export const addUserToTwitterCircle = async (
                 members: [member._id],
                 count: 1,
             });
+            owner.twitterCircleCount = 1;
+            await owner.save();
             const membersList = await memberToAdd.save();
             return {
                 success: true,
@@ -88,6 +90,8 @@ export const addUserToTwitterCircle = async (
                     memberId.toString() !== member._id.toString()
             );
             existingOwner.count = existingOwner.members.length;
+            owner.twitterCircleCount = existingOwner.members.length;
+            await owner.save();
             const membersList = await existingOwner.save();
             return {
                 success: true,
@@ -99,6 +103,8 @@ export const addUserToTwitterCircle = async (
 
         existingOwner.members.push(member._id);
         existingOwner.count = existingOwner.members.length;
+        owner.twitterCircleCount = existingOwner.members.length;
+        await owner.save();
 
         const membersList = await existingOwner.save();
 
