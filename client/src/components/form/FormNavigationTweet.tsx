@@ -19,6 +19,7 @@ import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../consta
 import { searchUsers } from '../../api/user.api';
 import UserInfo from '../ui/UserInfo';
 import useClickOutSide from '../../hooks/useClickOutSide';
+import Picker from '@emoji-mart/react';
 
 interface FormNavigationProps {
     value: string;
@@ -66,14 +67,22 @@ const FormNavigation: FC<FormNavigationProps> = ({
     const [inputValue, setInputValue] = useState(value);
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [searchResults, setSearchResults] = useState<any[]>([]);
+    const [selectedEmoji, setSelectedEmoji] = useState<any>();
+    const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
+
 
     const searchResultsRef = useRef<HTMLDivElement>(null);
+    const emojiPickerRef = useRef<HTMLDivElement>(null);
+    
 
     // close searech result on click outside
     useClickOutSide(searchResultsRef, setShowSuggestions);  
+    useClickOutSide(emojiPickerRef, setOpenEmojiPicker);
 
     // Adjust text erea with input value
     useAutosizeTextArea(tweetTextRef.current, value)
+
+
 
     // ubmit with by pressing "command + enter"
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -114,7 +123,20 @@ const FormNavigation: FC<FormNavigationProps> = ({
         }
     };
       
-
+    const handleEmojiSelect = (emoji: any) => {
+        const textarea = tweetTextRef.current;
+        setSelectedEmoji(emoji.native)
+        if (textarea) {
+            const startPos = textarea.selectionStart;
+            const endPos = textarea.selectionEnd;
+            const text = textarea.value;
+            const newText = text.substring(0, startPos) + emoji.native + text.substring(endPos);
+            setInputValue(newText);
+            textarea.focus();
+            textarea.setSelectionRange(startPos + emoji.native.length, startPos + emoji.native.length);
+            setOpenEmojiPicker(false);
+        }
+    };
       
     const isImageSelected = !!imagePreview;
 
@@ -236,7 +258,14 @@ const FormNavigation: FC<FormNavigationProps> = ({
                 <div className={styles.footer}>
                     <div className={styles.icons}>
                         <ImageIcon onChange={onImageUpload} />
-                        <EmojiIcon />
+                        <EmojiIcon onClick={() => setOpenEmojiPicker(true)} />
+                            {openEmojiPicker && (
+                                <div ref={emojiPickerRef} className={`${styles.emojiPicker} ${!imagePreview ? styles.emojiPickerWithPreviewImg : ''}`}>
+                                    <Picker 
+                                        onEmojiSelect={handleEmojiSelect} 
+                                    />
+                                </div>
+                        )}
                         <CalendarIcon />
                     </div>
                     <Button
@@ -244,7 +273,7 @@ const FormNavigation: FC<FormNavigationProps> = ({
                         type={ButtonType.primary}
                         size={ButtonSize.small}
                         isDisabled={
-                            (value.length > 0 || imagePreview ? false : true) || (isLoading)
+                            (value.length > 0 || imagePreview || selectedEmoji ? false : true) || (isLoading)
                         }
                         onClick={() => {}}
                         loading={isLoading}

@@ -53,6 +53,16 @@
 
 .footer {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     width: 100%;
+}
+.emojiPicker {
+    position: relative;
+    right: 8rem;
+    z-index: 10000;
+}
+
+.icons {
+    display: flex;
 }

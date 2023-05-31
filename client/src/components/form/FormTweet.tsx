@@ -29,6 +29,8 @@ import {
 import { searchUsers } from '../../api/user.api';
 import UserInfo from '../ui/UserInfo';
 import useClickOutSide from '../../hooks/useClickOutSide';
+import data from '@emoji-mart/data'
+import Picker from '@emoji-mart/react'
 
 interface FormProps {
     value: string;
@@ -77,11 +79,15 @@ const FormTweet: FC<FormProps> = ({
     const [inputValue, setInputValue] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [searchResults, setSearchResults] = useState<any[]>([]);
+    const [selectedEmoji, setSelectedEmoji] = useState<any>();
+    const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
 
     const searchResultsRef = useRef<HTMLDivElement>(null);
+    const emojiPickerRef = useRef<HTMLDivElement>(null);
 
     // close searech result on click outside
     useClickOutSide(searchResultsRef, setShowSuggestions);
+    useClickOutSide(emojiPickerRef, setOpenEmojiPicker);
 
     // Adjust text erea with input value
     useAutosizeTextArea(tweetTextRef.current, value);
@@ -141,6 +147,59 @@ const FormTweet: FC<FormProps> = ({
     }, [isFocused]);
 
     const isImageSelected = !!imagePreview;
+
+    const handleEmojiSelect = (emoji: any) => {
+        const textarea = tweetTextRef.current;
+        setSelectedEmoji(emoji.native)
+        if (textarea) {
+            const startPos = textarea.selectionStart;
+            const endPos = textarea.selectionEnd;
+            const text = textarea.value;
+            const newText = text.substring(0, startPos) + emoji.native + text.substring(endPos);
+            setInputValue(newText);
+            textarea.focus();
+            textarea.setSelectionRange(startPos + emoji.native.length, startPos + emoji.native.length);
+            setOpenEmojiPicker(false);
+        }
+      };
+
+      const custom = [
+        {
+          id: 'github',
+          name: 'GitHub',
+          emojis: [
+            {
+              id: 'octocat',
+              name: 'Octocat',
+              keywords: ['github'],
+              skins: [{ src: './octocat.png' }],
+            },
+            {
+              id: 'shipit',
+              name: 'Squirrel',
+              keywords: ['github'],
+              skins: [
+                { src: './shipit-1.png' }, { src: './shipit-2.png' }, { src: './shipit-3.png' },
+                { src: './shipit-4.png' }, { src: './shipit-5.png' }, { src: './shipit-6.png' },
+              ],
+            },
+          ],
+        },
+        {
+          id: 'gifs',
+          name: 'GIFs',
+          emojis: [
+            {
+              id: 'party_parrot',
+              name: 'Party Parrot',
+              keywords: ['dance', 'dancing'],
+              skins: [{ src: './party_parrot.gif' }],
+            },
+          ],
+        },
+      ]
+
+      
 
     return (
         <React.Fragment>
@@ -314,7 +373,15 @@ const FormTweet: FC<FormProps> = ({
                 <div className={styles.footer}>
                     <div className={styles.icons}>
                         <ImageIcon onChange={onImageUpload} />
-                        <EmojiIcon />
+                        <EmojiIcon onClick={() => setOpenEmojiPicker(true)} />
+                            {openEmojiPicker && (
+                                <div ref={emojiPickerRef} className={styles.emojiPicker}>
+                                    <Picker   
+                                        data={data} custom={custom} 
+                                        onEmojiSelect={handleEmojiSelect} 
+                                    />
+                                </div>
+                            )}
                         <CalendarIcon />
                     </div>
                     <Button
@@ -322,7 +389,7 @@ const FormTweet: FC<FormProps> = ({
                         type={ButtonType.primary}
                         size={ButtonSize.small}
                         isDisabled={
-                            (value.length > 0 || imagePreview ? false : true) || (isLoading)
+                            (value.length > 0 || imagePreview || selectedEmoji ? false : true) || (isLoading)
                         }
                         loading={isLoading}
                         onClick={() => setIsFocused(false)}

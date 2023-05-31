@@ -491,7 +491,7 @@ const Profile: FC<ProfileProps> = ({
                                     <>
                                         {userTweets.map((tweet: any) => (
                                             <Tweet
-                                                key={tweet?._id}
+                                                key={tweet?._id + tweet?.createdAt}
                                                 tweet={tweet}
                                                 onClickMenu={onClickTweetMenu}
                                                 onClickLike={onClickLike}
@@ -516,7 +516,7 @@ const Profile: FC<ProfileProps> = ({
                                     <>
                                         {userTweetReplies.map((tweet: any) => (
                                             <Tweet
-                                                key={tweet._id}
+                                                key={tweet._id + tweet?.createdAt}
                                                 tweet={tweet}
                                             />
                                         ))}
@@ -537,7 +537,7 @@ const Profile: FC<ProfileProps> = ({
                                     <>
                                         {userTweetsMedia.map((tweet: any) => (
                                             <Tweet
-                                                key={tweet._id}
+                                                key={tweet._id + tweet?.createdAt}
                                                 tweet={tweet}
                                                 onClickMenu={onClickTweetMenu}
                                                 onClickLike={onClickLike}
@@ -564,7 +564,7 @@ const Profile: FC<ProfileProps> = ({
                                     <>
                                         {userLikedTweets.map((tweet: any) => (
                                             <Tweet
-                                                key={tweet._id}
+                                                key={tweet._id + tweet?.createdAt}
                                                 tweet={tweet}
                                                 onClickMenu={onClickTweetMenu}
                                                 onClickLike={onClickLike}

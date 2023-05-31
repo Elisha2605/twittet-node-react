@@ -103,6 +103,12 @@
 
 .icons {
     display: flex;
+    position: relative;
+}
+
+.emojiPicker {
+    position: absolute;
+    z-index: 300;
 }
 
 .previewImage {

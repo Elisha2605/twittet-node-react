@@ -59,4 +59,7 @@
     .input{
         width: 100%;
     }
+    .searchResults {
+        width: 50%;
+    }
 }

@@ -21,6 +21,8 @@ import useClickOutSide from '../../hooks/useClickOutSide';
 import UserInfoRetweet from '../ui/UserInfoRetweet';
 import { getTimeDifference } from '../../utils/helpers.utils';
 import ImageIcon from '../icons/ImageIcon';
+import Picker from '@emoji-mart/react'
+
 
 interface FormRetweetProps {
     tweet: any;
@@ -70,8 +72,13 @@ const FormRetweet: FC<FormRetweetProps> = ({
     const [inputValue, setInputValue] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [searchResults, setSearchResults] = useState<any[]>([]);
+    const [selectedEmoji, setSelectedEmoji] = useState<any>();
+    const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
+
 
     const searchResultsRef = useRef<HTMLDivElement>(null);
+    const emojiPickerRef = useRef<HTMLDivElement>(null);
+
 
     // regular tweet
     const tweetId = tweet?._id;
@@ -100,6 +107,8 @@ const FormRetweet: FC<FormRetweetProps> = ({
 
     // close searech result on click outside
     useClickOutSide(searchResultsRef, setShowSuggestions);  
+    useClickOutSide(emojiPickerRef, setOpenEmojiPicker);
+
 
     // Adjust text erea with input value
     useAutosizeTextArea(tweetTextRef.current, value)
@@ -158,6 +167,22 @@ const FormRetweet: FC<FormRetweetProps> = ({
             }
             return <span key={index}>{word} </span>;
         });
+    };
+
+    const handleEmojiSelect = (emoji: any) => {
+        const textarea = tweetTextRef.current;
+        console.log('hello');
+        setSelectedEmoji(emoji.native)
+        if (textarea) {
+            const startPos = textarea.selectionStart;
+            const endPos = textarea.selectionEnd;
+            const text = textarea.value;
+            const newText = text.substring(0, startPos) + emoji.native + text.substring(endPos);
+            setInputValue(newText);
+            textarea.focus();
+            textarea.setSelectionRange(startPos + emoji.native.length, startPos + emoji.native.length);
+            setOpenEmojiPicker(false);
+        }
     };
       
     const isImageSelected = !!imagePreview;
@@ -365,7 +390,14 @@ const FormRetweet: FC<FormRetweetProps> = ({
                 <div className={styles.footer}>
                     <div className={styles.icons}>
                         <ImageIcon onChange={onImageUpload} />
-                        <EmojiIcon />
+                        <EmojiIcon onClick={() => setOpenEmojiPicker(true)} />
+                            {openEmojiPicker && (
+                                <div ref={emojiPickerRef} className={styles.emojiPicker}>
+                                    <Picker 
+                                        onEmojiSelect={handleEmojiSelect} 
+                                    />
+                                </div>
+                        )}
                         <CalendarIcon />
                     </div>
                     <Button

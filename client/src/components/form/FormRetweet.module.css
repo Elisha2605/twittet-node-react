@@ -122,6 +122,15 @@
     align-items: center;
     margin-top: 1rem;
 }
+.icons {
+    display: flex;
+}
+
+.emojiPicker {
+    position: absolute;
+    top: 7.4rem;
+    z-index: 300;
+}
 
 .searchResults {
     width: 60%;

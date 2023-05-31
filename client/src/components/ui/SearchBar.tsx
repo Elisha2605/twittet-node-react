@@ -68,7 +68,7 @@ const SearchBar: FC<SearchBarProps> = ({ width, isButton, classNameContainer, cl
                             <div key={user?._id}>
                             {isButton ? (
                                 <div key={user?._id} onClick={onClickBtn}>
-                                <UserInfo
+                                    <UserInfo
                                         userId={user?._id}
                                         avatar={
                                             user?.avatar &&

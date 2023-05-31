@@ -152,10 +152,10 @@ const Tweet: FC<TweetProps> = ({
         return true;
     };
 
-
     return (
         <React.Fragment>
             <div className={`${styles.container}`} key={tweetId}>
+                {/* RETWEET - START */}
 
                 {tweet?.type === TWEET_TYPE.reTweet ? (
                     <>
@@ -198,30 +198,16 @@ const Tweet: FC<TweetProps> = ({
                             </p>
                             {tweetImage && (
                                 <div className={styles.image}>
-                                    {!isReply ? (
-                                        <img
-                                            src={
-                                                tweetImage
-                                                    ? `${IMAGE_TWEET_BASE_URL}/${tweetImage}`
-                                                    : undefined
-                                            }
-                                            alt=""
-                                        />
-                                    ): (
-                                        <img
+                                    <img
                                         src={
                                             tweetImage
-                                                ? `${IMAGE_TWEET_REPLY_BASE_URL}/${tweetImage}`
+                                                ? `${IMAGE_TWEET_BASE_URL}/${tweetImage}`
                                                 : undefined
                                         }
                                         alt=""
                                     />
-                                    )}
                                 </div>
                             )}
-
-                            {/* RETWEET */}
-
                             <div className={`${styles.retweetContainer} ${hasRetweetAndTweetImage ? styles.reTweetWithImageContainer : ''}`} onClick={goToRetweetPage}>
                                 <UserInfoRetweet
                                     userId={retweetUserId}
@@ -276,10 +262,12 @@ const Tweet: FC<TweetProps> = ({
                                 </div>           
                             </div>
                         </div>
-                            
+                    {/* RETWEET - END */}
                     </>
                 ): (
                     <>
+                    {/* RGULAR TWEET - START */}
+
                         <UserInfo
                             userId={userId}
                             tweet={tweet}
@@ -309,7 +297,16 @@ const Tweet: FC<TweetProps> = ({
                             </p>
                             {tweetImage && (
                                 <div className={styles.image}>
-                                    {!isReply ? (
+                                    {tweet?.isReply ? (
+                                        <img
+                                            src={
+                                                tweetImage
+                                                    ? `${IMAGE_TWEET_REPLY_BASE_URL}/${tweetImage}`
+                                                    : undefined
+                                            }
+                                            alt=""
+                                        />
+                                    ): (
                                         <img
                                             src={
                                                 tweetImage
@@ -318,21 +315,13 @@ const Tweet: FC<TweetProps> = ({
                                             }
                                             alt=""
                                         />
-                                    ): (
-                                        <img
-                                        src={
-                                            tweetImage
-                                                ? `${IMAGE_TWEET_REPLY_BASE_URL}/${tweetImage}`
-                                                : undefined
-                                        }
-                                        alt=""
-                                    />
                                     )}
                                 </div>
                             )}
                         </div>
                     </>
                 )}
+                {/* RGULAR TWEET - END */}
                 
                 {tweet.audience === TWEET_AUDIENCE.twitterCircle ? (
                     <div className={styles.twitterCircle}>

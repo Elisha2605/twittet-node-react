@@ -37,6 +37,7 @@ import { getAuthUserFollows } from '../../api/follow.api';
 import AtIcon from '../../components/icons/AtIcon';
 import UserIcon from '../../components/icons/UserIcon';
 import { getUserSavedTweets, saveTweetToBookmark } from '../../api/bookmark.api';
+import { useMessage } from '../../context/successMessage.context';
 
 interface TweetPageProps {}
 
@@ -65,6 +66,8 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
     };
 
     const { id } = useParams<{ id: string }>();
+
+    const { showMessage } = useMessage();
 
     const navigate = useNavigate();
 
@@ -234,12 +237,16 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
         const getUserBookmarkList = async () => {
             const { tweets }: any = await getUserSavedTweets();
             setSavedTweets(tweets)
-            console.log(tweets);
         };
         getUserBookmarkList();
     }, [tweet])
     const onClickSaveAndUnsaveTweet = async () => {
         const res = await saveTweetToBookmark(tweet._id);
+        if (res.message === 'Added') {
+            showMessage('Tweet added to your Bookmarks', 'success');
+        } else if (res.message === 'Removed') {
+            showMessage('Tweet removed from Bookmarks', 'success');
+        }
         const bookmarkCount = res.tweet.bookmarkCount
         if (bookmarkCount === undefined) {
             setTweet((prevTweet: any) => ({

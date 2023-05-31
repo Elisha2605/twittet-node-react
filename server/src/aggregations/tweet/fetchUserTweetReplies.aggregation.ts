@@ -47,6 +47,11 @@ export const fetchUserTweetReplies = async (userId: string) => {
             },
         },
         {
+            $addFields: {
+                isReply: true, // Add the isReply field with the value true
+            },
+        },
+        {
             $project: {
                 _id: 1,
                 type: '$audience.type',
@@ -66,6 +71,7 @@ export const fetchUserTweetReplies = async (userId: string) => {
                 mentions: '$replyTweets.mentions',
                 createdAt: '$replyTweets.createdAt',
                 updatedAt: '$replyTweets.updatedAt',
+                isReply: 1,
             },
         },
     ]).exec();

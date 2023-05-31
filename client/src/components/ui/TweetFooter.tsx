@@ -102,6 +102,8 @@ const TweetFooter: FC<TweetFooterProps> = ({
             authUser?._id !== tweet?.user?._id) ||
         tweet?.audience === TWEET_AUDIENCE.twitterCircle;
 
+    const hasRetweeted = tweet?.type === TWEET_TYPE.reTweet && tweet?.text === null && tweet?.user?._id === authUser?._id
+
     return (
         <React.Fragment>
             <div
@@ -127,7 +129,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
                         isTweetReply ? styles.itemOnTweetReply : ''
                     }`}
                 >
-                {tweet?.type === TWEET_TYPE.reTweet && tweet?.text === null && tweet?.user?._id === authUser?._id ? (
+                {hasRetweeted ? (
                     <>
                         <PopUpMenu
                             value={tweet}

@@ -6,6 +6,7 @@
     padding: 0.8rem 2rem;
     border-radius: 4px;
     text-align: center;
+    z-index: 100000;
 }
 
 .success {

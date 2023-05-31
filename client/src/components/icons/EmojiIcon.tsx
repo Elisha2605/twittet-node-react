@@ -5,11 +5,13 @@ import styles from "./EmojiIcon.module.css";
 
 
 
-const EmojiIcon: FC<{ className?: string }> = ({ className }) => {
+const EmojiIcon: FC<{ className?: string, onClick?: any }> = ({ className, onClick }) => {
 
     return (
         <React.Fragment>
-            <FontAwesomeIcon icon={faFaceSmileWink} className={`${styles.faFaceSmileWink} ${className}`} color={'var(--color-primary)'} />
+            <div onClick={onClick}>
+                <FontAwesomeIcon icon={faFaceSmileWink} className={`${styles.faFaceSmileWink} ${className}`} color={'var(--color-primary)'} />
+            </div>
         </React.Fragment>
     )
 }
