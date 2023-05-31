@@ -47,7 +47,7 @@
     text-decoration: underline;
 }
 .image {
-    height: 20rem; /*Consider removing this or increasing it*/
+
     margin-bottom: 1rem;
     border-radius: 1rem;
 }
@@ -57,6 +57,10 @@
     height: 100%;
     object-fit: cover;
     border-radius: 1rem;
+}
+
+.imageFixedHeight img {
+    max-height: 450px;
 }
 
 .twitterCircle,

@@ -12,7 +12,6 @@ import ArrowLeftIcon from '../../components/icons/ArrowLeftIcon';
 import Button, { ButtonSize, ButtonType } from '../../components/ui/Button';
 import HeaderTitle from '../../components/header/HeaderTitle';
 import HorizontalNavBar from '../../components/ui/HorizontalNavBar';
-import PageUnderConstruction from '../../components/ui/PageUnderConstruction';
 import {
     IMAGE_AVATAR_BASE_URL,
     IMAGE_COVER_BASE_URL,

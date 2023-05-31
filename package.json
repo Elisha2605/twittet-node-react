@@ -6,25 +6,19 @@
   "scripts": {
     "lint": "eslint --ext .ts .",
     "format": "prettier --write \"**/*.ts\"",
-
     "build:client": "cd client && npm run build",
     "build:server": "tsc -p ./tsconfig.json",
     "build": "npm run build:server && npm run build:client",
-
     "start:client": "cd client && npm start",
     "start:server": "nodemon --exec ts-node -r dotenv/config -r tsconfig-paths/register index.ts",
-
     "dev": "concurrently --kill-others-on-fail \"npm run lint && npm run start:server\" \"cd client && npm start\"",
-    
     "start": "node dist/index.js",
     "heroku-postbuild": "tsc && npm install --prefix client && npm run build --prefix client",
-
     "seed": "ts-node -r dotenv/config -r tsconfig-paths/register server/src/config/seed.config.ts",
     "seed:clean": "npm run seed clean",
     "seed:users": "npm run seed users",
     "seed:emails": "npm run seed emails",
     "seed:users:clean": "npm run seed clean -- users",
-    
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -100,6 +94,7 @@
     "passport-local-mongoose": "^8.0.0",
     "q": "^1.5.1",
     "routes": "^2.1.0",
+    "sharp": "^0.32.1",
     "tsconfig-paths": "^4.1.2",
     "uuid": "^9.0.0",
     "winston": "^3.8.2"

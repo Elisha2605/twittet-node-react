@@ -1,5 +1,4 @@
 import React, { FC, useContext, useEffect, useState } from "react";
-import styles from "./Signup.module.css";
 import SignupForm from "./SignupForm";
 import { useForm } from "react-hook-form";
 import { singup } from "../../api/auth.api";
@@ -18,10 +17,11 @@ const Signup: FC<{}> = ({ }) => {
     const { register, handleSubmit, reset, getValues, formState: { errors } } = useForm({
         defaultValues: {
             name: "",
+            username: "",
             email: "",
-            avatar: null,
             password: "",
             passwordConfirm: "",
+            avatar: null,
         }
     });
 
@@ -35,6 +35,8 @@ const Signup: FC<{}> = ({ }) => {
         setLoading(true);       
         console.log(data.avatar?.[0]);
         const formData = await singup(
+            data.name,
+            data.username,
             data.email,
             data.avatar ? data.avatar?.[0] : undefined,
             data.password,

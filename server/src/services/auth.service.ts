@@ -27,15 +27,12 @@ export interface Status {
 }
 
 export const signup = async (
-    email: string,
     name: string,
-    // username: string,
+    username: string,
+    email: string,
     avatar: string | null,
-    coverImage: string,
-    bio: string,
     password: string,
     passwordConfirmation: string
-    // TODO: Change type any in Promise
 ): Promise<ApiResponse<any>> => {
     if (password !== passwordConfirmation) {
         return {
@@ -57,12 +54,10 @@ export const signup = async (
         }
         const user = await User.register(
             new User({
-                email: email,
                 name: name,
-                // username: username,
+                email: email,
+                username: username,
                 avatar: avatar,
-                // coverImage: coverImage,
-                // bio: bio,
             }),
             password
         );

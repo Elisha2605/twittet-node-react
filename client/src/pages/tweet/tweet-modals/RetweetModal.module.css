@@ -23,4 +23,5 @@
     position: absolute !important;
     /* top: 7rem !important; */
     max-width: 37.5rem !important;
+    overflow-y: auto;
 }

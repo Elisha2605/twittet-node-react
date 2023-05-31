@@ -27,12 +27,10 @@ export const singUp = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         try {
             const response = await signup(
-                req.body.email,
                 req.body.name,
-                // req.body.username,
+                req.body.username,
+                req.body.email,
                 req.files?.['avatar']?.[0]?.filename ?? null,
-                req.body.coverImage,
-                req.body.bio,
                 req.body.password,
                 req.body.passwordConfirmation
             );

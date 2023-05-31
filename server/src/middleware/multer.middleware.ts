@@ -3,6 +3,7 @@ import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import aws from 'aws-sdk';
 import dotenv from 'dotenv';
+import sharp from 'sharp';
 
 dotenv.config();
 
@@ -69,12 +70,21 @@ const uploadFileToS3 = async (file: Express.Multer.File, folder: string) => {
     const filename = `${file.fieldname}-${uuid}${fileExtension}`;
     const key = `${folder}/${filename}`;
 
-    const params = {
+    const params: any = {
         Bucket: process.env.AWS_BUCKET_NAME,
         Key: key,
-        Body: file.buffer,
         ContentType: file.mimetype,
     };
+
+    // Resize and compress the image using sharp
+    const compressedImage = await sharp(file.buffer)
+        .jpeg({ quality: 80 }) // Adjust the compression quality
+        .resize(1020, 1020, {
+            fit: 'outside',
+        })
+        .toBuffer();
+
+    params.Body = compressedImage;
 
     await s3.upload(params).promise();
 

@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TweetFooter from '../ui/TweetFooter';
 import UserInfo from '../ui/UserInfo';
@@ -48,6 +48,8 @@ const Tweet: FC<TweetProps> = ({
     const [authUser, setAuthUser] = useState<any>(null);
     const [followers, setFollowers] = useState<any>([]);
 
+    const imgRef = useRef<HTMLImageElement>(null);
+    
     // regular tweet
     const tweetId = tweet?._id;
     const createdAt = getTimeDifference(new Date(tweet?.createdAt).getTime());
@@ -152,6 +154,17 @@ const Tweet: FC<TweetProps> = ({
         return true;
     };
 
+    const handleImageLoad = () => {
+        if (imgRef.current) {
+          // Check if the image height exceeds the threshold
+          if (imgRef.current.offsetHeight > 200) { // Set your desired threshold here
+            // Add the 'imageFixedHeight' class to limit the image height
+            const parentElement = imgRef.current.parentNode as HTMLElement;
+            parentElement.classList.add(styles.imageFixedHeight);
+          }
+        }
+      };
+
     return (
         <React.Fragment>
             <div className={`${styles.container}`} key={tweetId}>
@@ -159,7 +172,7 @@ const Tweet: FC<TweetProps> = ({
 
                 {tweet?.type === TWEET_TYPE.reTweet ? (
                     <>
-                        {!tweetImage && !text && (
+                        {!tweetImage && !text && authUser && (
                             <div className={styles.whoRetweeted}>
                                 <FontAwesomeIcon icon={faRepeat} className={styles.faRepeat} />
                                 {authUser?._id === userId ? (
@@ -199,12 +212,14 @@ const Tweet: FC<TweetProps> = ({
                             {tweetImage && (
                                 <div className={styles.image}>
                                     <img
+                                        ref={imgRef}
                                         src={
                                             tweetImage
                                                 ? `${IMAGE_TWEET_BASE_URL}/${tweetImage}`
                                                 : undefined
                                         }
                                         alt=""
+                                        onLoad={handleImageLoad}
                                     />
                                 </div>
                             )}
@@ -240,21 +255,25 @@ const Tweet: FC<TweetProps> = ({
                                         <div className={`${styles.reTweetImage} ${hasRetweetAndTweetImage ? styles.reTweetWithImageImage : ''}`}>
                                             {!isReply ? (
                                                 <img
+                                                    ref={imgRef}
                                                     src={
                                                         retweetImage
                                                             ? `${IMAGE_TWEET_BASE_URL}/${retweetImage}`
                                                             : undefined
                                                     }
                                                     alt=""
+                                                    onLoad={handleImageLoad}
                                                 />
                                             ): (
                                                 <img
+                                                ref={imgRef}
                                                 src={
                                                     retweetImage
                                                         ? `${IMAGE_TWEET_REPLY_BASE_URL}/${retweetImage}`
                                                         : undefined
                                                 }
                                                 alt=""
+                                                onLoad={handleImageLoad}
                                             />
                                             )}
                                         </div>
@@ -296,24 +315,28 @@ const Tweet: FC<TweetProps> = ({
                                 {renderColoredText(tweet.text)}
                             </p>
                             {tweetImage && (
-                                <div className={styles.image}>
+                                <div className={`${styles.image}`}>
                                     {tweet?.isReply ? (
                                         <img
+                                            ref={imgRef}
                                             src={
                                                 tweetImage
                                                     ? `${IMAGE_TWEET_REPLY_BASE_URL}/${tweetImage}`
                                                     : undefined
                                             }
                                             alt=""
+                                            onLoad={handleImageLoad}
                                         />
                                     ): (
                                         <img
+                                            ref={imgRef}
                                             src={
                                                 tweetImage
                                                     ? `${IMAGE_TWEET_BASE_URL}/${tweetImage}`
                                                     : undefined
                                             }
                                             alt=""
+                                            onLoad={handleImageLoad}
                                         />
                                     )}
                                 </div>

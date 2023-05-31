@@ -1,6 +1,8 @@
 import { GETREQUESTOPTIONS, http } from '../config/axios.config';
 
 export const singup = async (
+    name: string,
+    username: string,
     email: string,
     avatar: any | undefined,
     password: string,
@@ -9,6 +11,8 @@ export const singup = async (
     const res = await http.post(
         '/auth/signup',
         {
+            name,
+            username,
             email: email,
             avatar: avatar,
             password: password,
