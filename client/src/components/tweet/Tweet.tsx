@@ -31,6 +31,7 @@ interface TweetProps {
     isLiked?: boolean;
     isRetweet?: boolean;
     isReply?: boolean;
+    onRemoveFromBookmarks?: (tweetId: string) => void;
 }
 
 const Tweet: FC<TweetProps> = ({
@@ -41,11 +42,11 @@ const Tweet: FC<TweetProps> = ({
     isLiked,
     isReply,
     isRetweet = false,
+    onRemoveFromBookmarks
 }) => {
 
     const [authUser, setAuthUser] = useState<any>(null);
     const [followers, setFollowers] = useState<any>([]);
-    const [followings, setFollowings] = useState<any>([]);
 
     // regular tweet
     const tweetId = tweet?._id;
@@ -122,9 +123,8 @@ const Tweet: FC<TweetProps> = ({
 
     useEffect(() => {
         const fetchAuthUserData = async () => {
-            const { followers, followings } = await getAuthUserFollows();
+            const { followers } = await getAuthUserFollows();
             setFollowers(followers);
-            setFollowings(followings)
         };
         fetchAuthUserData();
     }, []);
@@ -371,6 +371,7 @@ const Tweet: FC<TweetProps> = ({
                     onClick={() => onClickLike!(tweet)}
                     isLiked={isLiked}
                     isRetweet={isRetweet}
+                    onRemoveFromBookmarks={onRemoveFromBookmarks}
                 />
             </div>
         </React.Fragment>

@@ -131,7 +131,7 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
                                     }`}
                                     onClick={() => {
                                         if (
-                                            option === TWEET_MENU.retweet ||
+                                            option === TWEET_MENU.retweet || option === TWEET_MENU.undoRetweet ||
                                             option === TWEET_MENU.quoteTweet
                                         ) {
                                             handleRetweetClick(option, value);

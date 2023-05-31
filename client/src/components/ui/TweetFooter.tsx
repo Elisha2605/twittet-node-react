@@ -3,6 +3,7 @@ import {
     faArrowUpFromBracket,
     faBookmark,
     faHeart as faHeartSolid,
+    faPen,
 } from '@fortawesome/free-solid-svg-icons';
 import { faChartSimple, faRepeat } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,7 +18,7 @@ import {
 } from '../../data/menuOptions';
 import { saveTweetToBookmark } from '../../api/bookmark.api';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { TWEET_AUDIENCE, TWEET_TYPE } from '../../constants/common.constants';
+import { TWEET_AUDIENCE, TWEET_MENU, TWEET_TYPE } from '../../constants/common.constants';
 import AuthContext from '../../context/user.context';
 import { useMessage } from '../../context/successMessage.context';
 
@@ -33,6 +34,7 @@ interface TweetFooterProps {
     isLiked?: boolean;
     isRetweet?: boolean;
     onClickRetweet?: Function;
+    onRemoveFromBookmarks?: (tweetId: string) => void;
 }
 
 const TweetFooter: FC<TweetFooterProps> = ({
@@ -47,6 +49,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
     isLiked,
     isRetweet,
     onClickRetweet,
+    onRemoveFromBookmarks
 }) => {
     const [authUser, setAuthUser] = useState<any>(null);
 
@@ -80,7 +83,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
             showMessage('Tweet added to your Bookmarks', 'success');
         } else if (res.message === 'Removed') {
             showMessage('Tweet removed from Bookmarks', 'success');
-
+            onRemoveFromBookmarks!(tweet._id)
         }
     };
 
@@ -119,55 +122,60 @@ const TweetFooter: FC<TweetFooterProps> = ({
                     <p>{replies}</p>
                 </div>
 
-                {isRetweet ? (
-                    <div
-                    className={`${styles.item} ${styles.hoverGreen} ${
-                        isTweetReply ? styles.itemOnTweetReply : ''
-                    } ${styles.hasRetweeted}`}
-                >
-                    <PopUpMenu
-                        value={tweet}
-                        isMenuIcon={false}
-                        options={reTweetOptions!}
-                        icons={reTweetIcon}
-                        isDisable={canRetweet}
-                        onClick={(option, tweet: any) =>
-                            onClickRetweet!(option, tweet)
-                        }
-                        className={styles.retweetPopUp}
-                    >
-                        <FontAwesomeIcon
-                            icon={faRepeat}
-                            className={styles.faRepeat}
-                        />
-                    </PopUpMenu>
-                    <p>{retTweets}</p>
-                </div>
-                ): (
                 <div
                     className={`${styles.item} ${styles.hoverGreen} ${
                         isTweetReply ? styles.itemOnTweetReply : ''
                     }`}
                 >
+                {tweet?.type === TWEET_TYPE.reTweet && tweet?.text === null && tweet?.user?._id === authUser?._id ? (
+                    <>
+                        <PopUpMenu
+                            value={tweet}
+                            isMenuIcon={false}
+                            options={[TWEET_MENU.undoRetweet, TWEET_MENU.quoteTweet]!}
+                            icons={{
+                                'Undo Retweet': (
+                                    <FontAwesomeIcon icon={faRepeat} />
+                                ),
+                                'Quote Tweet': (
+                                    <FontAwesomeIcon icon={faPen} />
+                                ),
+                            }}
+                            isDisable={canRetweet}
+                            onClick={(option, tweet: any) =>
+                                onClickRetweet!(option, tweet)
+                            }
+                            className={styles.retweetPopUp}
+                        >
+                            <FontAwesomeIcon
+                                icon={faRepeat}
+                                className={styles.faRepeat}
+                            />
+                        </PopUpMenu>
+                        <p>{retTweets}</p>
+                    </>
+                ): (
+                    <>
                     <PopUpMenu
-                        value={tweet}
-                        isMenuIcon={false}
-                        options={reTweetOptions!}
-                        icons={reTweetIcon}
-                        isDisable={canRetweet}
-                        onClick={(option, tweet: any) =>
-                            onClickRetweet!(option, tweet)
-                        }
-                        className={styles.retweetPopUp}
-                    >
-                        <FontAwesomeIcon
-                            icon={faRepeat}
-                            className={styles.faRepeat}
-                        />
-                    </PopUpMenu>
-                    <p>{retTweets}</p>
-                </div>
+                            value={tweet}
+                            isMenuIcon={false}
+                            options={reTweetOptions!}
+                            icons={reTweetIcon}
+                            isDisable={canRetweet}
+                            onClick={(option, tweet: any) =>
+                                onClickRetweet!(option, tweet)
+                            }
+                            className={styles.retweetPopUp}
+                        >
+                            <FontAwesomeIcon
+                                icon={faRepeat}
+                                className={styles.faRepeat}
+                            />
+                        </PopUpMenu>
+                        <p>{retTweets}</p>
+                    </>
                 )}
+                </div>
                 
                 <div
                     className={`${styles.item} ${isLiked ? styles.liked : styles.item} ${
@@ -233,5 +241,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
         </React.Fragment>
     );
 };
+
+// tweet?.type === TWEET_TYPE.reTweet && tweet?.text === null && tweet?.user?._id === authUser?._id &&
 
 export default TweetFooter;

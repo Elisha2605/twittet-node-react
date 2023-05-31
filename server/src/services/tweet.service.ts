@@ -264,7 +264,7 @@ export const reTweet = async (
 
             return {
                 success: true,
-                message: 'Undone Retweet',
+                message: 'Undo Retweet',
                 status: 200,
                 payload: [],
             };

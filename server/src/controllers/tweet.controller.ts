@@ -174,6 +174,7 @@ export const reTweetController = asyncHandler(
             );
             if (success) {
                 res.status(200).json({
+                    success: success,
                     message: message,
                     status: status,
                     tweet: payload,

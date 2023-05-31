@@ -8,6 +8,7 @@ import AuthContext from '../../../context/user.context';
 import { TweetAudienceType, TweetReplyType } from '../../../types/tweet.types';
 import { retweet } from '../../../api/tweet.api';
 import FormRetweet from '../../../components/form/FormRetweet';
+import { useMessage } from '../../../context/successMessage.context';
 
 interface RetweetModalProps {
     originalTweet: any,
@@ -46,6 +47,8 @@ const RetweetModal: FC<RetweetModalProps> = ({
     const [tweetReply, setTweetReply] = useState<TweetReplyType>(TWEET_REPLY.everyone);
     const [authUser, setAuthUser] = useState<any>(null);
 
+    const { showMessage } = useMessage();
+
     const ctx = useContext(AuthContext);
     useEffect(() => {
         const getAuthUser = async () => {
@@ -78,6 +81,9 @@ const RetweetModal: FC<RetweetModalProps> = ({
                 ...tweet
             };
             onAddTweet(newTweet)
+        }
+        if (res.success) {
+            showMessage('Your tweet was sent', 'success');
         }
         setIsFormFocused(false);
         closeModal('retweet-modal');

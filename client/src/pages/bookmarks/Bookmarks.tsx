@@ -77,6 +77,10 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
         }
     };
 
+    const removeTweetFromBookmarks = (tweetId: string) => {
+        setSavedTweets((prevTweets) => prevTweets.filter((tweet) => tweet._id !== tweetId));
+    };
+
     return (
         <React.Fragment>
             <div className={Layout.mainSectionContainer}>
@@ -109,6 +113,7 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
                                         isLiked={tweet?.likes?.includes(
                                             authUser?._id
                                         )}
+                                        onRemoveFromBookmarks={removeTweetFromBookmarks}
                                     />
                                 ))}
                             </>

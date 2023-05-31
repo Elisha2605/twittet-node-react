@@ -20,6 +20,7 @@ export enum TWEET_MENU {
     edit = 'Edit',
     retweet = 'Retweet',
     quoteTweet = 'Quote Tweet',
+    undoRetweet = 'Undo Retweet'
 }
 
 export enum TWEET_AUDIENCE {
