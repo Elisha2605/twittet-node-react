@@ -14,7 +14,7 @@ import Tweet from '../../src/models/tweet.model';
 import User from '../../src/models/user.model';
 import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
 import { CustomError } from '../../src/utils/helpers';
-import { fetchUserTweetReplies } from 'src/aggregations/tweet/fetchUserTweetReplies.aggregation';
+import { fetchUserTweetReplies } from '../../src/aggregations/tweet/fetchUserTweetReplies.aggregation';
 
 export const getAllTweets = async (
     userId: string
