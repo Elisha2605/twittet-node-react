@@ -17,7 +17,7 @@ import upload, { uploadToS3 } from '../../src/middleware/multer.middleware';
 const tweetRouter = Router();
 
 tweetRouter.get('', verifyUser(), getAllTweetsController);
-tweetRouter.get('/replies', verifyUser(), getUserTweetRepliesController);
+tweetRouter.get('/replies/:id', verifyUser(), getUserTweetRepliesController);
 tweetRouter.get('/user-tweets/:id', verifyUser(), getUserTweetsController);
 tweetRouter.get('/follower-tweets', verifyUser(), getFollowTweetsController);
 tweetRouter.get('/tweet/:id', verifyUser(), getTweetByIdController);

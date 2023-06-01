@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { TWEET_AUDIENCE } from '../../../src/constants/tweet.constants';
 import Tweet from '../../../src/models/tweet.model';
 
-export const fetchUserTweets = async (userId: string) => {
+export const fetchUserTweets = async (userId: string, visitorId: string) => {
     const tweets = await Tweet.aggregate([
         {
             $lookup: {
@@ -77,14 +77,14 @@ export const fetchUserTweets = async (userId: string) => {
                             $cond: {
                                 if: {
                                     $eq: [
-                                        new mongoose.Types.ObjectId(userId),
+                                        new mongoose.Types.ObjectId(visitorId),
                                         '$twitterCircle.user',
                                     ],
                                 },
                                 then: true,
                                 else: {
                                     $in: [
-                                        new mongoose.Types.ObjectId(userId),
+                                        new mongoose.Types.ObjectId(visitorId),
                                         '$twitterCircle.members',
                                     ],
                                 },

@@ -19,9 +19,9 @@ export const getAllTweets = async () => {
     }
 };
 
-export const getUserTweetReplies = async () => {
+export const getUserTweetReplies = async (userId: string) => {
     try {
-        const res = await http.get('/tweets/replies', GETREQUESTOPTIONS());
+        const res = await http.get(`/tweets/replies/${userId}`, GETREQUESTOPTIONS());
         return res.data;
     } catch (error: any) {
         if (error.response && error.response.status === 401) {

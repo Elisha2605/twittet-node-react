@@ -90,10 +90,11 @@ export const getTweetById = async (tweetId: string): Promise<any> => {
 };
 
 export const getUserTweets = async (
-    userId: string
+    userId: string,
+    visitorId: string
 ): Promise<ApiResponse<any>> => {
     try {
-        const tweets = await fetchUserTweets(userId);
+        const tweets = await fetchUserTweets(userId, visitorId);
 
         if (tweets.length === 0) {
             return {

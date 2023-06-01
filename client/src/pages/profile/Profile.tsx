@@ -163,7 +163,7 @@ const Profile: FC<ProfileProps> = ({
     useEffect(() => {
         const getLikedTweet = async () => {
             const { tweets } = await getUserLikedTweets(id!);
-            const { replies } = await getUserTweetReplies();
+            const { replies } = await getUserTweetReplies(id!);
 
             setUserLikedTweets(tweets);
             setUserTweetReplies(replies);
@@ -282,6 +282,8 @@ const Profile: FC<ProfileProps> = ({
             );
         }
     };
+
+    const isAuthUser = authUser?._id === id;
 
     return (
         <React.Fragment>
@@ -490,7 +492,10 @@ const Profile: FC<ProfileProps> = ({
                                     <>
                                         {userTweets.map((tweet: any) => (
                                             <Tweet
-                                                key={tweet?._id + tweet?.createdAt}
+                                                key={
+                                                    tweet?._id +
+                                                    tweet?.createdAt
+                                                }
                                                 tweet={tweet}
                                                 onClickMenu={onClickTweetMenu}
                                                 onClickLike={onClickLike}
@@ -502,8 +507,16 @@ const Profile: FC<ProfileProps> = ({
                                     </>
                                 ) : (
                                     <ContentNotAvailable
-                                        title="You haven't posted any tweet yet"
-                                        message="You will find all our tweets here"
+                                        title={
+                                            isAuthUser
+                                                ? "You haven't posted any tweet yet"
+                                                : `@${user?.username} hasn’t poseted any Tweet yet`
+                                        }
+                                        message={
+                                            isAuthUser
+                                                ? 'Once you do, you will find all our tweets here'
+                                                : 'Once they do, those Tweets will show up here.'
+                                        }
                                     />
                                 )}
                             </div>
@@ -515,15 +528,25 @@ const Profile: FC<ProfileProps> = ({
                                     <>
                                         {userTweetReplies.map((tweet: any) => (
                                             <Tweet
-                                                key={tweet._id + tweet?.createdAt}
+                                                key={
+                                                    tweet._id + tweet?.createdAt
+                                                }
                                                 tweet={tweet}
                                             />
                                         ))}
                                     </>
                                 ) : (
                                     <ContentNotAvailable
-                                        title="You haven't replyed to any tweet"
-                                        message="All your replies will show displayed here"
+                                        title={
+                                            isAuthUser
+                                                ? "You haven't replyed to any tweet"
+                                                : `@${user?.username} hasn’t reply to any tweet`
+                                        }
+                                        message={
+                                            isAuthUser
+                                                ? 'All your replies will show displayed here'
+                                                : 'Once they do, those Replies will show up here.'
+                                        }
                                     />
                                 )}
                             </div>
@@ -536,7 +559,9 @@ const Profile: FC<ProfileProps> = ({
                                     <>
                                         {userTweetsMedia.map((tweet: any) => (
                                             <Tweet
-                                                key={tweet._id + tweet?.createdAt}
+                                                key={
+                                                    tweet._id + tweet?.createdAt
+                                                }
                                                 tweet={tweet}
                                                 onClickMenu={onClickTweetMenu}
                                                 onClickLike={onClickLike}
@@ -548,8 +573,16 @@ const Profile: FC<ProfileProps> = ({
                                     </>
                                 ) : (
                                     <ContentNotAvailable
-                                        title="You don’t have any tweet with an image"
-                                        message="All your tweets which have images will be displayed here"
+                                        title={
+                                            isAuthUser
+                                                ? 'You don’t have any tweet with an image'
+                                                : `@${user?.username} hasn’t Tweeted media`
+                                        }
+                                        message={
+                                            isAuthUser
+                                                ? 'All your tweets which have images will be displayed here'
+                                                : 'Once they do, those Tweets will show up here.'
+                                        }
                                     />
                                 )}
                             </div>
@@ -563,7 +596,9 @@ const Profile: FC<ProfileProps> = ({
                                     <>
                                         {userLikedTweets.map((tweet: any) => (
                                             <Tweet
-                                                key={tweet._id + tweet?.createdAt}
+                                                key={
+                                                    tweet._id + tweet?.createdAt
+                                                }
                                                 tweet={tweet}
                                                 onClickMenu={onClickTweetMenu}
                                                 onClickLike={onClickLike}
@@ -575,8 +610,16 @@ const Profile: FC<ProfileProps> = ({
                                     </>
                                 ) : (
                                     <ContentNotAvailable
-                                        title="You don’t have any likes yet"
-                                        message="Tap the heart on any Tweet to show it some love. When you do, it’ll show up here."
+                                        title={
+                                            isAuthUser
+                                                ? 'You don’t have any likes yet'
+                                                : `@${user?.username} hasn’t liked any Tweets`
+                                        }
+                                        message={
+                                            isAuthUser
+                                                ? 'Tap the heart on any Tweet to show it some love. When you do, it’ll show up here.'
+                                                : 'When they do, those Tweets will show up here.'
+                                        }
                                     />
                                 )}
                             </div>

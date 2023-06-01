@@ -48,7 +48,7 @@ const UserInfo: FC<UserInfoProps> = ({
     onClickOption,
     isReply = false,
     isOnHover = false,
-    isNavigate = false,
+    isNavigate = true,
 }) => {
 
     const [authUser, setAuthUser] = useState<any>(null);

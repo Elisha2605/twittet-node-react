@@ -42,11 +42,6 @@ export const fetchUserTweetReplies = async (userId: string) => {
             },
         },
         {
-            $sort: {
-                createdAt: -1,
-            },
-        },
-        {
             $addFields: {
                 isReply: true, // Add the isReply field with the value true
             },
@@ -54,7 +49,6 @@ export const fetchUserTweetReplies = async (userId: string) => {
         {
             $project: {
                 _id: 1,
-                type: '$audience.type',
                 user: {
                     _id: '$user._id',
                     name: '$user.name',
@@ -72,6 +66,11 @@ export const fetchUserTweetReplies = async (userId: string) => {
                 createdAt: '$replyTweets.createdAt',
                 updatedAt: '$replyTweets.updatedAt',
                 isReply: 1,
+            },
+        },
+        {
+            $sort: {
+                createdAt: -1,
             },
         },
     ]).exec();

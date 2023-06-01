@@ -131,6 +131,7 @@ const HomeEditTwitterCirlceModal: FC<HomeEditTwitterCirlceModalProps> = ({}) => 
                                    name={member?.name}
                                    username={member?.username}
                                    className={styles.userInfoWrapper}
+                                   isNavigate={true}
                                 >
                                 <Button
                                     type={ButtonType.tietary}
@@ -163,6 +164,7 @@ const HomeEditTwitterCirlceModal: FC<HomeEditTwitterCirlceModalProps> = ({}) => 
                                    name={following?.user?.name}
                                    username={following?.user?.username}
                                    className={styles.userInfoWrapper}
+                                   isNavigate={true}
                                 >
                                 <div>
                                     {isTwitterCircle(following?.user?._id) ? (
