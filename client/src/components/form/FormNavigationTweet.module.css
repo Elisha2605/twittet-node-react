@@ -78,7 +78,10 @@
     background-color: var(--color-primary-lighter);
     transition: 0.1s ease-in-out;
 }
-
+.textEreaInputError {
+    font-size: var(--font-size-sm);
+    color: var(--color-error);
+}
 /* WHO CAN REPLY BOX */
 .tweetReplyOptions {
     position: relative;
@@ -159,4 +162,15 @@
     border-radius: 1rem;
     overflow: hidden;
     z-index: 90;
+}
+
+.buttonAndCounterWrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.counter {
+    font-size: var(--font-size-sm);
+    color: var(--color-secondary);
 }

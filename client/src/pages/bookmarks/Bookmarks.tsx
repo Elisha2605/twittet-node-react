@@ -16,9 +16,12 @@ import BookmarkImage from '../../assets/bookmark.png';
 
 interface BookmarkProps {
     onClickTweetMenu: Function;
+    onEditTweet: any;
+    onDeleteTweet: any;
+    onClickRetweet: Function;
 }
 
-const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
+const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu, onEditTweet, onDeleteTweet, onClickRetweet }) => {
     const [authUser, setAuthUser] = useState<any>(null);
     const [savedTweets, setSavedTweets] = useState<any[]>([]);
     const [likedTweet, setLikedTweet] = useState<any>();
@@ -65,6 +68,29 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
             )
         );
     }, [likedTweet]);
+
+    useEffect(() => {
+        const handleEditTweetFromModal = () => {
+            if (authUser) {
+                setSavedTweets((prevTweets: any) =>
+                    prevTweets.map((tweet: any) =>
+                        tweet?._id === onEditTweet?._id
+                            ? { ...tweet, ...onEditTweet }
+                            : tweet
+                    )
+                );
+            }
+        };
+        handleEditTweetFromModal();
+    }, [onEditTweet]);
+
+     // On delete tweet
+     useEffect(() => {
+        setSavedTweets((preveState) =>
+            preveState.filter((tweet) => tweet._id !== onDeleteTweet._id)
+        );
+    }, [onDeleteTweet]);
+
 
     const handleOptionClick = (option: string) => {
         // TODO: handle menu option clickes
@@ -114,6 +140,8 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu }) => {
                                             authUser?._id
                                         )}
                                         onRemoveFromBookmarks={removeTweetFromBookmarks}
+                                        onClickRetweet={onClickRetweet}
+                                        isRetweet={tweet?.retweets?.includes(authUser?._id)}
                                     />
                                 ))}
                             </>

@@ -1,7 +1,7 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import styles from './RetweetModal.module.css';
 import Avatar, { Size } from '../../../components/ui/Avatar';
-import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY, TWEET_TYPE } from '../../../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, MAX_TWEET_CHARACTERS, TWEET_AUDIENCE, TWEET_REPLY, TWEET_TYPE } from '../../../constants/common.constants';
 import { ModalContext } from '../../../context/modal.context';
 import Modal from '../../../components/ui/Modal';
 import AuthContext from '../../../context/user.context';
@@ -46,6 +46,7 @@ const RetweetModal: FC<RetweetModalProps> = ({
     const [tweetAudience, setTweetAudience] = useState<TweetAudienceType>(TWEET_AUDIENCE.everyone);
     const [tweetReply, setTweetReply] = useState<TweetReplyType>(TWEET_REPLY.everyone);
     const [authUser, setAuthUser] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const { showMessage } = useMessage();
 
@@ -73,6 +74,12 @@ const RetweetModal: FC<RetweetModalProps> = ({
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
             : null;
+        
+        if (text?.length! > MAX_TWEET_CHARACTERS) {
+            showMessage('Could not send your tweet', 'error');
+            setIsLoading(false);
+            return;
+        }
         const res = await retweet(originalTweet?._id, text, selectedFile, tweetAudience, tweetReply);
         const { tweet }: any = res;
 

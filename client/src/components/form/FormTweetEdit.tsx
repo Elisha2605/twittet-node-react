@@ -15,7 +15,7 @@ import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAt, faChevronDown, faEarthAfrica, faLock, faUserCheck } from '@fortawesome/free-solid-svg-icons';
 import PopUpMenu from '../ui/PopUpMenu';
-import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, MAX_TWEET_CHARACTERS, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
 import { searchUsers } from '../../api/user.api';
 import UserInfo from '../ui/UserInfo';
 import useClickOutSide from '../../hooks/useClickOutSide';
@@ -71,6 +71,9 @@ const FormTweetEdit: FC<FormTweetEditProps> = ({
     const [searchResults, setSearchResults] = useState<any[]>([]);
     const [selectedEmoji, setSelectedEmoji] = useState<any>();
     const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
+    const [textEreaInputError, setTextEreaInputError] = useState<string | null>(null);
+    const [counter, setCounter] = useState<number>(0);
+
 
 
     const searchResultsRef = useRef<HTMLDivElement>(null);
@@ -94,6 +97,12 @@ const FormTweetEdit: FC<FormTweetEditProps> = ({
     
     const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
+        setCounter(value.length)
+        if (value.length > MAX_TWEET_CHARACTERS) {
+            setTextEreaInputError('Text too long!')
+        } else {
+            setTextEreaInputError(null)
+        }
         const lastChar = value.charAt(value.length - 1);
         if (lastChar === '@') {
         setShowSuggestions(true);
@@ -169,7 +178,7 @@ const FormTweetEdit: FC<FormTweetEditProps> = ({
                         </PopUpMenu>
                     </div>
                 ) : null }
-        
+                <p className={styles.textEreaInputError}>{textEreaInputError}</p>
                 <textarea
                     className={`${styles.textarea} ${classNameTextErea}`}
                     id="form-edit"
@@ -268,16 +277,23 @@ const FormTweetEdit: FC<FormTweetEditProps> = ({
                         )}
                         <CalendarIcon />
                     </div>
-                    <Button
-                        value={'Tweet'}
-                        type={ButtonType.primary}
-                        size={ButtonSize.small}
-                        isDisabled={
-                            (value.length > 0 || imagePreview ? false : true) || (isLoading)
-                        }
-                        onClick={() => setIsFocused(false)}
-                        loading={isLoading}
-                    />
+                    <div className={styles.buttonAndCounterWrapper}>
+                        {inputValue.length > 0 ? (
+                            <div className={styles.counter}>
+                            {counter}/280
+                            </div>
+                        ): null}
+                        <Button
+                            value={'Tweet'}
+                            type={ButtonType.primary}
+                            size={ButtonSize.small}
+                            isDisabled={
+                                (value.length > 0 || imagePreview || selectedEmoji ? false : true) || (isLoading) || value.length > MAX_TWEET_CHARACTERS
+                            }
+                            onClick={() => setIsFocused(false)}
+                            loading={isLoading}
+                        />
+                    </div>
                 </div>
             </form>
         </React.Fragment>

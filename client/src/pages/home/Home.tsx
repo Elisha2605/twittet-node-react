@@ -16,6 +16,7 @@ import {
 } from '../../api/tweet.api';
 import {
     IMAGE_AVATAR_BASE_URL,
+    MAX_TWEET_CHARACTERS,
     TWEET_AUDIENCE,
     TWEET_REPLY,
 } from '../../constants/common.constants';
@@ -205,6 +206,13 @@ const Home: React.FC<HomeProps> = ({
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
             : null;
+
+        if (text?.length! > MAX_TWEET_CHARACTERS) {
+            showMessage('Could not send your tweet', 'error');
+            setIsOnSubmitLoading(false);
+            return;
+        }
+        
         const res = await createTweet(
             text,
             selectedFile,

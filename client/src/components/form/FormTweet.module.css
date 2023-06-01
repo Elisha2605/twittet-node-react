@@ -13,6 +13,10 @@
     color: var(--color-secondary);
 }
 
+.textEreaInputError {
+    font-size: var(--font-size-sm);
+    color: var(--color-error);
+}
 /* AUDIENCE */
 
 .tweetPrivacyOptions {
@@ -148,4 +152,15 @@
     border-radius: 1rem;
     overflow: hidden;
     z-index: 90;
+}
+
+.buttonAndCounterWrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.counter {
+    font-size: var(--font-size-sm);
+    color: var(--color-secondary);
 }

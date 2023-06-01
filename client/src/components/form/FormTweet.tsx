@@ -23,6 +23,7 @@ import {
 import PopUpMenu from '../ui/PopUpMenu';
 import {
     IMAGE_AVATAR_BASE_URL,
+    MAX_TWEET_CHARACTERS,
     TWEET_AUDIENCE,
     TWEET_REPLY,
 } from '../../constants/common.constants';
@@ -81,6 +82,8 @@ const FormTweet: FC<FormProps> = ({
     const [searchResults, setSearchResults] = useState<any[]>([]);
     const [selectedEmoji, setSelectedEmoji] = useState<any>();
     const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
+    const [textEreaInputError, setTextEreaInputError] = useState<string | null>(null);
+    const [counter, setCounter] = useState<number>(0);
 
     const searchResultsRef = useRef<HTMLDivElement>(null);
     const emojiPickerRef = useRef<HTMLDivElement>(null);
@@ -103,6 +106,12 @@ const FormTweet: FC<FormProps> = ({
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
         const value = event.target.value;
+        setCounter(value.length)
+        if (value.length > MAX_TWEET_CHARACTERS) {
+            setTextEreaInputError('Text too long!')
+        } else {
+            setTextEreaInputError(null)
+        }
         const lastChar = value.charAt(value.length - 1);
         if (lastChar === '@') {
             setShowSuggestions(true);
@@ -163,44 +172,6 @@ const FormTweet: FC<FormProps> = ({
         }
       };
 
-      const custom = [
-        {
-          id: 'github',
-          name: 'GitHub',
-          emojis: [
-            {
-              id: 'octocat',
-              name: 'Octocat',
-              keywords: ['github'],
-              skins: [{ src: './octocat.png' }],
-            },
-            {
-              id: 'shipit',
-              name: 'Squirrel',
-              keywords: ['github'],
-              skins: [
-                { src: './shipit-1.png' }, { src: './shipit-2.png' }, { src: './shipit-3.png' },
-                { src: './shipit-4.png' }, { src: './shipit-5.png' }, { src: './shipit-6.png' },
-              ],
-            },
-          ],
-        },
-        {
-          id: 'gifs',
-          name: 'GIFs',
-          emojis: [
-            {
-              id: 'party_parrot',
-              name: 'Party Parrot',
-              keywords: ['dance', 'dancing'],
-              skins: [{ src: './party_parrot.gif' }],
-            },
-          ],
-        },
-      ]
-
-      
-
     return (
         <React.Fragment>
             <form
@@ -247,7 +218,7 @@ const FormTweet: FC<FormProps> = ({
                         </PopUpMenu>
                     </div>
                 ) : null}
-
+                <p className={styles.textEreaInputError}>{textEreaInputError}</p>
                 <textarea
                     className={`${styles.textarea} ${classNameTextErea}`}
                     id="review-text"
@@ -377,23 +348,30 @@ const FormTweet: FC<FormProps> = ({
                             {openEmojiPicker && (
                                 <div ref={emojiPickerRef} className={styles.emojiPicker}>
                                     <Picker   
-                                        data={data} custom={custom} 
+                                        data={data}
                                         onEmojiSelect={handleEmojiSelect} 
                                     />
                                 </div>
                             )}
                         <CalendarIcon />
                     </div>
-                    <Button
-                        value={'Tweet'}
-                        type={ButtonType.primary}
-                        size={ButtonSize.small}
-                        isDisabled={
-                            (value.length > 0 || imagePreview || selectedEmoji ? false : true) || (isLoading)
-                        }
-                        loading={isLoading}
-                        onClick={() => setIsFocused(false)}
-                    />
+                    <div className={styles.buttonAndCounterWrapper}>
+                        {inputValue.length > 0 ? (
+                            <div className={styles.counter}>
+                            {counter}/280
+                            </div>
+                        ): null}
+                        <Button
+                            value={'Tweet'}
+                            type={ButtonType.primary}
+                            size={ButtonSize.small}
+                            isDisabled={
+                                (value.length > 0 || imagePreview || selectedEmoji ? false : true) || (isLoading) || value.length > MAX_TWEET_CHARACTERS
+                            }
+                            loading={isLoading}
+                            onClick={() => setIsFocused(false)}
+                        />
+                    </div>
                 </div>
             </form>
         </React.Fragment>

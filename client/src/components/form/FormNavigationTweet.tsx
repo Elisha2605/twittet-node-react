@@ -15,7 +15,7 @@ import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAt, faChevronDown, faEarthAfrica, faLock, faUserCheck } from '@fortawesome/free-solid-svg-icons';
 import PopUpMenu from '../ui/PopUpMenu';
-import { IMAGE_AVATAR_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, MAX_TWEET_CHARACTERS, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
 import { searchUsers } from '../../api/user.api';
 import UserInfo from '../ui/UserInfo';
 import useClickOutSide from '../../hooks/useClickOutSide';
@@ -69,6 +69,8 @@ const FormNavigation: FC<FormNavigationProps> = ({
     const [searchResults, setSearchResults] = useState<any[]>([]);
     const [selectedEmoji, setSelectedEmoji] = useState<any>();
     const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
+    const [textEreaInputError, setTextEreaInputError] = useState<string | null>(null);
+    const [counter, setCounter] = useState<number>(0);
 
 
     const searchResultsRef = useRef<HTMLDivElement>(null);
@@ -93,6 +95,12 @@ const FormNavigation: FC<FormNavigationProps> = ({
     
     const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
+        if (value.length > MAX_TWEET_CHARACTERS) {
+            setTextEreaInputError('Text too long!')
+        } else {
+            setTextEreaInputError(null)
+        }
+        setCounter(value.length)
         const lastChar = value.charAt(value.length - 1);
         if (lastChar === '@') {
         setShowSuggestions(true);
@@ -169,7 +177,7 @@ const FormNavigation: FC<FormNavigationProps> = ({
                         </PopUpMenu>
                     </div>
                 ) : null }
-        
+                <p className={styles.textEreaInputError}>{textEreaInputError}</p>
                 <textarea
                     className={`${styles.textarea} ${classNameTextErea}`}
                     id="form-navigation"
@@ -268,16 +276,23 @@ const FormNavigation: FC<FormNavigationProps> = ({
                         )}
                         <CalendarIcon />
                     </div>
-                    <Button
-                        value={'Tweet'}
-                        type={ButtonType.primary}
-                        size={ButtonSize.small}
-                        isDisabled={
-                            (value.length > 0 || imagePreview || selectedEmoji ? false : true) || (isLoading)
-                        }
-                        onClick={() => {}}
-                        loading={isLoading}
-                    />
+                    <div className={styles.buttonAndCounterWrapper}>
+                        {inputValue.length > 0 ? (
+                            <div className={styles.counter}>
+                            {`${counter}/${MAX_TWEET_CHARACTERS}`}
+                            </div>
+                        ): null}
+                        <Button
+                            value={'Tweet'}
+                            type={ButtonType.primary}
+                            size={ButtonSize.small}
+                            isDisabled={
+                                (value.length > 0 || imagePreview || selectedEmoji ? false : true) || (isLoading) || value.length > MAX_TWEET_CHARACTERS
+                            }
+                            onClick={() => {}}
+                            loading={isLoading}
+                        />
+                    </div>
                 </div>
             </form>
         </React.Fragment>

@@ -1,3 +1,8 @@
+.container {
+    overflow-x: hidden;
+
+}
+
 .textarea {
     border: none;
     resize: none;
@@ -14,6 +19,11 @@
 
 .textarea::placeholder {
     color: var(--color-secondary);
+}
+
+.textEreaInputError {
+    font-size: var(--font-size-sm);
+    color: var(--color-error);
 }
 
 /* AUDIENCE */
@@ -145,13 +155,15 @@
 /* Re-tweet with no image */
 
 .retweetContainer {
-
     border-radius: 1rem;
     border: 1.5px solid var(--color-secondary-light);
 }
 
 .reTweetText {
     padding: 0 1rem 1rem 1rem;
+    width: 30rem;
+    overflow-wrap: break-word
+
 }
 
 .reTweetImage {
@@ -182,4 +194,15 @@
     width: 100%;
     height: 100%;
     border-radius: 1rem;
+}
+
+.buttonAndCounterWrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.counter {
+    font-size: var(--font-size-sm);
+    color: var(--color-secondary);
 }

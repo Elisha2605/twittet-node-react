@@ -10,6 +10,8 @@ export const IMAGE_TWEET_REPLY_BASE_URL = `https://fake-twitter-uploads.s3.amazo
 export const IMAGE_AVATAR_DEFAULT = 'default-avatar.jpg'
 export const IMAGE_COVER_DEFAULT = `https://fake-twitter-uploads.s3.amazonaws.com/avatar/default-cover.jpg`
 
+export const MAX_TWEET_CHARACTERS = 280
+
 export enum TWEET_TYPE {
     regular = 'Regular',
     reTweet = 'Retweet',

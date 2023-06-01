@@ -38,6 +38,7 @@
 
 .tweet {
     margin-bottom: 0.5rem;
+    overflow-wrap: break-word
     /* TODO: change the font-familly */
 }
 .coloredText {
@@ -97,8 +98,10 @@
 }
 
 .reTweetText {
-    padding: 0.2rem 0 0 1rem;
+    padding: 0.2rem 0.5rem 0 1rem;
     margin-top: -0.5rem;
+    overflow-wrap: break-word
+
 }
 
 .retweetContainer:hover {

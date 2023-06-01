@@ -35,6 +35,7 @@ interface ProfileProps {
     onDeleteTweet: any;
     onEditTweet: any;
     onClickTweetMenu: Function;
+    onClickRetweet: Function;
 }
 
 const Profile: FC<ProfileProps> = ({
@@ -42,6 +43,7 @@ const Profile: FC<ProfileProps> = ({
     onDeleteTweet,
     onEditTweet,
     onClickTweetMenu,
+    onClickRetweet
 }) => {
     const { id } = useParams<{ id: string }>();
 
@@ -502,6 +504,8 @@ const Profile: FC<ProfileProps> = ({
                                                 isLiked={tweet?.likes?.includes(
                                                     authUser?._id
                                                 )}
+                                                onClickRetweet={onClickRetweet}
+                                                isRetweet={tweet?.retweets?.includes(authUser?._id)}
                                             />
                                         ))}
                                     </>
@@ -532,6 +536,8 @@ const Profile: FC<ProfileProps> = ({
                                                     tweet._id + tweet?.createdAt
                                                 }
                                                 tweet={tweet}
+                                                onClickRetweet={onClickRetweet}
+                                                isRetweet={tweet?.retweets?.includes(authUser?._id)}
                                             />
                                         ))}
                                     </>
@@ -568,6 +574,8 @@ const Profile: FC<ProfileProps> = ({
                                                 isLiked={tweet?.likes?.includes(
                                                     authUser?._id
                                                 )}
+                                                onClickRetweet={onClickRetweet}
+                                                isRetweet={tweet?.retweets?.includes(authUser?._id)}
                                             />
                                         ))}
                                     </>
@@ -605,6 +613,8 @@ const Profile: FC<ProfileProps> = ({
                                                 isLiked={tweet?.likes?.includes(
                                                     authUser?._id
                                                 )}
+                                                onClickRetweet={onClickRetweet}
+                                                isRetweet={tweet?.retweets?.includes(authUser?._id)}
                                             />
                                         ))}
                                     </>

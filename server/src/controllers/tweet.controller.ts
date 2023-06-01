@@ -64,7 +64,10 @@ export const getUserTweetsController = asyncHandler(
             res.status(400).json({ InvalidInputError: 'Invalid input' });
         }
         try {
-            const { success, message, payload } = await getUserTweets(userId, visitorId);
+            const { success, message, payload } = await getUserTweets(
+                userId,
+                visitorId
+            );
             if (success) {
                 res.status(200).json({ tweets: payload });
             } else {
@@ -109,9 +112,10 @@ export const createTweetController = asyncHandler(
             res.status(400).json({ InvalidInputError: 'Invalid Input' });
             return;
         }
-        if (text !== undefined && text.length >= 300) {
+        if (text !== undefined && text.length > 280) {
             res.status(400).json({
-                InvalidInput: 'Tweet input must be less that 280',
+                InvalidInput:
+                    'Tweet text must not be greater than 280 characters',
             });
             return;
         }
@@ -157,9 +161,10 @@ export const reTweetController = asyncHandler(
             res.status(400).json({ InvalidInputError: 'Invalid Input' });
             return;
         }
-        if (text !== undefined && text.length >= 300) {
+        if (text !== undefined && text.length > 280) {
             res.status(400).json({
-                InvalidInput: 'Tweet input must be less that 280',
+                InvalidInput:
+                    'Tweet text must not be greater than 280 characters',
             });
             return;
         }
@@ -203,7 +208,13 @@ export const editTweetController = asyncHandler(
         const audience = req.body.audience;
         const reply = req.body.reply;
 
-        console.log(image);
+        if (text !== undefined && text.length > 280) {
+            res.status(400).json({
+                InvalidInput:
+                    'Tweet text must not be greater than 280 characters',
+            });
+            return;
+        }
 
         try {
             const response = await editTweet(

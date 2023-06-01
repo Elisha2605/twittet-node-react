@@ -130,6 +130,7 @@ function App() {
             const res = await deleteTweet(tweetId);
             const { tweet } = res;
             setOnDeleteTweet(tweet);
+            showMessage('Your Tweet was deleted', 'success');
         } else if (option === TWEET_MENU.edit) {
             openModal('edit-tweet-modal');
             setEditTweetModal(tweet);
@@ -264,12 +265,18 @@ function App() {
                                 <Route path="/message" element={<Message />} />
                                 <Route
                                     path="/bookmarks"
-                                    element={<Bookmarks onClickTweetMenu={handleTweetMenuOptionClick} />}
+                                    element={<Bookmarks 
+                                        onClickTweetMenu={handleTweetMenuOptionClick} 
+                                        onEditTweet={onEditTweet} 
+                                        onDeleteTweet={onDeleteTweet} 
+                                        onClickRetweet={onReTweet}
+                                    />}
                                 />
                                 <Route path="/profile/:id" element={<Profile 
                                     onAddTweet={onAddTweet} 
                                     onDeleteTweet={onDeleteTweet} 
                                     onEditTweet={onEditTweet}
+                                    onClickRetweet={onReTweet}
                                     onClickTweetMenu={handleTweetMenuOptionClick} />} 
                                 />
                                 <Route path="/follow-status/:path/:id/*" element={<FollowStatus />} />

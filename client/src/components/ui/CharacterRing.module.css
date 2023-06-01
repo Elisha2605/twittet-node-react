@@ -1,0 +1,19 @@
+.characterRing {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .ringBackground {
+    fill: none;
+    stroke: grey;
+    stroke-width: 5;
+  }
+  
+  .ringFill {
+    fill: none;
+    stroke: blue;
+    stroke-width: 5;
+    stroke-dasharray: 0;
+    transition: stroke-dashoffset 0.3s ease;
+  }
+  

@@ -14,7 +14,7 @@ import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAt, faChevronDown, faEarthAfrica, faLock, faUserCheck } from '@fortawesome/free-solid-svg-icons';
 import PopUpMenu from '../ui/PopUpMenu';
-import { IMAGE_AVATAR_BASE_URL, IMAGE_TWEET_BASE_URL, TWEET_AUDIENCE, TWEET_REPLY, TWEET_TYPE } from '../../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, IMAGE_TWEET_BASE_URL, MAX_TWEET_CHARACTERS, TWEET_AUDIENCE, TWEET_REPLY, TWEET_TYPE } from '../../constants/common.constants';
 import { searchUsers } from '../../api/user.api';
 import UserInfo from '../ui/UserInfo';
 import useClickOutSide from '../../hooks/useClickOutSide';
@@ -74,6 +74,9 @@ const FormRetweet: FC<FormRetweetProps> = ({
     const [searchResults, setSearchResults] = useState<any[]>([]);
     const [selectedEmoji, setSelectedEmoji] = useState<any>();
     const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
+    const [textEreaInputError, setTextEreaInputError] = useState<string | null>(null);
+    const [counter, setCounter] = useState<number>(0);
+
 
 
     const searchResultsRef = useRef<HTMLDivElement>(null);
@@ -122,6 +125,12 @@ const FormRetweet: FC<FormRetweetProps> = ({
     
     const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
+        setCounter(value.length)
+        if (value.length > MAX_TWEET_CHARACTERS) {
+            setTextEreaInputError('Text too long!');
+        } else {
+            setTextEreaInputError(null);
+        }
         const lastChar = value.charAt(value.length - 1);
         if (lastChar === '@') {
         setShowSuggestions(true);
@@ -217,7 +226,7 @@ const FormRetweet: FC<FormRetweetProps> = ({
                         </PopUpMenu>
                     </div>
                 ) : null }
-        
+                <p className={styles.textEreaInputError}>{textEreaInputError}</p>
                 <textarea
                     className={`${styles.textarea} ${classNameTextErea}`}
                     id="form-retweet"
@@ -400,13 +409,20 @@ const FormRetweet: FC<FormRetweetProps> = ({
                         )}
                         <CalendarIcon />
                     </div>
-                    <Button
-                        value={'Tweet'}
-                        type={ButtonType.primary}
-                        size={ButtonSize.small}
-                        isDisabled={false}
-                        onClick={() => setIsFocused(false)}
-                    />
+                    <div className={styles.buttonAndCounterWrapper}>
+                        {inputValue.length > 0 ? (
+                            <div className={styles.counter}>
+                            {counter}/280
+                            </div>
+                        ): null}
+                        <Button
+                            value={'Tweet'}
+                            type={ButtonType.primary}
+                            size={ButtonSize.small}
+                            isDisabled={false}
+                            onClick={() => setIsFocused(false)}
+                        />
+                    </div>
                 </div>
             </form>
         </React.Fragment>
