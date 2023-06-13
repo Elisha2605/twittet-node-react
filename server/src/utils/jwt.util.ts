@@ -14,14 +14,15 @@ export const COOKIE_OPTIONS: CookieOptions = {
     sameSite: 'none',
 };
 
-export const getToken = (user: any) => {
-    return jwt.sign(user, process.env.JWT_SECRET, {
+export const getToken = (userId: any) => {
+    const token = jwt.sign(userId, process.env.JWT_SECRET, {
         expiresIn: eval(process.env.SESSION_EXPIRTY),
     });
+    return token;
 };
 
-export const getRefreshToken = (user: any) => {
-    const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
+export const getRefreshToken = (userId: any) => {
+    const refreshToken = jwt.sign(userId, process.env.REFRESH_TOKEN_SECRET, {
         expiresIn: eval(process.env.REFRESH_TOKEN_EXPIRY),
     });
     return refreshToken;

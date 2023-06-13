@@ -1,10 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './passwordReset.module.css';
 import Header from '../../../components/header/Header';
 import ArrowLeftIcon from '../../../components/icons/ArrowLeftIcon';
 import HeaderTitle from '../../../components/header/HeaderTitle';
 import { useNavigate } from 'react-router-dom';
-import AuthContext from '../../../context/user.context';
 import Button, { ButtonSize, ButtonType } from '../../../components/ui/Button';
 import { useForm } from 'react-hook-form';
 import { resetPassword } from '../../../api/passwordReset.api';
@@ -20,7 +19,6 @@ const PasswordReset: React.FC<{}> = ({}) => {
     const {
         register,
         handleSubmit,
-        reset,
         getValues,
         formState: { errors },
     } = useForm({
@@ -35,15 +33,6 @@ const PasswordReset: React.FC<{}> = ({}) => {
         const { password, passwordConfirm } = getValues();
         return password === passwordConfirm || 'Passwords do not match';
     };
-
-    // get auth user
-    const ctx = useContext(AuthContext);
-    useEffect(() => {
-        const getAuthUser = async () => {
-            const { user } = ctx.getUserContext();
-        };
-        getAuthUser();
-    }, []);
 
     const token = localStorage.getItem('resetToken');
 

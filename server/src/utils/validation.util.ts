@@ -29,3 +29,14 @@ export const validate_website = (value: string) => {
 
     return value;
 };
+
+export const validateEmail = (email: string): boolean | string => {
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    const maxLength = 100; // Maximum length you want to allow for the email
+
+    if (email.length > maxLength) {
+        return false; // Email exceeds the maximum length
+    }
+
+    return emailRegex.test(email);
+};

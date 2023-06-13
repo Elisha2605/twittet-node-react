@@ -5,11 +5,22 @@ import {
     resetPassword,
     verifyPasswordVerificationToken,
 } from '../../src/services/passwordReset.service';
+import { validateEmail } from '../../src/utils/validation.util';
 
 export const requestPasswordResetController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.user._id;
         const email = req.body.email;
+
+        if (!userId || !email) {
+            res.status(400).json({ InvalidInputError: 'Invalid input' });
+            return;
+        }
+
+        if (!validateEmail(req.body.email)) {
+            res.status(400).json({ InvalidInputError: 'Invalid Email' });
+            return;
+        }
 
         try {
             const { success, message, status, payload } =

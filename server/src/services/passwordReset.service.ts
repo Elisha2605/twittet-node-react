@@ -41,6 +41,15 @@ export const requestPasswordReset = async (
 
         const emailTemplate = await getEmailTemplateByName('resetpassword');
 
+        if (!emailTemplate) {
+            return {
+                success: false,
+                message: 'Email template not found',
+                status: 404,
+                payload: {},
+            };
+        }
+
         const html = injectVariables(emailTemplate.html, {
             token: token,
         });
@@ -154,7 +163,7 @@ export const resetPassword = async (
         if (!resetRequest || !resetRequest.token) {
             return {
                 success: true,
-                message: 'Password reset requeres verification',
+                message: 'Password reset requires verification',
                 status: 400,
                 payload: {},
             };

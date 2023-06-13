@@ -2,9 +2,7 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { dbConn } from './config/db.config';
-import session from 'express-session';
 import passport from 'passport';
-import mongoSession from 'connect-mongodb-session';
 import httpContext from 'express-http-context';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
@@ -48,36 +46,11 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-const MongoDBStore = mongoSession(session);
-
-const store = new MongoDBStore({
-    uri: process.env.MONGODB_CONNECTION_STRING,
-    collection: 'sessions',
-});
-
-store.on('error', (error) => {
-    console.log(error);
-});
-
-app.use(
-    session({
-        secret: process.env.JWT_SECRET,
-        cookie: {
-            maxAge: 3600000 * 24,
-            httpOnly: false,
-        },
-        resave: false,
-        saveUninitialized: false,
-        store: store,
-    })
-);
-
-app.use(passport.session());
 app.use(cookieParser(process.env.JWT_SECRET));
 
 app.use(loggerMiddleware);
 
-// ROUTES - API
+// ROUTES
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/tweets', tweetRouter);
@@ -105,9 +78,8 @@ app.use(
     express.static(path.join(__distPath, 'uploads', 'replyImage'))
 );
 
-// Step 1:
 app.use(express.static(path.resolve(__dirname, 'client', 'build')));
-// Step 2:
+
 app.get('*', function (request, response) {
     response.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
 });

@@ -10,8 +10,7 @@ export const requestPasswordReset = async (email: string) => {
         return res.data;
     } catch (error: any) {
         if (error.response && error.response.status === 401) {
-            localStorage.removeItem('context');
-            window.location.href = '/';
+            window.location.href = '/access-denied';
         } else {
             console.error(error);
             throw error;
@@ -27,8 +26,7 @@ export const verifyPasswordVerificationToken = async (token: string) => {
         return res.data;
     } catch (error: any) {
         if (error.response && error.response.status === 401) {
-            localStorage.removeItem('context');
-            window.location.href = '/';
+            window.location.href = '/access-denied';
         } else {
             console.error(error);
             throw error;
@@ -47,7 +45,6 @@ export const resetPassword = async (password: string, token: string) => {
         return res.data;
     } catch (error: any) {
         if (error.response && error.response.status === 401) {
-            localStorage.removeItem('context');
             window.location.href = '/';
         } else {
             console.error(error);

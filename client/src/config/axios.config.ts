@@ -9,7 +9,6 @@ const http = axios.create({
 
 const getCurrentContext = () => {
     const storedContext = JSON.parse(localStorage.getItem('context') as string);
-
     if (storedContext !== null) {
         return storedContext;
     }

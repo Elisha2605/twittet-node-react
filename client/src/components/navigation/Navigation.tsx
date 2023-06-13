@@ -211,7 +211,7 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                         />
                     </div>
 
-                    {authUser && authUser._id && (
+                    {authUser && authUser?._id && (
                         <div
                             onClick={() => {
                                 setActiveNav('profile');
@@ -227,7 +227,7 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                                         : faUser
                                 }
                                 label={'Profile'}
-                                path={`/profile/${authUser._id}`}
+                                path={`/profile/${authUser?._id}`}
                             />
                         </div>
                     )}

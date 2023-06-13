@@ -25,6 +25,7 @@ import FollowStatus from './pages/follow/FollowStatus';
 import Settings from './pages/settings/settings';
 import HomeEditTwitterCirlceModal from './pages/home/home-modals/HomeEditTwitterCirlceModal';
 import { useMessage } from './context/successMessage.context';
+import AccessDenied from './pages/access-denied';
 
 function App() {
 
@@ -241,6 +242,7 @@ function App() {
                         </>
                         <div className={Layout.page}>
                             <Routes>
+                                <Route path='/access-denied' element={<AccessDenied />} ></Route>
                                 <Route path="/" element={
                                     <Home
                                         onClickTweetMenu={handleTweetMenuOptionClick}

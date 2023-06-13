@@ -1,26 +1,22 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './passwordChangeSettings.module.css';
 import Header from '../../../components/header/Header';
 import ArrowLeftIcon from '../../../components/icons/ArrowLeftIcon';
 import HeaderTitle from '../../../components/header/HeaderTitle';
 import { useNavigate } from 'react-router-dom';
-import AuthContext from '../../../context/user.context';
 import Button, { ButtonSize, ButtonType } from '../../../components/ui/Button';
 import { useForm } from 'react-hook-form';
 import { requestPasswordReset } from '../../../api/passwordReset.api';
 
 const PasswordChangeSettings: React.FC<{}> = ({}) => {
-    const [user, setUser] = useState<any>(null);
     const [email, setName] = useState('');
     const [serverError, setServerError] = useState('');
-    const [isLoading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
     const {
         register,
         handleSubmit,
-        reset,
         formState: { errors },
     } = useForm({
         defaultValues: {
@@ -28,22 +24,12 @@ const PasswordChangeSettings: React.FC<{}> = ({}) => {
         },
     });
 
-    // get auth user
-    const ctx = useContext(AuthContext);
-    useEffect(() => {
-        const getAuthUser = async () => {
-            const { user } = ctx.getUserContext();
-            setUser(user);
-        };
-        getAuthUser();
-    }, []);
 
-    const handleEmailClick = (settingName: string) => {
+    const onNavigateToVerification = (settingName: string) => {
         navigate(`/settings/${settingName}`);
     };
 
     const handleSubmitForm = handleSubmit(async (data: any) => {
-        setLoading(true);
         if (data) {
             const { message, status, success } = await requestPasswordReset(
                 data.email
@@ -53,10 +39,9 @@ const PasswordChangeSettings: React.FC<{}> = ({}) => {
                 return;
             }
             if (success) {
-                handleEmailClick('verification');
+                onNavigateToVerification('verification');
             }
         }
-        setLoading(false);
     });
 
     return (
