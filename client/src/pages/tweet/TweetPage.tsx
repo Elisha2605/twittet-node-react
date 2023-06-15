@@ -2,7 +2,7 @@ import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import styles from './TweetPage.module.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import XmarkIcon from '../../components/icons/XmarkIcon';
-import { createReply, deleteTweet, getTweetById, getTweetReplies, retweet } from '../../api/tweet.api';
+import { createReply, deleteTweet, getTweetById, getTweetReplies } from '../../api/tweet.api';
 import {
     IMAGE_AVATAR_BASE_URL,
     IMAGE_TWEET_BASE_URL,

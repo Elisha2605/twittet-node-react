@@ -28,7 +28,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
 import UserInfo from '../../components/ui/UserInfo';
-import { getTweetById } from '../../api/tweet.api';
+import { createReply, getTweetById, getTweetReplies } from '../../api/tweet.api';
 import { tweetMenuIcons, tweetMenuOptions } from '../../data/menuOptions';
 import Avatar, { Size } from '../../components/ui/Avatar';
 import FormReply from '../../components/form/FormReplyTweet';
@@ -40,9 +40,19 @@ import AtIcon from '../../components/icons/AtIcon';
 import Tweet from '../../components/tweet/Tweet';
 import { getUserSavedTweets, saveTweetToBookmark } from '../../api/bookmark.api';
 
-interface TweetPageNoImageProps {}
+interface TweetPageNoImageProps {
+    onClickTweetMenu: Function;
+    onEditTweet: any;
+    onDeleteTweet: any;
+    onClickRetweet: Function;
+}
 
-const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
+const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
+    onClickTweetMenu, 
+    onEditTweet, 
+    onDeleteTweet, 
+    onClickRetweet
+}) => {
     const { id } = useParams<{ id: string }>();
 
     const [tweet, setTweet] = useState<any>();
@@ -67,18 +77,18 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
 
      // get Auth user
      const ctx = useContext(AuthContext);
-     const getTweetReplies = async () => {
+     const fetchTweetReplies = async () => {
          const { user } = ctx.getUserContext();
          setAuthUser(user);
          if (user) {
-             const res = await getAllTweetReplies(id!);
+             const res = await getTweetReplies(id!);
              const { tweets } = res;
              setTweetReplies(tweets);
          }
      };
  
      useEffect(() => {
-         getTweetReplies();
+        fetchTweetReplies();
      }, [id]);
 
     // get Tweet by ID
@@ -90,12 +100,37 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
         getTweet();
     }, [id]);
 
-     // On like tweet
-     const onClickLike = async () => {
+    // On like tweet
+    const onClickLike = async () => {
         const res: any = await likeTweet(tweet?._id);
+        const { likedTweet } = res;
+        setTweet((prev: any) => ({
+            ...prev,
+            totalLikes: likedTweet?.likesCount,
+            likes: likedTweet?.likes,
+        }));
+    };
+
+    const onClickReplyLike = async (replyId: any) => {
+        const res: any = await likeTweet(replyId?._id);
         const { likedTweet } = res;
         setLikedTweet(likedTweet);
     };
+
+
+    useEffect(() => {
+        setTweetReplies((prevTweets: any) =>
+            prevTweets.map((tweet: any) =>
+                tweet?._id === likedTweet?.tweet
+                    ? {
+                          ...tweet,
+                          totalLikes: likedTweet?.likesCount,
+                          likes: likedTweet?.likes,
+                      }
+                    : tweet
+            )
+        );
+    }, [likedTweet]);
 
     const handleTextAreaOnChangeReply = (
         e: React.ChangeEvent<HTMLTextAreaElement>
@@ -131,7 +166,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
             : null;
-        const res = await createTweetReply(id!, text!, selectedFile);
+        const res = await createReply(id!, text!, selectedFile);
         const { tweet }: any = res;
         const newTweet = {
             _id: tweet._id,
@@ -156,15 +191,6 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
         clearTweetForm();
         setIsLoading(false);
     };
-
-    // Update Likes state
-    useEffect(() => {
-        setTweet((prev: any) => ({
-            ...prev,
-            totalLikes: likedTweet?.likesCount,
-            likes: likedTweet?.likes,
-        }));
-    }, [likedTweet]);
 
     useEffect(() => {
         const fetchAuthUserData = async () => {
@@ -243,6 +269,12 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
     const isSaved = (): boolean => {
         return tweet && savedTweets.some((t: any) => t._id === tweet._id)
     }
+
+    useEffect(() => {
+        setTweetReplies((preveState) =>
+            preveState.filter((tweet) => tweet._id !== onDeleteTweet._id)
+        );
+    }, [onDeleteTweet]);
 
     return (
         <React.Fragment>
@@ -568,10 +600,13 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                     <Tweet
                                         key={tweet?._id}
                                         tweet={tweet}
-                                        onClickMenu={() => {}}
-                                        onClickLike={() => {}}
-                                        isLiked={tweet?.likes?.includes(authUser?._id)}
-                                        isReply={true}
+                                        onClickMenu={onClickTweetMenu}
+                                        onClickLike={onClickReplyLike}
+                                        isLiked={tweet?.likes?.includes(
+                                            authUser?._id
+                                        )}
+                                        onClickRetweet={onClickRetweet}
+                                        isRetweet={tweet?.retweets?.includes(authUser?._id)}
                                     />
                                 </div>
                             ))}

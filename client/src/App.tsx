@@ -291,7 +291,15 @@ function App() {
                                         onClickRetweet={onReTweet} 
                                     />} 
                                 />
-                                <Route path="/tweet/:id" element={ <TweetPageNoImage />} />
+                                <Route 
+                                    path="/tweet/:id" 
+                                    element={ <TweetPageNoImage 
+                                        onEditTweet={onEditTweet}
+                                        onDeleteTweet={onDeleteTweet}
+                                        onClickTweetMenu={handleTweetMenuOptionClick} 
+                                        onClickRetweet={onReTweet} 
+                                    />} 
+                                />
                                 <Route path="/follower-requests" element={ <FollowerRequests />} />
                                 <Route path="/settings/:path" element={ <Settings />} />
                                 <Route
