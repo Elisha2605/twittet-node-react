@@ -133,7 +133,21 @@ const Profile: FC<ProfileProps> = ({
                             : tweet
                     )
                 );
+                setUserTweetReplies((prevTweets) =>
+                    prevTweets.map((tweet) =>
+                        tweet?._id === onEditTweet?._id
+                            ? { ...tweet, ...onEditTweet }
+                            : tweet
+                    )
+                );
                 setUserTweetsMedia((prevTweets) =>
+                    prevTweets.map((tweet) =>
+                        tweet?._id === onEditTweet?._id
+                            ? { ...tweet, ...onEditTweet }
+                            : tweet
+                    )
+                );
+                setUserLikedTweets((prevTweets) =>
                     prevTweets.map((tweet) =>
                         tweet?._id === onEditTweet?._id
                             ? { ...tweet, ...onEditTweet }
@@ -150,7 +164,13 @@ const Profile: FC<ProfileProps> = ({
         setUserTweets((preveState) =>
             preveState.filter((tweet) => tweet?._id !== onDeleteTweet?._id)
         );
+        setUserTweetReplies((preveState) =>
+            preveState.filter((tweet) => tweet?._id !== onDeleteTweet?._id)
+        );
         setUserTweetsMedia((preveState) =>
+            preveState.filter((tweet) => tweet?._id !== onDeleteTweet?._id)
+        );
+        setUserLikedTweets((preveState) =>
             preveState.filter((tweet) => tweet?._id !== onDeleteTweet?._id)
         );
     }, [onDeleteTweet]);
@@ -175,6 +195,17 @@ const Profile: FC<ProfileProps> = ({
 
     useEffect(() => {
         setUserTweets((prevTweets: any) =>
+            prevTweets.map((tweet: any) =>
+                tweet?._id === likedTweet?.tweet
+                    ? {
+                          ...tweet,
+                          totalLikes: likedTweet?.likesCount,
+                          likes: likedTweet?.likes,
+                      }
+                    : tweet
+            )
+        );
+        setUserTweetReplies((prevTweets: any) =>
             prevTweets.map((tweet: any) =>
                 tweet?._id === likedTweet?.tweet
                     ? {
@@ -211,6 +242,21 @@ const Profile: FC<ProfileProps> = ({
 
     const updateTweetsUserInfoOnProfileEdit = (user: any) => {
         setUserTweets((prevTweets) =>
+            prevTweets.map((tweet) => {
+                if (tweet?.user?._id === user?._id) {
+                    return {
+                        ...tweet,
+                        user: {
+                            ...tweet?.user,
+                            name: user?.name,
+                            avatar: user?.avatar,
+                        },
+                    };
+                }
+                return tweet;
+            })
+        );
+        setUserTweetReplies((prevTweets) =>
             prevTweets.map((tweet) => {
                 if (tweet?.user?._id === user?._id) {
                     return {

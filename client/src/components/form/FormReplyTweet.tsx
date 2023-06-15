@@ -21,7 +21,7 @@ interface FormReplyTweetProps {
 
     onSubmit: (e: React.FormEvent) => void;
     onImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    onChageImage: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    onChageReplyTextArea: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     onCancelImagePreview: () => void;
     onClickAudienceMenu?: Function;
     onClickReplyMenu?: Function;
@@ -40,7 +40,7 @@ const FormReplyTweet: FC<FormReplyTweetProps> = ({
 
     onSubmit,
     onImageUpload,
-    onChageImage,
+    onChageReplyTextArea,
     onCancelImagePreview,
 
     classNameTextErea,
@@ -64,7 +64,7 @@ const FormReplyTweet: FC<FormReplyTweetProps> = ({
                     <textarea
                         className={`${styles.textarea} ${classNameTextErea}`}
                         id="review-text"
-                        onChange={onChageImage}
+                        onChange={onChageReplyTextArea}
                         placeholder="Tweet your reply"
                         ref={tweetTextRef}
                         rows={1}

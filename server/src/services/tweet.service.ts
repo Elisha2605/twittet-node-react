@@ -579,14 +579,14 @@ export const deleteTweet = async (
         // Delete tweetLikes and tweetToDelete if both exist
         if (tweetLikes) {
             await Promise.all([
-                tweetLikes.deleteOne({ session }),
+                tweetLikes.deleteOne({ session }), // Deleting all tweet's likes
                 tweetToDelete.deleteOne({ session }),
             ]);
         } else if (tweetReply && tweetReply.replyCount > 0) {
-            tweetReply.replyCount -= 1; // Decrease the tweetCount by 1
+            tweetReply.replyCount -= 1; // Decreasing the tweetCount by 1
             await Promise.all([
                 tweetReply.save({ session }), // Save the updated tweetReply
-                tweetToDelete.deleteOne({ session }), 
+                tweetToDelete.deleteOne({ session }),
             ]);
         } else {
             await tweetToDelete.deleteOne({ session });

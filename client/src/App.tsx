@@ -288,7 +288,7 @@ function App() {
                                         onEditTweet={onEditTweet}
                                         onDeleteTweet={onDeleteTweet}
                                         onClickTweetMenu={handleTweetMenuOptionClick} 
-                                        onClickRetweet={onReTweet} 
+                                        onClickRetweet={onReTweet}
                                     />} 
                                 />
                                 <Route 

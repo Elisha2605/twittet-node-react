@@ -369,11 +369,6 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
                                             {getMonth(tweet?.createdAt)}, {' '} 
                                             {getYear(tweet?.createdAt)}
                                         </span> ·{' '}
-                                        {tweet?.viewCount > 0 && (
-                                            <p>
-                                                <span>{tweet?.viewCount}</span> Views
-                                            </p>
-                                        )}
                                     </div>
                                     <div className={styles.stats}>
                                         {tweet?.retweetCount > 0 && (    
@@ -474,7 +469,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
                                                     onCancelImagePreview={
                                                         handleCanselPreviewImage
                                                     }
-                                                    onChageImage={
+                                                    onChageReplyTextArea={
                                                         handleTextAreaOnChangeReply
                                                     }
                                                     isLoading={isLoading}
@@ -509,7 +504,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
                                                     onCancelImagePreview={
                                                         handleCanselPreviewImage
                                                     }
-                                                    onChageImage={
+                                                    onChageReplyTextArea={
                                                         handleTextAreaOnChangeReply
                                                     }
                                                     isLoading={isLoading}
@@ -544,7 +539,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
                                                     onCancelImagePreview={
                                                         handleCanselPreviewImage
                                                     }
-                                                    onChageImage={
+                                                    onChageReplyTextArea={
                                                         handleTextAreaOnChangeReply
                                                     }
                                                     isLoading={isLoading}
@@ -630,7 +625,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
                                                     onCancelImagePreview={
                                                         handleCanselPreviewImage
                                                     }
-                                                    onChageImage={
+                                                    onChageReplyTextArea={
                                                         handleTextAreaOnChangeReply
                                                     }
                                                     isLoading={isLoading}

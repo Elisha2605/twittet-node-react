@@ -43,9 +43,15 @@ interface TweetPageProps {
     onClickTweetMenu: Function;
     onEditTweet: any;
     onClickRetweet?: Function;
+    handleTextAreaOnChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
-const TweetPage: FC<TweetPageProps> = ({ onClickTweetMenu, onClickRetweet, onEditTweet, onDeleteTweet }) => {
+const TweetPage: FC<TweetPageProps> = ({ 
+    onClickTweetMenu, 
+    onClickRetweet, 
+    onEditTweet, 
+    onDeleteTweet,  
+}) => {
     const [tweet, setTweet] = useState<any>();
     const [authUser, setAuthUser] = useState<any>(null);
     const [isFormFocused, setIsFormFocused] = useState(false);
@@ -383,31 +389,30 @@ const TweetPage: FC<TweetPageProps> = ({ onClickTweetMenu, onClickRetweet, onEdi
                                         </p>
                                     )}{' '}
                                 </div>
-                                <div className={styles.stats}>
-                                    {tweet?.retweetCount > 0 && (    
-                                        <p>
-                                            <span>{tweet?.retweetCount}</span>Retweets
-                                        </p>
-                                    )}{' '}
-                                    <p>
-                                        <span>61</span>Quotes
-                                    </p>{' '}
-                                    {tweet?.totalLikes > 0 && (
-                                        <p>
-                                            <span>
-                                                {tweet?.totalLikes}
-                                            </span>
-                                            Likes
-                                        </p>
-                                    )}
-                                </div>
-                                {tweet?.bookmarkCount > 0 && (
+                                {tweet?.retweetCount.length > 0 || tweet?.totalLikes > 0 || tweet?.bookmarkCount ? (
+                                    <div className={styles.stats}>
+                                        {tweet?.retweetCount > 0 && (    
+                                            <p>
+                                                <span>{tweet?.retweetCount}</span>Retweets
+                                            </p>
+                                        )}{' '}
+                                        {tweet?.totalLikes > 0 && (
+                                            <p>
+                                                <span>
+                                                    {tweet?.totalLikes}
+                                                </span>
+                                                Likes
+                                            </p>
+                                        )}
+                                    </div>
+                                ): null}
+                                {tweet?.bookmarkCount > 0 ? (
                                     <div className={styles.bookmarks}>
                                         <p>
                                             <span>{tweet?.bookmarkCount}</span>Bookmarks
                                         </p>
                                     </div>
-                                )}
+                                ): null}
                                 <div className={styles.icons}>
                                     <div>
                                         <FontAwesomeIcon
@@ -480,7 +485,7 @@ const TweetPage: FC<TweetPageProps> = ({ onClickTweetMenu, onClickRetweet, onEdi
                                                 onCancelImagePreview={
                                                     handleCanselPreviewImage
                                                 }
-                                                onChageImage={
+                                                onChageReplyTextArea={
                                                     handleTextAreaOnChangeReply
                                                 }
                                                 isLoading={isLoading}
@@ -515,7 +520,7 @@ const TweetPage: FC<TweetPageProps> = ({ onClickTweetMenu, onClickRetweet, onEdi
                                                 onCancelImagePreview={
                                                     handleCanselPreviewImage
                                                 }
-                                                onChageImage={
+                                                onChageReplyTextArea={
                                                     handleTextAreaOnChangeReply
                                                 }
                                                 isLoading={isLoading}
@@ -550,7 +555,7 @@ const TweetPage: FC<TweetPageProps> = ({ onClickTweetMenu, onClickRetweet, onEdi
                                                 onCancelImagePreview={
                                                     handleCanselPreviewImage
                                                 }
-                                                onChageImage={
+                                                onChageReplyTextArea={
                                                     handleTextAreaOnChangeReply
                                                 }
                                                 isLoading={isLoading}
@@ -636,7 +641,7 @@ const TweetPage: FC<TweetPageProps> = ({ onClickTweetMenu, onClickRetweet, onEdi
                                                 onCancelImagePreview={
                                                     handleCanselPreviewImage
                                                 }
-                                                onChageImage={
+                                                onChageReplyTextArea={
                                                     handleTextAreaOnChangeReply
                                                 }
                                                 isLoading={isLoading}
