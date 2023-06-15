@@ -25,6 +25,7 @@ import FollowStatus from './pages/follow/FollowStatus';
 import Settings from './pages/settings/settings';
 import HomeEditTwitterCirlceModal from './pages/home/home-modals/HomeEditTwitterCirlceModal';
 import { useMessage } from './context/successMessage.context';
+import AccessDenied from './pages/access-denied';
 
 function App() {
 
@@ -141,15 +142,16 @@ function App() {
     };
 
     const onReTweet = async (option: any, tweet: any) => {
+        console.log(tweet);
         if (option === TWEET_MENU.undoRetweet) {
-            const res = await retweet(tweet?._id, null, tweet.image, tweet.audience, tweet.reply);
+            const res = await retweet(tweet?._id, null, tweet?.image, tweet?.audience, tweet?.reply);
             if (res.message === "Undo Retweet") {
                 showMessage('Undo Retweet successful', 'success');
                 setOnDeleteTweet(tweet)
             }
         }
         if (option === TWEET_MENU.retweet) {
-            const res = await retweet(tweet?._id, null, tweet.image, tweet.audience, tweet.reply);
+            const res = await retweet(tweet?._id, null, tweet?.image, tweet?.audience, tweet?.reply);
                 const newTweet = {
                     ...res.tweet
                 };
@@ -163,8 +165,8 @@ function App() {
             setTweet(tweet)
             openModal('retweet-modal')
             setEditTweetModal(tweet);
-            setValueEditModal(tweet.text);
-            const image = tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`;
+            setValueEditModal(tweet?.text);
+            const image = tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet?.image}`;
             setPreviewEditImageModal(image);
         }
     }  
@@ -241,6 +243,7 @@ function App() {
                         </>
                         <div className={Layout.page}>
                             <Routes>
+                                <Route path='/access-denied' element={<AccessDenied />} ></Route>
                                 <Route path="/" element={
                                     <Home
                                         onClickTweetMenu={handleTweetMenuOptionClick}
@@ -280,8 +283,24 @@ function App() {
                                     onClickTweetMenu={handleTweetMenuOptionClick} />} 
                                 />
                                 <Route path="/follow-status/:path/:id/*" element={<FollowStatus />} />
-                                <Route path="/tweet/image/:id" element={ <TweetPage />} />
-                                <Route path="/tweet/:id" element={ <TweetPageNoImage />} />
+                                <Route 
+                                    path="/tweet/image/:id" 
+                                    element={ <TweetPage
+                                        onEditTweet={onEditTweet}
+                                        onDeleteTweet={onDeleteTweet}
+                                        onClickTweetMenu={handleTweetMenuOptionClick} 
+                                        onClickRetweet={onReTweet}
+                                    />} 
+                                />
+                                <Route 
+                                    path="/tweet/:id" 
+                                    element={ <TweetPageNoImage 
+                                        onEditTweet={onEditTweet}
+                                        onDeleteTweet={onDeleteTweet}
+                                        onClickTweetMenu={handleTweetMenuOptionClick} 
+                                        onClickRetweet={onReTweet} 
+                                    />} 
+                                />
                                 <Route path="/follower-requests" element={ <FollowerRequests />} />
                                 <Route path="/settings/:path" element={ <Settings />} />
                                 <Route

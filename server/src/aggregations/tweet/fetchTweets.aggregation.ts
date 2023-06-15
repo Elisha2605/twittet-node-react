@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
-import { TWEET_AUDIENCE } from '../../../src/constants/tweet.constants';
+import {
+    TWEET_AUDIENCE,
+    TWEET_TYPE,
+} from '../../../src/constants/tweet.constants';
 import Tweet from '../../../src/models/tweet.model';
 
 export const getTweets = async (userId: string) => {
@@ -67,29 +70,40 @@ export const getTweets = async (userId: string) => {
         },
         {
             $match: {
-                $or: [
+                $and: [
                     {
-                        audience: TWEET_AUDIENCE.everyone,
-                    },
-                    {
-                        audience: TWEET_AUDIENCE.twitterCircle,
-                        $expr: {
-                            $cond: {
-                                if: {
-                                    $eq: [
-                                        new mongoose.Types.ObjectId(userId),
-                                        '$twitterCircle.user',
-                                    ],
-                                },
-                                then: true,
-                                else: {
-                                    $in: [
-                                        new mongoose.Types.ObjectId(userId),
-                                        '$twitterCircle.members',
-                                    ],
+                        $or: [
+                            {
+                                audience: TWEET_AUDIENCE.everyone,
+                            },
+                            {
+                                audience: TWEET_AUDIENCE.twitterCircle,
+                                $expr: {
+                                    $cond: {
+                                        if: {
+                                            $eq: [
+                                                new mongoose.Types.ObjectId(
+                                                    userId
+                                                ),
+                                                '$twitterCircle.user',
+                                            ],
+                                        },
+                                        then: true,
+                                        else: {
+                                            $in: [
+                                                new mongoose.Types.ObjectId(
+                                                    userId
+                                                ),
+                                                '$twitterCircle.members',
+                                            ],
+                                        },
+                                    },
                                 },
                             },
-                        },
+                        ],
+                    },
+                    {
+                        type: { $ne: TWEET_TYPE.reply },
                     },
                 ],
             },

@@ -85,8 +85,9 @@ export const signup = async (
 
 export const login = async (userId: string): Promise<ApiResponse<any>> => {
     try {
-        const token = getToken({ _id: userId });
+        const accessToken = getToken({ _id: userId });
         const refreshToken = getRefreshToken({ _id: userId });
+
         const user = await User.findById(userId);
         user.refreshToken.push({ refreshToken: refreshToken });
 
@@ -99,7 +100,7 @@ export const login = async (userId: string): Promise<ApiResponse<any>> => {
             message: 'User Context sent successfully',
             status: 200,
             payload: {
-                token: token,
+                token: accessToken,
                 refreshToken: refreshToken,
                 user: user,
             },

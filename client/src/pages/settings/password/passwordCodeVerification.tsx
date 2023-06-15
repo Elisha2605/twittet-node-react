@@ -1,17 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './passwordCodeVerification.module.css';
 import Header from '../../../components/header/Header';
 import ArrowLeftIcon from '../../../components/icons/ArrowLeftIcon';
 import HeaderTitle from '../../../components/header/HeaderTitle';
 import { useNavigate } from 'react-router-dom';
-import AuthContext from '../../../context/user.context';
 import Button, { ButtonSize, ButtonType } from '../../../components/ui/Button';
 import { useForm } from 'react-hook-form';
 import { verifyPasswordVerificationToken } from '../../../api/passwordReset.api';
 
-
 const PassworConfirmation: React.FC<{}> = ({}) => {
-    const [user, setUser] = useState<any>(null);
     const [email, setName] = useState('');
     const [serverError, setServerError] = useState('');
     const [isLoading, setLoading] = useState(false);
@@ -21,23 +18,12 @@ const PassworConfirmation: React.FC<{}> = ({}) => {
     const {
         register,
         handleSubmit,
-        reset,
         formState: { errors },
     } = useForm({
         defaultValues: {
             token: '',
         },
     });
-
-    // get auth user
-    const ctx = useContext(AuthContext);
-    useEffect(() => {
-        const getAuthUser = async () => {
-            const { user } = ctx.getUserContext();
-            setUser(user);
-        };
-        getAuthUser();
-    }, []);
 
     const handleNavigate = (settingName: string) => {
         navigate(`/settings/${settingName}`);
@@ -72,8 +58,7 @@ const PassworConfirmation: React.FC<{}> = ({}) => {
                         </div>
                     </div>
                     <p className={styles.message}>
-                        Check your email to get your verification code. Note
-                        that the verification code will expire in 30 minutes.
+                        Check your email to get your verification code.
                     </p>
                     <form
                         className={styles.formControl}

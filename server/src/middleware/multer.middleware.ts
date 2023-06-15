@@ -14,7 +14,7 @@ aws.config.update({
     region: process.env.AWS_REGION,
 });
 
-// Create an instance of the S3 service
+// Creating an instance of the S3 service
 const s3 = new aws.S3();
 
 const upload = multer({

@@ -4,7 +4,7 @@ import TweetFooter from '../ui/TweetFooter';
 import UserInfo from '../ui/UserInfo';
 import styles from './TweetReply.module.css';
 import { getTimeDifference } from '../../utils/helpers.utils';
-import { IMAGE_AVATAR_BASE_URL, IMAGE_AVATAR_DEFAULT, IMAGE_TWEET_REPLY_BASE_URL } from '../../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, IMAGE_AVATAR_DEFAULT, IMAGE_TWEET_BASE_URL } from '../../constants/common.constants';
 import { 
     tweetMenuOptions, 
     tweetMenuIcons, 
@@ -13,17 +13,27 @@ import {
 interface TweetProps {
     tweet?: any;
     onClickMenu: Function;
+    onClickRetweet?: Function;
     onClickLike: (tweet: any) => void;
+    isRetweet?: boolean;
+    isLiked?: boolean;
     isReply?: boolean;
     classNameNoImage?: string;
+    onRemoveFromBookmarks?: (tweetId: string) => void;
+
 }
 
 const Tweet: FC<TweetProps> = ({
     tweet,
     onClickMenu,
+    onClickRetweet,
     onClickLike,
+    isRetweet,
+    isLiked,
     isReply = false,
     classNameNoImage,
+    
+    onRemoveFromBookmarks
 }) => {
 
 
@@ -40,13 +50,23 @@ const Tweet: FC<TweetProps> = ({
 
     let navigate = useNavigate();
 
-    const goToTweetPage = () => {
-        if (tweet?.image) {
-            navigate(`/tweet/image/${tweetId}`)
-        } else {
-            navigate(`/tweet/${tweetId}`)
-        }
-    }
+    const renderColoredText = (text: string) => {
+        const words = text ? text.split(' ') : [];
+        return words.map((word: any, index: any) => {
+            if (word.startsWith('@') || word.startsWith('#')) {
+                return (
+                    <a
+                        key={index}
+                        href={`http://127.0.0.1:3000/profile/${userId}`}
+                        className={styles.coloredText}
+                    >
+                        {word}{' '}
+                    </a>
+                );
+            }
+            return <span key={index}>{word} </span>;
+        });
+    };
     
     return (
         <React.Fragment>
@@ -67,23 +87,32 @@ const Tweet: FC<TweetProps> = ({
                         onClickOption={onClickMenu}
                         isReply={isReply}
                     />
-                    <div className={styles.body} key={tweet._id} onClick={goToTweetPage}>
+                    <div className={styles.body} key={tweet._id} 
+                        onClick={() => navigate(`/tweet/${tweet._id}`)}>
                         <p className={styles.tweet}>{tweetText}</p>
                         {tweetImage && (
-                            <div className={`${styles.image} ${!isReply ? classNameNoImage : ''}`}>
-                                <img src={tweetImage ? `${IMAGE_TWEET_REPLY_BASE_URL}/${tweetImage}` : undefined} alt="" />
+                            <div className={`${styles.image} ${!isReply ? classNameNoImage : ''}`}
+                            onClick={(e: any) => {
+                                e.stopPropagation();
+                                    navigate(`/tweet/image/${tweet._id}`);
+                                }
+                            }>
+                                <img src={tweetImage ? `${IMAGE_TWEET_BASE_URL}/${tweetImage}` : undefined} alt="" />
                             </div>
                         )}
                     </div>
-
                     <TweetFooter
                         tweet={tweet}
-                        replies={''}
-                        retTweets={''}
-                        likes={tweet.totalLikes > 0 ? tweet.totalLikes: '' }
-                        views={''}
-                        onClick={() => onClickLike(tweet)}
-                        isTweetReply={isReply}
+                        replies={tweet?.replyCount === 0 ? '' : tweet?.replyCount}
+                        reTweets={tweet?.retweetCount === 0 ? '' : tweet?.retweetCount}
+                        likes={tweet.totalLikes > 0 ? tweet.totalLikes : ''}
+                        views={tweet.viewCount > 0 ? tweet.viewCount : ''}
+                        onClickRetweet={onClickRetweet}
+                        onClick={() => onClickLike!(tweet)}
+                        isLiked={isLiked}
+                        isRetweet={isRetweet}
+                        onRemoveFromBookmarks={onRemoveFromBookmarks}
+                        isTweetReply={true}
                     />
                 </div>
             </div>

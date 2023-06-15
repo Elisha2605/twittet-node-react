@@ -2,46 +2,45 @@ import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import styles from './TweetPage.module.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import XmarkIcon from '../../components/icons/XmarkIcon';
-import { getTweetById } from '../../api/tweet.api';
+import { createReply, getTweetById, getTweetReplies } from '../../api/tweet.api';
 import {
     IMAGE_AVATAR_BASE_URL,
     IMAGE_TWEET_BASE_URL,
     TWEET_AUDIENCE,
-    TWEET_MENU,
     TWEET_REPLY,
 } from '../../constants/common.constants';
 import TweetFooter from '../../components/ui/TweetFooter';
 import { likeTweet } from '../../api/like.api';
 import UserInfo from '../../components/ui/UserInfo';
 import { tweetMenuIcons, tweetMenuOptions } from '../../data/menuOptions';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faBookmark as faBookmarkRegular,
-    faComment,
-    faHeart,
-} from '@fortawesome/free-regular-svg-icons';
-import {
-    faBookmark as faBookmarkSolid,
-} from '@fortawesome/free-solid-svg-icons';
-import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
-import {
-    faArrowUpFromBracket,
-    faRepeat,
-} from '@fortawesome/free-solid-svg-icons';
 import Avatar, { Size } from '../../components/ui/Avatar';
 import AuthContext from '../../context/user.context';
 import FormReply from '../../components/form/FormReplyTweet';
 import TweetReply from '../../components/tweet/TweetReply';
-import { createTweetReply, getAllTweetReplies } from '../../api/reply.api';
 import { getAuthUserFollows } from '../../api/follow.api';
 import AtIcon from '../../components/icons/AtIcon';
 import UserIcon from '../../components/icons/UserIcon';
 import { getUserSavedTweets, saveTweetToBookmark } from '../../api/bookmark.api';
 import { useMessage } from '../../context/successMessage.context';
+import { getMonth, getMonthName, getTimeAMPM, getYear } from '../../utils/helpers.utils';
+import TweetFooterPage from '../../components/ui/TweetFooterPage';
 
-interface TweetPageProps {}
+interface TweetPageProps {
+    onDeleteTweet: any,
+    onClickTweetMenu: Function;
+    onEditTweet: any;
+    onClickRetweet: Function;
+    isRetweet?: boolean;
+    handleTextAreaOnChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+}
 
-const TweetPage: FC<TweetPageProps> = ({}) => {
+const TweetPage: FC<TweetPageProps> = ({ 
+    onClickTweetMenu, 
+    onClickRetweet, 
+    onEditTweet, 
+    onDeleteTweet, 
+    isRetweet 
+}) => {
     const [tweet, setTweet] = useState<any>();
     const [authUser, setAuthUser] = useState<any>(null);
     const [isFormFocused, setIsFormFocused] = useState(false);
@@ -64,6 +63,8 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
     const goBack = () => {
         navigate(`/${previousPath}`);
     };
+    const [likedTweet, setLikedTweet] = useState<any>();
+
 
     const { id } = useParams<{ id: string }>();
 
@@ -73,26 +74,28 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
 
     // get Auth user
     const ctx = useContext(AuthContext);
-    const getTweetReplies = async () => {
+    const fetchTweetReplies = async () => {
         const { user } = ctx.getUserContext();
         setAuthUser(user);
 
         if (user) {
-            const res = await getAllTweetReplies(id!);
+            const res = await getTweetReplies(id!);
             const { tweets } = res;
             setTweetReplies(tweets);
         }
     };
 
     useEffect(() => {
-        getTweetReplies();
+        fetchTweetReplies();
     }, [id]);
 
     // get Tweet by ID
     useEffect(() => {
         const getTweet = async () => {
+            setIsLoading(true);
             const { tweet } = await getTweetById(id!);
             setTweet(tweet[0]);
+            setIsLoading(false);
         };
         getTweet();
     }, [id]);
@@ -108,16 +111,25 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
         }));
     };
 
-    const handleTweetMenuOptionClick = async (
-        option: string,
-        tweetId: string,
-        tweet: any
-    ) => {
-        if (option === TWEET_MENU.delete) {
-            console.log('hello');
-        } else if (option === TWEET_MENU.edit) {
-        }
+    const onClickReplyLike = async (replyId: any) => {
+        const res: any = await likeTweet(replyId?._id);
+        const { likedTweet } = res;
+        setLikedTweet(likedTweet);
     };
+
+    useEffect(() => {
+        setTweetReplies((prevTweets: any) =>
+            prevTweets.map((tweet: any) =>
+                tweet?._id === likedTweet?.tweet
+                    ? {
+                          ...tweet,
+                          totalLikes: likedTweet?.likesCount,
+                          likes: likedTweet?.likes,
+                      }
+                    : tweet
+            )
+        );
+    }, [likedTweet]);
 
     const handleTextAreaOnChangeReply = (
         e: React.ChangeEvent<HTMLTextAreaElement>
@@ -148,7 +160,6 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
     };
 
     const handleSubmitTweet = async (e: React.FormEvent) => {
-        setIsLoading(true);
         e.preventDefault();
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
@@ -156,8 +167,9 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
 
         console.log(text);
         console.log(selectedFile);
-        const res = await createTweetReply(id!, text!, selectedFile);
+        const res = await createReply(id!, text!, selectedFile);
         const { tweet }: any = res;
+        console.log(tweet);
         console.log(tweet);
         const newTweet = {
             _id: tweet._id,
@@ -183,7 +195,6 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
         }));
         setTweetReplies((prevTweets) => [newTweet, ...prevTweets]);
         clearTweetForm();
-        setIsLoading(false);
     };
 
     useEffect(() => {
@@ -240,6 +251,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
         };
         getUserBookmarkList();
     }, [tweet])
+
     const onClickSaveAndUnsaveTweet = async () => {
         const res = await saveTweetToBookmark(tweet._id);
         if (res.message === 'Added') {
@@ -267,355 +279,359 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
     const isSaved = (): boolean => {
         return tweet && savedTweets.some((t: any) => t._id === tweet._id)
     }
+
+    useEffect(() => {
+        const handleEditReply = () => {
+            if (authUser) {
+                setTweetReplies((prevTweets: any) =>
+                    prevTweets.map((tweet: any) =>
+                        tweet?._id === onEditTweet?._id
+                            ? { ...tweet, ...onEditTweet }
+                            : tweet
+                    )
+                );
+            }
+        };
+        handleEditReply();
+    }, [onEditTweet]);
+
+    useEffect(() => {
+        setTweetReplies((preveState) =>
+            preveState.filter((tweet) => tweet._id !== onDeleteTweet._id)
+        );
+    }, [onDeleteTweet]);
    
+    useEffect(() => {
+        console.log(tweetReplies);
+    }, [tweetReplies])
+
     return (
         <React.Fragment>
-            <div className={styles.container}>
-                <div
-                    className={styles.overlay}
-                    onClick={() => {
-                        goBack();
-                        clearTweetForm();
-                    }}
-                ></div>
-                <XmarkIcon
-                    className={styles.canselBtn}
-                    size={'xl'}
-                    onClick={() => {
-                        goBack();
-                        clearTweetForm();
-                    }}
-                />
-                <div className={styles.image}>
-                    <img
-                        src={
-                            tweet?.image ?
-                            `${IMAGE_TWEET_BASE_URL}/${tweet?.image}` :
-                            undefined
-                        }
-                        alt=""
+            {!isLoading && (
+                <div className={styles.container}>
+                    <div
+                        className={styles.overlay}
+                        onClick={() => {
+                            goBack();
+                            clearTweetForm();
+                        }}
+                    ></div>
+                    <XmarkIcon
+                        className={styles.canselBtn}
+                        size={'xl'}
+                        onClick={() => {
+                            goBack();
+                            clearTweetForm();
+                        }}
                     />
-                    <div className={styles.footer}>
-                        <TweetFooter
-                            replies={tweet?.replyCount === 0 ? '' : tweet?.replyCount}
-                            retTweets={''}
-                            likes={
-                                tweet?.totalLikes > 0 ? tweet?.totalLikes : ''
+                    <div className={styles.image}>
+                        <img
+                            src={
+                                tweet?.image ?
+                                `${IMAGE_TWEET_BASE_URL}/${tweet?.image}` :
+                                undefined
                             }
-                            views={''}
-                            onClick={onClickLike}
-                            isLiked={tweet?.likes?.includes(authUser?._id)}
+                            alt=""
                         />
-                    </div>
-                </div>
-                <div className={styles.aside}>
-                    <div className={styles.asideUpperSectionWrapper}>
-                        <UserInfo
-                            userId={tweet?.user?._id}
-                            tweet={tweet}
-                            avatar={
-                                tweet?.user?.avatar
-                                    ? `${IMAGE_AVATAR_BASE_URL}/${tweet?.user?.avatar}`
-                                    : undefined
-                            }
-                            name={tweet?.user?.name}
-                            username={tweet?.user?.username}
-                            isVerified={tweet?.user?.isVerified}
-                            className={styles.userInfo}
-                            options={tweetMenuOptions}
-                            icons={tweetMenuIcons}
-                            onClickOption={handleTweetMenuOptionClick}
-                        />
-                        <div className={styles.asideContent}>
-                            <div className={styles.text}>{tweet?.text}</div>
-                            <div className={styles.info}>
-                                <span>9:15 PM</span> · <span>May 5, 2023</span>{' '}
-                                ·{' '}
-                                {tweet?.viewCount > 0 && (
-                                    <p>
-                                        <span>{tweet?.viewCount}</span> Views
-                                    </p>
-                                )}{' '}
-                            </div>
-                            <div className={styles.stats}>
-                                {tweet?.retweetCount > 0 && (    
-                                    <p>
-                                        <span>{tweet?.retweetCount}</span>Retweets
-                                    </p>
-                                )}{' '}
-                                <p>
-                                    <span>61</span>Quotes
-                                </p>{' '}
-                                {tweet?.totalLikes > 0 && (
-                                    <p>
-                                        <span>
-                                            {tweet?.totalLikes}
-                                        </span>
-                                        Likes
-                                    </p>
-                                )}
-                            </div>
-                            {tweet?.bookmarkCount > 0 && (
-                                <div className={styles.bookmarks}>
-                                    <p>
-                                        <span>{tweet?.bookmarkCount}</span>Bookmarks
-                                    </p>
-                                </div>
-                            )}
-                            <div className={styles.icons}>
-                                <div>
-                                    <FontAwesomeIcon
-                                        icon={faComment}
-                                        className={styles.faComment}
-                                    />
-                                </div>
-                                <FontAwesomeIcon
-                                    icon={faRepeat}
-                                    className={styles.faRepeat}
-                                />
-                                <div onClick={onClickLike}>
-                                    <FontAwesomeIcon
-                                        icon={
-                                            tweet?.likes?.includes(
-                                                authUser?._id
-                                            )
-                                                ? faHeartSolid
-                                                : faHeart
-                                        }
-                                        className={styles.faHeart}
-                                        color={
-                                            tweet?.likes?.includes(
-                                                authUser?._id
-                                            )
-                                                ? 'var(--color-pink)'
-                                                : ''
-                                        }
-                                    />
-                                </div>
-                                <div onClick={onClickSaveAndUnsaveTweet}>
-                                    <FontAwesomeIcon
-                                        icon={isSaved() ? faBookmarkSolid : faBookmarkRegular}
-                                        color={isSaved() ? 'var(--color-primary)': ''}
-                                        className={`${styles.faBookmark}`}
-                                    />
-                                </div>
-                                <div>
-                                    <FontAwesomeIcon
-                                        icon={faArrowUpFromBracket}
-                                        className={styles.faArrowUpFromBracket}
-                                    />
-                                </div>
-                            </div>
-
-                            {isOnlyPeopleYouFollow(tweet?.user?._id) &&
-                            tweet?.reply === TWEET_REPLY.peopleYouFollow ? (
-                                <>
-                                    <div className={styles.formSection}>
-                                        <Avatar
-                                            path={
-                                                authUser?.avatar
-                                                    ? `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`
-                                                    : undefined
-                                            }
-                                            size={Size.small}
-                                            className={''}
-                                        />
-                                        <FormReply
-                                            tweet={tweet}
-                                            value={value}
-                                            tweetTextRef={tweetTextRef}
-                                            imagePreview={previewImage}
-                                            isFocused={isFormFocused}
-                                            setIsFocused={setIsFormFocused}
-                                            onSubmit={handleSubmitTweet}
-                                            onImageUpload={
-                                                handleImageUploadRepy
-                                            }
-                                            onCancelImagePreview={
-                                                handleCanselPreviewImage
-                                            }
-                                            onChageImage={
-                                                handleTextAreaOnChangeReply
-                                            }
-                                            isLoading={isLoading}
-                                        />
-                                    </div>
-                                </>
-                            ) : isMention(tweet && authUser?._id) &&
-                              tweet?.reply ===
-                                  TWEET_REPLY.onlyPeopleYouMention ? (
-                                <>
-                                    <div className={styles.formSection}>
-                                        <Avatar
-                                            path={
-                                                authUser?.avatar
-                                                    ? `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`
-                                                    : undefined
-                                            }
-                                            size={Size.small}
-                                            className={''}
-                                        />
-                                        <FormReply
-                                            tweet={tweet}
-                                            value={value}
-                                            tweetTextRef={tweetTextRef}
-                                            imagePreview={previewImage}
-                                            isFocused={isFormFocused}
-                                            setIsFocused={setIsFormFocused}
-                                            onSubmit={handleSubmitTweet}
-                                            onImageUpload={
-                                                handleImageUploadRepy
-                                            }
-                                            onCancelImagePreview={
-                                                handleCanselPreviewImage
-                                            }
-                                            onChageImage={
-                                                handleTextAreaOnChangeReply
-                                            }
-                                            isLoading={isLoading}
-                                        />
-                                    </div>
-                                </>
-                            ) : isTwitterCircle(tweet && tweet?.user?._id) &&
-                            tweet?.audience ===
-                                TWEET_AUDIENCE.twitterCircle ? (
-                                <>
-                                    <div className={styles.formSection}>
-                                        <Avatar
-                                            path={
-                                                authUser?.avatar
-                                                    ? `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`
-                                                    : undefined
-                                            }
-                                            size={Size.small}
-                                            className={''}
-                                        />
-                                        <FormReply
-                                            tweet={tweet}
-                                            value={value}
-                                            tweetTextRef={tweetTextRef}
-                                            imagePreview={previewImage}
-                                            isFocused={isFormFocused}
-                                            setIsFocused={setIsFormFocused}
-                                            onSubmit={handleSubmitTweet}
-                                            onImageUpload={
-                                                handleImageUploadRepy
-                                            }
-                                            onCancelImagePreview={
-                                                handleCanselPreviewImage
-                                            }
-                                            onChageImage={
-                                                handleTextAreaOnChangeReply
-                                            }
-                                            isLoading={isLoading}
-                                        />
-                                    </div>
-                                </>
-                            ) : !isOnlyPeopleYouFollow(tweet?.user?._id) &&
-                              tweet?.reply === TWEET_REPLY.peopleYouFollow ? (
-                                <>
-                                    <div className={styles.whoCanReply}>
-                                        <div className={styles.replyMsgWrapper}>
-                                            <UserIcon isMedium={true} />
-                                            <div className={styles.replyMsg}>
-                                                <h4>Who can reply?</h4>
-                                                <p>
-                                                    People @
-                                                    {tweet?.user?.username}{' '}
-                                                    follows can reply
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </>
-                            ) : !isMention(tweet && authUser?._id) &&
-                              tweet?.reply ===
-                                  TWEET_REPLY.onlyPeopleYouMention ? (
-                                <>
-                                    <div className={styles.whoCanReply}>
-                                        <div className={styles.replyMsgWrapper}>
-                                            <AtIcon isMedium={true} />
-                                            <div className={styles.replyMsg}>
-                                                <h4>Who can reply?</h4>
-                                                <p>
-                                                    People @
-                                                    {tweet?.user?.username}{' '}
-                                                    mentioned can reply
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </>
-                            ) : !isTwitterCircle(tweet && tweet?.user?._id) &&
-                              tweet?.audience ===
-                                TWEET_AUDIENCE.twitterCircle ? (
-                                <>
-                                    <div className={styles.whoCanReply}>
-                                        <div className={styles.replyMsgWrapper}>
-                                            <AtIcon isMedium={true} />
-                                            <div className={styles.replyMsg}>
-                                                <h4>Who can reply?</h4>
-                                                <p>
-                                                    People in Twitter Circle who follow @
-                                                    {tweet?.user?.username}{' '} 
-                                                    can reply
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    <div className={styles.formSection}>
-                                        <Avatar
-                                            path={
-                                                authUser?.avatar
-                                                    ? `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`
-                                                    : undefined
-                                            }
-                                            size={Size.small}
-                                            className={''}
-                                        />
-                                        <FormReply
-                                            tweet={tweet}
-                                            value={value}
-                                            tweetTextRef={tweetTextRef}
-                                            imagePreview={previewImage}
-                                            isFocused={isFormFocused}
-                                            setIsFocused={setIsFormFocused}
-                                            onSubmit={handleSubmitTweet}
-                                            onImageUpload={
-                                                handleImageUploadRepy
-                                            }
-                                            onCancelImagePreview={
-                                                handleCanselPreviewImage
-                                            }
-                                            onChageImage={
-                                                handleTextAreaOnChangeReply
-                                            }
-                                            isLoading={isLoading}
-                                        />
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                    {tweetReplies.map((tweet: any) => (
-                        <div
-                            className={styles.asideReplySection}
-                            key={tweet?._id}
-                        >
-                            <TweetReply
-                                key={tweet?._id}
+                        <div className={styles.footer}>
+                            <TweetFooter
                                 tweet={tweet}
-                                onClickMenu={() => {}}
-                                onClickLike={onClickLike}
-                                isReply={true}
+                                replies={tweet?.replyCount === 0 ? '' : tweet?.replyCount}
+                                reTweets={tweet?.retweetCount === 0 ? '' : tweet?.retweetCount}
+                                likes={
+                                    tweet?.totalLikes > 0 ? tweet?.totalLikes : ''
+                                }
+                                views={tweet?.viewCount > 0 ? tweet?.viewCount : ''}
+                                onClickRetweet={onClickRetweet}
+                                onClick={onClickLike}
+                                isRetweet={tweet?.retweets?.includes(authUser?._id)}
+                                isLiked={tweet?.likes?.includes(authUser?._id)}
                             />
                         </div>
-                    ))}
+                    </div>
+                    <div className={styles.aside}>
+                        <div className={styles.asideUpperSectionWrapper}>
+                            <UserInfo
+                                userId={tweet?.user?._id}
+                                tweet={tweet}
+                                avatar={
+                                    tweet?.user?.avatar
+                                        ? `${IMAGE_AVATAR_BASE_URL}/${tweet?.user?.avatar}`
+                                        : undefined
+                                }
+                                name={tweet?.user?.name}
+                                username={tweet?.user?.username}
+                                isVerified={tweet?.user?.isVerified}
+                                className={styles.userInfo}
+                                options={tweetMenuOptions}
+                                icons={tweetMenuIcons}
+                            />
+                            <div className={styles.asideContent}>
+                                <div className={styles.text}>{tweet?.text}</div>
+                                <div className={styles.info}>
+                                    <span>{getTimeAMPM(tweet?.createdAt)}</span> · <span>
+                                        {getMonthName(tweet?.createdAt)}{' '} 
+                                        {getMonth(tweet?.createdAt)}, {' '} 
+                                        {getYear(tweet?.createdAt)}
+                                    </span>{' '}
+                                    ·
+                                    {tweet?.viewCount > 0 && (
+                                        <p>
+                                            <span>{tweet?.viewCount}</span> Views
+                                        </p>
+                                    )}{' '}
+                                </div>
+                                <div className={styles.stats}>
+                                    {tweet?.retweetCount > 0 && (    
+                                        <p>
+                                            <span>{tweet?.retweetCount}</span>Retweets
+                                        </p>
+                                    )}{' '}
+                                    {tweet?.totalLikes > 0 && (
+                                        <p>
+                                            <span>
+                                                {tweet?.totalLikes}
+                                            </span>
+                                            Likes
+                                        </p>
+                                    )}
+                                    {tweet?.bookmarkCount > 0 && (
+                                            <p>
+                                                <span>{tweet?.bookmarkCount}</span>Bookmarks
+                                            </p>
+                                    )}
+                                </div>
+                                <div className={styles.tweetFooterSide}>
+                                <TweetFooterPage
+                                    tweet={tweet}
+                                    replies={tweet?.replyCount === 0 ? '' : tweet?.replyCount}
+                                    reTweets={tweet?.retweetCount === 0 ? '' : tweet?.retweetCount}
+                                    likes={
+                                        tweet?.totalLikes > 0 ? tweet?.totalLikes : ''
+                                    }
+                                    views={tweet?.viewCount > 0 ? tweet?.viewCount : ''}
+                                    onClickRetweet={onClickRetweet}
+                                    onClick={onClickLike}
+                                    isRetweet={tweet?.retweets?.includes(authUser?._id)}
+                                    isLiked={tweet?.likes?.includes(authUser?._id)}
+                                    isSaved={isSaved}
+                                    onClickBookmark={onClickSaveAndUnsaveTweet}
+                                />
+                                </div>
+                                {isOnlyPeopleYouFollow(tweet?.user?._id) &&
+                                tweet?.reply === TWEET_REPLY.peopleYouFollow ? (
+                                    <>
+                                        <div className={styles.formSection}>
+                                            <Avatar
+                                                path={
+                                                    authUser?.avatar
+                                                        ? `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`
+                                                        : undefined
+                                                }
+                                                size={Size.small}
+                                                className={''}
+                                            />
+                                            <FormReply
+                                                tweet={tweet}
+                                                value={value}
+                                                tweetTextRef={tweetTextRef}
+                                                imagePreview={previewImage}
+                                                isFocused={isFormFocused}
+                                                setIsFocused={setIsFormFocused}
+                                                onSubmit={handleSubmitTweet}
+                                                onImageUpload={
+                                                    handleImageUploadRepy
+                                                }
+                                                onCancelImagePreview={
+                                                    handleCanselPreviewImage
+                                                }
+                                                onChageReplyTextArea={
+                                                    handleTextAreaOnChangeReply
+                                                }
+                                                isLoading={isLoading}
+                                            />
+                                        </div>
+                                    </>
+                                ) : isMention(tweet && authUser?._id) &&
+                                tweet?.reply ===
+                                    TWEET_REPLY.onlyPeopleYouMention ? (
+                                    <>
+                                        <div className={styles.formSection}>
+                                            <Avatar
+                                                path={
+                                                    authUser?.avatar
+                                                        ? `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`
+                                                        : undefined
+                                                }
+                                                size={Size.small}
+                                                className={''}
+                                            />
+                                            <FormReply
+                                                tweet={tweet}
+                                                value={value}
+                                                tweetTextRef={tweetTextRef}
+                                                imagePreview={previewImage}
+                                                isFocused={isFormFocused}
+                                                setIsFocused={setIsFormFocused}
+                                                onSubmit={handleSubmitTweet}
+                                                onImageUpload={
+                                                    handleImageUploadRepy
+                                                }
+                                                onCancelImagePreview={
+                                                    handleCanselPreviewImage
+                                                }
+                                                onChageReplyTextArea={
+                                                    handleTextAreaOnChangeReply
+                                                }
+                                                isLoading={isLoading}
+                                            />
+                                        </div>
+                                    </>
+                                ) : isTwitterCircle(tweet && tweet?.user?._id) &&
+                                tweet?.audience ===
+                                    TWEET_AUDIENCE.twitterCircle ? (
+                                    <>
+                                        <div className={styles.formSection}>
+                                            <Avatar
+                                                path={
+                                                    authUser?.avatar
+                                                        ? `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`
+                                                        : undefined
+                                                }
+                                                size={Size.small}
+                                                className={''}
+                                            />
+                                            <FormReply
+                                                tweet={tweet}
+                                                value={value}
+                                                tweetTextRef={tweetTextRef}
+                                                imagePreview={previewImage}
+                                                isFocused={isFormFocused}
+                                                setIsFocused={setIsFormFocused}
+                                                onSubmit={handleSubmitTweet}
+                                                onImageUpload={
+                                                    handleImageUploadRepy
+                                                }
+                                                onCancelImagePreview={
+                                                    handleCanselPreviewImage
+                                                }
+                                                onChageReplyTextArea={
+                                                    handleTextAreaOnChangeReply
+                                                }
+                                                isLoading={isLoading}
+                                            />
+                                        </div>
+                                    </>
+                                ) : !isOnlyPeopleYouFollow(tweet?.user?._id) &&
+                                tweet?.reply === TWEET_REPLY.peopleYouFollow ? (
+                                    <>
+                                        <div className={styles.whoCanReply}>
+                                            <div className={styles.replyMsgWrapper}>
+                                                <UserIcon isMedium={true} />
+                                                <div className={styles.replyMsg}>
+                                                    <h4>Who can reply?</h4>
+                                                    <p>
+                                                        People @
+                                                        {tweet?.user?.username}{' '}
+                                                        follows can reply
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : !isMention(tweet && authUser?._id) &&
+                                tweet?.reply ===
+                                    TWEET_REPLY.onlyPeopleYouMention ? (
+                                    <>
+                                        <div className={styles.whoCanReply}>
+                                            <div className={styles.replyMsgWrapper}>
+                                                <AtIcon isMedium={true} />
+                                                <div className={styles.replyMsg}>
+                                                    <h4>Who can reply?</h4>
+                                                    <p>
+                                                        People @
+                                                        {tweet?.user?.username}{' '}
+                                                        mentioned can reply
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : isLoading && !isTwitterCircle(tweet && tweet?.user?._id) &&
+                                tweet?.audience ===
+                                    TWEET_AUDIENCE.twitterCircle ? (
+                                    <>
+                                        <div className={styles.whoCanReply}>
+                                            <div className={styles.replyMsgWrapper}>
+                                                <AtIcon isMedium={true} />
+                                                <div className={styles.replyMsg}>
+                                                    <h4>Who can reply?</h4>
+                                                    <p>
+                                                        People in Twitter Circle who follow @
+                                                        {tweet?.user?.username}{' '} 
+                                                        can reply
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className={styles.formSection}>
+                                            <Avatar
+                                                path={
+                                                    authUser?.avatar
+                                                        ? `${IMAGE_AVATAR_BASE_URL}/${authUser?.avatar}`
+                                                        : undefined
+                                                }
+                                                size={Size.small}
+                                                className={''}
+                                            />
+                                            <FormReply
+                                                tweet={tweet}
+                                                value={value}
+                                                tweetTextRef={tweetTextRef}
+                                                imagePreview={previewImage}
+                                                isFocused={isFormFocused}
+                                                setIsFocused={setIsFormFocused}
+                                                onSubmit={handleSubmitTweet}
+                                                onImageUpload={
+                                                    handleImageUploadRepy
+                                                }
+                                                onCancelImagePreview={
+                                                    handleCanselPreviewImage
+                                                }
+                                                onChageReplyTextArea={
+                                                    handleTextAreaOnChangeReply
+                                                }
+                                                isLoading={isLoading}
+                                            />
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                        {tweetReplies.map((tweet: any) => (
+                            <div
+                                className={styles.asideReplySection}
+                                key={tweet?._id}
+                            >
+                                <TweetReply
+                                    key={tweet?._id}
+                                    tweet={tweet}
+                                    onClickMenu={onClickTweetMenu}
+                                    onClickLike={onClickReplyLike}
+                                    isReply={true}
+                                    isLiked={tweet?.likes?.includes(
+                                        authUser?._id
+                                    )}
+                                    onClickRetweet={onClickRetweet}
+                                />
+                            </div>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
         </React.Fragment>
     );
 };
