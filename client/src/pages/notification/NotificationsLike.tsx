@@ -7,11 +7,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 
 interface NotificationsLikeProps{
-    likes: any
+    like: any
 }
 
 const NotificationsLike: FC<NotificationsLikeProps> = ({ 
-    likes,
+    like,
 }) => {
 
     const navigate = useNavigate();
@@ -20,20 +20,20 @@ const NotificationsLike: FC<NotificationsLikeProps> = ({
 
     return (
         <React.Fragment>
-            <div className={styles.container} onClick={() => navigate(`/tweet/${likes?._id}`)}>
+            <div className={styles.container} onClick={() => navigate(`/tweet/${like?._id}`)}>
                 <div className={styles.wrapper}>  
                     <UserInfo
-                        userId={likes?.user?._id}
-                        avatar={likes?.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${likes?.user?.avatar}`}
-                        name={likes?.user?.name}
-                        isVerified={likes?.user?.isVerified}
-                        username={likes?.user?.username}
+                        userId={like?.user?._id}
+                        avatar={like?.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${like?.user?.avatar}`}
+                        name={like?.user?.name}
+                        isVerified={like?.user?.isVerified}
+                        username={like?.user?.username}
                         className={styles.userInfoWrapper}
                         isNavigate={false}
                         >
                     </UserInfo>
                     <FontAwesomeIcon icon={faHeart} size={'xl'} color={'var(--color-pink)'} />
-                    <p className={styles.message}>{likes?.message}</p> 
+                    <p className={styles.message}>{like?.message}</p> 
                 </div>   
             </div>
 

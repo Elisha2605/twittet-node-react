@@ -50,14 +50,6 @@ const Tweet: FC<TweetProps> = ({
 
     let navigate = useNavigate();
 
-    const goToTweetPage = () => {
-        if (tweet?.image) {
-            navigate(`/tweet/image/${tweetId}`)
-        } else {
-            navigate(`/tweet/${tweetId}`)
-        }
-    }
-
     const renderColoredText = (text: string) => {
         const words = text ? text.split(' ') : [];
         return words.map((word: any, index: any) => {

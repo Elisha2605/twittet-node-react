@@ -333,14 +333,15 @@ export const reply = async (
             text: text,
             image: image,
         });
-        const savedReply = await newReply.save();
+        await newReply.updateOne({ $inc: { replyCount: 1 } });
+        const savedReply: any = await newReply.save();
         if (!savedReply) {
             throw CustomError('Could not create reply', 500);
         }
         await tweet.updateOne({ $inc: { replyCount: 1 } });
         const populatedReply = await newReply.populate({
             path: 'user',
-            select: 'name username avatar coverImage isVerified isProtected',
+            select: 'name username avatar coverImage isVerified isProtected createdAt',
             model: 'User',
         });
 
@@ -350,7 +351,7 @@ export const reply = async (
             text: populatedReply.text,
             image: populatedReply.image,
             replyCount: tweet.replyCount,
-            createdAt: tweet.createdAt,
+            createdAt: savedReply.createdAt,
         };
 
         return {

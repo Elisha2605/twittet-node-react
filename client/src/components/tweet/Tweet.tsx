@@ -318,7 +318,9 @@ const Tweet: FC<TweetProps> = ({
                                 {renderColoredText(tweet.text)}
                             </p>
                             {tweetImage && (
-                                <div className={`${styles.image}`} onClick={(e: any) => {
+                                <div 
+                                    className={`${styles.image}`} 
+                                    onClick={(e: any) => {
                                         e.stopPropagation();
                                         navigate(`/tweet/image/${tweet._id}`);
                                     }

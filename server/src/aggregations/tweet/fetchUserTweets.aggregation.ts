@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
-import { TWEET_AUDIENCE } from '../../../src/constants/tweet.constants';
+import {
+    TWEET_AUDIENCE,
+    TWEET_TYPE,
+} from '../../../src/constants/tweet.constants';
 import Tweet from '../../../src/models/tweet.model';
 
 export const fetchUserTweets = async (userId: string, visitorId: string) => {
@@ -93,6 +96,7 @@ export const fetchUserTweets = async (userId: string, visitorId: string) => {
                     },
                 ],
                 'user._id': new mongoose.Types.ObjectId(userId),
+                type: { $ne: TWEET_TYPE.reply },
             },
         },
         {

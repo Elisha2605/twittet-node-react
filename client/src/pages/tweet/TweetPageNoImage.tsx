@@ -40,6 +40,7 @@ import UserIcon from '../../components/icons/UserIcon';
 import AtIcon from '../../components/icons/AtIcon';
 import Tweet from '../../components/tweet/Tweet';
 import { getUserSavedTweets, saveTweetToBookmark } from '../../api/bookmark.api';
+import { getMonth, getMonthName, getTimeAMPM, getYear } from '../../utils/helpers.utils';
 
 interface TweetPageNoImageProps {
     onClickTweetMenu: Function;
@@ -207,6 +208,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
             reposts: [],
             likes: [],
         };
+        console.log(newTweet);
         setTweetReplies((prevTweets) => [newTweet, ...prevTweets]);
         clearTweetForm();
     };
@@ -341,7 +343,13 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
                                         {tweet?.text}
                                     </div>
                                     {tweet?.image && (
-                                        <div className={styles.image}>
+                                        <div 
+                                            className={styles.image}
+                                            onClick={(e: any) => {
+                                                e.stopPropagation();
+                                                navigate(`/tweet/image/${tweet._id}`);
+                                            }
+                                        }>
                                             <img
                                                 ref={imgRef}
                                                 src={
@@ -355,11 +363,17 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
                                         </div>
                                     )}
                                     <div className={styles.info}>
-                                        <span>9:15 PM</span> ·{' '}
-                                        <span>May 5, 2023</span> ·{' '}
-                                        <p>
-                                            <span>1.2M </span>Views
-                                        </p>
+                                        <span>{getTimeAMPM(tweet?.createdAt)}</span> ·{' '}
+                                        <span>{getTimeAMPM(tweet?.createdAt)}</span> · <span>
+                                            {getMonthName(tweet?.createdAt)}{' '} 
+                                            {getMonth(tweet?.createdAt)}, {' '} 
+                                            {getYear(tweet?.createdAt)}
+                                        </span> ·{' '}
+                                        {tweet?.viewCount > 0 && (
+                                            <p>
+                                                <span>{tweet?.viewCount}</span> Views
+                                            </p>
+                                        )}
                                     </div>
                                     <div className={styles.stats}>
                                         {tweet?.retweetCount > 0 && (    

@@ -11,7 +11,6 @@ export const getLikesNotification = async (
             {
                 $match: {
                     user: new mongoose.Types.ObjectId(userId),
-                    type: NOTIFICATION_TYPE.like,
                 },
             },
             {
