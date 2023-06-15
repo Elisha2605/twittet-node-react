@@ -112,15 +112,6 @@ const Tweet: FC<TweetProps> = ({
         }
     };
 
-    const goToRetweetPage = (e: React.MouseEvent<HTMLDivElement>) => {
-        e.stopPropagation();
-        if (retweet?.tweet?.image) {
-            navigate(`/tweet/image/${retweetId}`);
-        } else {
-            navigate(`/tweet/${retweetId}`);
-        }
-    }
-
     const hasRetweetAndTweetImage =  retweetImage && tweetImage;
 
     useEffect(() => {
@@ -204,7 +195,7 @@ const Tweet: FC<TweetProps> = ({
                         <div
                             className={styles.body}
                             key={tweet._id}
-                            onClick={goToTweetPage}
+                            onClick={() => navigate(`/tweet/${tweet._id}`)}
                         >
                             <p className={styles.tweet}>
                                 {renderColoredText(text)}
