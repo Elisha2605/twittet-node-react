@@ -2,7 +2,7 @@ import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import styles from './TweetPage.module.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import XmarkIcon from '../../components/icons/XmarkIcon';
-import { getTweetById } from '../../api/tweet.api';
+import { createReply, deleteTweet, getTweetById, getTweetReplies, retweet } from '../../api/tweet.api';
 import {
     IMAGE_AVATAR_BASE_URL,
     IMAGE_TWEET_BASE_URL,
@@ -32,16 +32,20 @@ import Avatar, { Size } from '../../components/ui/Avatar';
 import AuthContext from '../../context/user.context';
 import FormReply from '../../components/form/FormReplyTweet';
 import TweetReply from '../../components/tweet/TweetReply';
-import { createTweetReply, getAllTweetReplies } from '../../api/reply.api';
 import { getAuthUserFollows } from '../../api/follow.api';
 import AtIcon from '../../components/icons/AtIcon';
 import UserIcon from '../../components/icons/UserIcon';
 import { getUserSavedTweets, saveTweetToBookmark } from '../../api/bookmark.api';
 import { useMessage } from '../../context/successMessage.context';
 
-interface TweetPageProps {}
+interface TweetPageProps {
+    onDeleteTweet: any,
+    onClickTweetMenu: Function;
+    onEditTweet: any;
+    onClickRetweet?: Function;
+}
 
-const TweetPage: FC<TweetPageProps> = ({}) => {
+const TweetPage: FC<TweetPageProps> = ({ onClickTweetMenu, onClickRetweet, onEditTweet, onDeleteTweet }) => {
     const [tweet, setTweet] = useState<any>();
     const [authUser, setAuthUser] = useState<any>(null);
     const [isFormFocused, setIsFormFocused] = useState(false);
@@ -64,6 +68,8 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
     const goBack = () => {
         navigate(`/${previousPath}`);
     };
+    const [likedTweet, setLikedTweet] = useState<any>();
+
 
     const { id } = useParams<{ id: string }>();
 
@@ -73,19 +79,19 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
 
     // get Auth user
     const ctx = useContext(AuthContext);
-    const getTweetReplies = async () => {
+    const fetchTweetReplies = async () => {
         const { user } = ctx.getUserContext();
         setAuthUser(user);
 
         if (user) {
-            const res = await getAllTweetReplies(id!);
+            const res = await getTweetReplies(id!);
             const { tweets } = res;
             setTweetReplies(tweets);
         }
     };
 
     useEffect(() => {
-        getTweetReplies();
+        fetchTweetReplies();
     }, [id]);
 
     // get Tweet by ID
@@ -108,16 +114,25 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
         }));
     };
 
-    const handleTweetMenuOptionClick = async (
-        option: string,
-        tweetId: string,
-        tweet: any
-    ) => {
-        if (option === TWEET_MENU.delete) {
-            console.log('hello');
-        } else if (option === TWEET_MENU.edit) {
-        }
+    const onClickReplyLike = async (replyId: any) => {
+        const res: any = await likeTweet(replyId?._id);
+        const { likedTweet } = res;
+        setLikedTweet(likedTweet);
     };
+
+    useEffect(() => {
+        setTweetReplies((prevTweets: any) =>
+            prevTweets.map((tweet: any) =>
+                tweet?._id === likedTweet?.tweet
+                    ? {
+                          ...tweet,
+                          totalLikes: likedTweet?.likesCount,
+                          likes: likedTweet?.likes,
+                      }
+                    : tweet
+            )
+        );
+    }, [likedTweet]);
 
     const handleTextAreaOnChangeReply = (
         e: React.ChangeEvent<HTMLTextAreaElement>
@@ -156,8 +171,9 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
 
         console.log(text);
         console.log(selectedFile);
-        const res = await createTweetReply(id!, text!, selectedFile);
+        const res = await createReply(id!, text!, selectedFile);
         const { tweet }: any = res;
+        console.log(tweet);
         console.log(tweet);
         const newTweet = {
             _id: tweet._id,
@@ -240,6 +256,7 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
         };
         getUserBookmarkList();
     }, [tweet])
+
     const onClickSaveAndUnsaveTweet = async () => {
         const res = await saveTweetToBookmark(tweet._id);
         if (res.message === 'Added') {
@@ -267,7 +284,47 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
     const isSaved = (): boolean => {
         return tweet && savedTweets.some((t: any) => t._id === tweet._id)
     }
+
+    const handleTweetMenuOptionClick = async (option: string, tweetId: string, tweet: any) => {
+        if (option === TWEET_MENU.delete) {
+            const res = await deleteTweet(tweetId);
+            const { tweet } = res;
+            // setOnDeleteTweet(tweet);
+            showMessage('Your Tweet was deleted', 'success');
+        } else if (option === TWEET_MENU.edit) {
+            // openModal('edit-tweet-modal');
+            // setEditTweetModal(tweet);
+            // setValueEditModal(tweet.text);
+            // const image = tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`;
+            // setPreviewEditImageModal(image);
+        } 
+    };
+
+    useEffect(() => {
+        const handleEditReply = () => {
+            if (authUser) {
+                setTweetReplies((prevTweets: any) =>
+                    prevTweets.map((tweet: any) =>
+                        tweet?._id === onEditTweet?._id
+                            ? { ...tweet, ...onEditTweet }
+                            : tweet
+                    )
+                );
+            }
+        };
+        handleEditReply();
+    }, [onEditTweet]);
+
+    useEffect(() => {
+        setTweetReplies((preveState) =>
+            preveState.filter((tweet) => tweet._id !== onDeleteTweet._id)
+        );
+    }, [onDeleteTweet]);
    
+    useEffect(() => {
+        console.log(tweetReplies);
+    }, [tweetReplies])
+
     return (
         <React.Fragment>
             <div className={styles.container}>
@@ -608,9 +665,13 @@ const TweetPage: FC<TweetPageProps> = ({}) => {
                             <TweetReply
                                 key={tweet?._id}
                                 tweet={tweet}
-                                onClickMenu={() => {}}
-                                onClickLike={onClickLike}
+                                onClickMenu={onClickTweetMenu}
+                                onClickLike={onClickReplyLike}
                                 isReply={true}
+                                isLiked={tweet?.likes?.includes(
+                                    authUser?._id
+                                )}
+                                onClickRetweet={onClickRetweet}
                             />
                         </div>
                     ))}

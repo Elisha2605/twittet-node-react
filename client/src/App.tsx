@@ -282,7 +282,15 @@ function App() {
                                     onClickTweetMenu={handleTweetMenuOptionClick} />} 
                                 />
                                 <Route path="/follow-status/:path/:id/*" element={<FollowStatus />} />
-                                <Route path="/tweet/image/:id" element={ <TweetPage />} />
+                                <Route 
+                                    path="/tweet/image/:id" 
+                                    element={ <TweetPage
+                                        onEditTweet={onEditTweet}
+                                        onDeleteTweet={onDeleteTweet}
+                                        onClickTweetMenu={handleTweetMenuOptionClick} 
+                                        onClickRetweet={onReTweet} 
+                                    />} 
+                                />
                                 <Route path="/tweet/:id" element={ <TweetPageNoImage />} />
                                 <Route path="/follower-requests" element={ <FollowerRequests />} />
                                 <Route path="/settings/:path" element={ <Settings />} />
