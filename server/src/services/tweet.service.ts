@@ -561,6 +561,10 @@ export const deleteTweet = async (
         const tweetLikes: any = await Like.findOne({ tweet: tweetId }).session(
             session
         );
+        const tweetReply: any = await Tweet.findOne({
+            _id: tweetToDelete.originalTweet,
+        }).session(session);
+
         if (!tweetToDelete) {
             return {
                 success: true,
@@ -577,6 +581,12 @@ export const deleteTweet = async (
             await Promise.all([
                 tweetLikes.deleteOne({ session }),
                 tweetToDelete.deleteOne({ session }),
+            ]);
+        } else if (tweetReply && tweetReply.replyCount > 0) {
+            tweetReply.replyCount -= 1; // Decrease the tweetCount by 1
+            await Promise.all([
+                tweetReply.save({ session }), // Save the updated tweetReply
+                tweetToDelete.deleteOne({ session }), 
             ]);
         } else {
             await tweetToDelete.deleteOne({ session });

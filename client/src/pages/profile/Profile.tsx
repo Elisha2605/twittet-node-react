@@ -533,9 +533,15 @@ const Profile: FC<ProfileProps> = ({
                                         {userTweetReplies.map((tweet: any) => (
                                             <Tweet
                                                 key={
-                                                    tweet._id + tweet?.createdAt
+                                                    tweet?._id +
+                                                    tweet?.createdAt
                                                 }
                                                 tweet={tweet}
+                                                onClickMenu={onClickTweetMenu}
+                                                onClickLike={onClickLike}
+                                                isLiked={tweet?.likes?.includes(
+                                                    authUser?._id
+                                                )}
                                                 onClickRetweet={onClickRetweet}
                                                 isRetweet={tweet?.retweets?.includes(authUser?._id)}
                                             />
