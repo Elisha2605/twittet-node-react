@@ -4,7 +4,7 @@ import Notification from './notification.model';
 import Tweet from './tweet.model';
 import { NOTIFICATION_TYPE } from '../../src/constants/notification.constants';
 import { NOTIFICATION_MESSAGE } from '../../src/constants/notification.constants';
-import { TWEET_TYPE } from 'src/constants/tweet.constants';
+import { TWEET_TYPE } from '../../src/constants/tweet.constants';
 
 export interface Ilike extends mongoose.Document {
     tweet: ObjectId | string;
