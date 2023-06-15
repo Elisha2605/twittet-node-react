@@ -9,6 +9,7 @@ import ArrowLeftIcon from '../../components/icons/ArrowLeftIcon';
 import HeaderTitle from '../../components/header/HeaderTitle';
 import {
     IMAGE_AVATAR_BASE_URL,
+    IMAGE_TWEET_BASE_URL,
     TWEET_AUDIENCE,
     TWEET_REPLY,
 } from '../../constants/common.constants';
@@ -73,11 +74,14 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
     const [savedTweets, setSavedTweets] = useState<any>([])
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
+    const imgRef = useRef<HTMLImageElement>(null);
+
     const navigate = useNavigate();
 
      // get Auth user
      const ctx = useContext(AuthContext);
      const fetchTweetReplies = async () => {
+
          const { user } = ctx.getUserContext();
          setAuthUser(user);
          if (user) {
@@ -85,20 +89,35 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
              const { tweets } = res;
              setTweetReplies(tweets);
          }
+
      };
  
      useEffect(() => {
         fetchTweetReplies();
      }, [id]);
+     
 
     // get Tweet by ID
     useEffect(() => {
         const getTweet = async () => {
+            setIsLoading(true);
             const { tweet } = await getTweetById(id!);
             setTweet(tweet[0]);
+            setIsLoading(false);
         };
         getTweet();
     }, [id]);
+
+    const handleImageLoad = () => {
+        if (imgRef.current) {
+          // Check if the image height exceeds the threshold
+          if (imgRef.current.offsetHeight > 200) { // Set your desired threshold here
+            // Add the 'imageFixedHeight' class to limit the image height
+            const parentElement = imgRef.current.parentNode as HTMLElement;
+            parentElement.classList.add(styles.imageFixedHeight);
+          }
+        }
+    };
 
     // On like tweet
     const onClickLike = async () => {
@@ -141,12 +160,14 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
     const handleImageUploadRepy = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
+
         const file = event.target.files && event.target.files[0];
         if (file) {
             setSelectedFile(file);
             let imageUrl = URL.createObjectURL(file);
             setPreviewImage(imageUrl);
         }
+
     };
 
     const handleCanselPreviewImage = () => {
@@ -162,7 +183,6 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
 
     const handleSubmitTweet = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
             : null;
@@ -189,7 +209,6 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
         };
         setTweetReplies((prevTweets) => [newTweet, ...prevTweets]);
         clearTweetForm();
-        setIsLoading(false);
     };
 
     useEffect(() => {
@@ -278,6 +297,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
 
     return (
         <React.Fragment>
+        {!isLoading && (
             <div className={Layout.mainSectionContainer}>
                 <div className={Layout.mainSection}>
                     {/* *** HEADER - START *** */}
@@ -320,6 +340,20 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
                                     <div className={styles.text}>
                                         {tweet?.text}
                                     </div>
+                                    {tweet?.image && (
+                                        <div className={styles.image}>
+                                            <img
+                                                ref={imgRef}
+                                                src={
+                                                    tweet?.image
+                                                        ? `${IMAGE_TWEET_BASE_URL}/${tweet?.image}`
+                                                        : undefined
+                                                }
+                                                alt=""
+                                                onLoad={handleImageLoad}
+                                            />
+                                        </div>
+                                    )}
                                     <div className={styles.info}>
                                         <span>9:15 PM</span> ·{' '}
                                         <span>May 5, 2023</span> ·{' '}
@@ -333,7 +367,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
                                                 <span>{tweet?.retweetCount}</span>Retweets
                                             </p>
                                         )}{' '}
-                                         {tweet?.viewCount > 0 && (
+                                        {tweet?.viewCount > 0 && (
                                                 <p>
                                                     <span>{tweet?.viewCount}</span> Views
                                                 </p>
@@ -538,7 +572,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
                                                 </div>
                                             </div>
                                         </>
-                                    ) : !isTwitterCircle(tweet && tweet?.user?._id) &&
+                                    ) : isLoading && !isTwitterCircle(tweet && tweet?.user?._id) &&
                                     tweet?.audience ===
                                         TWEET_AUDIENCE.twitterCircle ? (
                                         <>
@@ -624,6 +658,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
                     </Aside>
                 </div>
             </div>
+        )}
         </React.Fragment>
     );
 };

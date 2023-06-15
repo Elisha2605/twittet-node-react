@@ -4,7 +4,7 @@ import TweetFooter from '../ui/TweetFooter';
 import UserInfo from '../ui/UserInfo';
 import styles from './TweetReply.module.css';
 import { getTimeDifference } from '../../utils/helpers.utils';
-import { IMAGE_AVATAR_BASE_URL, IMAGE_AVATAR_DEFAULT, IMAGE_TWEET_BASE_URL, IMAGE_TWEET_REPLY_BASE_URL } from '../../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, IMAGE_AVATAR_DEFAULT, IMAGE_TWEET_BASE_URL } from '../../constants/common.constants';
 import { 
     tweetMenuOptions, 
     tweetMenuIcons, 
@@ -95,10 +95,16 @@ const Tweet: FC<TweetProps> = ({
                         onClickOption={onClickMenu}
                         isReply={isReply}
                     />
-                    <div className={styles.body} key={tweet._id} onClick={goToTweetPage}>
+                    <div className={styles.body} key={tweet._id} 
+                        onClick={() => navigate(`/tweet/${tweet._id}`)}>
                         <p className={styles.tweet}>{tweetText}</p>
                         {tweetImage && (
-                            <div className={`${styles.image} ${!isReply ? classNameNoImage : ''}`}>
+                            <div className={`${styles.image} ${!isReply ? classNameNoImage : ''}`}
+                            onClick={(e: any) => {
+                                e.stopPropagation();
+                                    navigate(`/tweet/image/${tweet._id}`);
+                                }
+                            }>
                                 <img src={tweetImage ? `${IMAGE_TWEET_BASE_URL}/${tweetImage}` : undefined} alt="" />
                             </div>
                         )}
