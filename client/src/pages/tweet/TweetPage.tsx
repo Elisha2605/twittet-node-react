@@ -42,7 +42,8 @@ interface TweetPageProps {
     onDeleteTweet: any,
     onClickTweetMenu: Function;
     onEditTweet: any;
-    onClickRetweet?: Function;
+    onClickRetweet: Function;
+    isRetweet?: boolean;
     handleTextAreaOnChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
@@ -50,7 +51,8 @@ const TweetPage: FC<TweetPageProps> = ({
     onClickTweetMenu, 
     onClickRetweet, 
     onEditTweet, 
-    onDeleteTweet,  
+    onDeleteTweet, 
+    isRetweet 
 }) => {
     const [tweet, setTweet] = useState<any>();
     const [authUser, setAuthUser] = useState<any>(null);
@@ -312,10 +314,6 @@ const TweetPage: FC<TweetPageProps> = ({
         );
     }, [onDeleteTweet]);
    
-    useEffect(() => {
-        console.log(tweetReplies);
-    }, [tweetReplies])
-
     return (
         <React.Fragment>
             {!isLoading && (
@@ -346,13 +344,16 @@ const TweetPage: FC<TweetPageProps> = ({
                         />
                         <div className={styles.footer}>
                             <TweetFooter
+                                tweet={tweet}
                                 replies={tweet?.replyCount === 0 ? '' : tweet?.replyCount}
-                                retTweets={''}
+                                reTweets={tweet?.retweetCount === 0 ? '' : tweet?.retweetCount}
                                 likes={
                                     tweet?.totalLikes > 0 ? tweet?.totalLikes : ''
                                 }
-                                views={''}
+                                views={tweet?.viewCount > 0 ? tweet?.viewCount : ''}
+                                onClickRetweet={onClickRetweet}
                                 onClick={onClickLike}
+                                isRetweet={tweet?.retweets?.includes(authUser?._id)}
                                 isLiked={tweet?.likes?.includes(authUser?._id)}
                             />
                         </div>

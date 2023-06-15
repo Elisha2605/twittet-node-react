@@ -26,7 +26,7 @@ interface TweetFooterProps {
     tweet?: any;
 
     replies: string;
-    retTweets: string;
+    reTweets: string;
     likes: string;
     views: string;
     onClick?: (tweet: string) => void;
@@ -41,7 +41,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
     tweet,
 
     replies,
-    retTweets,
+    reTweets,
     likes,
     views,
     onClick,
@@ -88,11 +88,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
     };
 
     const onTweetReply = () => {
-        if (tweet?.image) {
-            navigate(`/tweet/image/${tweet?._id}`);
-        } else if (!tweet?.image) {
-            navigate(`/tweet/${tweet?._id}`);
-        }
+        navigate(`/tweet/${tweet?._id}`);
     };
 
     // can't tweet if it's another user's retweet with quote.
@@ -154,7 +150,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
                                 className={styles.faRepeat}
                             />
                         </PopUpMenu>
-                        <p>{retTweets}</p>
+                        <p>{reTweets}</p>
                     </>
                 ): (
                     <>
@@ -164,7 +160,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
                             options={reTweetOptions!}
                             icons={reTweetIcon}
                             isDisable={canRetweet}
-                            onClick={(option, tweet: any) =>
+                            onClick={(option, tweet: any) => 
                                 onClickRetweet!(option, tweet)
                             }
                             className={styles.retweetPopUp}
@@ -174,7 +170,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
                                 className={styles.faRepeat}
                             />
                         </PopUpMenu>
-                        <p>{retTweets}</p>
+                        <p>{reTweets}</p>
                     </>
                 )}
                 </div>
@@ -243,7 +239,5 @@ const TweetFooter: FC<TweetFooterProps> = ({
         </React.Fragment>
     );
 };
-
-// tweet?.type === TWEET_TYPE.reTweet && tweet?.text === null && tweet?.user?._id === authUser?._id &&
 
 export default TweetFooter;

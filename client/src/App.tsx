@@ -142,15 +142,16 @@ function App() {
     };
 
     const onReTweet = async (option: any, tweet: any) => {
+        console.log(tweet);
         if (option === TWEET_MENU.undoRetweet) {
-            const res = await retweet(tweet?._id, null, tweet.image, tweet.audience, tweet.reply);
+            const res = await retweet(tweet?._id, null, tweet?.image, tweet?.audience, tweet?.reply);
             if (res.message === "Undo Retweet") {
                 showMessage('Undo Retweet successful', 'success');
                 setOnDeleteTweet(tweet)
             }
         }
         if (option === TWEET_MENU.retweet) {
-            const res = await retweet(tweet?._id, null, tweet.image, tweet.audience, tweet.reply);
+            const res = await retweet(tweet?._id, null, tweet?.image, tweet?.audience, tweet?.reply);
                 const newTweet = {
                     ...res.tweet
                 };
@@ -164,8 +165,8 @@ function App() {
             setTweet(tweet)
             openModal('retweet-modal')
             setEditTweetModal(tweet);
-            setValueEditModal(tweet.text);
-            const image = tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`;
+            setValueEditModal(tweet?.text);
+            const image = tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet?.image}`;
             setPreviewEditImageModal(image);
         }
     }  

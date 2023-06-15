@@ -385,9 +385,9 @@ const Tweet: FC<TweetProps> = ({
                 <TweetFooter
                     tweet={tweet}
                     replies={tweet?.replyCount === 0 ? '' : tweet?.replyCount}
-                    retTweets={tweet?.retweetCount === 0 ? '' : tweet?.retweetCount}
-                    likes={tweet.totalLikes > 0 ? tweet.totalLikes : ''}
-                    views={tweet.viewCount > 0 ? tweet.viewCount : ''}
+                    reTweets={tweet?.retweetCount === 0 ? '' : tweet?.retweetCount}
+                    likes={tweet?.totalLikes > 0 ? tweet?.totalLikes : ''}
+                    views={tweet?.viewCount > 0 ? tweet?.viewCount : ''}
                     onClickRetweet={onClickRetweet}
                     onClick={() => onClickLike!(tweet)}
                     isLiked={isLiked}
