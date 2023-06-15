@@ -16,8 +16,6 @@ const NotificationsMention: FC<NotificationsMentionProps> = ({
 
     const [authUser, setAuthUser] = useState<any>(null);
 
-    const navigate = useNavigate();
-
     const ctx = useContext(AuthContext);
     useEffect(() => {
         const getAuthUser = async () => {
@@ -33,7 +31,6 @@ const NotificationsMention: FC<NotificationsMentionProps> = ({
         <React.Fragment>
             <div>{mentions?.text}</div>
              <Tweet
-                key={mentions?._id}
                 tweet={mentions?.sender}
                 onClickMenu={() => {}}
                 onClickLike={() => {}}

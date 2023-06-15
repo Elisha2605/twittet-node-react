@@ -46,22 +46,9 @@ const Notification = () => {
     useEffect(() => {
         const getAllNotifications = async () => {
             setIsLoading(true);
-            const likes = await getLikesNotification();
-            const mentions = await getMentionsNotification();
-
-            // combining likes and mentions into a single array
-            const allNotifications = [
-                ...likes.notifications,
-                ...mentions.notifications,
-            ];
-
-            // sorting the combined array based on timestamp in descending order
-            allNotifications.sort(
-                (a, b) =>
-                    new Date(b.createdAt).getTime() -
-                    new Date(a.createdAt).getTime()
-            );
-            setAllNotifications(allNotifications);
+            const { notifications } = await getLikesNotification();
+         
+            setAllNotifications(notifications);
             setIsLoading(false);
         };
 
@@ -127,18 +114,22 @@ const Notification = () => {
                             {!isLoading &&
                                 allNotifications.length > 0 &&
                                 allNotifications.map((notification: any) => (
-                                    <div key={notification._id}>
+                                    <div key={notification?._id + Math.random()}>
                                         {notification.type ===
-                                        NOTIFICATION_TYPE.like ? (
+                                        NOTIFICATION_TYPE.tweet ? (
                                             <NotificationsLike
-                                                likes={notification}
+                                                like={notification}
+                                            />
+                                        ) : notification.type ===
+                                        NOTIFICATION_TYPE.reply ? (
+                                            <NotificationsLike
+                                                like={notification}
                                             />
                                         ) : notification.type ===
                                           NOTIFICATION_TYPE.mention ? (
                                             <Tweet
-                                                key={notification?._id}
+                                                key={notification?._id + Math.random()}
                                                 tweet={notification}
-                                                onClickMenu={() => {}}
                                                 onClickLike={onClickLike}
                                                 isLiked={notification?.likes?.includes(
                                                     authUser?._id
@@ -147,7 +138,7 @@ const Notification = () => {
                                         ) : null}
                                     </div>
                                 ))}
-                            {!isLoading &&  allNotifications.length < 1 && (
+                            {!isLoading &&  allNotifications.length === 0 && (
                                 <ContentNotAvailable
                                     title={
                                         "You don't have notificaitons - yet!"
@@ -172,7 +163,7 @@ const Notification = () => {
                             {!isLoading &&
                                 allNotifications.length > 0 &&
                                 allNotifications.map((notification: any) => (
-                                    <div key={notification._id}>
+                                    <div key={notification._id + Math.random()}>
                                         {notification.type ===
                                         NOTIFICATION_TYPE.mention ? (
                                             <Tweet

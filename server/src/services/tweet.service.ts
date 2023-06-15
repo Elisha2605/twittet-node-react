@@ -6,6 +6,7 @@ import { getTweets } from '../../src/aggregations/tweet/fetchTweets.aggregation'
 import { fetchUserTweets } from '../../src/aggregations/tweet/fetchUserTweets.aggregation';
 import {
     TWEET_AUDIENCE,
+    TWEET_REPLY,
     TWEET_TYPE,
 } from '../../src/constants/tweet.constants';
 import Follow from '../../src/models/follow.model';
@@ -15,6 +16,7 @@ import User from '../../src/models/user.model';
 import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
 import { CustomError } from '../../src/utils/helpers';
 import { fetchUserTweetReplies } from '../../src/aggregations/tweet/fetchUserTweetReplies.aggregation';
+import { fetchTweetReplies } from '../../src/aggregations/tweet/fetchTweetReplies.aggregation';
 
 export const getAllTweets = async (
     userId: string
@@ -35,6 +37,38 @@ export const getAllTweets = async (
             message: 'Successfully fetched tweets',
             status: 200,
             payload: tweets,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};
+
+export const getTweetReplies = async (
+    tweetId: string,
+    userId: string
+): Promise<ApiResponse<any>> => {
+    try {
+        const replies = await fetchTweetReplies(tweetId, userId);
+
+        if (replies.length === 0) {
+            return {
+                success: true,
+                message: 'Replies not found!',
+                status: 404,
+                payload: [],
+            };
+        }
+        return {
+            success: true,
+            message: 'Successfully fetched replies',
+            status: 200,
+            payload: replies,
         };
     } catch (error) {
         const errorResponse: ErrorResponse = {
@@ -223,6 +257,108 @@ export const createTweet = async (
             message: 'Successfully created tweet',
             status: 200,
             payload: populatedTweet,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};
+
+export const reply = async (
+    tweetId: string,
+    userId: string,
+    text: string,
+    image: string
+): Promise<ApiResponse<any>> => {
+    try {
+        const tweet: any = await Tweet.findById(tweetId);
+
+        if (!tweet) {
+            throw CustomError('Tweet not found!', 404);
+        }
+
+        const authorFollowers = await Follow.findOne({ user: tweet.user });
+
+        // check for Twitter Circle
+        if (
+            tweet.user.toString() !== userId.toString() &&
+            tweet.audience === TWEET_AUDIENCE.twitterCircle &&
+            !authorFollowers.followers.some(
+                (follower: any) =>
+                    follower.user.toString() === userId.toString()
+            )
+        ) {
+            throw CustomError(
+                'Unthorised! only people in the Twitter Circle who follow the user can reply!',
+                400
+            );
+        }
+
+        // check for people people you follow
+        if (
+            tweet.user.toString() !== userId.toString() &&
+            tweet.reply === TWEET_REPLY.peopleYouFollow &&
+            !authorFollowers.followings.some(
+                (follower: any) =>
+                    follower.user.toString() === userId.toString()
+            )
+        ) {
+            throw CustomError(
+                'Unthorised! only people the user follows can reply!',
+                400
+            );
+        }
+
+        // check for people you mention
+        if (
+            tweet.user.toString() !== userId.toString() &&
+            tweet.reply === TWEET_REPLY.onlyPeopleYouMention &&
+            !tweet.mentions.includes(userId)
+        ) {
+            throw CustomError(
+                'Unthorised! only people mentioned by the user can reply!',
+                400
+            );
+        }
+
+        const newReply = new Tweet({
+            type: TWEET_TYPE.reply,
+            originalTweet: tweet._id,
+            user: userId,
+            text: text,
+            image: image,
+        });
+        await newReply.updateOne({ $inc: { replyCount: 1 } });
+        const savedReply: any = await newReply.save();
+        if (!savedReply) {
+            throw CustomError('Could not create reply', 500);
+        }
+        await tweet.updateOne({ $inc: { replyCount: 1 } });
+        const populatedReply = await newReply.populate({
+            path: 'user',
+            select: 'name username avatar coverImage isVerified isProtected createdAt',
+            model: 'User',
+        });
+
+        const newObject = {
+            _id: populatedReply._id,
+            user: populatedReply.user,
+            text: populatedReply.text,
+            image: populatedReply.image,
+            replyCount: tweet.replyCount,
+            createdAt: savedReply.createdAt,
+        };
+
+        return {
+            success: true,
+            message: 'Successfully created reply',
+            status: 200,
+            payload: newObject,
         };
     } catch (error) {
         const errorResponse: ErrorResponse = {
@@ -425,6 +561,10 @@ export const deleteTweet = async (
         const tweetLikes: any = await Like.findOne({ tweet: tweetId }).session(
             session
         );
+        const tweetReply: any = await Tweet.findOne({
+            _id: tweetToDelete.originalTweet,
+        }).session(session);
+
         if (!tweetToDelete) {
             return {
                 success: true,
@@ -439,7 +579,13 @@ export const deleteTweet = async (
         // Delete tweetLikes and tweetToDelete if both exist
         if (tweetLikes) {
             await Promise.all([
-                tweetLikes.deleteOne({ session }),
+                tweetLikes.deleteOne({ session }), // Deleting all tweet's likes
+                tweetToDelete.deleteOne({ session }),
+            ]);
+        } else if (tweetReply && tweetReply.replyCount > 0) {
+            tweetReply.replyCount -= 1; // Decreasing the tweetCount by 1
+            await Promise.all([
+                tweetReply.save({ session }), // Save the updated tweetReply
                 tweetToDelete.deleteOne({ session }),
             ]);
         } else {

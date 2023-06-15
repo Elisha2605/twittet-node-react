@@ -1,0 +1,90 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.item {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    color: var(--color-secondary);
+    
+}
+
+.item p {
+    font-size: .8rem;
+}
+
+.liked {
+    color: var(--color-pink);
+}
+
+.retweetPopUp {
+    position: relative;
+    bottom: 2rem;
+    left: 6rem;
+}
+
+.faComment,
+.faRepeat,
+.faHeart,
+.faChartSimple,
+.faBookmark {
+    padding: 0.7rem 0.7rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.1s ease-in;
+    font-size: 1.4rem;
+}
+.faBookmark {
+    cursor: pointer;
+    font-size: 1.4rem;
+
+    padding: 0.7rem 0.9rem !important;
+}
+
+.faHeart {
+    font-size: 1.6rem;
+}
+
+.faRepeat {
+    position: relative;
+    top: 3px;
+}
+
+.faComment:hover {
+    background: var(--color-primary-lighter);
+    color: var(--color-primary);
+}
+.faRepeat:hover {
+    background: var(--color-green-lighter);
+    color: var(--color-green);
+}
+.faHeart:hover {
+    background: var(--color-pink-lighter);
+    color: var(--color-pink);
+}
+.faChartSimple:hover {
+    background: var(--color-primary-lighter);
+    color: var(--color-primary);
+}
+.faBookmark:hover {
+    background: var(--color-primary-lighter);
+    color: var(--color-primary);
+}
+
+.hoverBlue:hover {
+    color: var(--color-primary);
+}
+.hoverGreen:hover {
+    color: var(--color-green);
+}
+
+.hoverPink:hover {
+    color: var(--color-pink);
+}
+
+.hasRetweeted {
+    color: var(--color-green);
+}

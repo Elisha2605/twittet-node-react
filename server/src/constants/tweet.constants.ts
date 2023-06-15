@@ -1,6 +1,7 @@
 export enum TWEET_TYPE {
     regular = 'Regular',
     reTweet = 'Retweet',
+    reply = 'Reply',
 }
 
 export enum TWEET_AUDIENCE {

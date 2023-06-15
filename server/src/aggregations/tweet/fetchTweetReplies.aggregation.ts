@@ -1,8 +1,11 @@
 import mongoose from 'mongoose';
+import {
+    TWEET_AUDIENCE,
+    TWEET_TYPE,
+} from '../../../src/constants/tweet.constants';
 import Tweet from '../../../src/models/tweet.model';
-import { TWEET_AUDIENCE, TWEET_TYPE } from 'src/constants/tweet.constants';
 
-export const fetchUserTweetReplies = async (userId: string) => {
+export const fetchTweetReplies = async (tweetId: string, userId: string) => {
     const tweets = await Tweet.aggregate([
         {
             $lookup: {
@@ -103,7 +106,7 @@ export const fetchUserTweetReplies = async (userId: string) => {
                         ],
                     },
                     {
-                        'user._id': new mongoose.Types.ObjectId(userId),
+                        originalTweet: new mongoose.Types.ObjectId(tweetId),
                         type: TWEET_TYPE.reply,
                     },
                 ],

@@ -17,6 +17,18 @@ export const getYear = (timestamp: string): number => {
     return year;
 };
 
+export const getMonth = (timestamp: string): number => {
+    const date = new Date(timestamp);
+    const year = date.getMonth();
+    return year;
+};
+
+export const getTimeAMPM = (timestamp: string) => {
+    const time = new Date(timestamp);
+    const formatedTime = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+    return formatedTime
+  }
+
 export const getMonthName = (timestamp: string): string => {
     const date = new Date(timestamp);
     const month = date.getMonth() + 1;

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import {
+    reply,
     createTweet,
     deleteTweet,
     editTweet,
@@ -11,6 +12,7 @@ import {
     getUserTweets,
     reTweet,
     updateTweetAudience,
+    getTweetReplies,
 } from '../../src/services/tweet.service';
 
 export const getAllTweetsController = asyncHandler(
@@ -18,6 +20,30 @@ export const getAllTweetsController = asyncHandler(
         const userId = req.user._id;
         try {
             const { success, message, payload, status } = await getAllTweets(
+                userId
+            );
+            if (success) {
+                res.status(200).json({
+                    message: message,
+                    status: status,
+                    tweets: payload,
+                });
+            } else {
+                res.status(500).json({ success, message });
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+export const getTweetRepliesController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const tweetId = req.params.id;
+        const userId = req.user._id;
+        try {
+            const { success, message, payload, status } = await getTweetReplies(
+                tweetId,
                 userId
             );
             if (success) {
@@ -128,6 +154,47 @@ export const createTweetController = asyncHandler(
                 audience,
                 reply
             );
+            const { payload } = response;
+            if (response.success) {
+                res.status(response.status).send({
+                    success: response.success,
+                    message: response.message,
+                    status: response.status,
+                    tweet: payload,
+                });
+            }
+        } catch (error) {
+            res.status(error.status).json({
+                sucess: error.success,
+                message: error.message,
+                status: error.status,
+            });
+            next(error);
+        }
+    }
+);
+
+export const replyController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const tweetId = req.params.id;
+        const userId = req.user._id;
+        const text = req.body.text;
+        const image = req.files?.['tweetImage']?.[0]?.filename ?? null;
+
+        if (text === undefined && image === null) {
+            res.status(400).json({ InvalidInputError: 'Invalid Input' });
+            return;
+        }
+        if (text !== undefined && text.length > 280) {
+            res.status(400).json({
+                InvalidInput:
+                    'Reply text must not be greater than 280 characters',
+            });
+            return;
+        }
+
+        try {
+            const response = await reply(tweetId, userId, text, image);
             const { payload } = response;
             if (response.success) {
                 res.status(response.status).send({
