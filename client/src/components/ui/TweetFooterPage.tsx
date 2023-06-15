@@ -1,26 +1,25 @@
-import { faComment, faHeart } from '@fortawesome/free-regular-svg-icons';
 import {
-    faArrowUpFromBracket,
     faBookmark,
     faHeart as faHeartSolid,
     faPen,
 } from '@fortawesome/free-solid-svg-icons';
-import { faChartSimple, faRepeat } from '@fortawesome/free-solid-svg-icons';
+import { faRepeat } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { FC, useContext, useEffect, useState } from 'react';
-import styles from './TweetFooter.module.css';
+import styles from './TweetFooterPage.module.css';
 import PopUpMenu from './PopUpMenu';
 import {
     reTweetIcon,
     reTweetOptions,
-    shareIcon,
-    shareOptions,
 } from '../../data/menuOptions';
-import { saveTweetToBookmark } from '../../api/bookmark.api';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { TWEET_AUDIENCE, TWEET_MENU, TWEET_TYPE } from '../../constants/common.constants';
 import AuthContext from '../../context/user.context';
-import { useMessage } from '../../context/successMessage.context';
+import {
+    faBookmark as faBookmarkRegular,
+    faComment,
+    faHeart,
+} from '@fortawesome/free-regular-svg-icons';
 
 interface TweetFooterProps {
     tweet?: any;
@@ -35,28 +34,23 @@ interface TweetFooterProps {
     isRetweet?: boolean;
     onClickRetweet?: Function;
     onRemoveFromBookmarks?: (tweetId: string) => void;
+    isSaved: Function;
+    onClickBookmark: Function;
 }
 
 const TweetFooter: FC<TweetFooterProps> = ({
     tweet,
-
-    replies,
     reTweets,
-    likes,
-    views,
     onClick,
     isTweetReply,
     isLiked,
-    isRetweet,
     onClickRetweet,
-    onRemoveFromBookmarks
+    isSaved,
+    onClickBookmark
 }) => {
     const [authUser, setAuthUser] = useState<any>(null);
 
-    const location = useLocation();
     const navigate = useNavigate();
-    
-    const { showMessage } = useMessage();
     
     const ctx = useContext(AuthContext);
     useEffect(() => {
@@ -69,22 +63,6 @@ const TweetFooter: FC<TweetFooterProps> = ({
 
     const handleLike = (tweet: any) => {
         onClick!(tweet);
-    };
-
-    const onClickSaveAndUnsaveTweet = async (
-        option: any,
-        _id: string,
-        tweet: any
-        ) => {
-
-        const res: any = await saveTweetToBookmark(tweet._id);
-            
-        if (res.message === 'Added') {
-            showMessage('Tweet added to your Bookmarks', 'success');
-        } else if (res.message === 'Removed') {
-            showMessage('Tweet removed from Bookmarks', 'success');
-            onRemoveFromBookmarks!(tweet._id)
-        }
     };
 
     const onTweetReply = () => {
@@ -115,9 +93,9 @@ const TweetFooter: FC<TweetFooterProps> = ({
                 >
                     <FontAwesomeIcon
                         icon={faComment}
+                        size={'lg'}
                         className={styles.faComment}
                     />
-                    <p>{replies}</p>
                 </div>
 
                 <div
@@ -131,6 +109,7 @@ const TweetFooter: FC<TweetFooterProps> = ({
                             value={tweet}
                             isMenuIcon={false}
                             options={[TWEET_MENU.undoRetweet, TWEET_MENU.quoteTweet]!}
+                            classNameContainer={styles.popUpRetweetContainer}
                             icons={{
                                 'Undo Retweet': (
                                     <FontAwesomeIcon icon={faRepeat} />
@@ -167,10 +146,11 @@ const TweetFooter: FC<TweetFooterProps> = ({
                         >
                             <FontAwesomeIcon
                                 icon={faRepeat}
+                                size={'lg'}
                                 className={styles.faRepeat}
                             />
                         </PopUpMenu>
-                        <p>{reTweets}</p>
+
                     </>
                 )}
                 </div>
@@ -183,57 +163,23 @@ const TweetFooter: FC<TweetFooterProps> = ({
                 >
                     <FontAwesomeIcon
                         icon={isLiked ? faHeartSolid : faHeart}
+                        size={'lg'}
                         className={styles.faHeart}
                     />
-                    <p>{likes}</p>
-                </div>
-                <div
-                    className={`${styles.item} ${styles.hoverBlue} ${
-                        isTweetReply ? styles.itemOnTweetReply : ''
-                    }`}
-                >
-                    <FontAwesomeIcon
-                        icon={faChartSimple}
-                        className={styles.faChartSimple}
-                    />
-                    <p>{views}</p>
                 </div>
                 <div
                     className={`${styles.item} ${
                         isTweetReply ? styles.itemOnTweetReply : ''
                     }`}
                 >
-                    {location.pathname === '/bookmarks' ? (
-                        <PopUpMenu
-                            value={tweet}
-                            isMenuIcon={false}
-                            options={['Remove tweet']!}
-                            icons={{
-                                'Remove tweet': (
-                                    <FontAwesomeIcon icon={faBookmark} />
-                                ),
-                            }}
-                            onClick={onClickSaveAndUnsaveTweet}
-                        >
-                            <FontAwesomeIcon
-                                icon={faArrowUpFromBracket}
-                                className={`${styles.faArrowUpFromBracket} ${styles.hoverBlue}`}
-                            />
-                        </PopUpMenu>
-                    ) : (
-                        <PopUpMenu
-                            value={tweet}
-                            isMenuIcon={false}
-                            options={shareOptions!}
-                            icons={shareIcon}
-                            onClick={onClickSaveAndUnsaveTweet}
-                        >
-                            <FontAwesomeIcon
-                                icon={faArrowUpFromBracket}
-                                className={`${styles.faArrowUpFromBracket} ${styles.hoverBlue}`}
-                            />
-                        </PopUpMenu>
-                    )}
+                    <div onClick={() => onClickBookmark()}>
+                        <FontAwesomeIcon
+                            icon={isSaved() ? faBookmark : faBookmarkRegular}
+                            color={isSaved() ? 'var(--color-primary)': ''}
+                            size={'lg'}
+                            className={`${styles.faBookmark}`}
+                        />
+                    </div>
                 </div>
             </div>
         </React.Fragment>

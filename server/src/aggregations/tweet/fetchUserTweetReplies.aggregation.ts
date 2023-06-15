@@ -1,26 +1,27 @@
 import mongoose from 'mongoose';
 import Tweet from '../../../src/models/tweet.model';
+import { TWEET_AUDIENCE, TWEET_TYPE } from 'src/constants/tweet.constants';
 
 export const fetchUserTweetReplies = async (userId: string) => {
     const tweets = await Tweet.aggregate([
         {
             $lookup: {
-                from: 'Reply',
-                localField: '_id',
-                foreignField: 'tweet',
-                as: 'replyTweets',
+                from: 'TwitterCircle',
+                localField: 'user',
+                foreignField: 'user',
+                as: 'twitterCircle',
             },
         },
         {
             $unwind: {
-                path: '$replyTweets',
+                path: '$twitterCircle',
                 preserveNullAndEmptyArrays: true,
             },
         },
         {
             $lookup: {
                 from: 'User',
-                localField: 'replyTweets.user',
+                localField: 'user',
                 foreignField: '_id',
                 as: 'user',
             },
@@ -30,25 +31,105 @@ export const fetchUserTweetReplies = async (userId: string) => {
         },
         {
             $lookup: {
+                from: 'Tweet',
+                localField: 'originalTweet',
+                foreignField: '_id',
+                as: 'original',
+            },
+        },
+        {
+            $unwind: {
+                path: '$original',
+                preserveNullAndEmptyArrays: true,
+            },
+        },
+        {
+            $lookup: {
                 from: 'User',
-                localField: 'retweet.user',
+                localField: 'original.user',
                 foreignField: '_id',
                 as: 'tweetOwner',
             },
         },
         {
-            $match: {
-                'replyTweets.user': new mongoose.Types.ObjectId(userId),
+            $unwind: {
+                path: '$tweetOwner',
+                preserveNullAndEmptyArrays: true,
             },
         },
         {
-            $addFields: {
-                isReply: true, // Add the isReply field with the value true
+            $lookup: {
+                from: 'Like',
+                localField: '_id',
+                foreignField: 'tweet',
+                as: 'likes',
+            },
+        },
+        {
+            $unwind: { path: '$likes', preserveNullAndEmptyArrays: true },
+        },
+        {
+            $match: {
+                $and: [
+                    {
+                        $or: [
+                            {
+                                audience: TWEET_AUDIENCE.everyone,
+                            },
+                            {
+                                audience: TWEET_AUDIENCE.twitterCircle,
+                                $expr: {
+                                    $cond: {
+                                        if: {
+                                            $eq: [
+                                                new mongoose.Types.ObjectId(
+                                                    userId
+                                                ),
+                                                '$twitterCircle.user',
+                                            ],
+                                        },
+                                        then: true,
+                                        else: {
+                                            $in: [
+                                                new mongoose.Types.ObjectId(
+                                                    userId
+                                                ),
+                                                '$twitterCircle.members',
+                                            ],
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        'user._id': new mongoose.Types.ObjectId(userId),
+                        type: TWEET_TYPE.reply,
+                    },
+                ],
+            },
+        },
+        {
+            $sort: {
+                createdAt: -1,
             },
         },
         {
             $project: {
                 _id: 1,
+                type: 1,
+                original: {
+                    tweet: '$original',
+                    user: {
+                        _id: '$tweetOwner._id',
+                        name: '$tweetOwner.name',
+                        username: '$tweetOwner.username',
+                        avatar: '$tweetOwner.avatar',
+                        coverImage: '$tweetOwner.coverImage',
+                        isVerified: '$tweetOwner.isVerified',
+                        isProtected: '$tweetOwner.isProtected',
+                    },
+                },
                 user: {
                     _id: '$user._id',
                     name: '$user.name',
@@ -58,19 +139,29 @@ export const fetchUserTweetReplies = async (userId: string) => {
                     isVerified: '$user.isVerified',
                     isProtected: '$user.isProtected',
                 },
-                image: '$replyTweets.image',
-                text: '$replyTweets.text',
-                audience: '$replyTweets.audience',
-                reply: '$replyTweets.reply',
-                mentions: '$replyTweets.mentions',
-                createdAt: '$replyTweets.createdAt',
-                updatedAt: '$replyTweets.updatedAt',
-                isReply: 1,
-            },
-        },
-        {
-            $sort: {
-                createdAt: -1,
+                image: 1,
+                text: 1,
+                audience: 1,
+                reply: 1,
+                mentions: 1,
+                createdAt: 1,
+                updatedAt: 1,
+                likes: '$likes.likes',
+                replyCount: 1,
+                bookmarkCount: 1,
+                retweetCount: 1,
+                viewCount: 1,
+                totalLikes: {
+                    $cond: {
+                        if: {
+                            $isArray: '$likes.likes',
+                        },
+                        then: {
+                            $size: '$likes.likes',
+                        },
+                        else: 0,
+                    },
+                },
             },
         },
     ]).exec();

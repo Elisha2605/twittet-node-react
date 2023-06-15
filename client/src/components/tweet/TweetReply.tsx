@@ -4,7 +4,7 @@ import TweetFooter from '../ui/TweetFooter';
 import UserInfo from '../ui/UserInfo';
 import styles from './TweetReply.module.css';
 import { getTimeDifference } from '../../utils/helpers.utils';
-import { IMAGE_AVATAR_BASE_URL, IMAGE_AVATAR_DEFAULT, IMAGE_TWEET_BASE_URL, IMAGE_TWEET_REPLY_BASE_URL } from '../../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, IMAGE_AVATAR_DEFAULT, IMAGE_TWEET_BASE_URL } from '../../constants/common.constants';
 import { 
     tweetMenuOptions, 
     tweetMenuIcons, 
@@ -50,14 +50,6 @@ const Tweet: FC<TweetProps> = ({
 
     let navigate = useNavigate();
 
-    const goToTweetPage = () => {
-        if (tweet?.image) {
-            navigate(`/tweet/image/${tweetId}`)
-        } else {
-            navigate(`/tweet/${tweetId}`)
-        }
-    }
-
     const renderColoredText = (text: string) => {
         const words = text ? text.split(' ') : [];
         return words.map((word: any, index: any) => {
@@ -95,10 +87,16 @@ const Tweet: FC<TweetProps> = ({
                         onClickOption={onClickMenu}
                         isReply={isReply}
                     />
-                    <div className={styles.body} key={tweet._id} onClick={goToTweetPage}>
+                    <div className={styles.body} key={tweet._id} 
+                        onClick={() => navigate(`/tweet/${tweet._id}`)}>
                         <p className={styles.tweet}>{tweetText}</p>
                         {tweetImage && (
-                            <div className={`${styles.image} ${!isReply ? classNameNoImage : ''}`}>
+                            <div className={`${styles.image} ${!isReply ? classNameNoImage : ''}`}
+                            onClick={(e: any) => {
+                                e.stopPropagation();
+                                    navigate(`/tweet/image/${tweet._id}`);
+                                }
+                            }>
                                 <img src={tweetImage ? `${IMAGE_TWEET_BASE_URL}/${tweetImage}` : undefined} alt="" />
                             </div>
                         )}
@@ -106,7 +104,7 @@ const Tweet: FC<TweetProps> = ({
                     <TweetFooter
                         tweet={tweet}
                         replies={tweet?.replyCount === 0 ? '' : tweet?.replyCount}
-                        retTweets={tweet?.retweetCount === 0 ? '' : tweet?.retweetCount}
+                        reTweets={tweet?.retweetCount === 0 ? '' : tweet?.retweetCount}
                         likes={tweet.totalLikes > 0 ? tweet.totalLikes : ''}
                         views={tweet.viewCount > 0 ? tweet.viewCount : ''}
                         onClickRetweet={onClickRetweet}

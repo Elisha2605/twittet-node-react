@@ -20,7 +20,11 @@ const tweetRouter = Router();
 
 tweetRouter.get('', verifyUser(), getAllTweetsController);
 tweetRouter.get('/replies/:id', verifyUser(), getTweetRepliesController);
-tweetRouter.get('/replies/:id', verifyUser(), getUserTweetRepliesController);
+tweetRouter.get(
+    '/user-replies/:id',
+    verifyUser(),
+    getUserTweetRepliesController
+);
 tweetRouter.get('/user-tweets/:id', verifyUser(), getUserTweetsController);
 tweetRouter.get('/follower-tweets', verifyUser(), getFollowTweetsController);
 tweetRouter.get('/tweet/:id', verifyUser(), getTweetByIdController);

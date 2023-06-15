@@ -4,6 +4,7 @@ import Notification from './notification.model';
 import Tweet from './tweet.model';
 import { NOTIFICATION_TYPE } from '../../src/constants/notification.constants';
 import { NOTIFICATION_MESSAGE } from '../../src/constants/notification.constants';
+import { TWEET_TYPE } from 'src/constants/tweet.constants';
 
 export interface Ilike extends mongoose.Document {
     tweet: ObjectId | string;
@@ -47,21 +48,32 @@ likeSchema.post<Ilike>('save', async function (doc, next) {
         const likingUser = likes[likes.length - 1];
         if (likingUser.toString() !== tweet.user.toString()) {
             const existingNotification = await Notification.findOne({
-                type: NOTIFICATION_TYPE.like,
+                type: NOTIFICATION_TYPE.tweet,
                 user: tweet.user,
                 sender: likingUser,
                 tweet: tweet._id,
             });
 
             if (!existingNotification) {
-                const notification = new Notification({
-                    type: NOTIFICATION_TYPE.like,
-                    user: tweet.user,
-                    sender: likingUser,
-                    tweet: tweet._id,
-                    message: NOTIFICATION_MESSAGE.like,
-                });
-                await notification.save();
+                if (tweet.type === TWEET_TYPE.regular) {
+                    const notification = new Notification({
+                        type: NOTIFICATION_TYPE.tweet,
+                        user: tweet.user,
+                        sender: likingUser,
+                        tweet: tweet._id,
+                        message: NOTIFICATION_MESSAGE.likeTweet,
+                    });
+                    await notification.save();
+                } else if (tweet.type === TWEET_TYPE.reply) {
+                    const notification = new Notification({
+                        type: NOTIFICATION_TYPE.reply,
+                        user: tweet.user,
+                        sender: likingUser,
+                        tweet: tweet._id,
+                        message: NOTIFICATION_MESSAGE.likeReply,
+                    });
+                    await notification.save();
+                }
             }
         }
     } catch (error) {

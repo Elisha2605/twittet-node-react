@@ -333,14 +333,15 @@ export const reply = async (
             text: text,
             image: image,
         });
-        const savedReply = await newReply.save();
+        await newReply.updateOne({ $inc: { replyCount: 1 } });
+        const savedReply: any = await newReply.save();
         if (!savedReply) {
             throw CustomError('Could not create reply', 500);
         }
         await tweet.updateOne({ $inc: { replyCount: 1 } });
         const populatedReply = await newReply.populate({
             path: 'user',
-            select: 'name username avatar coverImage isVerified isProtected',
+            select: 'name username avatar coverImage isVerified isProtected createdAt',
             model: 'User',
         });
 
@@ -350,7 +351,7 @@ export const reply = async (
             text: populatedReply.text,
             image: populatedReply.image,
             replyCount: tweet.replyCount,
-            createdAt: tweet.createdAt,
+            createdAt: savedReply.createdAt,
         };
 
         return {
@@ -560,6 +561,10 @@ export const deleteTweet = async (
         const tweetLikes: any = await Like.findOne({ tweet: tweetId }).session(
             session
         );
+        const tweetReply: any = await Tweet.findOne({
+            _id: tweetToDelete.originalTweet,
+        }).session(session);
+
         if (!tweetToDelete) {
             return {
                 success: true,
@@ -574,7 +579,13 @@ export const deleteTweet = async (
         // Delete tweetLikes and tweetToDelete if both exist
         if (tweetLikes) {
             await Promise.all([
-                tweetLikes.deleteOne({ session }),
+                tweetLikes.deleteOne({ session }), // Deleting all tweet's likes
+                tweetToDelete.deleteOne({ session }),
+            ]);
+        } else if (tweetReply && tweetReply.replyCount > 0) {
+            tweetReply.replyCount -= 1; // Decreasing the tweetCount by 1
+            await Promise.all([
+                tweetReply.save({ session }), // Save the updated tweetReply
                 tweetToDelete.deleteOne({ session }),
             ]);
         } else {

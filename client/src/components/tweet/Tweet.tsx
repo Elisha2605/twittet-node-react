@@ -163,7 +163,7 @@ const Tweet: FC<TweetProps> = ({
             parentElement.classList.add(styles.imageFixedHeight);
           }
         }
-      };
+    };
 
     return (
         <React.Fragment>
@@ -223,7 +223,7 @@ const Tweet: FC<TweetProps> = ({
                                     />
                                 </div>
                             )}
-                            <div className={`${styles.retweetContainer} ${hasRetweetAndTweetImage ? styles.reTweetWithImageContainer : ''}`} onClick={goToRetweetPage}>
+                            <div className={`${styles.retweetContainer} ${hasRetweetAndTweetImage ? styles.reTweetWithImageContainer : ''}`} onClick={() => navigate(`/tweet/${retweetId}`)}>
                                 <UserInfoRetweet
                                     userId={retweetUserId}
                                     tweet={retweet}
@@ -246,8 +246,11 @@ const Tweet: FC<TweetProps> = ({
                                 <div
                                     className={`${styles.retweetBody} ${hasRetweetAndTweetImage ? styles.reTweetWithImageBody : ''}`}
                                     key={retweetId}
-                                    onClick={goToTweetPage}
-                                >
+                                    onClick={(e: any) => {
+                                        e.stopPropagation();
+                                        navigate(`/tweet/${retweetId}`);
+                                        }
+                                }>
                                     <p className={`${styles.reTweetText} ${hasRetweetAndTweetImage ? styles.reTweetWithImageText : ''}`}>
                                         {renderColoredText(retweetText && retweetText.length > 150 ? retweetText.substring(0, 150) + '...' : retweetText)}
                                     </p>
@@ -309,13 +312,19 @@ const Tweet: FC<TweetProps> = ({
                         <div
                             className={styles.body}
                             key={tweet._id}
-                            onClick={goToTweetPage}
+                            onClick={() => navigate(`/tweet/${tweet._id}`)}
                         >
                             <p className={styles.tweet}>
                                 {renderColoredText(tweet.text)}
                             </p>
                             {tweetImage && (
-                                <div className={`${styles.image}`}>
+                                <div 
+                                    className={`${styles.image}`} 
+                                    onClick={(e: any) => {
+                                        e.stopPropagation();
+                                        navigate(`/tweet/image/${tweet._id}`);
+                                    }
+                                }>
                                     {tweet?.isReply ? (
                                         <img
                                             ref={imgRef}
@@ -376,9 +385,9 @@ const Tweet: FC<TweetProps> = ({
                 <TweetFooter
                     tweet={tweet}
                     replies={tweet?.replyCount === 0 ? '' : tweet?.replyCount}
-                    retTweets={tweet?.retweetCount === 0 ? '' : tweet?.retweetCount}
-                    likes={tweet.totalLikes > 0 ? tweet.totalLikes : ''}
-                    views={tweet.viewCount > 0 ? tweet.viewCount : ''}
+                    reTweets={tweet?.retweetCount === 0 ? '' : tweet?.retweetCount}
+                    likes={tweet?.totalLikes > 0 ? tweet?.totalLikes : ''}
+                    views={tweet?.viewCount > 0 ? tweet?.viewCount : ''}
                     onClickRetweet={onClickRetweet}
                     onClick={() => onClickLike!(tweet)}
                     isLiked={isLiked}

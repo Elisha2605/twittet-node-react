@@ -9,40 +9,40 @@ import ArrowLeftIcon from '../../components/icons/ArrowLeftIcon';
 import HeaderTitle from '../../components/header/HeaderTitle';
 import {
     IMAGE_AVATAR_BASE_URL,
+    IMAGE_TWEET_BASE_URL,
     TWEET_AUDIENCE,
     TWEET_REPLY,
 } from '../../constants/common.constants';
 import AuthContext from '../../context/user.context';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faBookmark as faBookmarkRegular,
-    faComment,
-    faHeart,
-} from '@fortawesome/free-regular-svg-icons';
-import {
-    faBookmark as faBookMarkSolid,
-    faArrowUpFromBracket,
-    faRepeat,
-} from '@fortawesome/free-solid-svg-icons';
-import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
 import UserInfo from '../../components/ui/UserInfo';
-import { getTweetById } from '../../api/tweet.api';
+import { createReply, getTweetById, getTweetReplies } from '../../api/tweet.api';
 import { tweetMenuIcons, tweetMenuOptions } from '../../data/menuOptions';
 import Avatar, { Size } from '../../components/ui/Avatar';
 import FormReply from '../../components/form/FormReplyTweet';
 import { likeTweet } from '../../api/like.api';
-import { createTweetReply, getAllTweetReplies } from '../../api/reply.api';
 import { getAuthUserFollows } from '../../api/follow.api';
 import UserIcon from '../../components/icons/UserIcon';
 import AtIcon from '../../components/icons/AtIcon';
 import Tweet from '../../components/tweet/Tweet';
 import { getUserSavedTweets, saveTweetToBookmark } from '../../api/bookmark.api';
+import { getMonth, getMonthName, getTimeAMPM, getYear } from '../../utils/helpers.utils';
+import TweetFooterPage from '../../components/ui/TweetFooterPage';
 
-interface TweetPageNoImageProps {}
+interface TweetPageNoImageProps {
+    onClickTweetMenu: Function;
+    onEditTweet: any;
+    onDeleteTweet: any;
+    onClickRetweet: Function;
+}
 
-const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
+const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
+    onClickTweetMenu, 
+    onEditTweet, 
+    onDeleteTweet, 
+    onClickRetweet
+}) => {
     const { id } = useParams<{ id: string }>();
 
     const [tweet, setTweet] = useState<any>();
@@ -63,39 +63,82 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
     const [savedTweets, setSavedTweets] = useState<any>([])
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
+    const imgRef = useRef<HTMLImageElement>(null);
+
     const navigate = useNavigate();
 
      // get Auth user
      const ctx = useContext(AuthContext);
-     const getTweetReplies = async () => {
+     const fetchTweetReplies = async () => {
+
          const { user } = ctx.getUserContext();
          setAuthUser(user);
          if (user) {
-             const res = await getAllTweetReplies(id!);
+             const res = await getTweetReplies(id!);
              const { tweets } = res;
              setTweetReplies(tweets);
          }
+
      };
  
      useEffect(() => {
-         getTweetReplies();
+        fetchTweetReplies();
      }, [id]);
+     
 
     // get Tweet by ID
     useEffect(() => {
         const getTweet = async () => {
+            setIsLoading(true);
             const { tweet } = await getTweetById(id!);
             setTweet(tweet[0]);
+            setIsLoading(false);
         };
         getTweet();
     }, [id]);
 
-     // On like tweet
-     const onClickLike = async () => {
+    const handleImageLoad = () => {
+        if (imgRef.current) {
+          // Check if the image height exceeds the threshold
+          if (imgRef.current.offsetHeight > 200) { // Set your desired threshold here
+            // Add the 'imageFixedHeight' class to limit the image height
+            const parentElement = imgRef.current.parentNode as HTMLElement;
+            parentElement.classList.add(styles.imageFixedHeight);
+          }
+        }
+    };
+
+    // On like tweet
+    const onClickLike = async () => {
         const res: any = await likeTweet(tweet?._id);
+        const { likedTweet } = res;
+        setTweet((prev: any) => ({
+            ...prev,
+            totalLikes: likedTweet?.likesCount,
+            likes: likedTweet?.likes,
+        }));
+    };
+
+    const onClickReplyLike = async (replyId: any) => {
+        const res: any = await likeTweet(replyId?._id);
         const { likedTweet } = res;
         setLikedTweet(likedTweet);
     };
+
+
+    useEffect(() => {
+        setTweetReplies((prevTweets: any) =>
+            prevTweets.map((tweet: any) =>
+                tweet?._id === likedTweet?.tweet
+                    ? {
+                          ...tweet,
+                          totalLikes: likedTweet?.likesCount,
+                          likes: likedTweet?.likes,
+                      }
+                    : tweet
+            )
+        );
+    }, [likedTweet]);
 
     const handleTextAreaOnChangeReply = (
         e: React.ChangeEvent<HTMLTextAreaElement>
@@ -106,12 +149,14 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
     const handleImageUploadRepy = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
+
         const file = event.target.files && event.target.files[0];
         if (file) {
             setSelectedFile(file);
             let imageUrl = URL.createObjectURL(file);
             setPreviewImage(imageUrl);
         }
+
     };
 
     const handleCanselPreviewImage = () => {
@@ -127,11 +172,10 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
 
     const handleSubmitTweet = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
             : null;
-        const res = await createTweetReply(id!, text!, selectedFile);
+        const res = await createReply(id!, text!, selectedFile);
         const { tweet }: any = res;
         const newTweet = {
             _id: tweet._id,
@@ -152,19 +196,10 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
             reposts: [],
             likes: [],
         };
+        console.log(newTweet);
         setTweetReplies((prevTweets) => [newTweet, ...prevTweets]);
         clearTweetForm();
-        setIsLoading(false);
     };
-
-    // Update Likes state
-    useEffect(() => {
-        setTweet((prev: any) => ({
-            ...prev,
-            totalLikes: likedTweet?.likesCount,
-            likes: likedTweet?.likes,
-        }));
-    }, [likedTweet]);
 
     useEffect(() => {
         const fetchAuthUserData = async () => {
@@ -244,8 +279,15 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
         return tweet && savedTweets.some((t: any) => t._id === tweet._id)
     }
 
+    useEffect(() => {
+        setTweetReplies((preveState) =>
+            preveState.filter((tweet) => tweet._id !== onDeleteTweet._id)
+        );
+    }, [onDeleteTweet]);
+
     return (
         <React.Fragment>
+        {!isLoading && (
             <div className={Layout.mainSectionContainer}>
                 <div className={Layout.mainSection}>
                     {/* *** HEADER - START *** */}
@@ -288,12 +330,33 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                     <div className={styles.text}>
                                         {tweet?.text}
                                     </div>
+                                    {tweet?.image && (
+                                        <div 
+                                            className={styles.image}
+                                            onClick={(e: any) => {
+                                                e.stopPropagation();
+                                                navigate(`/tweet/image/${tweet._id}`);
+                                            }
+                                        }>
+                                            <img
+                                                ref={imgRef}
+                                                src={
+                                                    tweet?.image
+                                                        ? `${IMAGE_TWEET_BASE_URL}/${tweet?.image}`
+                                                        : undefined
+                                                }
+                                                alt=""
+                                                onLoad={handleImageLoad}
+                                            />
+                                        </div>
+                                    )}
                                     <div className={styles.info}>
-                                        <span>9:15 PM</span> ·{' '}
-                                        <span>May 5, 2023</span> ·{' '}
-                                        <p>
-                                            <span>1.2M </span>Views
-                                        </p>
+                                        <span>{getTimeAMPM(tweet?.createdAt)}</span> ·{' '}
+                                        <span>{getTimeAMPM(tweet?.createdAt)}</span> · <span>
+                                            {getMonthName(tweet?.createdAt)}{' '} 
+                                            {getMonth(tweet?.createdAt)}, {' '} 
+                                            {getYear(tweet?.createdAt)}
+                                        </span> ·{' '}
                                     </div>
                                     <div className={styles.stats}>
                                         {tweet?.retweetCount > 0 && (    
@@ -301,7 +364,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                                 <span>{tweet?.retweetCount}</span>Retweets
                                             </p>
                                         )}{' '}
-                                         {tweet?.viewCount > 0 && (
+                                        {tweet?.viewCount > 0 && (
                                                 <p>
                                                     <span>{tweet?.viewCount}</span> Views
                                                 </p>
@@ -320,51 +383,22 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                             </p>
                                         )}
                                     </div>
-                                    <div className={styles.icons}>
-                                        <div>
-                                            <FontAwesomeIcon
-                                                icon={faComment}
-                                                className={styles.faComment}
-                                            />
-                                        </div>
-                                        <FontAwesomeIcon
-                                            icon={faRepeat}
-                                            className={styles.faRepeat}
+                                    <div className={styles.tweetFooter}>
+                                    <TweetFooterPage
+                                        tweet={tweet}
+                                        replies={tweet?.replyCount === 0 ? '' : tweet?.replyCount}
+                                        reTweets={tweet?.retweetCount === 0 ? '' : tweet?.retweetCount}
+                                        likes={
+                                            tweet?.totalLikes > 0 ? tweet?.totalLikes : ''
+                                        }
+                                        views={tweet?.viewCount > 0 ? tweet?.viewCount : ''}
+                                        onClickRetweet={onClickRetweet}
+                                        onClick={onClickLike}
+                                        isRetweet={tweet?.retweets?.includes(authUser?._id)}
+                                        isLiked={tweet?.likes?.includes(authUser?._id)}
+                                        isSaved={isSaved}
+                                        onClickBookmark={onClickSaveAndUnsaveTweet}
                                         />
-                                        <div onClick={onClickLike}>
-                                            <FontAwesomeIcon
-                                                icon={
-                                                    tweet?.likes?.includes(
-                                                        authUser?._id
-                                                    )
-                                                        ? faHeartSolid
-                                                        : faHeart
-                                                }
-                                                className={styles.faHeart}
-                                                color={
-                                                    tweet?.likes?.includes(
-                                                        authUser?._id
-                                                    )
-                                                        ? 'var(--color-pink)'
-                                                        : ''
-                                                }
-                                            />
-                                        </div>
-                                        <div onClick={onClickSaveAndUnsaveTweet}>
-                                            <FontAwesomeIcon
-                                                icon={isSaved() ? faBookMarkSolid : faBookmarkRegular}
-                                                color={isSaved() ? 'var(--color-primary)': ''}
-                                                className={styles.faBookmark}
-                                            />
-                                        </div>
-                                        <div>
-                                            <FontAwesomeIcon
-                                                icon={faArrowUpFromBracket}
-                                                className={
-                                                    styles.faArrowUpFromBracket
-                                                }
-                                            />
-                                        </div>
                                     </div>
 
                                     {isOnlyPeopleYouFollow(tweet?.user?._id) &&
@@ -394,7 +428,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                                     onCancelImagePreview={
                                                         handleCanselPreviewImage
                                                     }
-                                                    onChageImage={
+                                                    onChageReplyTextArea={
                                                         handleTextAreaOnChangeReply
                                                     }
                                                     isLoading={isLoading}
@@ -429,7 +463,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                                     onCancelImagePreview={
                                                         handleCanselPreviewImage
                                                     }
-                                                    onChageImage={
+                                                    onChageReplyTextArea={
                                                         handleTextAreaOnChangeReply
                                                     }
                                                     isLoading={isLoading}
@@ -464,7 +498,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                                     onCancelImagePreview={
                                                         handleCanselPreviewImage
                                                     }
-                                                    onChageImage={
+                                                    onChageReplyTextArea={
                                                         handleTextAreaOnChangeReply
                                                     }
                                                     isLoading={isLoading}
@@ -506,7 +540,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                                 </div>
                                             </div>
                                         </>
-                                    ) : !isTwitterCircle(tweet && tweet?.user?._id) &&
+                                    ) : isLoading && !isTwitterCircle(tweet && tweet?.user?._id) &&
                                     tweet?.audience ===
                                         TWEET_AUDIENCE.twitterCircle ? (
                                         <>
@@ -550,7 +584,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                                     onCancelImagePreview={
                                                         handleCanselPreviewImage
                                                     }
-                                                    onChageImage={
+                                                    onChageReplyTextArea={
                                                         handleTextAreaOnChangeReply
                                                     }
                                                     isLoading={isLoading}
@@ -568,10 +602,13 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                                     <Tweet
                                         key={tweet?._id}
                                         tweet={tweet}
-                                        onClickMenu={() => {}}
-                                        onClickLike={() => {}}
-                                        isLiked={tweet?.likes?.includes(authUser?._id)}
-                                        isReply={true}
+                                        onClickMenu={onClickTweetMenu}
+                                        onClickLike={onClickReplyLike}
+                                        isLiked={tweet?.likes?.includes(
+                                            authUser?._id
+                                        )}
+                                        onClickRetweet={onClickRetweet}
+                                        isRetweet={tweet?.retweets?.includes(authUser?._id)}
                                     />
                                 </div>
                             ))}
@@ -589,6 +626,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({}) => {
                     </Aside>
                 </div>
             </div>
+        )}
         </React.Fragment>
     );
 };

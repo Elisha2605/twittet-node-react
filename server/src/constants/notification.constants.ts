@@ -1,9 +1,11 @@
 export enum NOTIFICATION_TYPE {
     mention = 'Mention',
-    like = 'Like',
+    tweet = 'Tweet',
+    reply = 'Reply',
 }
 
 export enum NOTIFICATION_MESSAGE {
     mention = 'has mentioned you',
-    like = 'liked your tweet',
+    likeTweet = 'liked your tweet',
+    likeReply = 'liked your reply',
 }
