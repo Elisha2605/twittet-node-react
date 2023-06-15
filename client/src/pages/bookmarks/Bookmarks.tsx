@@ -51,7 +51,6 @@ const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu, onEditTweet, onDeleteT
     const onClickLike = async (tweet: any) => {
         const res: any = await likeTweet(tweet._id);
         const { likedTweet } = res;
-        console.log(likedTweet);
         setLikedTweet(likedTweet);
     };
 

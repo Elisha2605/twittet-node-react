@@ -5,7 +5,7 @@ import {
 } from '../../../src/constants/tweet.constants';
 import Tweet from '../../../src/models/tweet.model';
 
-export const getTweets = async (userId: string) => {
+export const fetchTweetReplies = async (tweetId: string, userId: string) => {
     const tweets = await Tweet.aggregate([
         {
             $lookup: {
@@ -37,16 +37,19 @@ export const getTweets = async (userId: string) => {
                 from: 'Tweet',
                 localField: 'originalTweet',
                 foreignField: '_id',
-                as: 'retweet',
+                as: 'original',
             },
         },
         {
-            $unwind: { path: '$retweet', preserveNullAndEmptyArrays: true },
+            $unwind: {
+                path: '$original',
+                preserveNullAndEmptyArrays: true,
+            },
         },
         {
             $lookup: {
                 from: 'User',
-                localField: 'retweet.user',
+                localField: 'original.user',
                 foreignField: '_id',
                 as: 'tweetOwner',
             },
@@ -103,7 +106,8 @@ export const getTweets = async (userId: string) => {
                         ],
                     },
                     {
-                        type: { $ne: TWEET_TYPE.reply },
+                        originalTweet: new mongoose.Types.ObjectId(tweetId),
+                        type: TWEET_TYPE.reply,
                     },
                 ],
             },
@@ -117,8 +121,8 @@ export const getTweets = async (userId: string) => {
             $project: {
                 _id: 1,
                 type: 1,
-                retweet: {
-                    tweet: '$retweet',
+                original: {
+                    tweet: '$original',
                     user: {
                         _id: '$tweetOwner._id',
                         name: '$tweetOwner.name',

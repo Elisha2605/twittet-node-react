@@ -19,6 +19,21 @@ export const getAllTweets = async () => {
     }
 };
 
+export const getTweetReplies = async (tweetId: string) => {
+    try {
+        const res = await http.get(`/tweets/replies/${tweetId}`, GETREQUESTOPTIONS());
+        return res.data;
+    } catch (error: any) {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('context');
+            window.location.href = '/';
+        } else {
+            console.error(error);
+            throw error;
+        }
+    }
+};
+
 export const getUserTweetReplies = async (userId: string) => {
     try {
         const res = await http.get(`/tweets/replies/${userId}`, GETREQUESTOPTIONS());
@@ -99,6 +114,32 @@ export const createTweet = async (
                 tweetImage: image,
                 audience: audience,
                 reply: reply,
+            },
+            GETREQUESTOPTIONS_WITH_MULTIFROM()
+        );
+        return res.data;
+    } catch (error: any) {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('context');
+            window.location.href = '/';
+        } else {
+            console.error(error);
+            throw error;
+        }
+    }
+};
+
+export const createReply = async (
+    tweetId: string | null,
+    text: string | null,
+    image: File | null,
+) => {
+    try {
+        const res = await http.post(
+            `/tweets/reply/${tweetId}`,
+            {
+                text: text,
+                tweetImage: image,
             },
             GETREQUESTOPTIONS_WITH_MULTIFROM()
         );
