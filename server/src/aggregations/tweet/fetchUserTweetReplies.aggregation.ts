@@ -166,6 +166,5 @@ export const fetchUserTweetReplies = async (userId: string) => {
         },
     ]).exec();
 
-
     return tweets;
 };

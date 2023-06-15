@@ -16,31 +16,19 @@ import {
 import AuthContext from '../../context/user.context';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faBookmark as faBookmarkRegular,
-    faComment,
-    faHeart,
-} from '@fortawesome/free-regular-svg-icons';
-import {
-    faBookmark as faBookMarkSolid,
-    faArrowUpFromBracket,
-    faRepeat,
-} from '@fortawesome/free-solid-svg-icons';
-import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
 import UserInfo from '../../components/ui/UserInfo';
 import { createReply, getTweetById, getTweetReplies } from '../../api/tweet.api';
 import { tweetMenuIcons, tweetMenuOptions } from '../../data/menuOptions';
 import Avatar, { Size } from '../../components/ui/Avatar';
 import FormReply from '../../components/form/FormReplyTweet';
 import { likeTweet } from '../../api/like.api';
-import { createTweetReply, getAllTweetReplies } from '../../api/reply.api';
 import { getAuthUserFollows } from '../../api/follow.api';
 import UserIcon from '../../components/icons/UserIcon';
 import AtIcon from '../../components/icons/AtIcon';
 import Tweet from '../../components/tweet/Tweet';
 import { getUserSavedTweets, saveTweetToBookmark } from '../../api/bookmark.api';
 import { getMonth, getMonthName, getTimeAMPM, getYear } from '../../utils/helpers.utils';
+import TweetFooterPage from '../../components/ui/TweetFooterPage';
 
 interface TweetPageNoImageProps {
     onClickTweetMenu: Function;
@@ -395,51 +383,22 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
                                             </p>
                                         )}
                                     </div>
-                                    <div className={styles.icons}>
-                                        <div>
-                                            <FontAwesomeIcon
-                                                icon={faComment}
-                                                className={styles.faComment}
-                                            />
-                                        </div>
-                                        <FontAwesomeIcon
-                                            icon={faRepeat}
-                                            className={styles.faRepeat}
+                                    <div className={styles.tweetFooter}>
+                                    <TweetFooterPage
+                                        tweet={tweet}
+                                        replies={tweet?.replyCount === 0 ? '' : tweet?.replyCount}
+                                        reTweets={tweet?.retweetCount === 0 ? '' : tweet?.retweetCount}
+                                        likes={
+                                            tweet?.totalLikes > 0 ? tweet?.totalLikes : ''
+                                        }
+                                        views={tweet?.viewCount > 0 ? tweet?.viewCount : ''}
+                                        onClickRetweet={onClickRetweet}
+                                        onClick={onClickLike}
+                                        isRetweet={tweet?.retweets?.includes(authUser?._id)}
+                                        isLiked={tweet?.likes?.includes(authUser?._id)}
+                                        isSaved={isSaved}
+                                        onClickBookmark={onClickSaveAndUnsaveTweet}
                                         />
-                                        <div onClick={onClickLike}>
-                                            <FontAwesomeIcon
-                                                icon={
-                                                    tweet?.likes?.includes(
-                                                        authUser?._id
-                                                    )
-                                                        ? faHeartSolid
-                                                        : faHeart
-                                                }
-                                                className={styles.faHeart}
-                                                color={
-                                                    tweet?.likes?.includes(
-                                                        authUser?._id
-                                                    )
-                                                        ? 'var(--color-pink)'
-                                                        : ''
-                                                }
-                                            />
-                                        </div>
-                                        <div onClick={onClickSaveAndUnsaveTweet}>
-                                            <FontAwesomeIcon
-                                                icon={isSaved() ? faBookMarkSolid : faBookmarkRegular}
-                                                color={isSaved() ? 'var(--color-primary)': ''}
-                                                className={styles.faBookmark}
-                                            />
-                                        </div>
-                                        <div>
-                                            <FontAwesomeIcon
-                                                icon={faArrowUpFromBracket}
-                                                className={
-                                                    styles.faArrowUpFromBracket
-                                                }
-                                            />
-                                        </div>
                                     </div>
 
                                     {isOnlyPeopleYouFollow(tweet?.user?._id) &&

@@ -118,6 +118,13 @@
     color: var(--color-secondary);
 }
 
+.tweetFooter {
+    padding: 0rem 4rem;
+    border-bottom: var(--border-light);
+    padding-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
 .icons {
     display: flex;
     justify-content: space-around;

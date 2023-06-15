@@ -13,20 +13,6 @@ import TweetFooter from '../../components/ui/TweetFooter';
 import { likeTweet } from '../../api/like.api';
 import UserInfo from '../../components/ui/UserInfo';
 import { tweetMenuIcons, tweetMenuOptions } from '../../data/menuOptions';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faBookmark as faBookmarkRegular,
-    faComment,
-    faHeart,
-} from '@fortawesome/free-regular-svg-icons';
-import {
-    faBookmark as faBookmarkSolid,
-} from '@fortawesome/free-solid-svg-icons';
-import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
-import {
-    faArrowUpFromBracket,
-    faRepeat,
-} from '@fortawesome/free-solid-svg-icons';
 import Avatar, { Size } from '../../components/ui/Avatar';
 import AuthContext from '../../context/user.context';
 import FormReply from '../../components/form/FormReplyTweet';
@@ -37,6 +23,7 @@ import UserIcon from '../../components/icons/UserIcon';
 import { getUserSavedTweets, saveTweetToBookmark } from '../../api/bookmark.api';
 import { useMessage } from '../../context/successMessage.context';
 import { getMonth, getMonthName, getTimeAMPM, getYear } from '../../utils/helpers.utils';
+import TweetFooterPage from '../../components/ui/TweetFooterPage';
 
 interface TweetPageProps {
     onDeleteTweet: any,
@@ -390,75 +377,43 @@ const TweetPage: FC<TweetPageProps> = ({
                                         </p>
                                     )}{' '}
                                 </div>
-                                {tweet?.retweetCount.length > 0 || tweet?.totalLikes > 0 || tweet?.bookmarkCount ? (
-                                    <div className={styles.stats}>
-                                        {tweet?.retweetCount > 0 && (    
-                                            <p>
-                                                <span>{tweet?.retweetCount}</span>Retweets
-                                            </p>
-                                        )}{' '}
-                                        {tweet?.totalLikes > 0 && (
-                                            <p>
-                                                <span>
-                                                    {tweet?.totalLikes}
-                                                </span>
-                                                Likes
-                                            </p>
-                                        )}
-                                    </div>
-                                ): null}
-                                {tweet?.bookmarkCount > 0 ? (
-                                    <div className={styles.bookmarks}>
+                                <div className={styles.stats}>
+                                    {tweet?.retweetCount > 0 && (    
                                         <p>
-                                            <span>{tweet?.bookmarkCount}</span>Bookmarks
+                                            <span>{tweet?.retweetCount}</span>Retweets
                                         </p>
-                                    </div>
-                                ): null}
-                                <div className={styles.icons}>
-                                    <div>
-                                        <FontAwesomeIcon
-                                            icon={faComment}
-                                            className={styles.faComment}
-                                        />
-                                    </div>
-                                    <FontAwesomeIcon
-                                        icon={faRepeat}
-                                        className={styles.faRepeat}
-                                    />
-                                    <div onClick={onClickLike}>
-                                        <FontAwesomeIcon
-                                            icon={
-                                                tweet?.likes?.includes(
-                                                    authUser?._id
-                                                )
-                                                    ? faHeartSolid
-                                                    : faHeart
-                                            }
-                                            className={styles.faHeart}
-                                            color={
-                                                tweet?.likes?.includes(
-                                                    authUser?._id
-                                                )
-                                                    ? 'var(--color-pink)'
-                                                    : ''
-                                            }
-                                        />
-                                    </div>
-                                    <div onClick={onClickSaveAndUnsaveTweet}>
-                                        <FontAwesomeIcon
-                                            icon={isSaved() ? faBookmarkSolid : faBookmarkRegular}
-                                            color={isSaved() ? 'var(--color-primary)': ''}
-                                            className={`${styles.faBookmark}`}
-                                        />
-                                    </div>
-                                    <div>
-                                        <FontAwesomeIcon
-                                            icon={faArrowUpFromBracket}
-                                            className={styles.faArrowUpFromBracket}
-                                        />
-                                    </div>
+                                    )}{' '}
+                                    {tweet?.totalLikes > 0 && (
+                                        <p>
+                                            <span>
+                                                {tweet?.totalLikes}
+                                            </span>
+                                            Likes
+                                        </p>
+                                    )}
+                                    {tweet?.bookmarkCount > 0 && (
+                                            <p>
+                                                <span>{tweet?.bookmarkCount}</span>Bookmarks
+                                            </p>
+                                    )}
                                 </div>
-
+                                <div className={styles.tweetFooterSide}>
+                                <TweetFooterPage
+                                    tweet={tweet}
+                                    replies={tweet?.replyCount === 0 ? '' : tweet?.replyCount}
+                                    reTweets={tweet?.retweetCount === 0 ? '' : tweet?.retweetCount}
+                                    likes={
+                                        tweet?.totalLikes > 0 ? tweet?.totalLikes : ''
+                                    }
+                                    views={tweet?.viewCount > 0 ? tweet?.viewCount : ''}
+                                    onClickRetweet={onClickRetweet}
+                                    onClick={onClickLike}
+                                    isRetweet={tweet?.retweets?.includes(authUser?._id)}
+                                    isLiked={tweet?.likes?.includes(authUser?._id)}
+                                    isSaved={isSaved}
+                                    onClickBookmark={onClickSaveAndUnsaveTweet}
+                                />
+                                </div>
                                 {isOnlyPeopleYouFollow(tweet?.user?._id) &&
                                 tweet?.reply === TWEET_REPLY.peopleYouFollow ? (
                                     <>
