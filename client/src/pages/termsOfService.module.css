@@ -1,0 +1,32 @@
+.container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.logoAndTitle {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+.logoAndTitle h2 {
+    font-weight: var(--font-weight-600);
+}
+
+.wrapper h1 {
+    margin-bottom: 1rem;
+}
+
+.wrapper p {
+    margin-bottom: 1.5rem;
+}
+
+.wrapper h3 {
+    margin-top: 1rem;
+}
+
+.wrapper p {
+    width: 50%;
+}

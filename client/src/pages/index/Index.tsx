@@ -6,11 +6,13 @@ import Modal from '../../components/ui/Modal';
 import Signup from '../../components/auth/Signup';
 import Login from '../../components/auth/Login';
 import { ModalContext } from '../../context/modal.context';
+import { useNavigate } from 'react-router-dom';
 
 
 const Index: FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
 
     const { openModal } = useContext(ModalContext);
+    const navigate = useNavigate();
 
     return (
         <React.Fragment>
@@ -62,8 +64,10 @@ const Index: FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
                             Exam 2023. Feel free to sign up with a fake{' '}
                             <span>email address</span> and{' '}
                             <span>password</span>. By singing up, you agree to the{' '}
-                            <span>Terms of Service</span> and{' '} <span>Privacy Policy</span>, 
-                            including <span>Cookie Use</span>
+                            <span onClick={() => navigate('/terms-of-service')}>Terms of Service</span> and{' '} 
+                            <span onClick={() => navigate('/terms-of-service')}>Privacy Policy</span>, 
+                            including 
+                            <span onClick={() => navigate('/terms-of-service')}>Cookie Use</span>
                         </p>
                     </div>
                 </div>

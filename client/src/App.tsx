@@ -26,6 +26,7 @@ import Settings from './pages/settings/settings';
 import HomeEditTwitterCirlceModal from './pages/home/home-modals/HomeEditTwitterCirlceModal';
 import { useMessage } from './context/successMessage.context';
 import AccessDenied from './pages/access-denied';
+import TermsOfService from './pages/termsOfService';
 
 function App() {
 
@@ -178,6 +179,7 @@ function App() {
                 <BrowserRouter>
                     <Routes>
                         <Route path="/" element={<Index onSuccess={handleLoginSuccess} />} />
+                        <Route path="/terms-of-service" element={<TermsOfService />} />
                         <Route
                             path="*"
                             element={<Navigate to="/" replace={true} />}
