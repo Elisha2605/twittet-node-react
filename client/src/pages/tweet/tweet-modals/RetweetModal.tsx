@@ -1,7 +1,7 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import styles from './RetweetModal.module.css';
 import Avatar, { Size } from '../../../components/ui/Avatar';
-import { IMAGE_AVATAR_BASE_URL, MAX_TWEET_CHARACTERS, TWEET_AUDIENCE, TWEET_REPLY, TWEET_TYPE } from '../../../constants/common.constants';
+import { IMAGE_AVATAR_BASE_URL, MAX_TWEET_CHARACTERS, TWEET_AUDIENCE, TWEET_REPLY } from '../../../constants/common.constants';
 import { ModalContext } from '../../../context/modal.context';
 import Modal from '../../../components/ui/Modal';
 import AuthContext from '../../../context/user.context';
@@ -62,12 +62,6 @@ const RetweetModal: FC<RetweetModalProps> = ({
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
 
     const { closeModal } = useContext(ModalContext);
-
-    // Set audience and reply on Edit
-    useEffect(() => {
-        setTweetAudience(editTweetModal.audience)
-        setTweetReply(editTweetModal.reply)
-    }, [editTweetModal])
 
     const handleSubmitTweet = async (e: React.FormEvent) => {
         e.preventDefault();

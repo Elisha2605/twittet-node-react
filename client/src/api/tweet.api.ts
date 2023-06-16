@@ -129,7 +129,7 @@ export const createTweet = async (
     }
 };
 
-export const createReply = async (
+export const reply = async (
     tweetId: string | null,
     text: string | null,
     image: File | null,
@@ -157,10 +157,10 @@ export const createReply = async (
 
 export const retweet = async (
     tweetId: string,
-    text: string | null,
-    image: File | null,
-    audience: string,
-    reply: string
+    text?: string | null,
+    image?: File | null,
+    audience?: string,
+    reply?: string
 ) => {
     try {
         const res = await http.post(

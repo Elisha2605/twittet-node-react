@@ -344,7 +344,8 @@ const Tweet: FC<TweetProps> = ({
                             this Tweet
                         </span>
                     </div>
-                ) : (tweet.reply === TWEET_REPLY.peopleYouFollow && isOnlyPeopleYouFollow(userId)) || (tweet.reply === TWEET_REPLY.peopleYouFollow && tweet?.user?._id === authUser?._id) ? (
+                ) : (tweet?.type !== TWEET_TYPE.reTweet && tweet.reply === TWEET_REPLY.peopleYouFollow 
+                     && isOnlyPeopleYouFollow(userId)) || (tweet?.type !== TWEET_TYPE.reTweet && tweet.reply === TWEET_REPLY.peopleYouFollow && tweet?.user?._id === authUser?._id) ? (
                     <div className={styles.tweetReply}>
                         <span className={styles.icon}>
                             <UserIcon isSmall={true} />

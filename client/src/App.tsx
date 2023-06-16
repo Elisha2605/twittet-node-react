@@ -144,14 +144,14 @@ function App() {
     const onReTweet = async (option: any, tweet: any) => {
         console.log(tweet);
         if (option === TWEET_MENU.undoRetweet) {
-            const res = await retweet(tweet?._id, null, tweet?.image, tweet?.audience, tweet?.reply);
+            const res = await retweet(tweet?._id);
             if (res.message === "Undo Retweet") {
                 showMessage('Undo Retweet successful', 'success');
                 setOnDeleteTweet(tweet)
             }
         }
         if (option === TWEET_MENU.retweet) {
-            const res = await retweet(tweet?._id, null, tweet?.image, tweet?.audience, tweet?.reply);
+            const res = await retweet(tweet?._id, null, tweet?.image);
                 const newTweet = {
                     ...res.tweet
                 };
