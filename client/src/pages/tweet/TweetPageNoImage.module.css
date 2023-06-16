@@ -182,10 +182,8 @@
 }
 
 .replyMsgWrapper {
-    display: flex;
     gap: 1rem;
     padding: 0.5rem;
-  
     background: var(--color-primary-lighter);
     border-radius: 0.5rem;
     color: var(--color-black);

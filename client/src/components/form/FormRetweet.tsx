@@ -367,7 +367,7 @@ const FormRetweet: FC<FormRetweetProps> = ({
                             isDisable={tweetReplyValue === TWEET_REPLY.onlyTwitterCircle}
                             onClick={(option) => {
                                 onClickReplyMenu!(option)
-                            }} 
+                            }}
                             className={styles.tweetReplyOptions}
                             classNameWithTitle={styles.tweetReplyPopUpBox}
                         >

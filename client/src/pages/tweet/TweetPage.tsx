@@ -396,7 +396,7 @@ const TweetPage: FC<TweetPageProps> = ({
                                         Retweets
                                     </p>
                                 )}{' '}
-                                {tweet?.totalLikes > 0 && (
+                                {tweet && (
                                     <p>
                                         <span>{tweet?.totalLikes}</span>
                                         Likes
