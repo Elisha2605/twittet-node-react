@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
 import Tweet from '../../../src/models/tweet.model';
-import { TWEET_AUDIENCE, TWEET_TYPE } from '../../../src/constants/tweet.constants';
+import {
+    TWEET_AUDIENCE,
+    TWEET_TYPE,
+} from '../../../src/constants/tweet.constants';
 
 export const fetchUserTweetReplies = async (userId: string) => {
     const tweets = await Tweet.aggregate([
