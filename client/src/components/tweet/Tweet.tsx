@@ -104,14 +104,6 @@ const Tweet: FC<TweetProps> = ({
         });
     };
 
-    const goToTweetPage = () => {
-        if (tweet?.image) {
-            navigate(`/tweet/image/${tweet._id}`);
-        } else {
-            navigate(`/tweet/${tweet._id}`);
-        }
-    };
-
     const hasRetweetAndTweetImage =  retweetImage && tweetImage;
 
     useEffect(() => {
@@ -123,14 +115,10 @@ const Tweet: FC<TweetProps> = ({
     }, []);
 
     const isOnlyPeopleYouFollow = (userId: string): boolean => {
-        if (followers &&
-            tweet?.user?._id !== authUser?._id &&
-            tweet?.reply === TWEET_REPLY.peopleYouFollow &&
-            followers.some((following: any) => following?.user?._id === userId)
-        ) {
-            return true;
-        }
-        return false;
+        return followers &&
+                tweet?.user?._id !== authUser?._id &&
+                tweet?.reply === TWEET_REPLY.peopleYouFollow &&
+                followers.some((following: any) => following?.user?._id === userId)
     };
 
     const isMention = (userId: string): boolean => {
@@ -356,7 +344,7 @@ const Tweet: FC<TweetProps> = ({
                             this Tweet
                         </span>
                     </div>
-                ) : tweet.reply === TWEET_REPLY.peopleYouFollow && isOnlyPeopleYouFollow(userId) ? (
+                ) : (tweet.reply === TWEET_REPLY.peopleYouFollow && isOnlyPeopleYouFollow(userId)) || (tweet.reply === TWEET_REPLY.peopleYouFollow && tweet?.user?._id === authUser?._id) ? (
                     <div className={styles.tweetReply}>
                         <span className={styles.icon}>
                             <UserIcon isSmall={true} />
