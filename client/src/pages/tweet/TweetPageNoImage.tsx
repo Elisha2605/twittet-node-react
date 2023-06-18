@@ -68,35 +68,24 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
 
      // get Auth user
      const ctx = useContext(AuthContext);
-     const fetchTweetReplies = async () => {
 
-         const { user } = ctx.getUserContext();
-         setAuthUser(user);
-         if (user) {
-            setIsLoading(true);
-             const res = await getTweetReplies(id!);
-             const { tweets } = res;
-             setTweetReplies(tweets);
-             setIsLoading(true);
-         }
+     useEffect(() => {
+     const fetchTweetAndReplies = async () => {
+        setIsLoading(true);
+        const { user } = ctx.getUserContext();
+        const { tweet } = await getTweetById(id!);
+        setTweet(tweet[0]);
+        setAuthUser(user);
+        setIsLoading(false);
+        if (user) {
+            const res = await getTweetReplies(id!);
+            const { tweets } = res;
+            setTweetReplies(tweets);
+        }
 
      };
- 
-     useEffect(() => {
-        fetchTweetReplies();
+        fetchTweetAndReplies();
      }, [id]);
-     
-
-    // get Tweet by ID
-    useEffect(() => {
-        const getTweet = async () => {
-            setIsLoading(true);
-            const { tweet } = await getTweetById(id!);
-            setTweet(tweet[0]);
-            setIsLoading(false);
-        };
-        getTweet();
-    }, [id]);
 
     const handleImageLoad = () => {
         if (imgRef.current) {
