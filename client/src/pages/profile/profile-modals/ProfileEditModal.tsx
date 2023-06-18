@@ -157,7 +157,7 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
                                 size={ButtonSize.small}
                                 onClick={() => {}}
                                 className={styles.button}
-                                loading={isLoading}
+                                isLoading={isLoading}
                             />
                         </div>
                     </div>

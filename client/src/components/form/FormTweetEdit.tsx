@@ -291,7 +291,7 @@ const FormTweetEdit: FC<FormTweetEditProps> = ({
                                 (value.length > 0 || imagePreview || selectedEmoji ? false : true) || (isLoading) || value.length > MAX_TWEET_CHARACTERS
                             }
                             onClick={() => setIsFocused(false)}
-                            loading={isLoading}
+                            isLoading={isLoading}
                         />
                     </div>
                 </div>

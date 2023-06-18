@@ -160,7 +160,7 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                             setActiveNav('notification');
                         }}
                         className={
-                            activeNav === 'notification' ? styles.active : ''
+                            `${styles.navItem} ${activeNav === 'notification' ? styles.active : ''}`
                         }
                     >
                         <NavigationItem
@@ -178,7 +178,7 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                         onClick={() => {
                             setActiveNav('message');
                         }}
-                        className={activeNav === 'message' ? styles.active : ''}
+                        className={`${styles.navItem} ${activeNav === 'message' ? styles.active : ''}`}
                     >
                         <NavigationItem
                             icon={
@@ -196,7 +196,7 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                             setActiveNav('bookmarks');
                         }}
                         className={
-                            activeNav === 'bookmarks' ? styles.active : ''
+                            `${styles.navItem} ${activeNav === 'bookmarks' ? styles.active : ''}`
                         }
                     >
                         <NavigationItem
@@ -217,7 +217,7 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                                 setActiveNav('profile');
                             }}
                             className={
-                                activeNav === 'profile' ? styles.active : ''
+                                `${styles.navItem} ${activeNav === 'profile' ? styles.active : ''}`
                             }
                         >
                             <NavigationItem

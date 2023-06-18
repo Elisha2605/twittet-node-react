@@ -57,7 +57,7 @@ const Signup: FC<{}> = ({ }) => {
 
     useEffect(() => {
         reset(); // clear form input values
-    }, [form]);
+    }, [form, reset]);
 
 
     return (

@@ -9,7 +9,6 @@ import {
 import styles from './FormTweet.module.css';
 import EmojiIcon from '../icons/EmojiIcon';
 import ImageIcon from '../icons/ImageIcon';
-import CalendarIcon from '../icons/CalendarIcon';
 import XmarkIcon from '../icons/XmarkIcon';
 import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -371,7 +370,7 @@ const FormTweet: FC<FormProps> = ({
                             isDisabled={
                                 (value.length > 0 || imagePreview || selectedEmoji ? false : true) || (isLoading) || value.length > MAX_TWEET_CHARACTERS
                             }
-                            loading={isLoading}
+                            isLoading={isLoading}
                             onClick={() => setIsFocused(false)}
                         />
                     </div>

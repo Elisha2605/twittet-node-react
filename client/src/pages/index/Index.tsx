@@ -8,9 +8,7 @@ import Login from '../../components/auth/Login';
 import { ModalContext } from '../../context/modal.context';
 import { useNavigate } from 'react-router-dom';
 
-
 const Index: FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
-
     const { openModal } = useContext(ModalContext);
     const navigate = useNavigate();
 
@@ -34,10 +32,12 @@ const Index: FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
                     >
                         Signup
                     </div>
-                    <div 
+                    <div
                         className={styles.login}
                         onClick={() => openModal('Login')}
-                    >Login</div>
+                    >
+                        Login
+                    </div>
                     <Modal
                         title={'Signup'}
                         modalName={'Signup'}
@@ -48,26 +48,34 @@ const Index: FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
                         <Signup />
                     </Modal>
                     {/* {(signupSuccess || loginModalOpen) && ( */}
-                        <Modal
-                            title={'Login'}
-                            modalName={'Login'}
-                            isOverlay={true}
-                            logo={true}
-                            isXmarkLeft={false}
-                        >
-                            <Login onSuccess={onSuccess} />
-                        </Modal>
+                    <Modal
+                        title={'Login'}
+                        modalName={'Login'}
+                        isOverlay={true}
+                        logo={true}
+                        isXmarkLeft={false}
+                    >
+                        <Login onSuccess={onSuccess} />
+                    </Modal>
                     {/* )} */}
                     <div className={styles.termsAndService}>
                         <p>
-                            This is a fake/clone Twitter app. It's part of my web development Bachelor 
-                            Exam 2023. Feel free to sign up with a fake{' '}
-                            <span>email address</span> and{' '}
-                            <span>password</span>. By singing up, you agree to the{' '}
-                            <span onClick={() => navigate('/terms-of-service')}>Terms of Service</span> and{' '} 
-                            <span onClick={() => navigate('/terms-of-service')}>Privacy Policy</span>, 
-                            including 
-                            <span onClick={() => navigate('/terms-of-service')}>Cookie Use</span>
+                            This is a fake/clone Twitter app. It's part of my
+                            web development Bachelor Exam 2023. Feel free to
+                            sign up with a fake <span>email address</span> and{' '}
+                            <span>password</span>. By singing up, you agree to
+                            the{' '}
+                            <span onClick={() => navigate('/terms-of-service')}>
+                                Terms of Service
+                            </span>{' '}
+                            and{' '}
+                            <span onClick={() => navigate('/terms-of-service')}>
+                                Privacy Policy
+                            </span>
+                            , including
+                            <span onClick={() => navigate('/terms-of-service')}>
+                                Cookie Use
+                            </span>
                         </p>
                     </div>
                 </div>

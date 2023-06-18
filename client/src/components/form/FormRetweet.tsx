@@ -44,6 +44,7 @@ interface FormRetweetProps {
     onClickAudienceMenu?: Function;
     onClickReplyMenu?: Function;
 
+    isLoading?: boolean;
     classNameTextErea?: string;
 }
 
@@ -65,6 +66,8 @@ const FormRetweet: FC<FormRetweetProps> = ({
     onCancelImagePreview,
     onClickAudienceMenu,
     onClickReplyMenu,
+
+    isLoading,
 
     classNameTextErea,
 }) => {
@@ -419,7 +422,10 @@ const FormRetweet: FC<FormRetweetProps> = ({
                             value={'Tweet'}
                             type={ButtonType.primary}
                             size={ButtonSize.small}
-                            isDisabled={false}
+                            isLoading={isLoading}
+                            isDisabled={
+                                (value.length > 0 || imagePreview || selectedEmoji ? false : true) || (isLoading) || value.length > MAX_TWEET_CHARACTERS
+                            }
                             onClick={() => setIsFocused(false)}
                         />
                     </div>

@@ -19,7 +19,7 @@ interface ButtonProps {
     value: any;
     type: ButtonType;
     size: ButtonSize;
-    loading?: Boolean;
+    isLoading?: Boolean;
     isDisabled?: boolean;
     className?: string;
     onMouseEnter?: React.MouseEventHandler<HTMLButtonElement>;
@@ -32,7 +32,7 @@ const Button: FC<ButtonProps> = ({
     value,
     type,
     size,
-    loading = false,
+    isLoading = false,
     isDisabled = false,
     className,
     onMouseEnter,
@@ -67,15 +67,15 @@ const Button: FC<ButtonProps> = ({
     return (
         <button
             className={`${className} ${allStyles} ${styles[type]} ${
-                loading ? styles.loading : ''
+                isLoading ? styles.loading : ''
             } ${isDisabled && styles.disabled}`}
             onClick={(e) => onClick(e, itemId)}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
             disabled={isDisabled}
         >
-            {loading && <LoadingRing size={'small'} />}
-            {!loading && <span>{value}</span>}
+            {isLoading && <LoadingRing size={'small'} />}
+            {!isLoading && <span>{value}</span>}
         </button>
     );
 };

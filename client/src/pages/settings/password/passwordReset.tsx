@@ -162,7 +162,7 @@ const PasswordReset: React.FC<{}> = ({}) => {
                             size={ButtonSize.big}
                             className={styles.btn}
                             onClick={() => {}}
-                            loading={isLoading}
+                            isLoading={isLoading}
                         />
                     </form>
                 </Header>

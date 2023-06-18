@@ -287,7 +287,7 @@ export const editTweetController = asyncHandler(
             const response = await editTweet(
                 tweetId,
                 userId,
-                text,
+                text ? text : null,
                 image,
                 audience,
                 reply

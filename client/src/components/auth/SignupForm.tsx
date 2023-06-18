@@ -181,7 +181,7 @@ const SignupForm: FC<SignupFormProps> = ({
                     type={ButtonType.tietary}
                     size={ButtonSize.big}
                     onClick={() => {}}
-                    loading={isLoading}
+                    isLoading={isLoading}
                 />
             </form>
         </React.Fragment>

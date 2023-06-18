@@ -236,8 +236,6 @@ function App() {
                                 handleCanselPreviewImage={handleCanselPreviewImage}
                                 handleImageUpload={handleImageUpload}
                                 onAddTweet={handleAddTweet}
-                                
-                                editTweetModal={editTweetModal}
                             />
                         </div>
                         <>

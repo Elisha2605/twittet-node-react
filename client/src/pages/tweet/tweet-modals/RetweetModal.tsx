@@ -23,7 +23,6 @@ interface RetweetModalProps {
     clearTweetForm: () => void;
 
     onAddTweet: any, 
-    editTweetModal: any,
 }
 
 const RetweetModal: FC<RetweetModalProps> = ({ 
@@ -39,7 +38,6 @@ const RetweetModal: FC<RetweetModalProps> = ({
     clearTweetForm,
     
     onAddTweet, 
-    editTweetModal,
 }) => {
 
     const [isFormFocused, setIsFormFocused] = useState(false);
@@ -63,7 +61,7 @@ const RetweetModal: FC<RetweetModalProps> = ({
 
     const { closeModal } = useContext(ModalContext);
 
-    const handleSubmitTweet = async (e: React.FormEvent) => {
+    const handleSubmitRetweet = async (e: React.FormEvent) => {
         e.preventDefault();
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
@@ -71,11 +69,12 @@ const RetweetModal: FC<RetweetModalProps> = ({
         
         if (text?.length! > MAX_TWEET_CHARACTERS) {
             showMessage('Could not send your tweet', 'error');
-            setIsLoading(false);
             return;
         }
+        setIsLoading(true);
         const res = await retweet(originalTweet?._id, text, selectedFile, tweetAudience, tweetReply);
         const { tweet }: any = res;
+        setIsLoading(false);
 
         if (authUser) {
             const newTweet = {
@@ -142,10 +141,10 @@ const RetweetModal: FC<RetweetModalProps> = ({
                         tweetTextRef={tweetTextRef}
                         selectedFile={selectedFile}
                         imagePreview={previewImage}
-                        isFocused={true}
+                        isFocused={isFormFocused}
                         tweetReplyValue={tweetReply}
                         setIsFocused={setIsFormFocused}
-                        onSubmit={handleSubmitTweet}
+                        onSubmit={handleSubmitRetweet}
                         onImageUpload={handleImageUpload}
                         onCancelImagePreview={handleCanselPreviewImage}
                         onChageImage={handleTextAreaOnChange}
@@ -153,6 +152,7 @@ const RetweetModal: FC<RetweetModalProps> = ({
                         onClickAudienceMenu={handleTweetAudienceOptions}
                         onClickReplyMenu={handleTweetReyplyOptions}
                         classNameTextErea={styles.classNameTextErea}
+                        isLoading={isLoading}
                     />
                 </div>
             </Modal>

@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styles from './Following.module.css';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getUserById } from '../../api/user.api';
 import UserInfo from '../../components/ui/UserInfo';
 import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
 import { ButtonSize, ButtonType } from '../../components/ui/Button';

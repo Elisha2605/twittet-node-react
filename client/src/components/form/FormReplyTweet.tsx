@@ -3,7 +3,6 @@ import Button, { ButtonSize, ButtonType } from '../ui/Button';
 import styles from './FormReplyTweet.module.css';
 import EmojiIcon from '../icons/EmojiIcon';
 import ImageIcon from '../icons/ImageIcon';
-import CalendarIcon from '../icons/CalendarIcon';
 import XmarkIcon from '../icons/XmarkIcon';
 import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 import useClickOutSide from '../../hooks/useClickOutSide';
@@ -252,7 +251,7 @@ const FormReplyTweet: FC<FormReplyTweetProps> = ({
                                 isDisabled={
                                     (value.length > 0 || imagePreview || selectedEmoji ? false : true) || (isLoading) || value.length > MAX_TWEET_CHARACTERS
                                 }
-                                loading={isLoading}
+                                isLoading={isLoading}
                                 onClick={() => setIsFocused(false)}
                             />
                         </div>

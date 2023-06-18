@@ -107,7 +107,7 @@ const PassworConfirmation: React.FC<{}> = ({}) => {
                             isDisabled={email.length === 0}
                             className={styles.btn}
                             onClick={() => {}}
-                            loading={isLoading}
+                            isLoading={isLoading}
                         />
                     </form>
                 </Header>

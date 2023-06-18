@@ -1,7 +1,5 @@
-import React, { FC, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { FC } from "react";
 import styles from "./LoginForm.module.css";
-import { login } from "../../api/auth.api";
 import Button, { ButtonSize, ButtonType } from "../ui/Button";
 
 interface LoginFormProps {
@@ -69,7 +67,7 @@ const LoginForm: FC<LoginFormProps> = ({
                     type={ButtonType.tietary}
                     size={ButtonSize.big}
                     onClick={() => {}}
-                    loading={isLoading}
+                    isLoading={isLoading}
                 />
             </form>
         </React.Fragment>

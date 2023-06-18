@@ -290,7 +290,7 @@ const FormNavigation: FC<FormNavigationProps> = ({
                                 (value.length > 0 || imagePreview || selectedEmoji ? false : true) || (isLoading) || value.length > MAX_TWEET_CHARACTERS
                             }
                             onClick={() => {}}
-                            loading={isLoading}
+                            isLoading={isLoading}
                         />
                     </div>
                 </div>

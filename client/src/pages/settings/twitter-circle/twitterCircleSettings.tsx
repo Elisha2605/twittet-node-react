@@ -15,8 +15,6 @@ import { IMAGE_AVATAR_BASE_URL } from '../../../constants/common.constants';
 import Button, { ButtonSize, ButtonType } from '../../../components/ui/Button';
 
 const TwitterCircleSettings: React.FC<{}> = () => {
-    const { id } = useParams<{ id: string }>();
-    const [user, setUser] = useState<any>(null);
     const [followings, setFollowings] = useState<any[]>([]);
     const [members, setMembers] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -24,21 +22,16 @@ const TwitterCircleSettings: React.FC<{}> = () => {
     const navigate = useNavigate();
 
     // get auth user
-    const ctx = useContext(AuthContext);
     useEffect(() => {
-        const getAuthUser = async () => {
+        const fetchTwitterCircleMembers = async () => {
             setIsLoading(true);
-            const { user } = ctx.getUserContext();
-            setUser(user);
-
             const res = await getAuthUserTwitterCircleMembers();
             setMembers(res.user?.members);
-
             const { followings } = await getAuthUserFollows();
             setFollowings(followings);
             setIsLoading(false);
         };
-        getAuthUser();
+        fetchTwitterCircleMembers();
     }, []);
 
     const onRemoveTwitterCircle = async (
