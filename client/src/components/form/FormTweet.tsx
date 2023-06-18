@@ -30,8 +30,8 @@ import {
 import { searchUsers } from '../../api/user.api';
 import UserInfo from '../ui/UserInfo';
 import useClickOutSide from '../../hooks/useClickOutSide';
-import data from '@emoji-mart/data'
-import Picker from '@emoji-mart/react'
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
 
 interface FormProps {
     value: string;
@@ -170,7 +170,7 @@ const FormTweet: FC<FormProps> = ({
             textarea.setSelectionRange(startPos + emoji.native.length, startPos + emoji.native.length);
             setOpenEmojiPicker(false);
         }
-      };
+    };
 
     return (
         <React.Fragment>

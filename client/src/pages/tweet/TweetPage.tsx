@@ -6,6 +6,7 @@ import { reply, getTweetById, getTweetReplies } from '../../api/tweet.api';
 import {
     IMAGE_AVATAR_BASE_URL,
     IMAGE_TWEET_BASE_URL,
+    MAX_TWEET_CHARACTERS,
     TWEET_AUDIENCE,
     TWEET_REPLY,
 } from '../../constants/common.constants';
@@ -30,7 +31,6 @@ import {
 } from '../../utils/helpers.utils';
 import TweetFooterPage from '../../components/ui/TweetFooterPage';
 import TweetReplyFormSection from '../../components/tweet/TweetReplyFormSection';
-import LoadingRing from '../../components/ui/LoadingRing';
 
 interface TweetPageProps {
     onDeleteTweet: any;
@@ -51,19 +51,15 @@ const TweetPage: FC<TweetPageProps> = ({
     const [tweet, setTweet] = useState<any>();
     const [authUser, setAuthUser] = useState<any>(null);
     const [isFormFocused, setIsFormFocused] = useState(false);
-
     const [value, setValue] = useState('');
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const tweetTextRef = useRef<HTMLTextAreaElement>(null);
-
+    const [isOnSubmitLoading, setIsOnSubmitLoading] = useState<boolean>(false);
     const [tweetReplies, setTweetReplies] = useState<any[]>([]);
-
     const [followers, setFollowers] = useState<any>([]);
     const [followings, setFollowings] = useState<any>([]);
-
     const [savedTweets, setSavedTweets] = useState<any>([]);
-
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const previousPath = localStorage.getItem('active-nav');
@@ -173,18 +169,25 @@ const TweetPage: FC<TweetPageProps> = ({
         setSelectedFile(null);
     };
 
-    const handleSubmitTweet = async (e: React.FormEvent) => {
+    const handleSubmitReply = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsOnSubmitLoading(true);
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
             : null;
-
-        console.log(text);
-        console.log(selectedFile);
         const res = await reply(id!, text!, selectedFile);
+        
+        if (text?.length! > MAX_TWEET_CHARACTERS) {
+            showMessage('Could not send your tweet', 'error');
+            setIsOnSubmitLoading(false);
+            return;
+        }
+
+        if (res.success) {
+            showMessage('Your tweet was sent', 'success')
+        }
+
         const { tweet }: any = res;
-        console.log(tweet);
-        console.log(tweet);
         const newTweet = {
             _id: tweet._id,
             text: tweet.text,
@@ -208,7 +211,9 @@ const TweetPage: FC<TweetPageProps> = ({
             replyCount: tweet?.replyCount + 1,
         }));
         setTweetReplies((prevTweets) => [newTweet, ...prevTweets]);
+        setIsFormFocused(false);
         clearTweetForm();
+        setIsOnSubmitLoading(false);
     };
 
     // bookmark
@@ -460,11 +465,11 @@ const TweetPage: FC<TweetPageProps> = ({
                                     imagePreview={previewImage}
                                     isFocused={isFormFocused}
                                     setIsFocused={setIsFormFocused}
-                                    onSubmit={handleSubmitTweet}
+                                    onSubmit={handleSubmitReply}
                                     onImageUpload={handleImageUploadRepy}
                                     onCancelImagePreview={handleCanselPreviewImage}
                                     onChageReplyTextArea={handleTextAreaOnChangeReply}
-                                    isLoading={isLoading}
+                                    isLoading={isOnSubmitLoading}
                                 />
                             </TweetReplyFormSection>
                         </div>

@@ -97,3 +97,8 @@
     overflow: hidden;
     z-index: 90;
 }
+
+.emojiPicker {
+    position: relative;
+    top: 0;
+}

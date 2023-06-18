@@ -113,11 +113,6 @@ export const fetchTweetReplies = async (tweetId: string, userId: string) => {
             },
         },
         {
-            $sort: {
-                createdAt: -1,
-            },
-        },
-        {
             $project: {
                 _id: 1,
                 type: 1,
