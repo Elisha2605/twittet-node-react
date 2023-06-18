@@ -80,9 +80,11 @@ const TweetPage: FC<TweetPageProps> = ({
         const { user } = ctx.getUserContext();
         setAuthUser(user);
         if (user) {
+            setIsLoading(true);
             const res = await getTweetReplies(id!);
             const { tweets } = res;
             setTweetReplies(tweets);
+            setIsLoading(false);
         }
     };
 
@@ -93,19 +95,19 @@ const TweetPage: FC<TweetPageProps> = ({
     // get Tweet by ID
     useEffect(() => {
         const getTweet = async () => {
+            setIsLoading(true);
             const { tweet } = await getTweetById(id!);
             setTweet(tweet[0]);
+            setIsLoading(false);
         };
         getTweet();
     }, [id]);
 
     useEffect(() => {
         const fetchAuthUserFollowStatus = async () => {
-            setIsLoading(true);
             const { followers, followings } = await getAuthUserFollows();
             setFollowers(followers);
             setFollowings(followings);
-            setIsLoading(false);
         };
         fetchAuthUserFollowStatus();
     }, []);
