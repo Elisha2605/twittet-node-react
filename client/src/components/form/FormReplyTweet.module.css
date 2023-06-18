@@ -102,3 +102,24 @@
     position: relative;
     top: 0;
 }
+
+.textEreaInputError {
+    font-size: var(--font-size-sm);
+    color: var(--color-white);
+    margin-left: 1rem;
+    padding: 0.5rem;
+    background-color: var(--color-error);
+    width: fit-content;
+    border-radius: 0.5rem;
+}
+
+.buttonAndCounterWrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.counter {
+    font-size: var(--font-size-sm);
+    color: var(--color-secondary);
+}

@@ -60,6 +60,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
 
     const [savedTweets, setSavedTweets] = useState<any>([])
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isOnSubmitLoading, setIsOnSubmitLoading] = useState<boolean>(false);
 
     const imgRef = useRef<HTMLImageElement>(null);
 
@@ -152,7 +153,6 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
             let imageUrl = URL.createObjectURL(file);
             setPreviewImage(imageUrl);
         }
-
     };
 
     const handleCanselPreviewImage = () => {
@@ -166,8 +166,9 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
         setSelectedFile(null);
     };
 
-    const handleSubmitTweet = async (e: React.FormEvent) => {
+    const handleSubmitReply = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsOnSubmitLoading(true);
         const text = tweetTextRef.current?.value
             ? tweetTextRef.current?.value
             : null;
@@ -192,9 +193,10 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
             reposts: [],
             likes: [],
         };
-        console.log(newTweet);
         setTweetReplies((prevTweets) => [newTweet, ...prevTweets]);
+        setIsFormFocused(false);
         clearTweetForm();
+        setIsOnSubmitLoading(false);
     };
 
     useEffect(() => {
@@ -253,6 +255,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
         };
         getUserBookmarkList();
     }, [tweet])
+
     const onClickSaveAndUnsaveTweet = async () => {
         const res = await saveTweetToBookmark(tweet._id);
         const bookmarkCount = res.tweet.bookmarkCount
@@ -275,6 +278,21 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
     const isSaved = (): boolean => {
         return tweet && savedTweets.some((t: any) => t._id === tweet._id)
     }
+
+    useEffect(() => {
+        const handleEditReply = () => {
+            if (authUser) {
+                setTweetReplies((prevTweets: any) =>
+                    prevTweets.map((tweet: any) =>
+                        tweet?._id === onEditTweet?._id
+                            ? { ...tweet, ...onEditTweet }
+                            : tweet
+                    )
+                );
+            }
+        };
+        handleEditReply();
+    }, [onEditTweet]);
 
     useEffect(() => {
         setTweetReplies((preveState) =>
@@ -412,11 +430,12 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
                                             imagePreview={previewImage}
                                             isFocused={isFormFocused}
                                             setIsFocused={setIsFormFocused}
-                                            onSubmit={handleSubmitTweet}
+                                            onSubmit={handleSubmitReply}
                                             onImageUpload={handleImageUploadRepy}
                                             onCancelImagePreview={handleCanselPreviewImage}
                                             onChageReplyTextArea={handleTextAreaOnChangeReply}
-                                            isLoading={isLoading}
+                                            isLoading={isOnSubmitLoading}
+                                            ClassNameShowUserMentions={styles.showUserMentions}
                                         />
                                     </TweetReplyFormSection>
                                     {/*  */}

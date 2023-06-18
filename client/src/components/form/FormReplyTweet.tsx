@@ -33,7 +33,8 @@ interface FormReplyTweetProps {
     onClickAudienceMenu?: Function;
     onClickReplyMenu?: Function;
 
-    classNameTextErea?: string;   
+    classNameTextErea?: string; 
+    ClassNameShowUserMentions?: string;  
     isLoading?: boolean;
 }
 
@@ -51,6 +52,7 @@ const FormReplyTweet: FC<FormReplyTweetProps> = ({
     onCancelImagePreview,
 
     classNameTextErea,
+    ClassNameShowUserMentions,
     isLoading,
 }) => {
 
@@ -72,12 +74,15 @@ const FormReplyTweet: FC<FormReplyTweetProps> = ({
     useClickOutSide(emojiPickerRef, setOpenEmojiPicker);
 
     // ubmit with by pressing "command + enter"
+    
+    // to be moved //////////////
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === "Enter" && e.metaKey) {
             onSubmit(e);
         }
     }
 
+    // to be moved //////////////
     const handleUserClick = (username: string) => {
         setShowSuggestions(false);
         const textarea = document.getElementById(
@@ -101,6 +106,7 @@ const FormReplyTweet: FC<FormReplyTweetProps> = ({
         }
     };
 
+    // to be moved //////////////
     const handleInputChange = async (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
@@ -125,6 +131,7 @@ const FormReplyTweet: FC<FormReplyTweetProps> = ({
         setSearchResults(users);
     };
     
+    // to be moved //////////////
     const handleEmojiSelect = (emoji: any) => {
         const textarea = tweetTextRef.current;
         setSelectedEmoji(emoji.native)
@@ -155,6 +162,7 @@ const FormReplyTweet: FC<FormReplyTweetProps> = ({
                 onKeyDown={handleKeyDown} 
                 onClick={() => setIsFocused(true)}
             >
+                {textEreaInputError && <p className={styles.textEreaInputError}>{textEreaInputError}</p>}
                 <div className={styles.textAreaWrapper}>
                     <textarea
                         className={`${styles.textarea} ${classNameTextErea}`}
@@ -172,7 +180,7 @@ const FormReplyTweet: FC<FormReplyTweetProps> = ({
                     <div>
                         <div
                             ref={searchResultsRef}
-                            className={styles.searchResults}
+                            className={`${styles.searchResults} ${ClassNameShowUserMentions}`}
                         >
                             {searchResults.map((user: any) => (
                                 <div
@@ -228,18 +236,26 @@ const FormReplyTweet: FC<FormReplyTweetProps> = ({
                                     />
                                 </div>
                             )}
-                            <CalendarIcon />
+                            {/* <CalendarIcon /> */}
                         </div>
-                        <Button
-                            value={'Tweet'}
-                            type={ButtonType.primary}
-                            size={ButtonSize.small}
-                            isDisabled={
-                                (value.length > 0 || imagePreview || selectedEmoji ? false : true) || (isLoading) || value.length > MAX_TWEET_CHARACTERS
-                            }
-                            loading={isLoading}
-                            onClick={() => setIsFocused(false)}
-                        />
+                        <div className={styles.buttonAndCounterWrapper}>
+
+                            {inputValue.length > 0 ? (
+                                <div className={styles.counter}>
+                                {counter}/280
+                                </div>
+                            ): null}    
+                            <Button
+                                value={'Tweet'}
+                                type={ButtonType.primary}
+                                size={ButtonSize.small}
+                                isDisabled={
+                                    (value.length > 0 || imagePreview || selectedEmoji ? false : true) || (isLoading) || value.length > MAX_TWEET_CHARACTERS
+                                }
+                                loading={isLoading}
+                                onClick={() => setIsFocused(false)}
+                            />
+                        </div>
                     </div>
                 )}
             </form>

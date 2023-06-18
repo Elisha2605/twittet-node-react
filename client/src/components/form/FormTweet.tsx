@@ -102,6 +102,7 @@ const FormTweet: FC<FormProps> = ({
         }
     };
 
+    // to be moved //////////////
     const handleInputChange = async (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
@@ -126,6 +127,7 @@ const FormTweet: FC<FormProps> = ({
         setSearchResults(users);
     };
 
+    // to be moved //////////////
     const handleUserClick = (username: string) => {
         setShowSuggestions(false);
         const textarea = document.getElementById(
@@ -157,6 +159,7 @@ const FormTweet: FC<FormProps> = ({
 
     const isImageSelected = !!imagePreview;
 
+    // to be moved //////////////
     const handleEmojiSelect = (emoji: any) => {
         const textarea = tweetTextRef.current;
         setSelectedEmoji(emoji.native)
@@ -218,7 +221,7 @@ const FormTweet: FC<FormProps> = ({
                         </PopUpMenu>
                     </div>
                 ) : null}
-                <p className={styles.textEreaInputError}>{textEreaInputError}</p>
+                {textEreaInputError && <p className={styles.textEreaInputError}>{textEreaInputError}</p>}
                 <textarea
                     className={`${styles.textarea} ${classNameTextErea}`}
                     id="review-text"
@@ -353,7 +356,7 @@ const FormTweet: FC<FormProps> = ({
                                     />
                                 </div>
                             )}
-                        <CalendarIcon />
+                        {/* <CalendarIcon /> */}
                     </div>
                     <div className={styles.buttonAndCounterWrapper}>
                         {inputValue.length > 0 ? (
