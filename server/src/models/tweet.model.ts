@@ -100,7 +100,7 @@ const tweetSchema = new mongoose.Schema<ITweet>(tweetModel, {
 // adding a pre-save hook to parse mentions from the tweet text
 tweetSchema.pre<ITweet>('save', function (next) {
     const text = this.text;
-    const regex = /@([a-zA-Z0-9_-]+)/g; // match @username
+    const regex = /(?<!\S)@([a-zA-Z0-9_-]+)/g; // matching @username with negative lookbehind assertion
     const mentions: string[] = [];
     let match: any;
     while ((match = regex.exec(text)) !== null) {

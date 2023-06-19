@@ -10,7 +10,6 @@ import Aside from '../../components/aside/Aside';
 import WhoToFollow from '../../components/ui/WhoToFollow';
 import {
     getLikesNotification,
-    getMentionsNotification,
 } from '../../api/notification.api';
 import { NOTIFICATION_TYPE } from '../../constants/common.constants';
 import NotificationsLike from './NotificationsLike';

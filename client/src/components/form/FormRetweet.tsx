@@ -126,26 +126,31 @@ const FormRetweet: FC<FormRetweetProps> = ({
         }
     }
     
-    const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = async (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
         const value = event.target.value;
-        setCounter(value.length)
+        setInputValue(value);
+        setCounter(value.length);
+    
         if (value.length > MAX_TWEET_CHARACTERS) {
             setTextEreaInputError('Text too long!');
         } else {
             setTextEreaInputError(null);
         }
-        const lastChar = value.charAt(value.length - 1);
-        if (lastChar === '@') {
-        setShowSuggestions(true);
-        } else if (lastChar === ' ') {
-        setShowSuggestions(false);
-        }
-        setInputValue(value);
-
+    
         const atIndex = value.lastIndexOf('@');
+        const prevChar = value[atIndex - 1];
         const searchTerm = value.substring(atIndex + 1);
-        const { users } = await searchUsers(encodeURIComponent(searchTerm));
-        setSearchResults(users);
+    
+        setShowSuggestions(atIndex > -1 && searchTerm.length > 0 && !/\s/.test(searchTerm) && (prevChar === undefined || prevChar === ' '));
+        
+        if (atIndex > -1 && searchTerm.length > 0 && !/\s/.test(searchTerm) && (prevChar === undefined || prevChar === ' ')) {
+            const { users } = await searchUsers(encodeURIComponent(searchTerm));
+            setSearchResults(users);
+        } else {
+            setSearchResults([]);
+        }
     };
 
     const handleUserClick = (username: string) => {
