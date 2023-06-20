@@ -285,8 +285,7 @@ const Home: React.FC<HomeProps> = ({
         const { likedTweet } = res;
         setLikedTweet(likedTweet);
 
-        // check if the user _id is the same as tweet.user._id 
-
+        // sending notification with socket.io
         if (res.message === 'Liked' && 
             authUser?._id !== tweet?.user?._id
         ) {
