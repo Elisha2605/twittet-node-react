@@ -5,6 +5,7 @@ import { IMAGE_AVATAR_BASE_URL } from "../../constants/common.constants";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { getTimeDifference } from "../../utils/helpers.utils";
 
 interface NotificationsLikeProps{
     like: any
@@ -31,9 +32,12 @@ const NotificationsLike: FC<NotificationsLikeProps> = ({
                         className={styles.userInfoWrapper}
                         isNavigate={false}
                         >
+                    · <div>{getTimeDifference(new Date(like?.createdAt).getTime())}</div>
                     </UserInfo>
-                    <FontAwesomeIcon icon={faHeart} size={'xl'} color={'var(--color-pink)'} />
-                    <p className={styles.message}>{like?.message}</p> 
+                    <div className={styles.notificationMessageWrapper}>
+                        <FontAwesomeIcon icon={faHeart} size={'xl'} color={'var(--color-pink)'} />
+                        <p className={styles.message}>{like?.message}</p> 
+                    </div>
                 </div>   
             </div>
 

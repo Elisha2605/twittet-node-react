@@ -53,7 +53,7 @@ const Notification = () => {
                 }
             });
 
-            const res = await updateNotificationsState(notificationIds);
+            await updateNotificationsState(notificationIds);
 
             setAllNotifications(notifications);
             setIsLoading(false);

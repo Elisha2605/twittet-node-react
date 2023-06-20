@@ -1,15 +1,13 @@
 import app from './server/src/app';
 import http from 'http';
 import { Server } from 'socket.io';
-import User from 'src/models/user.model';
-import { getUserById } from 'src/services/user.service';
 
 const port = process.env.PORT || 5000;
 const server = http.createServer(app);
 
 // Configure CORS options
 const corsOptions = {
-    origin: 'http://localhost:3000', // Replace with your client URL
+    origin: [process.env.BASE_URL, process.env.PROD_URL],
     credentials: true,
 };
 

@@ -1,5 +1,6 @@
 .wrapper {
     display: flex;
+    gap: 1rem;
     padding: 0 1rem 0.5rem 1rem ;
     border-bottom: 1px solid var(--color-secondary-light);
 }
@@ -16,26 +17,16 @@
     gap: 1rem;
 }
 
+.notificationMessageWrapper {
+    display: flex;
+}
+
 .container .message, .container svg {
     position: relative;
-    top: 2.5rem;
+    top: 1.5rem;
 }
 .container .message {
     color: var(--color-secondary);
     font-size: var(--font-size-ms);
     padding-left: 0.5rem;
-} 
-
-/* .container {
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid var(--color-secondary-light);
-    gap: 0.5rem;
 }
-
-
-
-.container .message {
-    color: var(--color-secondary);
-    font-size: var(--font-size-sm);
-} */

@@ -69,8 +69,8 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
         fetchAllNotifications();
     }, []);
 
-    
-    ///////////////////////////////////////
+    /////////// notifications //////////////
+
     // **********************************//
     ////// Socket.io ////////
 
@@ -80,6 +80,8 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
             setIsNotificationOpened(true);
         })
     }, [socket])
+    ////// Socket.io ////////
+
 
 
     useEffect(() => {
