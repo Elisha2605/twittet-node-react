@@ -56,7 +56,7 @@ export const likeTweet = async (
             const result = await LikedTweet.save();
             return {
                 success: true,
-                message: 'Successfuly created a new Like Document, and 1 like!',
+                message: 'Liked',
                 status: 200,
                 payload: result,
             };
@@ -76,7 +76,7 @@ export const likeTweet = async (
             const result = await tweetToLike.deleteOne();
             return {
                 success: true,
-                message: 'Unliked tweet',
+                message: 'Unliked',
                 status: 200,
                 payload: result,
             };
@@ -89,7 +89,7 @@ export const likeTweet = async (
 
         return {
             success: true,
-            message: 'Liked tweet',
+            message: 'Liked',
             status: 200,
             payload: result,
         };

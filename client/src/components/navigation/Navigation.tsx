@@ -36,14 +36,51 @@ import faHomeRegular from '../../assets/faHome-regular.svg';
 import faHomeSolid from '../../assets/faHome-solid.svg';
 import PopUpMenu from '../ui/PopUpMenu';
 import { useNavigate } from 'react-router-dom';
+import { getAllNotifications } from '../../api/notification.api';
 
-interface NavigationProps {}
+interface NavigationProps {
+    socket: any;
+}
 
-const Navigation: React.FC<NavigationProps> = ({}) => {
+const Navigation: React.FC<NavigationProps> = ({ socket }) => {
     const [authUser, setAuthUser] = useState<any>(null);
     const [activeNav, setActiveNav] = useState('home');
+    const [isNotificationOpened, setIsNotificationOpened] = useState<boolean>(true);
 
     const navigate = useNavigate();
+
+    const [notifications, setNotifications] = useState<any[]>([]);
+
+
+    const [popUpNotification, setPopUpNotification] = useState<any[]>([]); 
+    const [isRead, setIsRead] = useState<boolean>(false); 
+
+    /////////// notifications //////////////
+
+    useEffect(() => {
+        const fetchAllNotifications = async () => {
+            const { notifications } = await getAllNotifications();
+            notifications.map((notif: any) => {
+                if (notif?.read === false && authUser?._id === notifications?.user?._id) {
+                    setIsRead(true);
+                }
+            });
+        };
+        fetchAllNotifications();
+    }, []);
+
+    
+    ///////////////////////////////////////
+    // **********************************//
+    ////// Socket.io ////////
+
+    useEffect(() => {
+        socket?.on('getNotification', (data: any) => {
+            setNotifications((preveState) => [...preveState, data]);
+            setIsNotificationOpened(true);
+        })
+    }, [socket])
+
 
     useEffect(() => {
         const setNavActive = () => {
@@ -158,11 +195,19 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                     <div
                         onClick={() => {
                             setActiveNav('notification');
+                            setIsNotificationOpened(!isNotificationOpened);
+                            setIsRead(false)
                         }}
                         className={
-                            `${styles.navItem} ${activeNav === 'notification' ? styles.active : ''}`
+                            `${styles.navItem} ${styles.notification} ${activeNav === 'notification' ? styles.active : ''}`
                         }
                     >
+                        {isNotificationOpened && notifications.length > 0  && (
+                            <div className={styles.redDot}></div>
+                        )}
+                        {isRead && (
+                            <div className={styles.redDot}></div>
+                        )}
                         <NavigationItem
                             icon={
                                 activeNav === 'notification'
@@ -250,6 +295,10 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                             <h2>More</h2>
                         </div>
                     </PopUpMenu>
+                </div>
+                <div>
+
+                {notifications.map((user) => <div>{user?.sender}</div>)}
                 </div>
                 <Button
                     value={'Tweet'}

@@ -15,13 +15,20 @@ import AuthContext from '../../context/user.context';
 import BookmarkImage from '../../assets/bookmark.png';
 
 interface BookmarkProps {
+    socket: any
     onClickTweetMenu: Function;
     onEditTweet: any;
     onDeleteTweet: any;
     onClickRetweet: Function;
 }
 
-const Bookmarks: FC<BookmarkProps> = ({ onClickTweetMenu, onEditTweet, onDeleteTweet, onClickRetweet }) => {
+const Bookmarks: FC<BookmarkProps> = ({ 
+    socket,
+    onClickTweetMenu, 
+    onEditTweet, 
+    onDeleteTweet, 
+    onClickRetweet 
+}) => {
     const [authUser, setAuthUser] = useState<any>(null);
     const [savedTweets, setSavedTweets] = useState<any[]>([]);
     const [likedTweet, setLikedTweet] = useState<any>();

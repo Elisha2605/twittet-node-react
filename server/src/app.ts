@@ -11,10 +11,10 @@ import './strategies/local.strategy';
 import './types/user.type';
 import errorHandler from './middleware/error.middleware';
 import { loggerMiddleware } from './middleware/logger.middleware';
+import path from 'path';
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import tweetRouter from './routes/tweet.routes';
-import path from 'path';
 import followRouter from './routes/follow.routes';
 import likeRouter from './routes/like.routes';
 import bookmarkRouter from './routes/bookmark.routes';
@@ -23,9 +23,14 @@ import notificationRouter from './routes/notification.routes';
 import twitterCircleRouter from './routes/twitterCircle.routes';
 import passwordRouter from './routes/passwordReset.routes';
 
+import socketIO, { Server as SocketIOServer } from 'socket.io';
+import { createServer, Server as HTTPServer } from 'http';
+
 dotenv.config();
 
 const app: Application = express();
+const httpServer: HTTPServer = createServer(app);
+const io: SocketIOServer = new socketIO.Server(httpServer);
 
 dbConn();
 

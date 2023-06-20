@@ -19,6 +19,7 @@ import {
     MAX_TWEET_CHARACTERS,
     TWEET_AUDIENCE,
     TWEET_REPLY,
+    TWEET_TYPE,
 } from '../../constants/common.constants';
 import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
 import AuthContext from '../../context/user.context';
@@ -28,6 +29,8 @@ import LoadingRing from '../../components/ui/LoadingRing';
 import { useMessage } from '../../context/successMessage.context';
 
 interface HomeProps {
+    socket: any;
+
     value: string;
     onAddTweet: any;
     onEditTweet: any;
@@ -45,6 +48,8 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({
+    socket,
+
     value,
     onAddTweet,
     onEditTweet,
@@ -274,11 +279,23 @@ const Home: React.FC<HomeProps> = ({
         );
     }, [likedTweet]);
 
+
     const onClickLike = async (tweet: any) => {
         const res: any = await likeTweet(tweet?._id);
         const { likedTweet } = res;
-        console.log(likedTweet);
         setLikedTweet(likedTweet);
+
+        // check if the user _id is the same as tweet.user._id 
+
+        if (res.message === 'Liked' && 
+            authUser?._id !== tweet?.user?._id
+        ) {
+            socket.emit('sendNotification', {
+                sender: authUser?._id,
+                receiver: tweet?.user?._id,
+                type: 'Like'
+            });
+        }
     };
 
     return (
@@ -359,6 +376,8 @@ const Home: React.FC<HomeProps> = ({
                         <div className={styles.main}>
                             {memoizedFollowTweets.map((tweet: any) => (
                                 <Tweet
+                                    socket={socket}
+
                                     key={tweet?._id}
                                     tweet={tweet}
                                     onClickMenu={onClickTweetMenu!}

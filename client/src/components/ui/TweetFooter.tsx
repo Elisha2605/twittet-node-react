@@ -23,8 +23,9 @@ import AuthContext from '../../context/user.context';
 import { useMessage } from '../../context/successMessage.context';
 
 interface TweetFooterProps {
-    tweet?: any;
+    socket?: any;
 
+    tweet?: any;
     replies: string;
     reTweets: string;
     likes: string;
@@ -38,8 +39,10 @@ interface TweetFooterProps {
 }
 
 const TweetFooter: FC<TweetFooterProps> = ({
-    tweet,
+    socket,
 
+
+    tweet,
     replies,
     reTweets,
     likes,

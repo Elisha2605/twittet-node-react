@@ -24,6 +24,8 @@ import AuthContext from '../../context/user.context';
 import { getAuthUserFollows } from '../../api/follow.api';
 
 interface TweetProps {
+    socket?: any;
+
     tweet?: any;
     onClickMenu?: Function;
     onClickRetweet?: Function;
@@ -35,6 +37,8 @@ interface TweetProps {
 }
 
 const Tweet: FC<TweetProps> = ({
+    socket,
+
     tweet,
     onClickMenu,
     onClickRetweet,
@@ -363,6 +367,8 @@ const Tweet: FC<TweetProps> = ({
                     )
                 )}
                 <TweetFooter
+                    socket={socket}
+
                     tweet={tweet}
                     replies={tweet?.replyCount === 0 ? '' : tweet?.replyCount}
                     reTweets={tweet?.retweetCount === 0 ? '' : tweet?.retweetCount}

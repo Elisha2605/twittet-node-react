@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styles from './App.module.css';
 import Navigation from './components/navigation/Navigation';
 import Layout from './Layout.module.css';
@@ -27,6 +27,7 @@ import HomeEditTwitterCirlceModal from './pages/home/home-modals/HomeEditTwitter
 import { useMessage } from './context/successMessage.context';
 import AccessDenied from './pages/access-denied';
 import TermsOfService from './pages/termsOfService';
+import { io } from 'socket.io-client';
 
 function App() {
 
@@ -61,6 +62,23 @@ function App() {
     const { modalOpen, openModal } = useContext(ModalContext);
     const context = useContext(AuthContext);
     let ctx: StoredContext = context.getUserContext();
+
+//////////////
+
+    const [socket, setSocket] = useState<any>(null);
+
+    useEffect(() => {
+       setSocket(io('http://localhost:4000'));
+    }, [])
+
+    useEffect(() => {
+        socket?.emit('newUser', ctx?.user);
+    }, [socket, ctx])
+
+//////////////
+
+
+
 
     const handleAddTweet = (tweet: any) => {
         setOnAddTweets((prevTweets) => [tweet, ...prevTweets]);
@@ -202,7 +220,7 @@ function App() {
                 <div>
                     <BrowserRouter>
                         <div className={`${Layout.navigation}`}>
-                            <Navigation />
+                            <Navigation socket={socket} />
                             <NavigationTweetModal 
                                 selectedFile={selectedFileModal}
                                 previewImage={previewImageModal}                                    
@@ -246,6 +264,7 @@ function App() {
                                 <Route path='/access-denied' element={<AccessDenied />} ></Route>
                                 <Route path="/" element={
                                     <Home
+                                        socket={socket}
                                         onClickTweetMenu={handleTweetMenuOptionClick}
                                         onDeleteTweet={onDeleteTweet}
                                         onAddTweet={onAddTweet}
@@ -263,12 +282,13 @@ function App() {
                                 <Route path="/explore" element={<Explore />} />
                                 <Route
                                     path="/notification"
-                                    element={<Notifications />}
+                                        element={<Notifications  />}
                                 />
                                 <Route path="/message" element={<Message />} />
                                 <Route
                                     path="/bookmarks"
                                     element={<Bookmarks 
+                                        socket={socket}
                                         onClickTweetMenu={handleTweetMenuOptionClick} 
                                         onEditTweet={onEditTweet} 
                                         onDeleteTweet={onDeleteTweet} 

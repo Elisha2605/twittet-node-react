@@ -54,6 +54,7 @@ export const getLikesNotification = async (
                     _id: '$tweet._id',
                     type: 1,
                     message: 1,
+                    read: 1,
                     user: {
                         _id: '$user._id',
                         name: '$user.name',
@@ -209,6 +210,32 @@ export const getMentionsNotification = async (
             message: 'Successfuly fetched all notifications!',
             status: 200,
             payload: notifications,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};
+
+export const updateNotificationsState = async (
+    notificationIds: string[],
+): Promise<ApiResponse<any>> => {
+    try {
+        const updateResult = await Notification.updateMany(
+            { tweet: { $in: notificationIds }, read: false },
+            { $set: { read: true } }
+        );
+
+        return {
+            success: true,
+            message: 'Notifications read',
+            status: 200,
+            payload: updateResult,
         };
     } catch (error) {
         const errorResponse: ErrorResponse = {

@@ -132,8 +132,6 @@ export const createTweetController = asyncHandler(
         const audience = req.body.audience;
         const reply = req.body.reply;
 
-        console.log(image);
-
         if (text === undefined && image === null) {
             res.status(400).json({ InvalidInputError: 'Invalid Input' });
             return;

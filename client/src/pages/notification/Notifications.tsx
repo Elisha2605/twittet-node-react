@@ -9,7 +9,7 @@ import SearchBar from '../../components/ui/SearchBar';
 import Aside from '../../components/aside/Aside';
 import WhoToFollow from '../../components/ui/WhoToFollow';
 import {
-    getLikesNotification,
+    getAllNotifications, updateNotificationsState,
 } from '../../api/notification.api';
 import { NOTIFICATION_TYPE } from '../../constants/common.constants';
 import NotificationsLike from './NotificationsLike';
@@ -43,15 +43,23 @@ const Notification = () => {
     }, [activeTab]);
 
     useEffect(() => {
-        const getAllNotifications = async () => {
+        const fetchAllNotifications = async () => {
             setIsLoading(true);
-            const { notifications } = await getLikesNotification();
-         
+            const { notifications } = await getAllNotifications();
+
+            const notificationIds = notifications.map((notif: any) => {
+                if (notif?.read === false) {
+                    return notif?._id
+                }
+            });
+
+            const res = await updateNotificationsState(notificationIds);
+
             setAllNotifications(notifications);
             setIsLoading(false);
         };
 
-        getAllNotifications();
+        fetchAllNotifications();
     }, []);
 
     // On like tweet

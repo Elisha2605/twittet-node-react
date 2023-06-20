@@ -131,7 +131,7 @@ tweetSchema.pre<ITweet>('save', function (next) {
         .catch((error) => next(error));
 });
 
-// adding a pre-save hook to initialize a new twitter circle doc fo a user.
+// adding a pre-save hook to initialize a new twitter circle doc for a user.
 tweetSchema.pre<ITweet>('save', async function (next) {
     if (this.audience === TWEET_AUDIENCE.twitterCircle) {
         try {
