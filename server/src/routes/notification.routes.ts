@@ -9,7 +9,7 @@ import { verifyUser } from '../../src/utils/jwt.util';
 
 const notificationRouter = Router();
 
-notificationRouter.get('/likes', verifyUser(), getLikesNotificationController);
+notificationRouter.get('', verifyUser(), getLikesNotificationController);
 notificationRouter.get(
     '/mentions',
     verifyUser(),

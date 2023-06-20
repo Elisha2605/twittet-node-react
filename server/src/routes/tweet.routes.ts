@@ -50,7 +50,7 @@ tweetRouter.post(
     reTweetController
 );
 
-tweetRouter.put(
+tweetRouter.patch(
     '/edit/:id',
     verifyUser(),
     upload.fields([{ name: 'tweetImage', maxCount: 1 }]),

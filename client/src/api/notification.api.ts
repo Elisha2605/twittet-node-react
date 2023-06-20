@@ -2,7 +2,7 @@ import { GETREQUESTOPTIONS, http } from '../config/axios.config';
 
 export const getAllNotifications = async () => {
     try {
-        const res = await http.get('/notifications/likes', GETREQUESTOPTIONS());
+        const res = await http.get('/notifications', GETREQUESTOPTIONS());
         return res.data;
     } catch (error: any) {
         console.error(error);

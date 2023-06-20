@@ -193,7 +193,7 @@ export const editTweet = async (
     reply: string
 ) => {
     try {
-        const res = await http.put(
+        const res = await http.patch(
             `/tweets/edit/${tweetId}`,
             {
                 text: text,

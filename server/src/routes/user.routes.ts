@@ -27,7 +27,7 @@ userRouter.get(
     verifyUser(),
     searchUserByUserNameController
 );
-userRouter.put(
+userRouter.patch(
     '/edit-profile',
     upload.fields([
         { name: 'cover', maxCount: 1 },
