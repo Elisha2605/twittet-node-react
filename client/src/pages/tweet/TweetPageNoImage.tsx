@@ -201,37 +201,37 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
         fetchAuthUserFollowStatus();
     }, []);
 
-    const isTwitterCircle = (userId: string): boolean => {
+    const isOnlyPeopleYouFollow = (userId: string): boolean => {
+        return (
+            (followers && tweet && tweet?.user?._id === authUser?._id) ||
+            (followers &&
+                tweet &&
+                tweet?.reply === TWEET_REPLY.peopleYouFollow &&
+                followers.some(
+                    (following: any) => following?.user?._id === userId
+                ))
+        );
+    };
+
+    const isMention = (userId: string): boolean => {
         if (
-            authUser && tweet &&
+            tweet &&
+            tweet?.mentions &&
             tweet?.user?._id !== authUser?._id &&
-            tweet?.audience === TWEET_AUDIENCE.twitterCircle &&
-            !followings.some(
-                (follower: any) => follower?.user?._id === userId
-            )
+            !tweet?.mentions.includes(userId)
         ) {
             return false;
         }
         return true;
     };
 
-    const isOnlyPeopleYouFollow = (userId: string): boolean => {
-        if (followers &&
-            tweet?.user?._id !== authUser?._id &&
-            tweet?.reply === TWEET_REPLY.peopleYouFollow &&
-            followers.some((following: any) => following?.user?._id === userId)
-        ) {
-            return true;
-        }
-        return false;
-    };
-
-    const isMention = (userId: string): boolean => {
+    const isTwitterCircle = (userId: string): boolean => {
         if (
+            authUser &&
             tweet &&
-            tweet.mentions &&
             tweet?.user?._id !== authUser?._id &&
-            !tweet.mentions.includes(userId)
+            tweet?.audience === TWEET_AUDIENCE.twitterCircle &&
+            !followings.some((follower: any) => follower?.user?._id === userId)
         ) {
             return false;
         }

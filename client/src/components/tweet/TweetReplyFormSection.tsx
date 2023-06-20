@@ -126,24 +126,20 @@ const TweetReplyFormSection: FC<TweetReplyFormSectionProps> = ({
             !isTwitterCircle(tweet && tweet?.user?._id) &&
             tweet?.audience === TWEET_AUDIENCE.twitterCircle
         ) {
-            if (!isLoading) {
-                return (
-                    <div className={styles.whoCanReply}>
-                        <div className={styles.replyMsgWrapper}>
-                            <AtIcon isMedium={true} />
-                            <div className={styles.replyMsg}>
-                                <h4>Who can reply?</h4>
-                                <p>
-                                    People in Twitter Circle who follow @
-                                    {tweet?.user?.username} can reply
-                                </p>
-                            </div>
+            return (
+                <div className={styles.whoCanReply}>
+                    <div className={styles.replyMsgWrapper}>
+                        <AtIcon isMedium={true} />
+                        <div className={styles.replyMsg}>
+                            <h4>Who can reply?</h4>
+                            <p>
+                                People in Twitter Circle who follow @
+                                {tweet?.user?.username} can reply
+                            </p>
                         </div>
                     </div>
-                );
-            } else {
-                return <LoadingRing size={'small'} className={styles.loadingRing} />
-            }
+                </div>
+            );
         } else {
             return (
                 <div className={styles.formSection}>
