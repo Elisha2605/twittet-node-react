@@ -24,9 +24,3 @@ passport.use(
         }
     })
 );
-
-// Not used => this function is defined to deserialize
-// the user object stored in the session (if sessions are used).
-passport.deserializeUser(function (user: any, done) {
-    done(null, user);
-});

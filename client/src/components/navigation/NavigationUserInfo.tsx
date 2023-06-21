@@ -3,6 +3,7 @@ import styles from './NavigationUserInfo.module.css';
 import PopUpMenu from '../ui/PopUpMenu';
 import { IMAGE_AVATAR_BASE_URL, IMAGE_AVATAR_DEFAULT } from '../../constants/common.constants';
 import faLockSolid from '../../assets/faLock-solid.svg';
+import Certified from '../../assets/certified.svg';
 
 
 interface NavigationUserInfoProps {
@@ -35,6 +36,11 @@ const NavigationUserInfo: FC<NavigationUserInfoProps> = ({
                                     <img src={faLockSolid} alt="" />
                                 </div>
                             )}
+                            <span>
+                                {user?.isVerified && (
+                                    <img className={styles.certifiedIcon} src={Certified} alt="" />
+                                )}
+                            </span>
                         </div>
                         <p className={styles.username}>@{user?.username}</p>
                     </div>

@@ -121,14 +121,14 @@ const FollowButton: FC<FollowButtonProps> = ({
     const isFollowing = (): boolean => {
         return (
             followings &&
-            followings.some((following: any) => following.user._id === userId)
+            followings.some((following: any) => following?.user?._id === userId)
         );
     };
 
     const isPending = (): boolean => {
         return (
             pendings &&
-            pendings.some((pending: any) => pending.user._id === userId)
+            pendings.some((pending: any) => pending?.user?._id === userId)
         );
     };
 

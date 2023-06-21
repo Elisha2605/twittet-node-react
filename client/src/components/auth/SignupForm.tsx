@@ -110,7 +110,7 @@ const SignupForm: FC<SignupFormProps> = ({
                             },
                         })}
                         className={styles.formInput}
-                        type="text"
+                        type="password"
                         id="password"
                         name="password"
                         placeholder=" "
@@ -140,7 +140,7 @@ const SignupForm: FC<SignupFormProps> = ({
                             },
                         })}
                         className={styles.formInput}
-                        type="text"
+                        type="password"
                         id="passwordConfirm"
                         name="passwordConfirm"
                         placeholder=" "

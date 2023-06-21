@@ -67,6 +67,11 @@
     height: 1rem;
 }
 
+.certifiedIcon {
+    position: relative;
+    top: 0.3rem;
+}
+
 /* form bigger sceens */
 @media (min-width: 1441px) {
     .container {

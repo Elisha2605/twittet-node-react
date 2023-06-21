@@ -7,7 +7,7 @@ import sharp from 'sharp';
 
 dotenv.config();
 
-// Configure your AWS SDK credentials
+// Configure AWS SDK credentials
 aws.config.update({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -76,9 +76,9 @@ const uploadFileToS3 = async (file: Express.Multer.File, folder: string) => {
         ContentType: file.mimetype,
     };
 
-    // Resize and compress the image using sharp
+    // Resizing and compress the image using sharp
     const compressedImage = await sharp(file.buffer)
-        .jpeg({ quality: 80 }) // Adjust the compression quality
+        .jpeg({ quality: 80 }) // Adjusting the compression quality
         .resize(1020, 1020, {
             fit: 'outside',
         })
