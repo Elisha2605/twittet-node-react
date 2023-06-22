@@ -73,7 +73,7 @@ export const likeTweet = async (
                 (like: any) => like.toString() !== user._id.toString()
             );
             tweetToLike.likesCount = tweetToLike.likes.length;
-            const result = await tweetToLike.deleteOne();
+            const result = await tweetToLike.save();
             return {
                 success: true,
                 message: 'Unliked',
