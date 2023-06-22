@@ -23,14 +23,9 @@ import notificationRouter from './routes/notification.routes';
 import twitterCircleRouter from './routes/twitterCircle.routes';
 import passwordRouter from './routes/passwordReset.routes';
 
-import socketIO, { Server as SocketIOServer } from 'socket.io';
-import { createServer, Server as HTTPServer } from 'http';
-
 dotenv.config();
 
 const app: Application = express();
-const httpServer: HTTPServer = createServer(app);
-const io: SocketIOServer = new socketIO.Server(httpServer);
 
 dbConn();
 
@@ -43,7 +38,7 @@ app.use(express.json());
 app.use(httpContext.middleware);
 
 const corsOptions = {
-    origin: true,
+    origin: [process.env.BASE_URL, process.env.PROD_URL],
     credentials: true,
     optionSuccessStatus: 200,
     allowedHeaders:
