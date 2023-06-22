@@ -9,7 +9,10 @@ import {
 export const getLikesNotificationController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.user._id;
-
+        if (!userId) {
+            res.status(400).json({ inputError: 'Input error' });
+            return;
+        }
         try {
             const { success, message, status, payload } =
                 await getLikesNotification(userId);
@@ -32,7 +35,10 @@ export const getLikesNotificationController = asyncHandler(
 export const getMentionsNotificationController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.user._id;
-
+        if (!userId) {
+            res.status(400).json({ inputError: 'Input error' });
+            return;
+        }
         try {
             const { success, message, status, payload } =
                 await getMentionsNotification(userId);
@@ -55,7 +61,10 @@ export const getMentionsNotificationController = asyncHandler(
 export const updateNotificationsStateController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const notificationIds = req?.body?.notificationIds;
-
+        if (!notificationIds) {
+            res.status(400).json({ inputError: 'Input error' });
+            return;
+        }
         try {
             const { success, message, status, payload } =
                 await updateNotificationsState(notificationIds);

@@ -11,14 +11,13 @@ export const requestPasswordResetController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.user._id;
         const email = req.body.email;
-
         if (!userId || !email) {
-            res.status(400).json({ InvalidInputError: 'Invalid input' });
+            res.status(400).json({ inputError: 'Input error' });
             return;
         }
 
         if (!validateEmail(req.body.email)) {
-            res.status(400).json({ InvalidInputError: 'Invalid Email' });
+            res.status(400).json({ InvalidInputError: 'Invalid email' });
             return;
         }
 
@@ -45,6 +44,10 @@ export const verifyPasswordVerificationTokenController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.user._id;
         const token = req.params.token;
+        if (!userId || !token) {
+            res.status(400).json({ InvalidInputError: 'Invalid input' });
+            return;
+        }
 
         try {
             const { success, message, status, payload } =
@@ -70,6 +73,11 @@ export const resetPasswordController = asyncHandler(
         const userId = req.user._id;
         const password = req.body.password;
         const token = req.body.token;
+
+        if (!userId || !token || password) {
+            res.status(400).json({ InvalidInputError: 'Invalid input' });
+            return;
+        }
 
         try {
             const { success, message, status, payload } = await resetPassword(

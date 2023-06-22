@@ -25,14 +25,67 @@ declare module 'express-session' {
 
 export const singUp = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
+        const name = req.body.name;
+        const username = req.body.username;
+        const email = req.body.email;
+        const avatar = req.files?.['avatar']?.[0]?.filename ?? null;
+        const password = req.body.password;
+        const passwordConfirmation = req.body.passwordConfirmation;
+
+        // validation
+        if (
+            !name ||
+            !username ||
+            !email ||
+            !password ||
+            !passwordConfirmation
+        ) {
+            res.status(400).json({ inputError: 'Input error' });
+            return;
+        }
+
+        if (
+            name.trim() === '' ||
+            username.trim() === '' ||
+            email.trim() === '' ||
+            password.trim() === '' ||
+            passwordConfirmation.trim() === ''
+        ) {
+            res.status(400).json({
+                inputError: 'Input field can not be empty!',
+            });
+            return;
+        }
+
+        if (name.trim().length > 30) {
+            res.status(400).json({
+                inputError: 'name can not be more than 30 charactors',
+            });
+            return;
+        }
+
+        if (username.trim().length > 25) {
+            res.status(400).json({
+                inputError: 'Name can not be more than 25 charactors',
+            });
+            return;
+        }
+
+        if (password !== passwordConfirmation) {
+            res.status(400).json({
+                inputError: 'Passwords do not match!',
+            });
+            return;
+        }
+
         try {
             const response = await signup(
-                req.body.name,
-                req.body.username,
-                req.body.email,
-                req.files?.['avatar']?.[0]?.filename ?? null,
-                req.body.password,
-                req.body.passwordConfirmation
+                name,
+                username,
+                email,
+                avatar,
+                password,
+                passwordConfirmation
             );
 
             const { payload } = response;
@@ -43,7 +96,7 @@ export const singUp = asyncHandler(
                     message: response.message,
                     status: response.status,
                     user: payload.user,
-                }); // return approprite user properties.
+                });
             } else {
                 res.status(response.status);
                 res.send(response);

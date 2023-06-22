@@ -8,7 +8,10 @@ import {
 export const getUserSavedTweetController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.user._id;
-
+        if (!userId) {
+            res.status(400).json({ inputError: 'Input error' });
+            return;
+        }
         try {
             const { success, message, status, payload } =
                 await getUserSavedTweets(userId);
@@ -32,7 +35,10 @@ export const saveTweetToBookmarkController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.user._id;
         const tweetId = req.params.id;
-
+        if (!userId || !tweetId) {
+            res.status(400).json({ inputError: 'Input error' });
+            return;
+        }
         try {
             const { success, message, status, payload } =
                 await saveTweetToBookmark(userId, tweetId);

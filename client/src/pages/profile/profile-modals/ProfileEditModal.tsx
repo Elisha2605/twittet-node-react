@@ -238,7 +238,10 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
                             }`}
                         >
                             <input
-                                {...register('name')}
+                                {...register('name', {
+                                    required: 'Name field is required',
+                                    maxLength: { value: 30, message: 'Name should not exceed 30 characters' }
+                                })}
                                 className={styles.formInput}
                                 type="text"
                                 id="name"
@@ -263,7 +266,9 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
                             }`}
                         >
                             <input
-                                {...register('bio')}
+                                {...register('bio', {
+                                    maxLength: { value: 500, message: 'Bio text should not exceed 500 characters' }
+                                })}
                                 className={styles.formInput}
                                 type="text"
                                 id="bio"
@@ -288,7 +293,9 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
                             }`}
                         >
                             <input
-                                {...register('location')}
+                                {...register('location', {
+                                    maxLength: { value: 90, message: 'Location text should not exceed 90 characters' }
+                                })}
                                 className={styles.formInput}
                                 type="text"
                                 id="location"
@@ -315,7 +322,10 @@ const ProfileEditModal: FC<ProfileEditModalProps> = ({
                             }`}
                         >
                             <input
-                                {...register('website', { validate: validateWebsite })}
+                                {...register('website', { 
+                                    validate: validateWebsite,
+                                    maxLength: { value: 70, message: '"ebsite text should not exceed 70 characters' }
+                                })}
                                 className={styles.formInput}
                                 type="text"
                                 id="website"

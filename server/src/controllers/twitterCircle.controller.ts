@@ -8,7 +8,10 @@ import {
 export const getUserTwitterCircleMembersController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.user._id;
-
+        if (!userId) {
+            res.status(400).json({ inputError: 'Input error' });
+            return;
+        }
         try {
             const { success, message, status, payload } =
                 await getUserTwitterCircleMembers(userId);
@@ -32,7 +35,10 @@ export const addUserToTwitterCircleController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.user._id;
         const addId = req.params.id;
-
+        if (!userId || !addId) {
+            res.status(400).json({ inputError: 'Input error' });
+            return;
+        }
         try {
             const { success, message, status, payload } =
                 await addUserToTwitterCircle(userId, addId);

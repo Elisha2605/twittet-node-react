@@ -46,7 +46,6 @@ const LoginForm: FC<LoginFormProps> = ({
                         {...register("password", 
                             {
                                 required: "Password field required",
-                                minLength: { value: 1, message: "password must be at least 4 characters"}
                             }
                         )}
                         className={styles.formInput}

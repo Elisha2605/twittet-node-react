@@ -10,7 +10,10 @@ import {
 export const getUserFollowsController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.params.id;
-
+        if (!userId) {
+            res.status(400).json({ inputError: 'Input error' });
+            return;
+        }
         try {
             const response = await getUserFollows(userId);
             res.status(200).json(response);
@@ -23,7 +26,10 @@ export const getUserFollowsController = asyncHandler(
 export const getAuthUserFollowsController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.user._id;
-
+        if (!userId) {
+            res.status(400).json({ inputError: 'Input error' });
+            return;
+        }
         try {
             const response = await getUserFollows(userId);
             res.status(200).json(response);
@@ -37,7 +43,10 @@ export const followRequestController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const sender = req.user._id;
         const receiver = req.params.id;
-
+        if (!sender || !receiver) {
+            res.status(400).json({ inputError: 'Input error' });
+            return;
+        }
         try {
             const { success, message, payload } = await sendFollowRequest(
                 sender,
@@ -63,7 +72,10 @@ export const approveFollowRequestController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const receiver = req.body.receiverId;
         const sender = req.body.senderId;
-
+        if (!sender || !receiver) {
+            res.status(400).json({ inputError: 'Input error' });
+            return;
+        }
         try {
             const { success, message, payload } = await approveFollowRequest(
                 receiver,
@@ -89,7 +101,10 @@ export const declineFollowRequestController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const receiver = req.body.receiverId;
         const sender = req.body.senderId;
-
+        if (!sender || !receiver) {
+            res.status(400).json({ inputError: 'Input error' });
+            return;
+        }
         try {
             const { success, message, payload } = await declineFollowRequest(
                 receiver,

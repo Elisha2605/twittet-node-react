@@ -40,24 +40,24 @@ const Follower: React.FC<{}> = () => {
             <div className={styles.main}>
                 {followers && followers.map((follower) => (
                     <div
-                        key={follower._id}
+                        key={follower?._id}
                         className={styles.followingItem}
                         onClick={() =>
-                            navigate(`/profile/${follower.user._id}`)
+                            navigate(`/profile/${follower?.user?._id}`)
                         }
                     >
                         <UserInfo
-                            user={follower.user}
+                            user={follower?.user}
                             avatar={
                                 follower?.user?.avatar &&
                                 `${IMAGE_AVATAR_BASE_URL}/${follower?.user?.avatar}`
                             }
-                            isVerified={follower?.user.isVerified}
+                            isVerified={follower?.user?.isVerified}
                             name={follower?.user?.name}
                             username={follower?.user?.username}
                             className={styles.userInfoWrapper}
                         >
-                            {authUser?._id !== follower.user._id && (
+                            {authUser?._id !== follower?.user?._id && (
                                 <FollowButton
                                     userId={follower?.user?._id}
                                     type={ButtonType.secondary}

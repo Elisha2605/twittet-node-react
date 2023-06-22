@@ -46,24 +46,24 @@ const Following = () => {
                 <div className={styles.main}>
                     {followings && followings.map((following) => (
                         <div
-                            key={following._id}
+                            key={following?._id}
                             className={styles.followingItem}
-                            onClick={() => navigate(`/profile/${following.user._id}`)}
+                            onClick={() => navigate(`/profile/${following?.user?._id}`)}
                         >
                             {!isLoading && authUser && (
                                 <UserInfo
-                                    user={following.user}
+                                    user={following?.user}
                                     avatar={
-                                        following.user?.avatar &&
-                                        `${IMAGE_AVATAR_BASE_URL}/${following.user?.avatar}`
+                                        following?.user?.avatar &&
+                                        `${IMAGE_AVATAR_BASE_URL}/${following?.user?.avatar}`
                                     }
-                                    name={following.user?.name}
-                                    isVerified={following.user.isVerified}
-                                    username={following.user?.username}
+                                    name={following?.user?.name}
+                                    isVerified={following?.user?.isVerified}
+                                    username={following?.user?.username}
                                     className={styles.userInfoWrapper}
                                 >
                                     <FollowButton
-                                        userId={following.user._id}
+                                        userId={following?.user?._id}
                                         type={ButtonType.secondary}
                                         size={ButtonSize.small}
                                     />

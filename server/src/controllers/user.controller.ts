@@ -154,6 +154,39 @@ export const editUserProfileController = asyncHandler(
         const location = req.body.location; // needs validation
         const website = validate_website(req.body.website);
 
+        if (!userId || !name) {
+            res.status(400).json({ inputError: 'Input error' });
+            return;
+        }
+
+        if (name.trim().length > 30) {
+            res.status(400).json({
+                inputError: 'name can not be more than 30 charactors',
+            });
+            return;
+        }
+
+        if (bio.trim().length > 500) {
+            res.status(400).json({
+                inputError: 'Bio can not be more than 500 charactors',
+            });
+            return;
+        }
+
+        if (location.trim().length > 90) {
+            res.status(400).json({
+                inputError: 'Location can not be more than 90 charactors',
+            });
+            return;
+        }
+
+        if (website.trim().length > 70) {
+            res.status(400).json({
+                inputError: 'Website can not be more than 70 charactors',
+            });
+            return;
+        }
+
         try {
             const { success, message, status, payload } = await editUserProfile(
                 userId,
@@ -216,7 +249,7 @@ export const editEmailController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.user._id;
         const email = req.body.email;
-        if (!email) {
+        if (!userId || !email) {
             res.status(400).json({ InvalidInputError: 'Invalid Input' });
         }
         try {
@@ -248,6 +281,10 @@ export const editProtectedController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.user._id;
         const isProtected = req.body.isProtected;
+        if (!userId || !isProtected) {
+            res.status(400).json({ InvalidInputError: 'Invalid Input' });
+        }
+
         if (isProtected.length === 0) {
             res.status(400).json({ InvalidInputError: 'Invalid Input' });
         }

@@ -131,9 +131,9 @@ const PasswordReset: React.FC<{}> = ({}) => {
                                     required: 'Confirm password field required',
                                     validate: passwordMatch,
                                     minLength: {
-                                        value: 1,
+                                        value: 3,
                                         message:
-                                            'confirm password must be at least 4 characters',
+                                            'confirm password must be at least 3 characters',
                                     },
                                 })}
                                 className={styles.formInput}

@@ -35,7 +35,10 @@ const SignupForm: FC<SignupFormProps> = ({
                         }`}
                     >
                         <input
-                            {...register('name')}
+                           {...register('name', {
+                                required: 'Name field is required',
+                                maxLength: { value: 30, message: 'Name should not exceed 30 characters' }
+                            })}
                             className={styles.formInput}
                             type="text"
                             id="name"
@@ -45,6 +48,11 @@ const SignupForm: FC<SignupFormProps> = ({
                         <label className={styles.formLabel} htmlFor="name">
                             Name
                         </label>
+                        {errors.name && (
+                            <p className={styles.errorMsg}>
+                                {errors.name?.message}
+                            </p>
+                        )}
                     </div>
                 </div>
                 <div
@@ -55,6 +63,7 @@ const SignupForm: FC<SignupFormProps> = ({
                     <input
                         {...register('username', {
                             required: 'Username field is required.',
+                            maxLength: { value: 25, message: 'Username should not exceed 25 characters' }
                         })}
                         className={styles.formInput}
                         type="text"
@@ -65,9 +74,9 @@ const SignupForm: FC<SignupFormProps> = ({
                     <label className={styles.formLabel} htmlFor="username">
                         Username
                     </label>
-                    {errors.email && (
+                    {errors.username && (
                         <p className={styles.errorMsg}>
-                            {errors.email?.message}
+                            {errors.username?.message}
                         </p>
                     )}
                 </div>
@@ -104,9 +113,9 @@ const SignupForm: FC<SignupFormProps> = ({
                         {...register('password', {
                             required: 'Password field required',
                             minLength: {
-                                value: 1,
+                                value: 3,
                                 message:
-                                    'password must be at least 4 characters',
+                                    'password must be at least 3 characters',
                             },
                         })}
                         className={styles.formInput}
@@ -134,9 +143,9 @@ const SignupForm: FC<SignupFormProps> = ({
                             required: 'Confirm password field required',
                             validate: passwordMatch,
                             minLength: {
-                                value: 1,
+                                value: 3,
                                 message:
-                                    'confirm password must be at least 4 characters',
+                                    'confirm password must be at least 3 characters',
                             },
                         })}
                         className={styles.formInput}

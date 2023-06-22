@@ -9,7 +9,10 @@ import {
 export const getAllTweetRepliesController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const tweetId = req.params.id;
-
+        if (!tweetId) {
+            res.status(400).json({ InvalidInputError: 'Invalid input' });
+            return;
+        }
         try {
             const { success, message, status, payload } =
                 await getAllTweetReplies(tweetId);
@@ -32,7 +35,10 @@ export const getAllTweetRepliesController = asyncHandler(
 export const getReplyByIdController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const replyId = req.params.id;
-
+        if (!replyId) {
+            res.status(400).json({ InvalidInputError: 'Invalid input' });
+            return;
+        }
         try {
             const { success, message, status, payload } = await getReplyById(
                 replyId
@@ -64,9 +70,9 @@ export const createReplyController = asyncHandler(
             res.status(400).json({ InvalidInputError: 'Invalid Input' });
             return;
         }
-        if (text !== undefined && text.length >= 300) {
+        if (text !== undefined && text.length >= 280) {
             res.status(400).json({
-                InvalidInput: 'Tweet input must be less that 280',
+                InvalidInput: 'Reply input must be less that 280',
             });
             return;
         }
