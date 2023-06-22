@@ -33,7 +33,7 @@ export const likeController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const tweetId = req.params.id;
         const userId = req.user._id;
-        if (!userId || tweetId) {
+        if (!userId || !tweetId) {
             res.status(400).json({ inputError: 'Input error' });
             return;
         }
