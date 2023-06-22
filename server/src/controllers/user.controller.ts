@@ -217,7 +217,7 @@ export const editUsernameController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.user._id;
         const username = req.body.username;
-        if (!username) {
+        if (!userId || !username) {
             res.status(400).json({ InvalidInputError: 'Invalid Input' });
         }
         try {
@@ -281,7 +281,7 @@ export const editProtectedController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.user._id;
         const isProtected = req.body.isProtected;
-        if (!userId || !isProtected) {
+        if (!userId) {
             res.status(400).json({ InvalidInputError: 'Invalid Input' });
         }
 

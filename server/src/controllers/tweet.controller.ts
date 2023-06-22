@@ -45,7 +45,7 @@ export const getTweetRepliesController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const tweetId = req.params.id;
         const userId = req.user._id;
-        if (!userId || tweetId) {
+        if (!userId || !tweetId) {
             res.status(400).json({ inputError: 'Input error' });
             return;
         }
@@ -190,7 +190,9 @@ export const replyController = asyncHandler(
         const userId = req.user._id;
         const text = req.body.text;
         const image = req.files?.['tweetImage']?.[0]?.filename ?? null;
-
+        if (!userId || !tweetId) {
+            res.status(400).json({ InvalidInputError: 'Invalid input' });
+        }
         if (text === undefined && image === null) {
             res.status(400).json({ InvalidInputError: 'Invalid Input' });
             return;
@@ -233,6 +235,9 @@ export const reTweetController = asyncHandler(
         const image = req.files?.['tweetImage']?.[0]?.filename ?? null;
         const audience = req.body.audience;
         const reply = req.body.reply;
+        if (!userId || !tweetId) {
+            res.status(400).json({ InvalidInputError: 'Invalid input' });
+        }
 
         if (tweetId === undefined) {
             res.status(400).json({ InvalidInputError: 'Invalid Input' });

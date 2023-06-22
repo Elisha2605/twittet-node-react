@@ -74,7 +74,7 @@ export const resetPasswordController = asyncHandler(
         const password = req.body.password;
         const token = req.body.token;
 
-        if (!userId || !token || password) {
+        if (!userId || !token || !password) {
             res.status(400).json({ InvalidInputError: 'Invalid input' });
             return;
         }
