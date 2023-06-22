@@ -10,6 +10,15 @@ export const getUserSavedTweets = async (
     try {
         const savedTweets = await fetchUserSavedTweets(userId);
 
+        if (!savedTweets) {
+            return {
+                success: false,
+                message: 'Saved tweets not found',
+                status: 404,
+                payload: {},
+            };
+        }
+
         return {
             success: true,
             message: 'Saved tweets',

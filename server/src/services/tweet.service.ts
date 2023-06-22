@@ -569,12 +569,12 @@ export const deleteTweet = async (
             return {
                 success: true,
                 message: 'Tweet not found!',
-                status: 204,
+                status: 404,
                 payload: {},
             };
         }
         if (!tweetToDelete.user._id.equals(userId)) {
-            throw CustomError('Unauthorized', 403);
+            throw CustomError('Unauthorized', 401);
         }
         // Delete tweetLikes and tweetToDelete if both exist
         if (tweetLikes) {

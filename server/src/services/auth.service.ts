@@ -133,7 +133,7 @@ export const logout = async (
 
         const logoutUser = await user.save();
         if (logoutUser === null || logoutUser === undefined) {
-            throw CustomError('Failed to logout', 404);
+            throw CustomError('User not found, Failed to logout', 404);
         }
         return {
             success: true,
