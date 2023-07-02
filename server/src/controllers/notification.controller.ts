@@ -2,11 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import asyncHandler from 'express-async-handler';
 import {
     getMentionsNotification,
-    getLikesNotification,
+    getAllNotification,
     updateNotificationsState,
 } from '../../src/services/notification.service';
 
-export const getLikesNotificationController = asyncHandler(
+export const getAllNotificationController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.user._id;
         if (!userId) {
@@ -15,7 +15,7 @@ export const getLikesNotificationController = asyncHandler(
         }
         try {
             const { success, message, status, payload } =
-                await getLikesNotification(userId);
+                await getAllNotification(userId);
             if (success) {
                 res.json({
                     success: success,
@@ -60,14 +60,10 @@ export const getMentionsNotificationController = asyncHandler(
 
 export const updateNotificationsStateController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        const notificationIds = req?.body?.notificationIds;
-        if (!notificationIds) {
-            res.status(400).json({ inputError: 'Input error' });
-            return;
-        }
+        const userId = req.user._id;
         try {
             const { success, message, status, payload } =
-                await updateNotificationsState(notificationIds);
+                await updateNotificationsState(userId);
             if (success) {
                 res.json({
                     success: success,

@@ -47,13 +47,7 @@ const Notification = () => {
             setIsLoading(true);
             const { notifications } = await getAllNotifications();
 
-            const notificationIds = notifications.map((notif: any) => {
-                if (notif?.read === false) {
-                    return notif?._id
-                }
-            });
-
-            await updateNotificationsState(notificationIds);
+            await updateNotificationsState();
 
             setAllNotifications(notifications);
             setIsLoading(false);

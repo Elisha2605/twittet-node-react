@@ -3,7 +3,7 @@ import { NOTIFICATION_TYPE } from '../../src/constants/notification.constants';
 import Notification from '../../src/models/notification.model';
 import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
 
-export const getLikesNotification = async (
+export const getAllNotification = async (
     userId: string
 ): Promise<ApiResponse<any>> => {
     try {
@@ -223,11 +223,11 @@ export const getMentionsNotification = async (
 };
 
 export const updateNotificationsState = async (
-    notificationIds: string[],
+    userId: string
 ): Promise<ApiResponse<any>> => {
     try {
         const updateResult = await Notification.updateMany(
-            { tweet: { $in: notificationIds }, read: false },
+            { user: userId, read: false },
             { $set: { read: true } }
         );
 

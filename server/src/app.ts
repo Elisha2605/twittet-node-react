@@ -18,10 +18,11 @@ import tweetRouter from './routes/tweet.routes';
 import followRouter from './routes/follow.routes';
 import likeRouter from './routes/like.routes';
 import bookmarkRouter from './routes/bookmark.routes';
-import replyRouter from './routes/reply.routes';
 import notificationRouter from './routes/notification.routes';
 import twitterCircleRouter from './routes/twitterCircle.routes';
 import passwordRouter from './routes/passwordReset.routes';
+import messageRouter from './routes/message.routes';
+import contactRouter from './routes/contact.routes';
 
 dotenv.config();
 
@@ -57,10 +58,11 @@ app.use('/api/tweets', tweetRouter);
 app.use('/api/follows', followRouter);
 app.use('/api/likes', likeRouter);
 app.use('/api/bookmarks', bookmarkRouter);
-app.use('/api/replies', replyRouter);
 app.use('/api/notifications', notificationRouter);
 app.use('/api/twitterCircles', twitterCircleRouter);
 app.use('/api/password-reset', passwordRouter);
+app.use('/api/message', messageRouter);
+app.use('/api/contact', contactRouter);
 
 // SERVING STATIC FILES
 

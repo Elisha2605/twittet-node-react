@@ -23,11 +23,11 @@ export const getMentionsNotification = async () => {
     }
 };
 
-export const updateNotificationsState = async (notificationIds: string[]) => {
+export const updateNotificationsState = async () => {
     try {
         const res = await http.patch(
             '/notifications/update-state',
-            { notificationIds: notificationIds },
+            {},
             GETREQUESTOPTIONS()
         );
         return res.data;
