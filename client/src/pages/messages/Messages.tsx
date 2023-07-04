@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Header from '../../components/header/Header';
 import styles from './Messages.module.css';
 import Layout from '../../Layout.module.css';
@@ -8,11 +8,7 @@ import EnvelopeIcon from '../../components/icons/EnvelopeIcon';
 import SearchBar from '../../components/ui/SearchBar';
 import Aside from '../../components/aside/Aside';
 import DetailIcon from '../../components/icons/DetailIcon';
-import Avatar, { Size } from '../../components/ui/Avatar';
-import {
-    CONTACT_OPTION,
-    IMAGE_AVATAR_BASE_URL,
-} from '../../constants/common.constants';
+import { CONTACT_OPTION } from '../../constants/common.constants';
 import {
     addContact,
     getAllContacts,
@@ -23,9 +19,10 @@ import { messageIcon, messageOption } from '../../data/menuOptions';
 import { useMessage } from '../../context/successMessage.context';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
-import { getMonthName, getYear } from '../../utils/helpers.utils';
 import { getConversation } from '../../api/message.api';
 import Conversation from './conversation';
+import AsideUserInfo from './AsideUserInfo';
+import FormMessage from './FormMessage';
 
 const Message = () => {
     const { path } = useParams<{ path: string }>();
@@ -44,6 +41,20 @@ const Message = () => {
         };
         fetchAllContacts();
     }, [currentUser]);
+
+    useEffect(() => {
+        const fetchAllContactAndConversation = async () => {
+            if (path!) {
+                const { user } = await getUserById(path!);
+                const { conversation } = await getConversation(path!);
+                setCurrentUser(user);
+                setConversations(conversation);
+            } else if (contacts.length === 0) {
+                navigate('/message');
+            }
+        };
+        fetchAllContactAndConversation();
+    }, [contacts.length, navigate, path]);
 
     const contactOnclikOption = async (option: any, contactId: any) => {
         if (option === CONTACT_OPTION.delete) {
@@ -67,35 +78,33 @@ const Message = () => {
         }
     };
 
-    useEffect(() => {
-        const fetchAllContactAndConversation = async () => {
-            if (path!) {
-                const { user } = await getUserById(path!);
-                const { conversation } = await getConversation(path!);
-                setCurrentUser(user);
-                setConversations(conversation);
-            } else if (contacts.length === 0) {
-                navigate('/message');
-            }
-        };
-        fetchAllContactAndConversation();
-    }, [path]);
-
     const handleSearchClick = async (newContact: any) => {
         setContacts((prevState: any) => [newContact, ...prevState]);
         await addContact(newContact?._id);
         if (contacts) {
             navigate(`/message/${newContact._id}`);
-            localStorage.setItem(
-                'lastMessageContactId',
-                newContact?._id
-            );
+            localStorage.setItem('lastMessageContactId', newContact?._id);
         }
     };
 
-    const handleContactClick = async (contactId: string) => {
-        navigate(`/message/${contactId}`);
+    const messagesContainerRef = useRef<HTMLDivElement>(null);
+    
+    useEffect(() => {
+        scrollToBottom(); // Scroll to the bottom initially
+      }, [path]);
+    
+    const scrollToBottom = () => {
+    if (messagesContainerRef.current) {
+        const { scrollHeight, clientHeight } = messagesContainerRef.current;
+        messagesContainerRef.current.scrollTop = scrollHeight - clientHeight;
+    }
     };
+
+    const onSendMessage = (message: string) => {
+        console.log(message);
+        setConversations((prevState: any) => [...prevState, message]);
+        scrollToBottom();
+    }
 
     return (
         <React.Fragment>
@@ -122,8 +131,9 @@ const Message = () => {
                                                 ? styles.active
                                                 : ''
                                         }`}
-                                        onClick={() =>
-                                            handleContactClick(contact?._id)
+                                        onClick={() => {
+                                            navigate(`/message/${contact?._id}`)
+                                        }
                                         }
                                     >
                                         <UserContactInfo
@@ -144,44 +154,23 @@ const Message = () => {
                         <Header border={false} clasName={styles.asideHeader}>
                             <DetailIcon className={styles.detailIcon} />
                         </Header>
-                        {path && currentUser && (
-                            <div className={styles.userToInfo}>
-                                <Avatar
-                                    size={Size.medium}
-                                    path={
-                                        currentUser?.avatar
-                                            ? `${IMAGE_AVATAR_BASE_URL}/${currentUser?.avatar}`
-                                            : `${IMAGE_AVATAR_BASE_URL}/default-avatar.jpg`
-                                    }
-                                    className={''}
-                                />
-                                <p className={styles.fullname}>
-                                    {currentUser?.name}
-                                </p>
-                                <p className={styles.username}>
-                                    @{currentUser?.username}
-                                </p>
-                                <p className={styles.moreInfo}>
-                                    Joined{' '}
-                                    {getMonthName(currentUser?.createdAt)}{' '}
-                                    {getYear(currentUser?.createdAt)} ·{' '}
-                                    {currentUser?.followerCount} Followers
-                                </p>
-                            </div>
-                        )}
-                        {/* Display Messages - start */}
-                        <div className={styles.messages}>
-                            {path &&
-                                conversations.map((conversation: any) => (
-                                    <div key={conversation?._id}>
-                                        <Conversation
-                                            otherUser={currentUser}
-                                            conversation={conversation}
-                                        />
-                                    </div>
-                                ))}
+                        <div className={styles.messages} ref={messagesContainerRef}>
+                            {path && currentUser && (
+                                <AsideUserInfo user={currentUser} />
+                            )}
+                                <div className={styles.messagesContainer}>
+                                    {path &&
+                                        conversations.slice().map((conversation: any) => (
+                                            <div key={conversation?._id}>
+                                                <Conversation
+                                                    otherUser={currentUser}
+                                                    conversation={conversation}
+                                                />
+                                            </div>
+                                        ))}
+                                </div>
+                                <FormMessage currentUser={currentUser} onSendMessage={onSendMessage} />
                         </div>
-                        {/* Display Messages - end */}
                     </Aside>
                 </div>
                 {/* Aside - end */}

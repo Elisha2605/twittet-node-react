@@ -20,6 +20,7 @@
 }
 
 .aside {
+    position: relative;
     width: 100%;
     height: 100vh; /* when many - messages remove this*/
     overflow-x: hidden;
@@ -28,45 +29,16 @@
     border-width: 0 1px 0 0;
 }
 
-.userToInfo {
-    display: flex;
-    flex-direction: column;
-    /* justify-content: center; */
-    align-items: center;
-    width: 100%;
-    height: 15rem;
-    border-bottom-color: var(--color-secondary-light);
-    border-style: solid;
-    border-width: 0 0 1px 0;
-    padding-top: 2rem;
-    margin-bottom: 1rem;
-}
-
-.userToInfo:hover {
-    background: var(--color-secondary-lighter);
-    transition: 0.2s ease-in-out;
-    cursor: pointer;
-}
-
-.fullname {
-    font-weight: var(--font-weight-600);
-}
-
-.username {
-    color: var(--color-secondary);
-}
-
-.moreInfo {
-    margin-top: 1rem;
-    color: var(--color-secondary);
-}
-
 .active {
     border-right: 2px solid var(--color-primary);
     background: var(--color-secondary-lighter);
 }
 
 .messages {
-    width: 100%;
-    height: 100%;
+    height: calc(100vh - 8.5rem);
+    overflow-y: scroll;
 }
+
+.messagesContainer {
+    height: 100%;
+  }

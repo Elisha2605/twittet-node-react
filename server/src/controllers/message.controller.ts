@@ -8,16 +8,16 @@ import {
 export const getConversationController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const authUser = req.user._id;
-        const otherUser = req.params.id;
+        const receiver = req.params.id;
 
-        if (!authUser || !otherUser) {
+        if (!authUser || !receiver) {
             res.status(400).json({ inputError: 'Input error' });
             return;
         }
         try {
             const { success, message, status, payload } = await getConversation(
                 authUser,
-                otherUser
+                receiver
             );
 
             if (success) {
@@ -72,14 +72,14 @@ export const sendMessageController = asyncHandler(
                     success: success,
                     status: status,
                     message: message,
-                    payload: payload,
+                    msg: payload,
                 });
             } else {
                 res.status(status).json({
                     success: success,
                     status: status,
                     message: message,
-                    payload: payload,
+                    msg: payload,
                 });
             }
             return;

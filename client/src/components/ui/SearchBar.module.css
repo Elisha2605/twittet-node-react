@@ -38,9 +38,10 @@
     background: var(--color-white);
     box-shadow: 0 0 0 1px rgba(15, 15, 15, 0.001), 0 8px 16px rgba(15, 15, 15, 0.4);
     border-radius: 1rem;
-    overflow: hidden;
+    overflow-y: scroll;
     top: 3.5rem;
     z-index: 1;
+    max-height: 30rem;
 }
 
 .userItem {
