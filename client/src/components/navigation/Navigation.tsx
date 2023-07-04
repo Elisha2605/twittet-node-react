@@ -24,9 +24,7 @@ import {
     navUseMenuIcons,
     navUserMenuOptions,
 } from '../../data/menuOptions';
-import {
-    MORE_NAV_OPTION,
-} from '../../constants/common.constants';
+import { MORE_NAV_OPTION } from '../../constants/common.constants';
 import { ModalContext } from '../../context/modal.context';
 import AuthContext from '../../context/user.context';
 import FaCircleEllipsis from '../../assets/faCircleEllipsis-regular.svg';
@@ -45,15 +43,15 @@ interface NavigationProps {
 const Navigation: React.FC<NavigationProps> = ({ socket }) => {
     const [authUser, setAuthUser] = useState<any>(null);
     const [activeNav, setActiveNav] = useState('home');
-    const [isNotificationOpened, setIsNotificationOpened] = useState<boolean>(true);
+    const [isNotificationOpened, setIsNotificationOpened] =
+        useState<boolean>(true);
+    const [lastMessageContactId, setLastMessageContactId] = useState<string>();
 
     const navigate = useNavigate();
 
     const [notifications, setNotifications] = useState<any[]>([]);
 
-
-    const [popUpNotification, setPopUpNotification] = useState<any[]>([]); 
-    const [isRead, setIsRead] = useState<boolean>(false); 
+    const [isRead, setIsRead] = useState<boolean>(false);
 
     /////////// notifications //////////////
 
@@ -61,7 +59,10 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
         const fetchAllNotifications = async () => {
             const { notifications } = await getAllNotifications();
             notifications.map((notif: any) => {
-                if (notif?.read === false && authUser?._id === notifications?.user?._id) {
+                if (
+                    notif?.read === false &&
+                    authUser?._id === notifications?.user?._id
+                ) {
                     setIsRead(true);
                 }
             });
@@ -78,11 +79,9 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
         socket?.on('getNotification', (data: any) => {
             setNotifications((preveState) => [...preveState, data]);
             setIsNotificationOpened(true);
-        })
-    }, [socket])
+        });
+    }, [socket]);
     ////// Socket.io ////////
-
-
 
     useEffect(() => {
         const setNavActive = () => {
@@ -136,12 +135,26 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
             navigate('/follower-requests');
         }
         if (option === MORE_NAV_OPTION.settingsAndPrivacy) {
-            navigate('/settings/account')
+            navigate('/settings/account');
         }
         if (option === MORE_NAV_OPTION.display) {
             console.log(option);
         }
     };
+
+// create a function that returns only the last 
+// ID or add it to the usercontext in the feature
+    const storedLastMessageContactId = localStorage.getItem('lastMessageContactId');
+    useEffect(() => {
+        const updateLastMessageContactId = () => {
+            if (storedLastMessageContactId) {
+                setLastMessageContactId(storedLastMessageContactId);
+            } else {
+                setLastMessageContactId('')
+            }
+        };
+        updateLastMessageContactId();
+    }, [storedLastMessageContactId]);
 
     return (
         <React.Fragment>
@@ -198,18 +211,16 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
                         onClick={() => {
                             setActiveNav('notification');
                             setIsNotificationOpened(!isNotificationOpened);
-                            setIsRead(false)
+                            setIsRead(false);
                         }}
-                        className={
-                            `${styles.navItem} ${styles.notification} ${activeNav === 'notification' ? styles.active : ''}`
-                        }
+                        className={`${styles.navItem} ${styles.notification} ${
+                            activeNav === 'notification' ? styles.active : ''
+                        }`}
                     >
-                        {isNotificationOpened && notifications.length > 0  && (
+                        {isNotificationOpened && notifications.length > 0 && (
                             <div className={styles.redDot}></div>
                         )}
-                        {isRead && (
-                            <div className={styles.redDot}></div>
-                        )}
+                        {isRead && <div className={styles.redDot}></div>}
                         <NavigationItem
                             icon={
                                 activeNav === 'notification'
@@ -225,7 +236,9 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
                         onClick={() => {
                             setActiveNav('message');
                         }}
-                        className={`${styles.navItem} ${activeNav === 'message' ? styles.active : ''}`}
+                        className={`${styles.navItem} ${
+                            activeNav === 'message' ? styles.active : ''
+                        }`}
                     >
                         <NavigationItem
                             icon={
@@ -234,7 +247,7 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
                                     : faEnvelope
                             }
                             label={'Message'}
-                            path="/message"
+                            path={lastMessageContactId ? `/message/${lastMessageContactId}` : `/message` }
                         />
                     </div>
 
@@ -242,9 +255,9 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
                         onClick={() => {
                             setActiveNav('bookmarks');
                         }}
-                        className={
-                            `${styles.navItem} ${activeNav === 'bookmarks' ? styles.active : ''}`
-                        }
+                        className={`${styles.navItem} ${
+                            activeNav === 'bookmarks' ? styles.active : ''
+                        }`}
                     >
                         <NavigationItem
                             icon={
@@ -263,9 +276,9 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
                             onClick={() => {
                                 setActiveNav('profile');
                             }}
-                            className={
-                                `${styles.navItem} ${activeNav === 'profile' ? styles.active : ''}`
-                            }
+                            className={`${styles.navItem} ${
+                                activeNav === 'profile' ? styles.active : ''
+                            }`}
                         >
                             <NavigationItem
                                 icon={
@@ -299,8 +312,9 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
                     </PopUpMenu>
                 </div>
                 <div>
-
-                {notifications.map((user) => <div>{user?.sender}</div>)}
+                    {notifications.map((user) => (
+                        <div>{user?.sender}</div>
+                    ))}
                 </div>
                 <Button
                     value={'Tweet'}
@@ -308,15 +322,15 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
                     size={ButtonSize.medium}
                     onClick={() => openModal('main-tweet-modal')}
                 />
-            
-            <div className={styles.navigationUser}>
-                <NavigationUserInfo
-                    user={authUser}
-                    menuOptions={navUserMenuOptions}
-                    menuIcons={navUseMenuIcons}
-                    onClickOption={handleMenuOptionClick}
-                />
-            </div>
+
+                <div className={styles.navigationUser}>
+                    <NavigationUserInfo
+                        user={authUser}
+                        menuOptions={navUserMenuOptions}
+                        menuIcons={navUseMenuIcons}
+                        onClickOption={handleMenuOptionClick}
+                    />
+                </div>
             </div>
         </React.Fragment>
     );

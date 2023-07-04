@@ -8,7 +8,6 @@ import Layout from '../../Layout.module.css';
 import ArrowLeftIcon from '../../components/icons/ArrowLeftIcon';
 import HeaderTitle from '../../components/header/HeaderTitle';
 import {
-    IMAGE_AVATAR_BASE_URL,
     IMAGE_TWEET_BASE_URL,
     TWEET_AUDIENCE,
     TWEET_REPLY,
@@ -321,11 +320,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
                                     <UserInfo
                                         userId={tweet?.user?._id}
                                         tweet={tweet}
-                                        avatar={
-                                            tweet?.user?.avatar
-                                                ? `${IMAGE_AVATAR_BASE_URL}/${tweet?.user?.avatar}`
-                                                : undefined
-                                        }
+                                        avatar={tweet?.user?.avatar}
                                         name={tweet?.user?.name}
                                         username={tweet?.user?.username}
                                         isVerified={tweet?.user?.isVerified}
@@ -460,7 +455,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
                     <div className={Layout.aside}>
                         <Aside className={styles.aside}>
                         <Header border={false}>
-                            <SearchBar width={74} />
+                            <SearchBar width={74} isNavigate={true} />
                         </Header>
                             <WhoToFollow />
                         </Aside>

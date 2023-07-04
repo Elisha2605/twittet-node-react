@@ -1,0 +1,25 @@
+.container {
+    padding: 0 1rem;
+}
+
+.conversationWrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.authUser {
+    align-self: flex-end;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    padding: 10px 20px;
+    border-radius: 20px 20px 4px 20px;
+    margin-bottom: 8px;
+}
+
+.otherUser {
+    align-self: flex-start;
+    background-color: var(--color-secondary-lighter);
+    padding: 10px 20px;
+    border-radius: 20px 20px 20px 4px;
+    margin-bottom: 8px;
+}

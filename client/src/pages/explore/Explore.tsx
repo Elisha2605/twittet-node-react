@@ -17,7 +17,7 @@ const Explore = () => {
                     {/* Home page - start */}
                         <Header>
                             <div className={styles.headerWrapper}>
-                                <SearchBar width={85} />
+                                <SearchBar width={85} isNavigate={true} />
                                 <GearIcon className={styles.gearIcon}/>
                             </div>
                         </Header>
@@ -38,7 +38,7 @@ const Explore = () => {
                 <div className={Layout.aside}>
                     <Aside className={styles.aside}>
                     <Header border={false}>
-                        <SearchBar />
+                        <SearchBar isNavigate={true} />
                     </Header>
                         <WhoToFollow />
                     </Aside>

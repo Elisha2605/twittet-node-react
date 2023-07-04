@@ -3,7 +3,6 @@ import styles from './Follower.module.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getUserFollows } from '../../api/follow.api';
 import UserInfo from '../../components/ui/UserInfo';
-import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
 import { ButtonSize, ButtonType } from '../../components/ui/Button';
 import AuthContext from '../../context/user.context';
 import FollowButton from '../../components/ui/FollowButton';
@@ -48,10 +47,7 @@ const Follower: React.FC<{}> = () => {
                     >
                         <UserInfo
                             user={follower?.user}
-                            avatar={
-                                follower?.user?.avatar &&
-                                `${IMAGE_AVATAR_BASE_URL}/${follower?.user?.avatar}`
-                            }
+                            avatar={follower?.user?.avatar}
                             isVerified={follower?.user?.isVerified}
                             name={follower?.user?.name}
                             username={follower?.user?.username}

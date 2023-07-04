@@ -76,7 +76,7 @@ const FollowStatus = () => {
                 <div className={Layout.aside}>
                     <Aside className={styles.aside}>
                     <Header border={false}>
-                        <SearchBar width={74} />
+                        <SearchBar width={74} isNavigate={true} />
                     </Header>
                         <WhoToFollow />
                     </Aside>

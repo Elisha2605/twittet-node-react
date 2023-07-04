@@ -6,6 +6,7 @@ interface Imessage extends mongoose.Document {
     receiver: string | ObjectId;
     text: string;
     image?: string;
+    read: boolean;
 }
 
 const messageModel = {
@@ -24,6 +25,10 @@ const messageModel = {
     },
     image: {
         type: String,
+    },
+    read: {
+        type: Boolean,
+        default: false,
     },
 };
 

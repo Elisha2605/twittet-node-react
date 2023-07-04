@@ -15,7 +15,7 @@ import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAt, faChevronDown, faEarthAfrica, faLock, faUserCheck } from '@fortawesome/free-solid-svg-icons';
 import PopUpMenu from '../ui/PopUpMenu';
-import { IMAGE_AVATAR_BASE_URL, MAX_TWEET_CHARACTERS, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
+import { MAX_TWEET_CHARACTERS, TWEET_AUDIENCE, TWEET_REPLY } from '../../constants/common.constants';
 import { searchUsers } from '../../api/user.api';
 import UserInfo from '../ui/UserInfo';
 import useClickOutSide from '../../hooks/useClickOutSide';
@@ -207,10 +207,7 @@ const FormTweetEdit: FC<FormTweetEditProps> = ({
                                     >
                                 <UserInfo
                                         userId={user?._id}
-                                        avatar={
-                                            user?.avatar &&
-                                            `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`
-                                        }
+                                        avatar={user?.avatar}
                                         name={user?.name}
                                         username={user?.username}
                                         isVerified={user?.isVerified}

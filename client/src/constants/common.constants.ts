@@ -48,3 +48,7 @@ export enum NOTIFICATION_TYPE {
     tweet = 'Tweet',
     reply = 'Reply'
 }
+
+export enum CONTACT_OPTION {
+    delete = 'Delete conversation'
+}

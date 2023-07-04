@@ -177,7 +177,7 @@ const Bookmarks: FC<BookmarkProps> = ({
                     {/* Aside - start */}
                     <Aside className={styles.aside}>
                         <Header border={false}>
-                            <SearchBar />
+                            <SearchBar isNavigate={true} />
                         </Header>
                         <WhoToFollow />
                     </Aside>

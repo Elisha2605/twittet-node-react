@@ -1,8 +1,5 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import styles from './HomeEditTwitterCirlceModal.module.css';
-import {
-    IMAGE_AVATAR_BASE_URL,
-} from '../../../constants/common.constants';
 import { ModalContext } from '../../../context/modal.context';
 import Modal from '../../../components/ui/Modal';
 import XmarkIcon from '../../../components/icons/XmarkIcon';
@@ -126,7 +123,7 @@ const HomeEditTwitterCirlceModal: FC<HomeEditTwitterCirlceModalProps> = ({}) => 
                             <div key={member?._id} className={styles.followingItem} onClick={() => navigate(`/profile/${member?._id}`)}>   
                                 <UserInfo
                                    user={member}
-                                   avatar={member?.avatar && `${IMAGE_AVATAR_BASE_URL}/${member?.avatar}`}
+                                   avatar={member?.avatar}
                                    isVerified={member?.isVerified}
                                    name={member?.name}
                                    username={member?.username}
@@ -159,7 +156,7 @@ const HomeEditTwitterCirlceModal: FC<HomeEditTwitterCirlceModalProps> = ({}) => 
                             <div key={following?._id} className={styles.followingItem} onClick={() => navigate(`/profile/${following.user._id}`)}>   
                                 <UserInfo
                                    user={following?.user}
-                                   avatar={following?.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${following?.user?.avatar}`}
+                                   avatar={following?.user?.avatar}
                                    isVerified={following?.user?.isVerified}
                                    name={following?.user?.name}
                                    username={following?.user?.username}

@@ -19,7 +19,6 @@ import {
     MAX_TWEET_CHARACTERS,
     TWEET_AUDIENCE,
     TWEET_REPLY,
-    TWEET_TYPE,
 } from '../../constants/common.constants';
 import { TweetAudienceType, TweetReplyType } from '../../types/tweet.types';
 import AuthContext from '../../context/user.context';
@@ -393,7 +392,7 @@ const Home: React.FC<HomeProps> = ({
                 <div className={Layout.aside}>
                     <Aside className={styles.aside}>
                     <Header border={false}>
-                        <SearchBar />
+                        <SearchBar isNavigate={true} />
                     </Header>
                         <WhoToFollow />
                     </Aside>

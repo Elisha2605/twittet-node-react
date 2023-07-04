@@ -11,7 +11,6 @@ import WhoToFollow from '../../components/ui/WhoToFollow';
 import ArrowLeftIcon from '../../components/icons/ArrowLeftIcon';
 import HeaderTitle from '../../components/header/HeaderTitle';
 import { useNavigate } from 'react-router-dom';
-import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
 import FollowButton, { ButtonSize, ButtonType } from '../../components/ui/FollowButton';
 import ContentNotAvailable from '../../components/ui/ContentNotAvailable';
 
@@ -100,7 +99,7 @@ const FollowerRequests: FC<FollowerRequestsProps> = ({}) => {
                                         <UserInfo
                                             user={waiting?.user}
                                             userId={waiting?.user?._id}
-                                            avatar={waiting?.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${waiting?.user?.avatar}`}
+                                            avatar={waiting?.user?.avatar}
                                             name={waiting?.user?.name}
                                             username={waiting?.user?.username}
                                             isVerified={waiting?.user?.isVerified}
@@ -146,7 +145,7 @@ const FollowerRequests: FC<FollowerRequestsProps> = ({}) => {
                 <div className={Layout.aside}>
                     <Aside className={styles.aside}>
                     <Header border={false}>
-                        <SearchBar width={74} />
+                        <SearchBar width={74} isNavigate={true} />
                     </Header>
                         <WhoToFollow />
                     </Aside>

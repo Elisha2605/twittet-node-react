@@ -700,7 +700,7 @@ const Profile: FC<ProfileProps> = ({
                     <div className={Layout.aside}>
                         <Aside className={styles.aside}>
                             <Header border={false}>
-                                <SearchBar />
+                                <SearchBar isNavigate={true} />
                             </Header>
                             <WhoToFollow />
                         </Aside>

@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './twitterCircleSettings.module.css';
-import { useNavigate, useParams } from 'react-router-dom';
-import AuthContext from '../../../context/user.context';
+import { useNavigate } from 'react-router-dom';
 import Header from '../../../components/header/Header';
 import ArrowLeftIcon from '../../../components/icons/ArrowLeftIcon';
 import HeaderTitle from '../../../components/header/HeaderTitle';
@@ -11,7 +10,6 @@ import {
 } from '../../../api/twitterCircle.api';
 import { getAuthUserFollows } from '../../../api/follow.api';
 import UserInfo from '../../../components/ui/UserInfo';
-import { IMAGE_AVATAR_BASE_URL } from '../../../constants/common.constants';
 import Button, { ButtonSize, ButtonType } from '../../../components/ui/Button';
 
 const TwitterCircleSettings: React.FC<{}> = () => {
@@ -118,9 +116,7 @@ const TwitterCircleSettings: React.FC<{}> = () => {
                                 >
                                     <UserInfo
                                         user={member}
-                                        avatar={
-                                            member?.avatar &&
-                                            `${IMAGE_AVATAR_BASE_URL}/${member?.avatar}`
+                                        avatar={member?.avatar
                                         }
                                         isVerified={member?.isVerified}
                                         name={member?.name}
@@ -158,10 +154,7 @@ const TwitterCircleSettings: React.FC<{}> = () => {
                         >
                             <UserInfo
                                 userId={following?._id}
-                                avatar={
-                                    following?.user?.avatar &&
-                                    `${IMAGE_AVATAR_BASE_URL}/${following?.user?.avatar}`
-                                }
+                                avatar={following?.user?.avatar}
                                 isVerified={following?.user?.isVerified}
                                 name={following?.user?.name}
                                 username={following?.user?.username}

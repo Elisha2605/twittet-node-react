@@ -1,8 +1,5 @@
 import React, { FC, useContext, useEffect, useState } from "react";
 import styles from "./NotificationsMention.module.css";
-import UserInfo from "../../components/ui/UserInfo";
-import { IMAGE_AVATAR_BASE_URL } from "../../constants/common.constants";
-import { useNavigate } from "react-router-dom";
 import Tweet from "../../components/tweet/Tweet";
 import AuthContext from "../../context/user.context";
 

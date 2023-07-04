@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Button, { ButtonSize, ButtonType } from './Button';
 import UserInfo from './UserInfo';
-
 import styles from './WhoToFollow.module.css';
 import { getAllUsers } from '../../api/user.api';
-import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
 import { useNavigate } from 'react-router-dom';
 
 const WhoToFollow = () => {
@@ -30,11 +27,7 @@ const WhoToFollow = () => {
                             <UserInfo
                                 user={user}
                                 userId={user?._id}
-                                avatar={
-                                    user?.avatar
-                                        ? `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`
-                                        : undefined
-                                }
+                                avatar={user?.avatar}
                                 name={user?.name}
                                 username={user?.username}
                                 isNavigate={true}

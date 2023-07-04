@@ -14,7 +14,7 @@ import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAt, faChevronDown, faEarthAfrica, faLock, faUserCheck } from '@fortawesome/free-solid-svg-icons';
 import PopUpMenu from '../ui/PopUpMenu';
-import { IMAGE_AVATAR_BASE_URL, IMAGE_TWEET_BASE_URL, MAX_TWEET_CHARACTERS, TWEET_AUDIENCE, TWEET_REPLY, TWEET_TYPE } from '../../constants/common.constants';
+import { IMAGE_TWEET_BASE_URL, MAX_TWEET_CHARACTERS, TWEET_AUDIENCE, TWEET_REPLY, TWEET_TYPE } from '../../constants/common.constants';
 import { searchUsers } from '../../api/user.api';
 import UserInfo from '../ui/UserInfo';
 import useClickOutSide from '../../hooks/useClickOutSide';
@@ -260,10 +260,7 @@ const FormRetweet: FC<FormRetweetProps> = ({
                                     >
                                 <UserInfo
                                         userId={user?._id}
-                                        avatar={
-                                            user?.avatar &&
-                                            `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`
-                                        }
+                                        avatar={user?.avatar}
                                         name={user?.name}
                                         username={user?.username}
                                         isVerified={user?.isVerified}
@@ -288,11 +285,7 @@ const FormRetweet: FC<FormRetweetProps> = ({
                         <UserInfoRetweet
                             userId={retweetUserId}
                             tweet={retweet}
-                            avatar={
-                                avatar
-                                    ? `${IMAGE_AVATAR_BASE_URL}/${retweetUserAvatar}`
-                                    : undefined
-                            }
+                            avatar={avatar}
                             name={retweetUserName}
                             username={retweetUserUsername}
                             isVerified={isVerfiedRetweetUser}
@@ -327,11 +320,7 @@ const FormRetweet: FC<FormRetweetProps> = ({
                     <UserInfoRetweet
                         userId={userId}
                         tweet={tweet.retweet}
-                        avatar={
-                            avatar
-                                ? `${IMAGE_AVATAR_BASE_URL}/${avatar}`
-                                : undefined
-                        }
+                        avatar={avatar}
                         name={name}
                         username={username}
                         isVerified={isVerfied}

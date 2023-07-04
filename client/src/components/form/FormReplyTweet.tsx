@@ -6,7 +6,7 @@ import ImageIcon from '../icons/ImageIcon';
 import XmarkIcon from '../icons/XmarkIcon';
 import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 import useClickOutSide from '../../hooks/useClickOutSide';
-import { IMAGE_AVATAR_BASE_URL, MAX_TWEET_CHARACTERS } from '../../constants/common.constants';
+import { MAX_TWEET_CHARACTERS } from '../../constants/common.constants';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import { searchUsers } from '../../api/user.api';
@@ -193,10 +193,7 @@ const FormReplyTweet: FC<FormReplyTweetProps> = ({
                                 >
                                     <UserInfo
                                         userId={user?._id}
-                                        avatar={
-                                            user?.avatar &&
-                                            `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`
-                                        }
+                                        avatar={user?.avatar}
                                         name={user?.name}
                                         username={user?.username}
                                         isVerified={user?.isVerified}

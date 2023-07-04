@@ -7,7 +7,11 @@ export const getAllContacts = async (
 ): Promise<ApiResponse<any>> => {
     try {
         const contacts = await Contact.findOne({ user: userId })
-            .populate('contactList', 'name email')
+            .populate({
+                path: 'contactList',
+                select: 'name username avatar isVerified isProtected',
+                options: { sort: { _id: -1 } },
+            })
             .exec();
 
         if (!contacts) {
@@ -62,14 +66,9 @@ export const addContact = async (
             existingUser &&
             existingUser.contactList.some((u: any) => u.toString() === newUser)
         ) {
-            existingUser.contactList = existingUser.contactList.filter(
-                (u: any) => u.toString() !== newUser
-            );
-
-            await existingUser.save();
             return {
                 success: true,
-                message: 'User removed from contact',
+                message: 'User already exist in contact',
                 status: 200,
                 payload: userToAdd,
             };
@@ -81,6 +80,49 @@ export const addContact = async (
             message: 'User added to contact',
             status: 200,
             payload: userToAdd,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};
+
+export const removeContact = async (
+    userId: string,
+    userToremove: string
+): Promise<ApiResponse<any>> => {
+    try {
+        const existingUser = await Contact.findOne({ user: userId });
+        const removedUser = await fetchUserInfo(userToremove);
+
+        if (
+            existingUser &&
+            existingUser.contactList.some(
+                (u: any) => u.toString() === userToremove
+            )
+        ) {
+            existingUser.contactList = existingUser.contactList.filter(
+                (u: any) => u.toString() !== userToremove
+            );
+
+            await existingUser.save();
+            return {
+                success: true,
+                message: 'User removed from contact',
+                status: 200,
+                payload: removedUser,
+            };
+        }
+        return {
+            success: false,
+            message: 'Could not remove user from contact',
+            status: 500,
+            payload: null,
         };
     } catch (error) {
         const errorResponse: ErrorResponse = {

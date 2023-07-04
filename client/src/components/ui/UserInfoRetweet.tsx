@@ -5,6 +5,7 @@ import AuthContext from '../../context/user.context';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import faLockSolid from '../../assets/faLock-solid.svg';
+import { IMAGE_AVATAR_BASE_URL, IMAGE_AVATAR_DEFAULT } from '../../constants/common.constants';
 
 
 interface UserInfoRetweetProps {
@@ -66,7 +67,9 @@ const UserInfoRetweet: FC<UserInfoRetweetProps> = ({
                 {avatar && (
                     <div className={styles.avatar}>
                         <a href={link}>
-                            <img src={avatar} alt="" />
+                            <img src={avatar
+                                    ? `${IMAGE_AVATAR_BASE_URL}/${avatar}`
+                                    : `${IMAGE_AVATAR_BASE_URL}/${IMAGE_AVATAR_DEFAULT}`} alt="" />
                         </a>
                     </div>
                 )}

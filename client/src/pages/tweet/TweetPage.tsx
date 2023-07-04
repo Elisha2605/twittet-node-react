@@ -359,11 +359,7 @@ const TweetPage: FC<TweetPageProps> = ({
                         <UserInfo
                             userId={tweet?.user?._id}
                             tweet={tweet}
-                            avatar={
-                                tweet?.user?.avatar
-                                    ? `${IMAGE_AVATAR_BASE_URL}/${tweet?.user?.avatar}`
-                                    : undefined
-                            }
+                            avatar={tweet?.user?.avatar}
                             name={tweet?.user?.name}
                             username={tweet?.user?.username}
                             isVerified={tweet?.user?.isVerified}

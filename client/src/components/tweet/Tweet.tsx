@@ -5,8 +5,6 @@ import UserInfo from '../ui/UserInfo';
 import styles from './Tweet.module.css';
 import { getTimeDifference } from '../../utils/helpers.utils';
 import {
-    IMAGE_AVATAR_BASE_URL,
-    IMAGE_AVATAR_DEFAULT,
     IMAGE_TWEET_BASE_URL,
     IMAGE_TWEET_REPLY_BASE_URL,
     TWEET_AUDIENCE,
@@ -168,11 +166,7 @@ const Tweet: FC<TweetProps> = ({
                         <UserInfo
                             userId={userId}
                             tweet={tweet}
-                            avatar={
-                                avatar
-                                    ? `${IMAGE_AVATAR_BASE_URL}/${avatar}`
-                                    : `${IMAGE_AVATAR_BASE_URL}/${IMAGE_AVATAR_DEFAULT}`
-                            }
+                            avatar={avatar}
                             name={name}
                             username={username}
                             isVerified={isVerfied}
@@ -210,11 +204,7 @@ const Tweet: FC<TweetProps> = ({
                                 <UserInfoRetweet
                                     userId={retweetUserId}
                                     tweet={retweet}
-                                    avatar={
-                                        avatar
-                                            ? `${IMAGE_AVATAR_BASE_URL}/${retweetUserAvatar}`
-                                            : undefined
-                                    }
+                                    avatar={avatar}
                                     name={retweetUserName}
                                     username={retweetUserUsername}
                                     isVerified={isVerfiedRetweetUser}
@@ -276,11 +266,7 @@ const Tweet: FC<TweetProps> = ({
                         <UserInfo
                             userId={userId}
                             tweet={tweet}
-                            avatar={
-                                avatar
-                                    ? `${IMAGE_AVATAR_BASE_URL}/${avatar}`
-                                    : `${IMAGE_AVATAR_BASE_URL}/${IMAGE_AVATAR_DEFAULT}`
-                            }
+                            avatar={avatar}
                             name={name}
                             username={username}
                             isVerified={isVerfied}

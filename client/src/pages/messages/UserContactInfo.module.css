@@ -1,0 +1,56 @@
+.avatar {
+    max-width: 100%;
+    max-height: 100%;
+    margin-top: 0.4rem;
+}
+
+.avatar img {
+    width: 3rem;
+    height: 3rem;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.avatar:hover {
+    filter: brightness(0.8);
+    transition: .2s;
+    cursor: pointer;
+}
+
+.contactsContainer {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: 100%;
+}
+
+.contactsContainer:hover {
+    background: var(--color-secondary-lighter);
+    transition: 0.1s ease-in;
+}
+.contactWrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.5rem;
+}
+
+.contactInfo {
+    display: flex;
+    gap: 0.3rem;
+}
+
+.contactName {
+    display: flex;
+    gap: 0.3rem;
+    font-weight: var(--font-weight-600);
+}
+
+.contactUserName, .contactLastMsgTime {
+    color: var(--color-secondary);
+}
+
+.menuIcon {
+    position: absolute;
+    right: 1rem;
+}

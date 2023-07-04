@@ -21,7 +21,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import PopUpMenu from '../ui/PopUpMenu';
 import {
-    IMAGE_AVATAR_BASE_URL,
     MAX_TWEET_CHARACTERS,
     TWEET_AUDIENCE,
     TWEET_REPLY,
@@ -247,10 +246,7 @@ const FormTweet: FC<FormProps> = ({
                                 >
                                     <UserInfo
                                         userId={user?._id}
-                                        avatar={
-                                            user?.avatar &&
-                                            `${IMAGE_AVATAR_BASE_URL}/${user?.avatar}`
-                                        }
+                                        avatar={user?.avatar}
                                         name={user?.name}
                                         username={user?.username}
                                         isVerified={user?.isVerified}

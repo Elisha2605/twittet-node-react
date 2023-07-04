@@ -61,8 +61,8 @@ app.use('/api/bookmarks', bookmarkRouter);
 app.use('/api/notifications', notificationRouter);
 app.use('/api/twitterCircles', twitterCircleRouter);
 app.use('/api/password-reset', passwordRouter);
-app.use('/api/message', messageRouter);
-app.use('/api/contact', contactRouter);
+app.use('/api/messages', messageRouter);
+app.use('/api/contacts', contactRouter);
 
 // SERVING STATIC FILES
 

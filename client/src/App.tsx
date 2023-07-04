@@ -284,7 +284,7 @@ function App() {
                                     path="/notification"
                                         element={<Notifications  />}
                                 />
-                                <Route path="/message" element={<Message />} />
+                                <Route path="/message/:path?" element={<Message />} />
                                 <Route
                                     path="/bookmarks"
                                     element={<Bookmarks 

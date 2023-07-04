@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import styles from './Following.module.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import UserInfo from '../../components/ui/UserInfo';
-import { IMAGE_AVATAR_BASE_URL } from '../../constants/common.constants';
 import { ButtonSize, ButtonType } from '../../components/ui/Button';
 import { getUserFollows } from '../../api/follow.api';
 import AuthContext from '../../context/user.context';
@@ -53,10 +52,7 @@ const Following = () => {
                             {!isLoading && authUser && (
                                 <UserInfo
                                     user={following?.user}
-                                    avatar={
-                                        following?.user?.avatar &&
-                                        `${IMAGE_AVATAR_BASE_URL}/${following?.user?.avatar}`
-                                    }
+                                    avatar={following?.user?.avatar}
                                     name={following?.user?.name}
                                     isVerified={following?.user?.isVerified}
                                     username={following?.user?.username}

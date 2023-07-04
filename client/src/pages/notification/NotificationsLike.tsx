@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import styles from "./NotificationsLike.module.css";
 import UserInfo from "../../components/ui/UserInfo";
-import { IMAGE_AVATAR_BASE_URL } from "../../constants/common.constants";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
@@ -25,7 +24,7 @@ const NotificationsLike: FC<NotificationsLikeProps> = ({
                 <div className={styles.wrapper}>  
                     <UserInfo
                         userId={like?.user?._id}
-                        avatar={like?.user?.avatar && `${IMAGE_AVATAR_BASE_URL}/${like?.user?.avatar}`}
+                        avatar={like?.user?.avatar}
                         name={like?.user?.name}
                         isVerified={like?.user?.isVerified}
                         username={like?.user?.username}
