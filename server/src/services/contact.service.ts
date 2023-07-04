@@ -10,7 +10,6 @@ export const getAllContacts = async (
             .populate({
                 path: 'contactList',
                 select: 'name username avatar isVerified isProtected',
-                options: { sort: { _id: -1 } },
             })
             .exec();
 

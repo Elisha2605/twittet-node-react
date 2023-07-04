@@ -31,7 +31,6 @@ const Message = () => {
     const { path } = useParams<{ path: string }>();
 
     const [contacts, setContacts] = useState<any[]>([]);
-    // const [currentPath, setCurrentPath] = useState<string>();
     const [currentUser, setCurrentUser] = useState<any>();
     const [conversations, setConversations] = useState<any>([]);
 
@@ -41,7 +40,7 @@ const Message = () => {
     useEffect(() => {
         const fetchAllContacts = async () => {
             const { contacts } = await getAllContacts();
-            setContacts(contacts.contactList);
+            setContacts(contacts.contactList.reverse());
         };
         fetchAllContacts();
     }, [currentUser]);
@@ -137,8 +136,6 @@ const Message = () => {
                                 ))}
                         </div>
                     </Header>
-
-                    {/* Home page - end */}
                 </div>
 
                 {/* Aside - start */}
