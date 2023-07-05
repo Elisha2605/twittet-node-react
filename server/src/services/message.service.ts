@@ -1,4 +1,4 @@
-import Contact from 'src/models/contact.model';
+import Contact from '../../src/models/contact.model';
 import Message from '../../src/models/message.model';
 import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
 
