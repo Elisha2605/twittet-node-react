@@ -3,7 +3,6 @@ import Bookmark from '../../src/models/bookmark.model';
 import Follow from '../../src/models/follow.model';
 import Like from '../../src/models/like.model';
 import Notification from '../../src/models/notification.model';
-import Reply from '../../src/models/reply.model';
 import Tweet from '../../src/models/tweet.model';
 import TwitterCircle from '../../src/models/twitterCircle.model';
 import User from '../../src/models/user.model';
@@ -160,7 +159,6 @@ export const clearDatabase = async () => {
         const followers = await Follow.deleteMany({});
         const likes = await Like.deleteMany({});
         const notifications = await Notification.deleteMany({});
-        const replies = await Reply.deleteMany({});
         const twitterCircle = await TwitterCircle.deleteMany({});
         const emailTemplate = await EmailTemplate.deleteMany({});
         const users = await User.deleteMany({});
@@ -169,7 +167,6 @@ export const clearDatabase = async () => {
         console.log(followers);
         console.log(likes);
         console.log(notifications);
-        console.log(replies);
         console.log(twitterCircle);
         console.log(bookmark);
         console.log(emailTemplate);
