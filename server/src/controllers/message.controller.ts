@@ -53,10 +53,10 @@ export const sendMessageController = asyncHandler(
             return;
         }
 
-        if (text !== undefined && text.length > 700) {
+        if (text !== undefined && text.length > 10000) {
             res.status(400).json({
                 InvalidInput:
-                    'message text must not be greater than 200 characters',
+                    'message text must not be greater than 10.000 characters',
             });
             return;
         }

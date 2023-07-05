@@ -54,6 +54,8 @@ export const sendMessage = async (
             await receiverUser.save();
         }
 
+        /** If sender is not in contactList and 
+        receiver exists push sender in contactList */
         if (
             receiverUser &&
             !receiverUser.contactList.some(
@@ -62,6 +64,27 @@ export const sendMessage = async (
         ) {
             receiverUser.contactList.push(sender);
             await receiverUser.save();
+        }
+
+        /** If sender is in contactList shift sender index to last. -
+         * should be reversed in fontend */
+        if (
+            receiverUser &&
+            receiverUser.contactList.some(
+                (u: any) => u.toString() === sender.toString()
+            )
+        ) {
+            const senderIndex = receiverUser.contactList.findIndex(
+                (u: any) => u.toString() === sender.toString()
+            );
+            if (
+                senderIndex !== -1 &&
+                senderIndex < receiverUser.contactList.length - 1
+            ) {
+                receiverUser.contactList.splice(senderIndex, 1);
+                receiverUser.contactList.push(sender);
+                await receiverUser.save();
+            }
         }
 
         if (!message) {
