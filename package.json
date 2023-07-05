@@ -2,6 +2,9 @@
   "name": "configuration",
   "version": "1.0.0",
   "description": "",
+  "engines": {
+    "node": "19.4.0"
+  },
   "main": "dist/index.js",
   "scripts": {
     "lint": "eslint --ext .ts .",
