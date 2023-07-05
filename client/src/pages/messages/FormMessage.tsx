@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './FormMessage.module.css';
 import ImageIcon from '../../components/icons/ImageIcon';
 import EmojiIcon from '../../components/icons/EmojiIcon';
@@ -6,11 +6,13 @@ import faPaperPlane from '../../assets/faPaperPlane-regular.svg';
 import { sendMessage } from '../../api/message.api';
 
 interface FormMessageProps {
+    socket: any;
+    authUser: any;
     currentUser: any;
     onSendMessage: (message: any) => void;
 }
 
-const FormMessage: React.FC<FormMessageProps> = ({ currentUser, onSendMessage }) => {
+const FormMessage: React.FC<FormMessageProps> = ({ socket, authUser, currentUser, onSendMessage }) => {
     const [message, setMessage] = useState('');
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -37,11 +39,23 @@ const FormMessage: React.FC<FormMessageProps> = ({ currentUser, onSendMessage })
     const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => { 
         e.preventDefault();   
 
-        //validation
+        // ToDo: validation
 
         //send message
-        const { msg } = await sendMessage(currentUser?._id, message);
-        // ToDo: check if msg is true 
+        const res = await sendMessage(currentUser?._id, message);
+        const { msg } = res
+
+        if (res.success) {
+        // ToDo: send real time msg
+            socket.emit('sendMessage', {
+                sender: authUser,
+                receiver: currentUser?._id,
+                message: msg,
+            });
+
+        // ToDo: send real time notification
+        }
+
         onSendMessage(msg);
         setMessage('');
         if (textareaRef.current) {

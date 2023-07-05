@@ -35,11 +35,22 @@ io.on('connection', (socket) => {
         addNewUser(userId, socket.id);
     });
 
+    /** SEND NOTIFICATION */
     socket.on('sendNotification', ({ sender, receiver, type }) => {
         const receiverUser = getReceiverUser(receiver);
         io.to(receiverUser?.socketId).emit('getNotification', {
             sender,
             type,
+        });
+    });
+
+    /** SEND MESSAGE */
+    socket.on('sendMessage', ({ sender, receiver, message }) => {
+        const receiverUser = getReceiverUser(receiver);
+        io.to(receiverUser?.socketId).emit('getMessage', {
+            sender,
+            receiver,
+            message,
         });
     });
 

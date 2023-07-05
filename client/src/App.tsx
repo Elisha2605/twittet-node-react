@@ -68,7 +68,7 @@ function App() {
     const [socket, setSocket] = useState<any>(null);
 
     useEffect(() => {
-       setSocket(io('http://localhost:4000'));
+       setSocket(io('http://localhost:4000')); // make this dynamic also with heroku
     }, [])
 
     useEffect(() => {
@@ -284,7 +284,10 @@ function App() {
                                     path="/notification"
                                         element={<Notifications  />}
                                 />
-                                <Route path="/message/:path?" element={<Message />} />
+                                <Route path="/message/:path?" element={<Message 
+                                        socket={socket}
+                                    />} 
+                                />
                                 <Route
                                     path="/bookmarks"
                                     element={<Bookmarks 

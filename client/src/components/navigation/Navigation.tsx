@@ -296,11 +296,6 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
                         </div>
                     </PopUpMenu>
                 </div>
-                <div>
-                    {notifications.map((user) => (
-                        <div>{user?.sender}</div>
-                    ))}
-                </div>
                 <Button
                     value={'Tweet'}
                     type={ButtonType.primary}

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import Header from '../../components/header/Header';
 import styles from './Messages.module.css';
 import Layout from '../../Layout.module.css';
@@ -23,8 +23,15 @@ import { getConversation } from '../../api/message.api';
 import Conversation from './conversation';
 import AsideUserInfo from './AsideUserInfo';
 import FormMessage from './FormMessage';
+import AuthContext, { StoredContext } from '../../context/user.context';
 
-const Message = () => {
+interface MessageProps {
+    socket: any;
+}
+
+const Message: FC<MessageProps> = ({
+    socket
+}) => {
     const { path } = useParams<{ path: string }>();
 
     const [contacts, setContacts] = useState<any[]>([]);
@@ -33,6 +40,10 @@ const Message = () => {
 
     const { showMessage } = useMessage();
     const navigate = useNavigate();
+
+    const context = useContext(AuthContext);
+    let ctx: StoredContext = context.getUserContext();
+
 
     useEffect(() => {
         const fetchAllContacts = async () => {
@@ -100,10 +111,16 @@ const Message = () => {
     };
 
     const onSendMessage = (message: string) => {
-        console.log(message);
         setConversations((prevState: any) => [...prevState, message]);
         scrollToBottom();
     };
+
+    useEffect(() => {
+        socket?.on('getMessage', (obj: any) => {
+            setConversations((prevState: any) => [...prevState, obj.message]);
+            scrollToBottom();
+        });
+    }, [socket])
 
     return (
         <React.Fragment>
@@ -171,6 +188,8 @@ const Message = () => {
                                     ))}
                         </div>
                         <FormMessage
+                            socket={socket}
+                            authUser={ctx.user}
                             currentUser={currentUser}
                             onSendMessage={onSendMessage}
                         />
