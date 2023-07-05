@@ -68,7 +68,10 @@ function App() {
     const [socket, setSocket] = useState<any>(null);
 
     useEffect(() => {
-       setSocket(io('http://localhost:4000')); // make this dynamic also with heroku
+        const url = process.env.NODE_ENV === 'production'
+        ? 'https://fake-twitter.herokuapp.com'
+        : 'http://localhost:4000';
+       setSocket(io(url)); // make this dynamic also with heroku
     }, [])
 
     useEffect(() => {
