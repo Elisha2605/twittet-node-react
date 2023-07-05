@@ -45,13 +45,12 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
     const [activeNav, setActiveNav] = useState('home');
     const [isNotificationOpened, setIsNotificationOpened] =
         useState<boolean>(true);
-    const [lastMessageContactId, setLastMessageContactId] = useState<string>();
+    const [notifications, setNotifications] = useState<any[]>([]);
+    const [isRead, setIsRead] = useState<boolean>(false);
+
 
     const navigate = useNavigate();
 
-    const [notifications, setNotifications] = useState<any[]>([]);
-
-    const [isRead, setIsRead] = useState<boolean>(false);
 
     /////////// notifications //////////////
 
@@ -141,20 +140,6 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
             console.log(option);
         }
     };
-
-// create a function that returns only the last 
-// ID or add it to the usercontext in the feature
-    const storedLastMessageContactId = localStorage.getItem('lastMessageContactId');
-    useEffect(() => {
-        const updateLastMessageContactId = () => {
-            if (storedLastMessageContactId) {
-                setLastMessageContactId(storedLastMessageContactId);
-            } else {
-                setLastMessageContactId('')
-            }
-        };
-        updateLastMessageContactId();
-    }, [storedLastMessageContactId]);
 
     return (
         <React.Fragment>
@@ -247,7 +232,7 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
                                     : faEnvelope
                             }
                             label={'Message'}
-                            path={lastMessageContactId ? `/message/${lastMessageContactId}` : `/message` }
+                            path={'/message'}
                         />
                     </div>
 

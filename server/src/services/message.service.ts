@@ -56,7 +56,9 @@ export const sendMessage = async (
 
         if (
             receiverUser &&
-            receiverUser.contactList.some((u: any) => u.toString() === sender)
+            !receiverUser.contactList.some(
+                (u: any) => u.toString() === sender.toString()
+            )
         ) {
             receiverUser.contactList.push(sender);
             await receiverUser.save();

@@ -22,7 +22,7 @@
 .aside {
     position: relative;
     width: 100%;
-    height: 100vh; /* when many - messages remove this*/
+    height: 100vh; 
     overflow-x: hidden;
     border-color: var(--color-secondary-light);    
     border-style: solid;
@@ -37,8 +37,5 @@
 .messages {
     height: calc(100vh - 8.5rem);
     overflow-y: scroll;
+    padding-bottom: 3rem;
 }
-
-.messagesContainer {
-    height: 100%;
-  }

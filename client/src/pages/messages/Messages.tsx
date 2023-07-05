@@ -37,10 +37,14 @@ const Message = () => {
     useEffect(() => {
         const fetchAllContacts = async () => {
             const { contacts } = await getAllContacts();
-            setContacts(contacts.contactList.reverse());
+            const reversedContacts = contacts.contactList.reverse();
+            setContacts(reversedContacts);
+            if (reversedContacts.length > 0 && !path) {
+                navigate(`/message/${reversedContacts[0]._id}`);
+            }
         };
         fetchAllContacts();
-    }, [currentUser]);
+    }, [path, navigate]);
 
     useEffect(() => {
         const fetchAllContactAndConversation = async () => {
@@ -65,14 +69,8 @@ const Message = () => {
             setCurrentUser(null);
             if (contacts.length > 1) {
                 navigate(`/message/${contacts[1]?._id}`);
-                const updatedLastMessageContactId = contacts[1]._id;
-                localStorage.setItem(
-                    'lastMessageContactId',
-                    updatedLastMessageContactId
-                );
             } else {
                 navigate('/message');
-                localStorage.removeItem('lastMessageContactId');
             }
             showMessage('Conversation deleted', 'success');
         }
@@ -88,23 +86,24 @@ const Message = () => {
     };
 
     const messagesContainerRef = useRef<HTMLDivElement>(null);
-    
+
     useEffect(() => {
         scrollToBottom(); // Scroll to the bottom initially
-      }, [path]);
-    
+    }, [path, currentUser]);
+
     const scrollToBottom = () => {
-    if (messagesContainerRef.current) {
-        const { scrollHeight, clientHeight } = messagesContainerRef.current;
-        messagesContainerRef.current.scrollTop = scrollHeight - clientHeight;
-    }
+        if (messagesContainerRef.current) {
+            const { scrollHeight, clientHeight } = messagesContainerRef.current;
+            messagesContainerRef.current.scrollTop =
+                scrollHeight - clientHeight;
+        }
     };
 
     const onSendMessage = (message: string) => {
         console.log(message);
         setConversations((prevState: any) => [...prevState, message]);
         scrollToBottom();
-    }
+    };
 
     return (
         <React.Fragment>
@@ -132,9 +131,10 @@ const Message = () => {
                                                 : ''
                                         }`}
                                         onClick={() => {
-                                            navigate(`/message/${contact?._id}`)
-                                        }
-                                        }
+                                            navigate(
+                                                `/message/${contact?._id}`
+                                            );
+                                        }}
                                     >
                                         <UserContactInfo
                                             contact={contact}
@@ -149,30 +149,33 @@ const Message = () => {
                 </div>
 
                 {/* Aside - start */}
-                <div>
-                    <Aside className={styles.aside}>
-                        <Header border={false} clasName={styles.asideHeader}>
-                            <DetailIcon className={styles.detailIcon} />
-                        </Header>
-                        <div className={styles.messages} ref={messagesContainerRef}>
-                            {path && currentUser && (
-                                <AsideUserInfo user={currentUser} />
-                            )}
-                                <div className={styles.messagesContainer}>
-                                    {path &&
-                                        conversations.slice().map((conversation: any) => (
-                                            <div key={conversation?._id}>
-                                                <Conversation
-                                                    otherUser={currentUser}
-                                                    conversation={conversation}
-                                                />
-                                            </div>
-                                        ))}
-                                </div>
-                                <FormMessage currentUser={currentUser} onSendMessage={onSendMessage} />
+                <Aside className={styles.aside}>
+                    <Header border={false} clasName={styles.asideHeader}>
+                        <DetailIcon className={styles.detailIcon} />
+                    </Header>
+                    <div className={styles.messages} ref={messagesContainerRef}>
+                        {path && currentUser && (
+                            <AsideUserInfo user={currentUser} />
+                        )}
+                        <div className={styles.messagesContainer}>
+                            {path &&
+                                conversations
+                                    .slice()
+                                    .map((conversation: any) => (
+                                        <div key={conversation?._id}>
+                                            <Conversation
+                                                otherUser={currentUser}
+                                                conversation={conversation}
+                                            />
+                                        </div>
+                                    ))}
                         </div>
-                    </Aside>
-                </div>
+                        <FormMessage
+                            currentUser={currentUser}
+                            onSendMessage={onSendMessage}
+                        />
+                    </div>
+                </Aside>
                 {/* Aside - end */}
             </div>
         </React.Fragment>
