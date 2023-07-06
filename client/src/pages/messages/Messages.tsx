@@ -44,8 +44,6 @@ const Message: FC<MessageProps> = ({
     const context = useContext(AuthContext);
     let ctx: StoredContext = context.getUserContext();
 
-    console.log(contacts);
-
     useEffect(() => {
         const fetchAllContacts = async () => {
             const { contacts } = await getAllContacts();
@@ -123,28 +121,60 @@ const Message: FC<MessageProps> = ({
         }
     };
 
-    const onSendMessage = (message: string) => {
+    const onSendMessage = (message: any) => {
         setConversations((prevState: any) => [...prevState, message]);
+        setContacts((prevContact: any) =>
+            prevContact.map(
+                (contact: any) =>
+                    (contact?._id === message?.receiver
+                        ? {
+                            ...contact,
+                            lastMessage: {
+                                text: message?.text
+                            }
+                        }
+                        : contact)
+            )
+        );
         scrollToBottom();
     };
 
     useEffect(() => {
         socket?.on('getMessage', (obj: any) => {
             const { sender, message } = obj;
-            navigate(`/message/${sender?._id}`);
             if (sender?._id === path) {
                 setConversations((prevState: any) => [...prevState, message]);
+                
                 scrollToBottom();
+            } else {
+                setContacts((prevContact: any) =>
+                prevContact.map(
+                    (contact: any) =>
+                        (contact?._id === sender?._id
+                            ? {
+                                ...contact,
+                                lastMessage: {
+                                    text: message?.text
+                                }
+                            }
+                            : contact)
+                )
+            );
             }
             if (!contacts.some((contact: any) => contact?._id === sender?._id)) {
-                setContacts((prevState: any) => [{
-                    _id: sender?._id,
-                    name: sender?.name,
-                    username: sender?.username,
-                    avatar: sender?.avatar,
-                    }, 
-                    ...prevState
-                ]);
+                setContacts((prevContact: any) =>
+                    prevContact.map(
+                        (contact: any) =>
+                            (contact?._id === message?.receiver
+                                ? {
+                                    ...contact,
+                                    lastMessage: {
+                                        text: message?.text
+                                    }
+                                }
+                                : contact)
+                    )
+                );
                 navigate(`/message/${sender?._id}`);
             }
         });

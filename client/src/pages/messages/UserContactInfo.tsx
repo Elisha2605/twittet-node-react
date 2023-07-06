@@ -20,18 +20,10 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
     onClickOption,
 }) => {
 
-    // const lastMessage = message[message?.length -1]?.text;
-
-    // const lastMessageSubStringed = () => {
-    //     const msg = lastMessage?.length > 30 ? lastMessage.substring(0, 30) + '...' : lastMessage;
-    //     return msg
-    // }
-
-    // console.log('last message');
-    // console.log(message[message?.length -1]);
-
-    // console.log('contact');
-    // console.log(contact);
+    const lastMessageSubStringed = (text: string) => {
+        const msg = text?.length > 30 ? text.substring(0, 30) + '...' : text;
+        return msg
+    }
     
     return (
         <div className={styles.contactsContainer}>
@@ -69,7 +61,7 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
                     </div>
                     {contact && (
                         <div className={styles.lastMessage}>
-                            {contact?.lastMessage?.text}
+                            {lastMessageSubStringed(contact?.lastMessage?.text)}
                         </div>
                     )}
                 </div>
