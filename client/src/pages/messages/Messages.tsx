@@ -131,7 +131,8 @@ const Message: FC<MessageProps> = ({
                         ? {
                             ...contact,
                             lastMessage: {
-                                text: message?.text
+                                text: message?.text,
+                                createdAt: message?.createdAt
                             }
                         }
                         : contact)
@@ -154,7 +155,8 @@ const Message: FC<MessageProps> = ({
                             ? {
                                 ...contact,
                                 lastMessage: {
-                                    text: message?.text
+                                    text: message?.text,
+                                    createdAt: message?.createdAt
                                 }
                             }
                             : contact)
@@ -168,7 +170,8 @@ const Message: FC<MessageProps> = ({
                                 ? {
                                     ...contact,
                                     lastMessage: {
-                                        text: message?.text
+                                        text: message?.text,
+                                        createdAt: message?.createdAt
                                     }
                                 }
                                 : contact)

@@ -5,6 +5,7 @@ import {
     IMAGE_AVATAR_DEFAULT,
 } from '../../constants/common.constants';
 import PopUpMenu from '../../components/ui/PopUpMenu';
+import { getTimeDifference } from '../../utils/helpers.utils';
 
 interface UserContactInfoProps {
     contact: any;
@@ -19,12 +20,15 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
     menuIcons,
     onClickOption,
 }) => {
-
     const lastMessageSubStringed = (text: string) => {
         const msg = text?.length > 30 ? text.substring(0, 30) + '...' : text;
-        return msg
-    }
-    
+        return msg;
+    };
+
+    const lastMessageTime = getTimeDifference(
+        new Date(contact?.lastMessage?.createdAt).getTime()
+    );
+
     return (
         <div className={styles.contactsContainer}>
             <div className={styles.contactWrapper}>
@@ -45,14 +49,13 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
                             @{contact?.username}
                         </p>{' '}
                         {'·'}
-                        <p className={styles.contactLastMsgTime}>{'1m'}</p>
-
+                        <p className={styles.contactLastMsgTime}>{lastMessageTime}</p>
                         <div className={styles.menuIcon}>
-                            <PopUpMenu 
+                            <PopUpMenu
                                 itemId={contact?._id}
                                 options={menuOptions!}
                                 icons={menuIcons!}
-                                onClick={(menuOptions, id) => 
+                                onClick={(menuOptions, id) =>
                                     onClickOption!(menuOptions, id)
                                 }
                                 className={styles.menuOption}
