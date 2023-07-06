@@ -50,9 +50,9 @@ const Message: FC<MessageProps> = ({
         const fetchAllContacts = async () => {
             const { contacts } = await getAllContacts();
             const reversedContacts = contacts;
-            setContacts(contacts);
+            setContacts(reversedContacts);
             if (reversedContacts.length > 0 && !path) {
-                navigate(`/message/${contacts[0]._id}`);
+                navigate(`/message/${reversedContacts[0]._id}`);
             }
         };
         fetchAllContacts();
@@ -72,7 +72,7 @@ const Message: FC<MessageProps> = ({
         fetchAllContactAndConversation();
     }, [contacts.length, navigate, path]);
 
-    const contactOnClikOption = async (option: any, contactId: any) => {
+    const contactOnclikOption = async (option: any, contactId: any) => {
         if (option === CONTACT_OPTION.delete) {
             await removeContact(contactId);
             setContacts((prevState: any) =>
@@ -89,7 +89,9 @@ const Message: FC<MessageProps> = ({
               if (currentIndex === 0) {
                 navigate(`/message/${contacts[1]?._id}`);
               } else {
-                navigate(`/message/${contacts[currentIndex - 1]?._id}`);
+                navigate(`/message/${contacts[0]?._id}`);
+                // navigate to the above contact
+                // navigate(`/message/${contacts[currentIndex - 1]?._id}`); 
               }
             } else {
               navigate('/message');
@@ -186,7 +188,7 @@ const Message: FC<MessageProps> = ({
                                             contact={contact}
                                             menuOptions={messageOption}
                                             menuIcons={messageIcon}
-                                            onClickOption={contactOnClikOption}
+                                            onClickOption={contactOnclikOption}
                                         />
                                     </div>
                                 ))}

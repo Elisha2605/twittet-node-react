@@ -63,6 +63,9 @@ export const getAllContacts = async (
                             },
                         },
                         {
+                            $sort: { createdAt: -1 },
+                        },
+                        {
                             $limit: 1,
                         },
                     ],

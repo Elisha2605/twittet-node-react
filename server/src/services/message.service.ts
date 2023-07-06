@@ -49,7 +49,7 @@ export const sendMessage = async (
         if (!receiverUser) {
             const receiverUser = new Contact({
                 user: receiver,
-                contactList: [sender],
+                contactList: [{ user: sender }],
             });
             await receiverUser.save();
         }
@@ -59,10 +59,12 @@ export const sendMessage = async (
         if (
             receiverUser &&
             !receiverUser.contactList.some(
-                (u: any) => u.toString() === sender.toString()
+                (u: any) => u.user.toString() === sender.toString()
             )
         ) {
-            receiverUser.contactList.push(sender);
+            receiverUser.contactList.unshift({
+                user: sender,
+            });
             await receiverUser.save();
         }
 
@@ -71,18 +73,18 @@ export const sendMessage = async (
         if (
             receiverUser &&
             receiverUser.contactList.some(
-                (u: any) => u.toString() === sender.toString()
+                (u: any) => u.user.toString() === sender.toString()
             )
         ) {
             const senderIndex = receiverUser.contactList.findIndex(
-                (u: any) => u.toString() === sender.toString()
+                (u: any) => u.user.toString() === sender.toString()
             );
-            if (
-                senderIndex !== -1 &&
-                senderIndex < receiverUser.contactList.length - 1
-            ) {
-                receiverUser.contactList.splice(senderIndex, 1);
-                receiverUser.contactList.push(sender);
+            if (senderIndex !== -1 && senderIndex !== 0) {
+                const [removedSender] = receiverUser.contactList.splice(
+                    senderIndex,
+                    1
+                );
+                receiverUser.contactList.unshift(removedSender);
                 await receiverUser.save();
             }
         }
