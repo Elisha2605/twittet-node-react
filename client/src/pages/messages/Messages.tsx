@@ -17,7 +17,7 @@ import {
 import UserContactInfo from './UserContactInfo';
 import { messageIcon, messageOption } from '../../data/menuOptions';
 import { useMessage } from '../../context/successMessage.context';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
 import { getConversation } from '../../api/message.api';
 import Conversation from './conversation';
@@ -117,10 +117,18 @@ const Message: FC<MessageProps> = ({
 
     useEffect(() => {
         socket?.on('getMessage', (obj: any) => {
-            setConversations((prevState: any) => [...prevState, obj.message]);
-            scrollToBottom();
+            const { sender, message } = obj;
+            if (sender._id === path) {
+                console.log(obj);
+                setConversations((prevState: any) => [...prevState, message]);
+                scrollToBottom();
+            }
         });
-    }, [socket])
+        return () => {
+            socket?.off('getMessage');
+        };
+    }, [socket, path])
+
 
     return (
         <React.Fragment>
@@ -136,7 +144,7 @@ const Message: FC<MessageProps> = ({
                                     <EnvelopeIcon />
                                 </div>
                             </div>
-                            <SearchBar onUserSelected={handleSearchClick} />
+                            <SearchBar onUserSelected={handleSearchClick} width={95} center={true} />
 
                             {contacts.length > 0 &&
                                 contacts.map((contact: any) => (

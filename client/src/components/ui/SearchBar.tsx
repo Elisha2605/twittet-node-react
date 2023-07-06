@@ -15,6 +15,7 @@ interface SearchBarProps {
     isNavigate?: boolean;
     onUserSelected?: (contact: any) => void;
     onClickBtn?: () => void;
+    center?: boolean;
 }
 
 const SearchBar: FC<SearchBarProps> = ({
@@ -25,6 +26,7 @@ const SearchBar: FC<SearchBarProps> = ({
     isNavigate,
     onUserSelected,
     onClickBtn,
+    center = false,
 }) => {
     const [searchTerm, setSearchTerm] = useState<any>('');
     const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -58,7 +60,9 @@ const SearchBar: FC<SearchBarProps> = ({
     return (
         <React.Fragment>
             <div
-                className={`${styles.container} ${classNameContainer}`}
+                className={`${styles.container} ${classNameContainer} ${
+                    center ? styles.positionCenter : ''
+                }`}
                 style={{ width: `${width}%` }}
             >
                 <input

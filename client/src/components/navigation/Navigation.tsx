@@ -56,6 +56,7 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
 
     useEffect(() => {
         const fetchAllNotifications = async () => {
+            setIsRead(false);
             const { notifications } = await getAllNotifications();
             notifications.map((notif: any) => {
                 if (
@@ -79,6 +80,9 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
             setNotifications((preveState) => [...preveState, data]);
             setIsNotificationOpened(true);
         });
+        return () => {
+            socket?.off('getNotification');
+        };
     }, [socket]);
     ////// Socket.io ////////
 
@@ -195,7 +199,7 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
                     <div
                         onClick={() => {
                             setActiveNav('notification');
-                            setIsNotificationOpened(!isNotificationOpened);
+                            setIsNotificationOpened(false);
                             setIsRead(false);
                         }}
                         className={`${styles.navItem} ${styles.notification} ${
