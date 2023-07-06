@@ -25,6 +25,8 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
         return msg;
     };
 
+    const lastMessage = contact?.lastMessage?.text;
+
     const lastMessageTime = getTimeDifference(
         new Date(contact?.lastMessage?.createdAt).getTime()
     );
@@ -48,8 +50,9 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
                         <p className={styles.contactUserName}>
                             @{contact?.username}
                         </p>{' '}
-                        {'·'}
-                        <p className={styles.contactLastMsgTime}>{lastMessageTime}</p>
+                        <p className={styles.contactLastMsgTime}>
+                            {lastMessage && '· ' + lastMessageTime}
+                        </p>
                         <div className={styles.menuIcon}>
                             <PopUpMenu
                                 itemId={contact?._id}
@@ -64,7 +67,7 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
                     </div>
                     {contact && (
                         <div className={styles.lastMessage}>
-                            {lastMessageSubStringed(contact?.lastMessage?.text)}
+                            {lastMessageSubStringed(lastMessage)}
                         </div>
                     )}
                 </div>

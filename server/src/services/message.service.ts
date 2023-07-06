@@ -114,3 +114,43 @@ export const sendMessage = async (
         return Promise.reject(errorResponse);
     }
 };
+
+export const updateMessageStatus = async (
+    messageId: string,
+    receiver: string
+): Promise<ApiResponse<any>> => {
+    try {
+        const query = {
+            $and: [{ _id: messageId }, { receiver: receiver }],
+        };
+        const message = await Message.findOneAndUpdate(
+            query,
+            { read: true },
+            { new: true }
+        );
+
+        if (!message) {
+            return {
+                success: true,
+                message: 'message not found!',
+                status: 404,
+                payload: {},
+            };
+        }
+
+        return {
+            success: true,
+            message: 'fetched Conversation',
+            status: 200,
+            payload: message,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};

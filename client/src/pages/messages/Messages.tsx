@@ -244,6 +244,7 @@ const Message: FC<MessageProps> = ({
                                     .map((conversation: any) => (
                                         <div key={conversation?._id}>
                                             <Conversation
+                                                contacts={contacts}
                                                 otherUser={currentUser}
                                                 conversation={conversation}
                                             />

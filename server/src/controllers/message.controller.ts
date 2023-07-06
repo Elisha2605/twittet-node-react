@@ -3,6 +3,7 @@ import asyncHandler from 'express-async-handler';
 import {
     getConversation,
     sendMessage,
+    updateMessageStatus,
 } from '../../src/services/message.service';
 
 export const getConversationController = asyncHandler(
@@ -66,6 +67,42 @@ export const sendMessageController = asyncHandler(
                 receiver,
                 text
             );
+
+            if (success) {
+                res.status(status).json({
+                    success: success,
+                    status: status,
+                    message: message,
+                    msg: payload,
+                });
+            } else {
+                res.status(status).json({
+                    success: success,
+                    status: status,
+                    message: message,
+                    msg: payload,
+                });
+            }
+            return;
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+export const updateMessageStatusController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const receiver = req.user._id;
+        const messageId = req.params.id;
+
+        if (!receiver || !messageId) {
+            res.status(400).json({ inputError: 'Input error' });
+            return;
+        }
+
+        try {
+            const { success, message, status, payload } =
+                await updateMessageStatus(messageId, receiver);
 
             if (success) {
                 res.status(status).json({

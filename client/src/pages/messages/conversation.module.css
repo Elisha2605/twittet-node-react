@@ -7,13 +7,22 @@
     flex-direction: column;
 }
 
-.authUser {
+.authUser, .textStatus {
     align-self: flex-end;
+}
+
+.authUserText {
     background-color: var(--color-primary);
     color: var(--color-white);
     padding: 10px 20px;
     border-radius: 20px 20px 4px 20px;
     margin-bottom: 8px;
+}
+
+.textStatus {
+    float: right;
+    position: relative;
+    top: -0.5rem;
 }
 
 .otherUser {
