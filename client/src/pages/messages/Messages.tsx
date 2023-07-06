@@ -111,24 +111,36 @@ const Message: FC<MessageProps> = ({
     };
 
     const onSendMessage = (message: string) => {
+        // console.log(message);
         setConversations((prevState: any) => [...prevState, message]);
         scrollToBottom();
     };
 
+    // console.log(contacts);
     useEffect(() => {
         socket?.on('getMessage', (obj: any) => {
             const { sender, message } = obj;
-            if (sender._id === path) {
-                console.log(obj);
+            navigate(`/message/${sender?._id}`);
+            if (sender?._id === path) {
                 setConversations((prevState: any) => [...prevState, message]);
                 scrollToBottom();
+            }
+            if (!contacts.some((contact: any) => contact?._id === sender?._id)) {
+                setContacts((prevState: any) => [{
+                    _id: sender?._id,
+                    name: sender?.name,
+                    username: sender?.username,
+                    avatar: sender?.avatar,
+                    }, 
+                    ...prevState
+                ]);
+                navigate(`/message/${sender?._id}`);
             }
         });
         return () => {
             socket?.off('getMessage');
         };
-    }, [socket, path])
-
+    }, [socket, path, contacts, navigate])
 
     return (
         <React.Fragment>
