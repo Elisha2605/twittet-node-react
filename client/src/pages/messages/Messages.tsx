@@ -121,6 +121,7 @@ const Message: FC<MessageProps> = ({
         }
     };
 
+
     const onSendMessage = (message: any) => {
         setConversations((prevState: any) => [...prevState, message]);
         setContacts((prevContact: any) =>
@@ -144,9 +145,8 @@ const Message: FC<MessageProps> = ({
             const { sender, message } = obj;
             if (sender?._id === path) {
                 setConversations((prevState: any) => [...prevState, message]);
-                
                 scrollToBottom();
-            } else {
+            } 
                 setContacts((prevContact: any) =>
                 prevContact.map(
                     (contact: any) =>
@@ -160,7 +160,6 @@ const Message: FC<MessageProps> = ({
                             : contact)
                 )
             );
-            }
             if (!contacts.some((contact: any) => contact?._id === sender?._id)) {
                 setContacts((prevContact: any) =>
                     prevContact.map(
