@@ -1,30 +1,110 @@
 import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
 import Contact from '../../src/models/contact.model';
 import { fetchUserInfo } from '../../src/aggregations/user/fetchUserInfo.aggregation';
+import mongoose from 'mongoose';
 
 export const getAllContacts = async (
     userId: string
 ): Promise<ApiResponse<any>> => {
     try {
-        const contacts = await Contact.findOne({ user: userId })
-            .populate({
-                path: 'contactList',
-                select: 'name username avatar isVerified isProtected',
-            })
-            .exec();
-
-        if (!contacts) {
-            return {
-                success: false,
-                message: 'Contacts not found',
-                status: 404,
-                payload: null,
-            };
-        }
+        const contacts = await Contact.aggregate([
+            {
+                $match: { user: new mongoose.Types.ObjectId(userId) },
+            },
+            {
+                $lookup: {
+                    from: 'User',
+                    localField: 'contactList.user',
+                    foreignField: '_id',
+                    as: 'contacts',
+                },
+            },
+            {
+                $unwind: '$contacts',
+            },
+            {
+                $lookup: {
+                    from: 'Message',
+                    let: { user: '$user', contact: '$contacts._id' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $or: [
+                                        {
+                                            $and: [
+                                                { $eq: ['$sender', '$$user'] },
+                                                {
+                                                    $eq: [
+                                                        '$receiver',
+                                                        '$$contact',
+                                                    ],
+                                                },
+                                            ],
+                                        },
+                                        {
+                                            $and: [
+                                                {
+                                                    $eq: [
+                                                        '$sender',
+                                                        '$$contact',
+                                                    ],
+                                                },
+                                                {
+                                                    $eq: [
+                                                        '$receiver',
+                                                        '$$user',
+                                                    ],
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            },
+                        },
+                        {
+                            $limit: 1,
+                        },
+                    ],
+                    as: 'lastMessage',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$lastMessage',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $addFields: {
+                    contactListIndex: {
+                        $indexOfArray: ['$contactList.user', '$contacts._id'],
+                    },
+                },
+            },
+            {
+                $sort: {
+                    contactListIndex: 1,
+                },
+            },
+            {
+                $project: {
+                    _id: '$contacts._id',
+                    name: '$contacts.name',
+                    username: '$contacts.username',
+                    avatar: '$contacts.avatar',
+                    isVerified: '$contacts.isVerified',
+                    isProtected: '$contacts.isProtected',
+                    lastMessage: {
+                        $ifNull: ['$lastMessage', null],
+                    },
+                },
+            },
+        ]);
 
         return {
             success: true,
-            message: 'fetched contacts',
+            message: 'Fetched contacts',
             status: 200,
             payload: contacts,
         };
@@ -50,7 +130,7 @@ export const addContact = async (
         if (!existingUser) {
             const addedUser = new Contact({
                 user: userId,
-                contactList: [newUser],
+                contactList: [{ user: newUser }],
             });
             const res = await addedUser.save();
             return {
@@ -63,16 +143,19 @@ export const addContact = async (
 
         if (
             existingUser &&
-            existingUser.contactList.some((u: any) => u.toString() === newUser)
+            existingUser.contactList.some(
+                (u: any) => u.user.toString() === newUser
+            )
         ) {
             return {
                 success: true,
-                message: 'User already exist in contact',
+                message: 'User already exists in contact',
                 status: 200,
                 payload: userToAdd,
             };
         }
-        existingUser.contactList.push(newUser);
+
+        existingUser.contactList.unshift({ user: newUser });
         await existingUser.save();
         return {
             success: true,
@@ -93,23 +176,18 @@ export const addContact = async (
 
 export const removeContact = async (
     userId: string,
-    userToremove: string
+    userToRemove: string
 ): Promise<ApiResponse<any>> => {
     try {
-        const existingUser = await Contact.findOne({ user: userId });
-        const removedUser = await fetchUserInfo(userToremove);
+        const updatedUser = await Contact.findOneAndUpdate(
+            { user: userId },
+            { $pull: { contactList: { user: userToRemove } } },
+            { new: true }
+        );
 
-        if (
-            existingUser &&
-            existingUser.contactList.some(
-                (u: any) => u.toString() === userToremove
-            )
-        ) {
-            existingUser.contactList = existingUser.contactList.filter(
-                (u: any) => u.toString() !== userToremove
-            );
+        if (updatedUser) {
+            const removedUser = await fetchUserInfo(userToRemove);
 
-            await existingUser.save();
             return {
                 success: true,
                 message: 'User removed from contact',
@@ -117,6 +195,7 @@ export const removeContact = async (
                 payload: removedUser,
             };
         }
+
         return {
             success: false,
             message: 'Could not remove user from contact',

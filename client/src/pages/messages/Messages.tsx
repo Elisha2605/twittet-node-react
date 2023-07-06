@@ -17,7 +17,7 @@ import {
 import UserContactInfo from './UserContactInfo';
 import { messageIcon, messageOption } from '../../data/menuOptions';
 import { useMessage } from '../../context/successMessage.context';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
 import { getConversation } from '../../api/message.api';
 import Conversation from './conversation';
@@ -44,14 +44,15 @@ const Message: FC<MessageProps> = ({
     const context = useContext(AuthContext);
     let ctx: StoredContext = context.getUserContext();
 
+    console.log(contacts);
 
     useEffect(() => {
         const fetchAllContacts = async () => {
             const { contacts } = await getAllContacts();
-            const reversedContacts = contacts.contactList.reverse();
-            setContacts(reversedContacts);
+            const reversedContacts = contacts;
+            setContacts(contacts);
             if (reversedContacts.length > 0 && !path) {
-                navigate(`/message/${reversedContacts[0]._id}`);
+                navigate(`/message/${contacts[0]._id}`);
             }
         };
         fetchAllContacts();
@@ -71,20 +72,31 @@ const Message: FC<MessageProps> = ({
         fetchAllContactAndConversation();
     }, [contacts.length, navigate, path]);
 
-    const contactOnclikOption = async (option: any, contactId: any) => {
+    const contactOnClikOption = async (option: any, contactId: any) => {
         if (option === CONTACT_OPTION.delete) {
             await removeContact(contactId);
             setContacts((prevState: any) =>
-                prevState.filter((c: any) => c?._id !== contactId)
+              prevState.filter((c: any) => c?._id !== contactId)
             );
             setCurrentUser(null);
+            
+            // Check if there are remaining contacts
             if (contacts.length > 1) {
+              // Find the index of the current contact
+              const currentIndex = contacts.findIndex((c: any) => c?._id === contactId);
+              
+              // Navigate to the next contact in the list
+              if (currentIndex === 0) {
                 navigate(`/message/${contacts[1]?._id}`);
+              } else {
+                navigate(`/message/${contacts[currentIndex - 1]?._id}`);
+              }
             } else {
-                navigate('/message');
+              navigate('/message');
             }
+            
             showMessage('Conversation deleted', 'success');
-        }
+          }
     };
 
     const handleSearchClick = async (newContact: any) => {
@@ -92,7 +104,6 @@ const Message: FC<MessageProps> = ({
         await addContact(newContact?._id);
         if (contacts) {
             navigate(`/message/${newContact._id}`);
-            localStorage.setItem('lastMessageContactId', newContact?._id);
         }
     };
 
@@ -111,12 +122,10 @@ const Message: FC<MessageProps> = ({
     };
 
     const onSendMessage = (message: string) => {
-        // console.log(message);
         setConversations((prevState: any) => [...prevState, message]);
         scrollToBottom();
     };
 
-    // console.log(contacts);
     useEffect(() => {
         socket?.on('getMessage', (obj: any) => {
             const { sender, message } = obj;
@@ -177,7 +186,7 @@ const Message: FC<MessageProps> = ({
                                             contact={contact}
                                             menuOptions={messageOption}
                                             menuIcons={messageIcon}
-                                            onClickOption={contactOnclikOption}
+                                            onClickOption={contactOnClikOption}
                                         />
                                     </div>
                                 ))}

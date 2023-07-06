@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './UserContactInfo.module.css';
 import {
     IMAGE_AVATAR_BASE_URL,
@@ -19,6 +19,20 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
     menuIcons,
     onClickOption,
 }) => {
+
+    // const lastMessage = message[message?.length -1]?.text;
+
+    // const lastMessageSubStringed = () => {
+    //     const msg = lastMessage?.length > 30 ? lastMessage.substring(0, 30) + '...' : lastMessage;
+    //     return msg
+    // }
+
+    // console.log('last message');
+    // console.log(message[message?.length -1]);
+
+    // console.log('contact');
+    // console.log(contact);
+    
     return (
         <div className={styles.contactsContainer}>
             <div className={styles.contactWrapper}>
@@ -53,7 +67,11 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
                             />
                         </div>
                     </div>
-                    <div className={styles.lastMessage}>hello</div>
+                    {contact && (
+                        <div className={styles.lastMessage}>
+                            {contact?.lastMessage?.text}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

@@ -3,7 +3,7 @@ import { handleError } from '../../src/utils/db.util';
 
 interface IContact extends mongoose.Document {
     user: string | ObjectId;
-    contactList: (string | ObjectId)[];
+    contactList: any;
     blockedList: (string | ObjectId)[];
 }
 
@@ -14,8 +14,18 @@ const contactModel = {
         ref: 'User',
     },
     contactList: {
-        type: [Types.ObjectId],
-        ref: 'User',
+        type: [
+            {
+                user: {
+                    type: Types.ObjectId,
+                    ref: 'User',
+                },
+                createdAt: {
+                    type: Date,
+                    default: Date.now,
+                },
+            },
+        ],
     },
     blockedList: {
         type: [Types.ObjectId],
