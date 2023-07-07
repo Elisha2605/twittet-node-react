@@ -17,9 +17,9 @@ import {
 import UserContactInfo from './UserContactInfo';
 import { messageIcon, messageOption } from '../../data/menuOptions';
 import { useMessage } from '../../context/successMessage.context';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
-import { getConversation } from '../../api/message.api';
+import { getConversation, updateMessageStatus } from '../../api/message.api';
 import Conversation from './conversation';
 import AsideUserInfo from './AsideUserInfo';
 import FormMessage from './FormMessage';
@@ -29,9 +29,7 @@ interface MessageProps {
     socket: any;
 }
 
-const Message: FC<MessageProps> = ({
-    socket
-}) => {
+const Message: FC<MessageProps> = ({ socket }) => {
     const { path } = useParams<{ path: string }>();
 
     const [contacts, setContacts] = useState<any[]>([]);
@@ -63,40 +61,46 @@ const Message: FC<MessageProps> = ({
                 const { conversation } = await getConversation(path!);
                 setCurrentUser(user);
                 setConversations(conversation);
-            } else if (contacts.length === 0) {
-                navigate('/message');
             }
         };
         fetchAllContactAndConversation();
-    }, [contacts.length, navigate, path]);
+    }, [contacts.length, path]);
+
+    useEffect(() => {
+        if (contacts.length === 0) {
+            navigate('/message');
+        }
+    }, [contacts.length, navigate]);
 
     const contactOnclikOption = async (option: any, contactId: any) => {
         if (option === CONTACT_OPTION.delete) {
             await removeContact(contactId);
             setContacts((prevState: any) =>
-              prevState.filter((c: any) => c?._id !== contactId)
+                prevState.filter((c: any) => c?._id !== contactId)
             );
             setCurrentUser(null);
-            
+
             // Check if there are remaining contacts
             if (contacts.length > 1) {
-              // Find the index of the current contact
-              const currentIndex = contacts.findIndex((c: any) => c?._id === contactId);
-              
-              // Navigate to the next contact in the list
-              if (currentIndex === 0) {
-                navigate(`/message/${contacts[1]?._id}`);
-              } else {
-                navigate(`/message/${contacts[0]?._id}`);
-                // navigate to the above contact
-                // navigate(`/message/${contacts[currentIndex - 1]?._id}`); 
-              }
+                // Find the index of the current contact
+                const currentIndex = contacts.findIndex(
+                    (c: any) => c?._id === contactId
+                );
+
+                // Navigate to the next contact in the list
+                if (currentIndex === 0) {
+                    navigate(`/message/${contacts[1]?._id}`);
+                } else {
+                    navigate(`/message/${contacts[0]?._id}`);
+                    // navigate to the above contact
+                    // navigate(`/message/${contacts[currentIndex - 1]?._id}`);
+                }
             } else {
-              navigate('/message');
+                navigate('/message');
             }
-            
+
             showMessage('Conversation deleted', 'success');
-          }
+        }
     };
 
     const handleSearchClick = async (newContact: any) => {
@@ -110,7 +114,7 @@ const Message: FC<MessageProps> = ({
     const messagesContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        scrollToBottom(); // Scroll to the bottom initially
+        scrollToBottom();
     }, [path, currentUser]);
 
     const scrollToBottom = () => {
@@ -121,69 +125,69 @@ const Message: FC<MessageProps> = ({
         }
     };
 
+    const updateContactState = (message: any, contactUser?: any) => {
+        setContacts((prevContacts) =>
+            prevContacts.map((contact) => {
+                if (
+                    contact._id ===
+                    (contactUser ? contactUser._id : message.receiver)
+                ) {
+                    return {
+                        ...contact,
+                        lastMessage: {
+                            text: message.text,
+                            createdAt: message.createdAt,
+                        },
+                    };
+                }
+                return contact;
+            })
+        );
+    };
 
     const onSendMessage = (message: any) => {
         setConversations((prevState: any) => [...prevState, message]);
-        setContacts((prevContact: any) =>
-            prevContact.map(
-                (contact: any) =>
-                    (contact?._id === message?.receiver
-                        ? {
-                            ...contact,
-                            lastMessage: {
-                                text: message?.text,
-                                createdAt: message?.createdAt
-                            }
-                        }
-                        : contact)
-            )
-        );
+        updateContactState(message);
         scrollToBottom();
     };
+
+    const location = useLocation();
+    const currentPath = location.pathname;
+
+    const messageStatusUpdate = async (sender: any, message: any) => {
+        if (
+            currentPath === `/message/${sender?._id}` && message?.read === false
+        ) {
+            const res = await updateMessageStatus();
+            console.log(res);
+        }
+    }
 
     useEffect(() => {
         socket?.on('getMessage', (obj: any) => {
             const { sender, message } = obj;
+            console.log(message);
             if (sender?._id === path) {
                 setConversations((prevState: any) => [...prevState, message]);
                 scrollToBottom();
-            } 
-                setContacts((prevContact: any) =>
-                prevContact.map(
-                    (contact: any) =>
-                        (contact?._id === sender?._id
-                            ? {
-                                ...contact,
-                                lastMessage: {
-                                    text: message?.text,
-                                    createdAt: message?.createdAt
-                                }
-                            }
-                            : contact)
-                )
-            );
-            if (!contacts.some((contact: any) => contact?._id === sender?._id)) {
-                setContacts((prevContact: any) =>
-                    prevContact.map(
-                        (contact: any) =>
-                            (contact?._id === message?.receiver
-                                ? {
-                                    ...contact,
-                                    lastMessage: {
-                                        text: message?.text,
-                                        createdAt: message?.createdAt
-                                    }
-                                }
-                                : contact)
-                    )
-                );
+            }
+            updateContactState(message, sender);
+            if (
+                !contacts.some((contact: any) => contact?._id === sender?._id)
+            ) {
+                updateContactState(message, sender);
                 navigate(`/message/${sender?._id}`);
             }
+
+            // update message status
+            messageStatusUpdate(sender, message);
+            console.log(message);
+            
         });
         return () => {
             socket?.off('getMessage');
         };
-    }, [socket, path, contacts, navigate])
+    }, [socket, path, contacts, navigate]);
 
     return (
         <React.Fragment>
@@ -199,7 +203,11 @@ const Message: FC<MessageProps> = ({
                                     <EnvelopeIcon />
                                 </div>
                             </div>
-                            <SearchBar onUserSelected={handleSearchClick} width={95} center={true} />
+                            <SearchBar
+                                onUserSelected={handleSearchClick}
+                                width={95}
+                                center={true}
+                            />
 
                             {contacts.length > 0 &&
                                 contacts.map((contact: any) => (
@@ -210,13 +218,9 @@ const Message: FC<MessageProps> = ({
                                                 ? styles.active
                                                 : ''
                                         }`}
-                                        onClick={() => {
-                                            navigate(
-                                                `/message/${contact?._id}`
-                                            );
-                                        }}
                                     >
                                         <UserContactInfo
+                                            authUser={ctx?.user}
                                             contact={contact}
                                             menuOptions={messageOption}
                                             menuIcons={messageIcon}
@@ -253,7 +257,7 @@ const Message: FC<MessageProps> = ({
                         </div>
                         <FormMessage
                             socket={socket}
-                            authUser={ctx.user}
+                            authUser={ctx?.user}
                             currentUser={currentUser}
                             onSendMessage={onSendMessage}
                         />

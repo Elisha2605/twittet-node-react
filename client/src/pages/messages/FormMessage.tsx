@@ -4,6 +4,7 @@ import ImageIcon from '../../components/icons/ImageIcon';
 import EmojiIcon from '../../components/icons/EmojiIcon';
 import faPaperPlane from '../../assets/faPaperPlane-regular.svg';
 import { sendMessage } from '../../api/message.api';
+import { getContactById } from '../../api/contact.api';
 
 interface FormMessageProps {
     socket: any;
@@ -44,7 +45,6 @@ const FormMessage: React.FC<FormMessageProps> = ({ socket, authUser, currentUser
         //send message
         const res = await sendMessage(currentUser?._id, message);
         const { msg } = res
-
         if (res.success) {
         // ToDo: send real time msg
             socket.emit('sendMessage', {

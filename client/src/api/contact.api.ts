@@ -10,6 +10,16 @@ export const getAllContacts = async () => {
     }
 };
 
+export const getContactById = async (contactId: string) => {
+    try {
+        const res = await http.get(`/contacts/${contactId}`, GETREQUESTOPTIONS());
+        return res.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
 export const addContact = async (contactId: string) => {
     try {
         const res = await http.post(

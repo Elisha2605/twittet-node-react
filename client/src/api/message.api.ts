@@ -26,3 +26,17 @@ export const sendMessage = async (receiverId: string, text: string) => {
         throw error;
     }
 };
+
+export const updateMessageStatus = async () => {
+    try {
+        const res = await http.patch(
+            '/messages/update-status',
+            {},
+            GETREQUESTOPTIONS()
+        );
+        return res.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};

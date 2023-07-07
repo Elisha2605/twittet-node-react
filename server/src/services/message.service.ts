@@ -116,33 +116,19 @@ export const sendMessage = async (
 };
 
 export const updateMessageStatus = async (
-    messageId: string,
     receiver: string
 ): Promise<ApiResponse<any>> => {
     try {
-        const query = {
-            $and: [{ _id: messageId }, { receiver: receiver }],
-        };
-        const message = await Message.findOneAndUpdate(
-            query,
-            { read: true },
-            { new: true }
+        const updateResult = await Message.updateMany(
+            { receiver: receiver, read: false },
+            { $set: { read: true } }
         );
-
-        if (!message) {
-            return {
-                success: true,
-                message: 'message not found!',
-                status: 404,
-                payload: {},
-            };
-        }
 
         return {
             success: true,
-            message: 'fetched Conversation',
+            message: 'Notifications read',
             status: 200,
-            payload: message,
+            payload: updateResult,
         };
     } catch (error) {
         const errorResponse: ErrorResponse = {

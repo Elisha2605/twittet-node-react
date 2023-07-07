@@ -3,6 +3,7 @@ import asyncHandler from 'express-async-handler';
 import {
     addContact,
     getAllContacts,
+    getContactById,
     removeContact,
 } from '../../src/services/contact.service';
 
@@ -32,6 +33,43 @@ export const getAllContactsController = asyncHandler(
                     status: status,
                     message: message,
                     contacts: payload,
+                });
+            }
+            return;
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+export const getContactByIdController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const user = req.user._id;
+        const contactId = req.params.id;
+        if (!user || !contactId) {
+            res.status(400).json({ inputError: 'Input error' });
+            return;
+        }
+
+        try {
+            const { success, message, status, payload } = await getContactById(
+                user,
+                contactId
+            );
+
+            if (success) {
+                res.status(status).json({
+                    success: success,
+                    status: status,
+                    message: message,
+                    contact: payload,
+                });
+            } else {
+                res.status(status).json({
+                    success: success,
+                    status: status,
+                    message: message,
+                    contact: payload,
                 });
             }
             return;

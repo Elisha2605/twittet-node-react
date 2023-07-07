@@ -93,16 +93,15 @@ export const sendMessageController = asyncHandler(
 export const updateMessageStatusController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const receiver = req.user._id;
-        const messageId = req.params.id;
 
-        if (!receiver || !messageId) {
+        if (!receiver) {
             res.status(400).json({ inputError: 'Input error' });
             return;
         }
 
         try {
             const { success, message, status, payload } =
-                await updateMessageStatus(messageId, receiver);
+                await updateMessageStatus(receiver);
 
             if (success) {
                 res.status(status).json({

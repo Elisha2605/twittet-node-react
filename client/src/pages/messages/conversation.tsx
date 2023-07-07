@@ -12,6 +12,7 @@ const Conversation: React.FC<ConversationProps> = ({
     otherUser,
     contacts,
 }) => {
+    
     const messageStatus = () => {
         if (
             contacts.some(
@@ -21,10 +22,10 @@ const Conversation: React.FC<ConversationProps> = ({
             ) &&
             conversation?.read === true
         ) {
-            console.log('true');
             return 'Seen';
         }
     };
+
 
     return (
         <React.Fragment>
