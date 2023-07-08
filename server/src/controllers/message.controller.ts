@@ -54,6 +54,14 @@ export const sendMessageController = asyncHandler(
             return;
         }
 
+        // temporary until image is emplimented
+        if (!text) {
+            res.status(400).json({
+                InvalidInput: 'text missing',
+            });
+            return;
+        }
+
         if (text !== undefined && text.length > 10000) {
             res.status(400).json({
                 InvalidInput:

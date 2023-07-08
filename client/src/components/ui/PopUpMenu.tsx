@@ -16,6 +16,7 @@ interface MenuPopUpProps {
     classNameContainer?: string;
     classNameWithTitle?: string;
     classNameMenuItemList?: string;
+    classNameMenuIcon?: any;
     isMenuIcon?: boolean;
     isDisable?: boolean;
     children?: React.ReactNode;
@@ -32,6 +33,7 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
     classNameContainer,
     classNameWithTitle,
     classNameMenuItemList,
+    classNameMenuIcon,
     isMenuIcon = true,
     isDisable,
     children,
@@ -92,7 +94,7 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
     return (
         <div className={`${styles.container} ${classNameContainer}`}>
             {isMenuIcon && (
-                <button className={styles.menuBtn} onClick={handleButtonClick}>
+                <button className={`${styles.menuBtn} ${classNameMenuIcon}`} onClick={handleButtonClick}>
                     <MenuIcon />
                 </button>
             )}

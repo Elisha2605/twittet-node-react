@@ -7,7 +7,7 @@ import {
 import PopUpMenu from '../../components/ui/PopUpMenu';
 import { getTimeDifference } from '../../utils/helpers.utils';
 import { updateMessageStatus } from '../../api/message.api';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface UserContactInfoProps {
     authUser: any;
@@ -26,61 +26,80 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
     onClickOption,
     newMessage,
 }) => {
+    const [isRead, setIsRead] = useState<boolean>(false);
+    const [incomingMsg, setIncomingMsg] = useState<boolean>(false);
+    const [isMenuHovered, setIsMenuHovered] = useState<boolean>(false);
 
-    const [isRead, setIsRead] = useState<boolean>(true);
+    const contactId = contact?._id;
+    const lastMessage = contact?.lastMessage?.text;
+    const receiverId = contact?.lastMessage?.receiver;
+    const isMessageRead = contact?.lastMessage?.read;
 
+    const lastMessageTime = getTimeDifference(
+        new Date(contact?.lastMessage?.createdAt).getTime()
+    );
+
+    const navigate = useNavigate();
 
     const lastMessageSubStringed = (text: string) => {
         const msg = text?.length > 30 ? text.substring(0, 30) + '...' : text;
         return msg;
     };
 
-    const navigate = useNavigate();
-
-    const lastMessage = contact?.lastMessage?.text;
-
-    const lastMessageTime = getTimeDifference(
-        new Date(contact?.lastMessage?.createdAt).getTime()
-    );
-
-    const updateStatus = async () => {
-        if (
-            contact?.lastMessage?.receiver === authUser?._id &&
-            contact?.lastMessage?.read === false
-        ) {
-            await updateMessageStatus();
-        }
+    const contactNamesSubStringed = (name: string) => {
+        const shortName =
+            name?.length > 11 ? name.substring(0, 11) + '...' : name;
+        return shortName;
     };
 
     const navigateToConversation = (e: React.MouseEvent) => {
-        e.stopPropagation()
-        updateStatus();
+        e.stopPropagation();
         setIsRead(true);
-        navigate(`/message/${contact?._id}`);
+        navigate(`/message/${contactId}`);
     };
 
+    // update Message status
+    const location = useLocation();
+    const currentPath = location.pathname;
     useEffect(() => {
-        if (newMessage && newMessage?.sender === contact?._id) {
-            setIsRead(false);
+        if (currentPath === `/message/${contactId}`) {
+            setIncomingMsg(false);
+            const updateStatus = async () => {
+                if (receiverId === authUser?._id && isMessageRead === false) {
+                    const res = await updateMessageStatus();
+                    console.log(res);
+                }
+            };
+            updateStatus();
         }
-    }, [contact?._id, newMessage])
+    }, [currentPath, contact]);
 
-    const containerClassName = `${styles.contactsContainer} ${
-        newMessage && newMessage?.sender === contact?._id && !isRead
-          ? styles.notification
-          : ''
+    useEffect(() => {
+        if (newMessage && newMessage?.sender === contactId) {
+            setIncomingMsg(true);
+        }
+    }, [contactId, newMessage]);
+
+    const notification = `${
+        !isMessageRead && contact?.lastMessage?.sender === contactId && !isRead
+            ? styles.notification
+            : ''
     }`;
 
     const notificationDot = `${
-        newMessage && newMessage?.sender === contact?._id && !isRead
-          ? styles.notificationDot
-          : ''
+        !isMessageRead && contact?.lastMessage?.sender === contactId && !isRead
+            ? styles.notificationDot
+            : ''
     }`;
 
     return (
         <div
-            className={`${!contact?.lastMessage?.read && contact?._id === contact?.lastMessage?.sender ? styles.notification : ''} ${containerClassName}`}
+            className={`${styles.container} ${notification} ${
+                incomingMsg ? styles.notification : ''
+            }`}
             onClick={navigateToConversation}
+            onMouseEnter={() => setIsMenuHovered(true)}
+            onMouseLeave={() => setIsMenuHovered(false)}
         >
             <div className={styles.contactWrapper}>
                 <div className={styles.avatar}>
@@ -95,25 +114,32 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
                 </div>
                 <div className={styles.contactInfoWrapper}>
                     <div className={styles.contactInfo}>
-                        <p className={styles.contactName}>{contact?.name}</p>
+                        <p className={styles.contactName}>
+                            {contactNamesSubStringed(contact?.name)}
+                        </p>
                         <p className={styles.contactUserName}>
-                            @{contact?.username}
+                            @{contactNamesSubStringed(contact?.username)}
                         </p>{' '}
                         <p className={styles.contactLastMsgTime}>
                             {lastMessage && '· ' + lastMessageTime}
                         </p>
                         <div className={styles.menuIcon}>
-                            <p className={!contact?.lastMessage?.read && contact?._id === contact?.lastMessage?.sender ? styles.notificationDot : ''}></p>
-                            <p className={notificationDot}></p>
-                            <PopUpMenu
-                                itemId={contact?._id}
-                                options={menuOptions!}
-                                icons={menuIcons!}
-                                onClick={(menuOptions, id) =>
-                                    onClickOption!(menuOptions, id)
-                                }
-                                className={styles.menuOption}
-                            />
+                            <p
+                                className={`${notificationDot} ${
+                                    incomingMsg ? styles.notificationDot : ''
+                                }`}
+                            ></p>
+                            {isMenuHovered && (
+                                <PopUpMenu
+                                    itemId={contactId}
+                                    options={menuOptions!}
+                                    icons={menuIcons!}
+                                    onClick={(menuOptions, id) =>
+                                        onClickOption!(menuOptions, id)
+                                    }
+                                    classNameMenuIcon={styles.menuIcon}
+                                />
+                            )}
                         </div>
                     </div>
                     {contact && (
