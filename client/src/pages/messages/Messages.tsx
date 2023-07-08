@@ -35,6 +35,7 @@ const Message: FC<MessageProps> = ({ socket }) => {
     const [contacts, setContacts] = useState<any[]>([]);
     const [currentUser, setCurrentUser] = useState<any>();
     const [conversations, setConversations] = useState<any>([]);
+    const [newMessage, setNewMessage] = useState<any>();
 
     const { showMessage } = useMessage();
     const navigate = useNavigate();
@@ -66,11 +67,11 @@ const Message: FC<MessageProps> = ({ socket }) => {
         fetchAllContactAndConversation();
     }, [contacts.length, path]);
 
-    useEffect(() => {
-        if (contacts.length === 0) {
-            navigate('/message');
-        }
-    }, [contacts.length, navigate]);
+    // useEffect(() => {
+    //     if (contacts.length === 0) {
+    //         navigate('/message');
+    //     }
+    // }, [contacts.length, navigate]);
 
     const contactOnclikOption = async (option: any, contactId: any) => {
         if (option === CONTACT_OPTION.delete) {
@@ -158,15 +159,15 @@ const Message: FC<MessageProps> = ({ socket }) => {
         if (
             currentPath === `/message/${sender?._id}` && message?.read === false
         ) {
-            const res = await updateMessageStatus();
-            console.log(res);
+            await updateMessageStatus();
+        } else {
+            setNewMessage(message);
         }
     }
 
     useEffect(() => {
         socket?.on('getMessage', (obj: any) => {
             const { sender, message } = obj;
-            console.log(message);
             if (sender?._id === path) {
                 setConversations((prevState: any) => [...prevState, message]);
                 scrollToBottom();
@@ -181,7 +182,6 @@ const Message: FC<MessageProps> = ({ socket }) => {
 
             // update message status
             messageStatusUpdate(sender, message);
-            console.log(message);
             
         });
         return () => {
@@ -225,6 +225,7 @@ const Message: FC<MessageProps> = ({ socket }) => {
                                             menuOptions={messageOption}
                                             menuIcons={messageIcon}
                                             onClickOption={contactOnclikOption}
+                                            newMessage={newMessage}
                                         />
                                     </div>
                                 ))}

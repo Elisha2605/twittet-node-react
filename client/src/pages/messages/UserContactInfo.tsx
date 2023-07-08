@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './UserContactInfo.module.css';
 import {
     IMAGE_AVATAR_BASE_URL,
@@ -7,7 +7,7 @@ import {
 import PopUpMenu from '../../components/ui/PopUpMenu';
 import { getTimeDifference } from '../../utils/helpers.utils';
 import { updateMessageStatus } from '../../api/message.api';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface UserContactInfoProps {
     authUser: any;
@@ -15,6 +15,7 @@ interface UserContactInfoProps {
     menuOptions?: string[];
     menuIcons?: Record<string, React.ReactNode>;
     onClickOption?: Function;
+    newMessage: any;
 }
 
 const UserContactInfo: React.FC<UserContactInfoProps> = ({
@@ -23,7 +24,12 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
     menuOptions,
     menuIcons,
     onClickOption,
+    newMessage,
 }) => {
+
+    const [isRead, setIsRead] = useState<boolean>(true);
+
+
     const lastMessageSubStringed = (text: string) => {
         const msg = text?.length > 30 ? text.substring(0, 30) + '...' : text;
         return msg;
@@ -42,24 +48,40 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
             contact?.lastMessage?.receiver === authUser?._id &&
             contact?.lastMessage?.read === false
         ) {
-            const res = await updateMessageStatus();
-            console.log(res);
+            await updateMessageStatus();
         }
     };
 
-    useEffect(() => {
+    const navigateToConversation = (e: React.MouseEvent) => {
+        e.stopPropagation()
         updateStatus();
-      }, [contact]); 
-    
-    const navigateToConversation = (event: React.MouseEvent) => {
-        updateStatus()
-        navigate(
-            `/message/${contact?._id}`
-        );
-    }
+        setIsRead(true);
+        navigate(`/message/${contact?._id}`);
+    };
+
+    useEffect(() => {
+        if (newMessage && newMessage?.sender === contact?._id) {
+            setIsRead(false);
+        }
+    }, [contact?._id, newMessage])
+
+    const containerClassName = `${styles.contactsContainer} ${
+        newMessage && newMessage?.sender === contact?._id && !isRead
+          ? styles.notification
+          : ''
+    }`;
+
+    const notificationDot = `${
+        newMessage && newMessage?.sender === contact?._id && !isRead
+          ? styles.notificationDot
+          : ''
+    }`;
 
     return (
-        <div className={styles.contactsContainer}  onClick={navigateToConversation}>
+        <div
+            className={`${!contact?.lastMessage?.read && contact?._id === contact?.lastMessage?.sender ? styles.notification : ''} ${containerClassName}`}
+            onClick={navigateToConversation}
+        >
             <div className={styles.contactWrapper}>
                 <div className={styles.avatar}>
                     <img
@@ -81,6 +103,8 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
                             {lastMessage && '· ' + lastMessageTime}
                         </p>
                         <div className={styles.menuIcon}>
+                            <p className={!contact?.lastMessage?.read && contact?._id === contact?.lastMessage?.sender ? styles.notificationDot : ''}></p>
+                            <p className={notificationDot}></p>
                             <PopUpMenu
                                 itemId={contact?._id}
                                 options={menuOptions!}
