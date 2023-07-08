@@ -7,7 +7,7 @@
     flex-direction: column;
 }
 
-.authUser, .textStatus {
+.authUser {
     align-self: flex-end;
 }
 
@@ -19,12 +19,6 @@
     margin-bottom: 8px;
 }
 
-.textStatus {
-    float: right;
-    position: relative;
-    top: -0.5rem;
-}
-
 .otherUser {
     align-self: flex-start;
     background-color: var(--color-secondary-lighter);
@@ -33,7 +27,22 @@
     margin-bottom: 8px;
 }
 
-.textStatus {
-    font-size: var(--font-size-ms);
+.textStatusAndTimeAuthUser {
+    float: right;
+    position: relative;
+    top: -0.5rem;
+}
+
+.textStatusAndTimeAuthUser, .textStatusAndTimeOtherUser {
+    font-size: var(--font-size-sm);
     color: var(--color-secondary);
 }
+
+.textStatusAndTimeOtherUser {
+    float: left;
+    position: relative;
+    top: -0.5rem;
+}
+
+
+

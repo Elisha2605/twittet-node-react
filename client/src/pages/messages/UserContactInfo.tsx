@@ -32,6 +32,7 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
 
     const contactId = contact?._id;
     const lastMessage = contact?.lastMessage?.text;
+    const senderId = contact?.lastMessage?.sender;
     const receiverId = contact?.lastMessage?.receiver;
     const isMessageRead = contact?.lastMessage?.read;
 
@@ -66,7 +67,7 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
             setIncomingMsg(false);
             const updateStatus = async () => {
                 if (receiverId === authUser?._id && isMessageRead === false) {
-                    const res = await updateMessageStatus();
+                    const res = await updateMessageStatus(senderId);
                     console.log(res);
                 }
             };
@@ -81,13 +82,13 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
     }, [contactId, newMessage]);
 
     const notification = `${
-        !isMessageRead && contact?.lastMessage?.sender === contactId && !isRead
+        !isMessageRead && senderId === contactId && !isRead
             ? styles.notification
             : ''
     }`;
 
     const notificationDot = `${
-        !isMessageRead && contact?.lastMessage?.sender === contactId && !isRead
+        !isMessageRead && senderId === contactId && !isRead
             ? styles.notificationDot
             : ''
     }`;

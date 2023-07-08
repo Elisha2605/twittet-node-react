@@ -100,6 +100,7 @@ export const sendMessageController = asyncHandler(
 
 export const updateMessageStatusController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
+        const sender = req.params.id;
         const receiver = req.user._id;
 
         if (!receiver) {
@@ -109,7 +110,7 @@ export const updateMessageStatusController = asyncHandler(
 
         try {
             const { success, message, status, payload } =
-                await updateMessageStatus(receiver);
+                await updateMessageStatus(sender, receiver);
 
             if (success) {
                 res.status(status).json({

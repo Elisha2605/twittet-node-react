@@ -34,7 +34,7 @@ import faHomeRegular from '../../assets/faHome-regular.svg';
 import faHomeSolid from '../../assets/faHome-solid.svg';
 import PopUpMenu from '../ui/PopUpMenu';
 import { useNavigate } from 'react-router-dom';
-import { getAllNotifications } from '../../api/notification.api';
+import { getAllNotifications, getMessageNotification, removeMessageNotification } from '../../api/notification.api';
 
 interface NavigationProps {
     socket: any;
@@ -47,6 +47,7 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
         useState<boolean>(true);
     const [notifications, setNotifications] = useState<any[]>([]);
     const [isRead, setIsRead] = useState<boolean>(false);
+    const [messageNotification, setMessageNotification] = useState<number | null>();
 
 
     const navigate = useNavigate();
@@ -58,6 +59,7 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
         const fetchAllNotifications = async () => {
             setIsRead(false);
             const { notifications } = await getAllNotifications();
+            const { msgNotification } = await getMessageNotification();
             notifications.map((notif: any) => {
                 if (
                     notif?.read === false &&
@@ -66,9 +68,13 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
                     setIsRead(true);
                 }
             });
+            if (msgNotification.length > 0)  {
+                setMessageNotification(msgNotification?.length)
+            }
         };
         fetchAllNotifications();
     }, []);
+
 
     /////////// notifications //////////////
 
@@ -207,9 +213,9 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
                         }`}
                     >
                         {isNotificationOpened && notifications.length > 0 && (
-                            <div className={styles.redDot}></div>
+                            <div className={styles.dot}></div>
                         )}
-                        {isRead && <div className={styles.redDot}></div>}
+                        {isRead && <div className={styles.dot}></div>}
                         <NavigationItem
                             icon={
                                 activeNav === 'notification'
@@ -222,13 +228,18 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
                     </div>
 
                     <div
-                        onClick={() => {
+                        onClick={async () => {
                             setActiveNav('message');
+                            await removeMessageNotification();
+                            setMessageNotification(null)
                         }}
-                        className={`${styles.navItem} ${
+                        className={`${styles.navItem} ${styles.message} ${
                             activeNav === 'message' ? styles.active : ''
                         }`}
                     >
+                        {messageNotification && (
+                            <div className={styles.dot}>{messageNotification}</div>
+                        )}
                         <NavigationItem
                             icon={
                                 activeNav === 'message'

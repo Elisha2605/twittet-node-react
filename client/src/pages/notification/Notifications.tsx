@@ -17,6 +17,7 @@ import Tweet from '../../components/tweet/Tweet';
 import AuthContext from '../../context/user.context';
 import { likeTweet } from '../../api/like.api';
 import ContentNotAvailable from '../../components/ui/ContentNotAvailable';
+import { useLocation } from 'react-router-dom';
 
 const Notification = () => {
     const [authUser, setAuthUser] = useState<any>(null);

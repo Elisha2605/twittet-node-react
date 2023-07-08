@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import XmarkIcon from '../../components/icons/XmarkIcon';
 import { reply, getTweetById, getTweetReplies } from '../../api/tweet.api';
 import {
-    IMAGE_AVATAR_BASE_URL,
     IMAGE_TWEET_BASE_URL,
     MAX_TWEET_CHARACTERS,
     TWEET_AUDIENCE,

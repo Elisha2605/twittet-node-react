@@ -23,6 +23,33 @@ export const getMentionsNotification = async () => {
     }
 };
 
+export const getMessageNotification = async () => {
+    try {
+        const res = await http.get(
+            '/notifications/message',
+            GETREQUESTOPTIONS()
+        );
+        return res.data;
+    } catch (error: any) {
+        console.error(error);
+        throw error;
+    }
+};
+
+export const removeMessageNotification = async () => {
+    try {
+        const res = await http.patch(
+            '/notifications/remove-message-notification',
+            {},
+            GETREQUESTOPTIONS()
+        );
+        return res.data;
+    } catch (error: any) {
+        console.error(error);
+        throw error;
+    }
+};
+
 export const updateNotificationsState = async () => {
     try {
         const res = await http.patch(

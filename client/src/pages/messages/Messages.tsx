@@ -67,12 +67,6 @@ const Message: FC<MessageProps> = ({ socket }) => {
         fetchAllContactAndConversation();
     }, [contacts.length, path]);
 
-    // useEffect(() => {
-    //     if (contacts.length === 0) {
-    //         navigate('/message');
-    //     }
-    // }, [contacts.length, navigate]);
-
     const contactOnclikOption = async (option: any, contactId: any) => {
         if (option === CONTACT_OPTION.delete) {
             await removeContact(contactId);
@@ -159,7 +153,7 @@ const Message: FC<MessageProps> = ({ socket }) => {
         if (
             currentPath === `/message/${sender?._id}` && message?.read === false
         ) {
-            await updateMessageStatus();
+            await updateMessageStatus(sender?._id);
         } else {
             setNewMessage(message);
         }

@@ -27,10 +27,10 @@ export const sendMessage = async (receiverId: string, text: string) => {
     }
 };
 
-export const updateMessageStatus = async () => {
+export const updateMessageStatus = async (senderId: string) => {
     try {
         const res = await http.patch(
-            '/messages/update-status',
+            `/messages/update-status/${senderId}`,
             {},
             GETREQUESTOPTIONS()
         );

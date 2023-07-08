@@ -116,11 +116,12 @@ export const sendMessage = async (
 };
 
 export const updateMessageStatus = async (
+    sender: string,
     receiver: string
 ): Promise<ApiResponse<any>> => {
     try {
         const updateResult = await Message.updateMany(
-            { receiver: receiver, read: false },
+            { receiver: receiver, sender: sender, read: false },
             { $set: { read: true } }
         );
 

@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { NOTIFICATION_TYPE } from '../../src/constants/notification.constants';
 import Notification from '../../src/models/notification.model';
 import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
+import Message from '../../src/models/message.model';
 
 export const getAllNotification = async (
     userId: string
@@ -210,6 +211,77 @@ export const getMentionsNotification = async (
             message: 'Successfuly fetched all notifications!',
             status: 200,
             payload: notifications,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};
+
+export const getMessageNotification = async (
+    userId: string
+): Promise<ApiResponse<any>> => {
+    try {
+        const notification = await Message.aggregate([
+            {
+                $match: {
+                    receiver: new mongoose.Types.ObjectId(userId),
+                    visited: false,
+                },
+            },
+            {
+                $group: {
+                    _id: '$sender',
+                    count: { $sum: 1 },
+                },
+            },
+        ]).exec();
+
+        if (notification.length === 0) {
+            return {
+                success: true,
+                message: 'No unread messages found',
+                status: 404,
+                payload: notification,
+            };
+        }
+
+        return {
+            success: true,
+            message: 'Fetched unread messages',
+            status: 200,
+            payload: notification,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};
+
+export const removeMessageNotificaiton = async (
+    userId: string
+): Promise<ApiResponse<any>> => {
+    try {
+        await Message.updateMany(
+            { receiver: userId, visited: false },
+            { $set: { visited: true } }
+        );
+
+        return {
+            success: true,
+            message: 'removed message notification',
+            status: 200,
+            payload: true,
         };
     } catch (error) {
         const errorResponse: ErrorResponse = {

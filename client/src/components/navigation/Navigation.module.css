@@ -72,19 +72,23 @@
 }
 
 /* Notification */
-.notification {
+.notification, .message {
     position: relative;
 }
-.redDot {
+
+
+.dot {
     position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 1rem;
-    height: 1rem;
-    background-color: var(--color-error);
+    width: 1.3rem;
+    height: 1.3rem;
+    background-color: var(--color-primary);
+    font-size: var(--font-size-sm);
     border-radius: 50%;
     top: 0.6rem;
     left: 1.6rem;
-    border: 2px solid white;
+    border: 2px solid var(--color-white);;
+    color: var(--color-white);
 }

@@ -11,7 +11,7 @@ const messageRouter = Router();
 messageRouter.get('/conversation/:id', verifyUser(), getConversationController);
 messageRouter.post('/send/:id', verifyUser(), sendMessageController);
 messageRouter.patch(
-    '/update-status',
+    '/update-status/:id',
     verifyUser(),
     updateMessageStatusController
 );

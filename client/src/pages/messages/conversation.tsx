@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import styles from './conversation.module.css';
+import { getTimeAMPM } from '../../utils/helpers.utils';
 
 interface ConversationProps {
     otherUser: any;
@@ -22,7 +23,7 @@ const Conversation: React.FC<ConversationProps> = ({
             ) &&
             conversation?.read === true
         ) {
-            return 'Seen';
+            return '· Seen';
         }
     };
 
@@ -36,14 +37,19 @@ const Conversation: React.FC<ConversationProps> = ({
                             <p className={styles.authUserText}>
                                 {conversation?.text}
                             </p>
-                            <p className={styles.textStatus}>
-                                {messageStatus()}
+                            <p className={styles.textStatusAndTimeAuthUser}>
+                            <span>{getTimeAMPM(conversation?.createdAt)}</span>{' '}{messageStatus()}
                             </p>
                         </div>
                     ) : (
-                        <div className={styles.otherUser}>
-                            <p>{conversation?.text}</p>
-                        </div>
+                        <>
+                            <div className={styles.otherUser}>
+                                <p>{conversation?.text}</p>
+                            </div>
+                            <p className={styles.textStatusAndTimeOtherUser}>
+                            <span>{getTimeAMPM(conversation?.createdAt)}</span>
+                            </p>
+                        </>
                     )}
                 </div>
             </div>

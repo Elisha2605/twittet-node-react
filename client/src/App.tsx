@@ -64,7 +64,6 @@ function App() {
     let ctx: StoredContext = context.getUserContext();
 
 //////////////
-
     const [socket, setSocket] = useState<any>(null);
 
     useEffect(() => {
@@ -80,9 +79,6 @@ function App() {
 
 //////////////
 
-
-
-
     const handleAddTweet = (tweet: any) => {
         setOnAddTweets((prevTweets) => [tweet, ...prevTweets]);
     };
@@ -93,9 +89,9 @@ function App() {
     
     // On Login blue background
     const handleLoginSuccess = () => {
-        setShowBackground(true); // Set the showBackground state to true when login is successful
+        setShowBackground(true); // Seting the showBackground state to true when login is successful
         const loginTimemout =  setTimeout(() => {
-            setShowBackground(false); // Set the showBackground state to false after 1.5 seconds
+            setShowBackground(false); // Seting the showBackground state to false after 1.5 seconds
         }, 1000)
         clearTimeout(loginTimemout);
     };
