@@ -149,11 +149,11 @@ const Message: FC<MessageProps> = ({ socket }) => {
     const location = useLocation();
     const currentPath = location.pathname;
 
-    const messageStatusUpdate = async (sender: any, message: any) => {
+    const messageStatusUpdate = async (message: any) => {
         if (
-            currentPath === `/message/${sender?._id}` && message?.read === false
+            currentPath === `/message/${message?.sender?._id}` && message?.read === false
         ) {
-            await updateMessageStatus(sender?._id);
+            await updateMessageStatus(message?.sender?._id);
         } else {
             setNewMessage(message);
         }
@@ -175,7 +175,7 @@ const Message: FC<MessageProps> = ({ socket }) => {
             }
 
             // update message status
-            messageStatusUpdate(sender, message);
+            messageStatusUpdate(message);
             
         });
         return () => {

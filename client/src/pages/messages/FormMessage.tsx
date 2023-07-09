@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styles from './FormMessage.module.css';
 import ImageIcon from '../../components/icons/ImageIcon';
 import EmojiIcon from '../../components/icons/EmojiIcon';
 import faPaperPlane from '../../assets/faPaperPlane-regular.svg';
 import { sendMessage } from '../../api/message.api';
-import { getContactById } from '../../api/contact.api';
 
 interface FormMessageProps {
     socket: any;
@@ -52,8 +51,6 @@ const FormMessage: React.FC<FormMessageProps> = ({ socket, authUser, currentUser
                 receiver: currentUser?._id,
                 message: msg,
             });
-
-        // ToDo: send real time notification
         }
 
         onSendMessage(msg);

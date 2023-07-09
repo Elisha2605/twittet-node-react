@@ -33,7 +33,7 @@ import faHashTagSolid from '../../assets/faHashTag-solid.svg';
 import faHomeRegular from '../../assets/faHome-regular.svg';
 import faHomeSolid from '../../assets/faHome-solid.svg';
 import PopUpMenu from '../ui/PopUpMenu';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getAllNotifications, getMessageNotification, removeMessageNotification } from '../../api/notification.api';
 
 interface NavigationProps {
@@ -80,7 +80,7 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
 
     // **********************************//
     ////// Socket.io ////////
-
+   
     useEffect(() => {
         socket?.on('getNotification', (data: any) => {
             setNotifications((preveState) => [...preveState, data]);
@@ -88,8 +88,21 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
         });
         return () => {
             socket?.off('getNotification');
+            // socket?.off('getMessage');
         };
     }, [socket]);
+
+    const location = useLocation();
+    const currentPath = location.pathname;
+    useEffect(() => {
+        socket?.on('getMessage', async (obj: any) => {
+            const { message } = obj;
+            const { msgNotification } = await getMessageNotification();
+            if (msgNotification.length > 0 && currentPath !== `/message/${message?.sender}`)  {
+                setMessageNotification(msgNotification?.length)
+            }
+        });
+    }, [socket])
     ////// Socket.io ////////
 
     useEffect(() => {
