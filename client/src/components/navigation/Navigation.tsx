@@ -251,13 +251,17 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
                         onClick={async () => {
                             setActiveNav('message');
                             await removeMessageNotification();
-                            setIsMessageVisited(true)
+                            setIsMessageVisited(true);
+                            setMessageNotification(null);
                         }}
                         className={`${styles.navItem} ${styles.message} ${
                             activeNav === 'message' ? styles.active : ''
                         }`}
                     >
                         {!isMessageVisited && (
+                            <div className={styles.dot}>{messageNotification}</div>
+                        )}
+                        {messageNotification && messageNotification > 0 && (
                             <div className={styles.dot}>{messageNotification}</div>
                         )}
                         <NavigationItem
