@@ -20,7 +20,6 @@ const Conversation: React.FC<ConversationProps> = ({
 
     const messageStatus = () => {
         if (
-            isMessageRead ||
             (contacts.some(
                 (contact: any) =>
                     contact?.lastMessage?.sender === conversation?.sender &&

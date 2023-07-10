@@ -8,6 +8,9 @@ import TwitterCircle from '../../src/models/twitterCircle.model';
 import User from '../../src/models/user.model';
 import fs from 'fs';
 import EmailTemplate from '../../src/models/emailTemplate.model';
+import Message from 'src/models/message.model';
+import Contact from 'src/models/contact.model';
+import PasswordReset from 'src/models/passwordReset.model';
 
 const users = [
     {
@@ -159,18 +162,22 @@ export const clearDatabase = async () => {
         const followers = await Follow.deleteMany({});
         const likes = await Like.deleteMany({});
         const notifications = await Notification.deleteMany({});
-        const twitterCircle = await TwitterCircle.deleteMany({});
-        const emailTemplate = await EmailTemplate.deleteMany({});
+        const twitterCircles = await TwitterCircle.deleteMany({});
         const users = await User.deleteMany({});
+        const messages = await Message.deleteMany({});
+        const contacts = await Contact.deleteMany({});
+        const passwordResets = await PasswordReset.deleteMany({});
 
-        console.log(tweets);
-        console.log(followers);
-        console.log(likes);
-        console.log(notifications);
-        console.log(twitterCircle);
-        console.log(bookmark);
-        console.log(emailTemplate);
-        console.log(users);
+        console.log('tweets deleted successfuly :', tweets);
+        console.log('followers deleted successfuly :', followers);
+        console.log('likes deleted successfuly :', likes);
+        console.log('notifications deleted successfuly :', notifications);
+        console.log('twitterCircles deleted successfuly :', twitterCircles);
+        console.log('bookmark deleted successfuly :', bookmark);
+        console.log('users deleted successfuly :', users);
+        console.log('users deleted successfuly :', messages);
+        console.log('contacts deleted successfuly :', contacts);
+        console.log('passwordResets deleted successfuly :', passwordResets);
     } catch (err) {
         console.error(err);
     }
