@@ -48,6 +48,8 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
     const [notifications, setNotifications] = useState<any[]>([]);
     const [isRead, setIsRead] = useState<boolean>(false);
     const [messageNotification, setMessageNotification] = useState<number | null>();
+    const [isMessageVisited, setIsMessageVisited] = useState<boolean>(true);
+    const [newMessage, setNewMessage] = useState<any>();
 
 
     const navigate = useNavigate();
@@ -78,8 +80,7 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
 
     /////////// notifications //////////////
 
-    // **********************************//
-    ////// Socket.io ////////
+    ////// Socket.io - START ////////
    
     useEffect(() => {
         socket?.on('getNotification', (data: any) => {
@@ -94,16 +95,25 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
 
     const location = useLocation();
     const currentPath = location.pathname;
+   
     useEffect(() => {
-        socket?.on('getMessage', async (obj: any) => {
-            const { message } = obj;
+        socket?.on('getMessageNotification', async (obj: any) => {
             const { msgNotification } = await getMessageNotification();
-            if (msgNotification.length > 0 && currentPath !== `/message/${message?.sender}`)  {
-                setMessageNotification(msgNotification?.length)
-            }
+            setNewMessage(msgNotification);
+            setMessageNotification(msgNotification?.length)
+            setIsMessageVisited(false);
+            setNewMessage(obj)
+
         });
     }, [socket])
-    ////// Socket.io ////////
+
+    useEffect(() => {
+        if (currentPath === `/message/${newMessage?.sender?._id}`) {
+            console.log('yeess');
+            setIsMessageVisited(true);
+        }
+    }, [currentPath, newMessage])
+    ////// Socket.io - END ////////
 
     useEffect(() => {
         const setNavActive = () => {
@@ -111,13 +121,10 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
             const activeNav = path.split('/')[1] || 'home';
             setActiveNav(activeNav);
         };
-
         // set active nav on component mount
         setNavActive();
-
         // add popstate event listener to set active nav on back/forward navigation
         window.addEventListener('popstate', setNavActive);
-
         // cleanup function to remove popstate event listener
         return () => {
             window.removeEventListener('popstate', setNavActive);
@@ -244,13 +251,13 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
                         onClick={async () => {
                             setActiveNav('message');
                             await removeMessageNotification();
-                            setMessageNotification(null)
+                            setIsMessageVisited(true)
                         }}
                         className={`${styles.navItem} ${styles.message} ${
                             activeNav === 'message' ? styles.active : ''
                         }`}
                     >
-                        {messageNotification && (
+                        {!isMessageVisited && (
                             <div className={styles.dot}>{messageNotification}</div>
                         )}
                         <NavigationItem

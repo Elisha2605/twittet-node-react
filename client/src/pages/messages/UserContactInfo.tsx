@@ -75,16 +75,19 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
         }
     }, [currentPath, contact]);
 
+    // set the notification dot on incoming message
     useEffect(() => {
-        if (newMessage && newMessage?.sender === contactId) {
+        if (
+            newMessage &&
+            newMessage?.sender === contactId &&
+            currentPath !== `/message/${contactId}`
+        ) {
             setIncomingMsg(true);
         }
     }, [contactId, newMessage]);
 
     const notification = `${
-        !isMessageRead && senderId === contactId && !isRead
-            ? styles.notification
-            : ''
+        senderId === contactId && !isRead ? styles.notification : ''
     }`;
 
     const notificationDot = `${

@@ -44,7 +44,7 @@ io.on('connection', (socket) => {
         });
     });
 
-    /** SEND MESSAGE */
+    /** SEND MESSAGE - START */
     socket.on('sendMessage', ({ sender, receiver, message }) => {
         const receiverUser = getReceiverUser(receiver);
         io.to(receiverUser?.socketId).emit('getMessage', {
@@ -53,6 +53,15 @@ io.on('connection', (socket) => {
             message,
         });
     });
+    socket.on('sendMessageNotification', ({ sender, receiver, message }) => {
+        const receiverUser = getReceiverUser(receiver);
+        io.to(receiverUser?.socketId).emit('getMessageNotification', {
+            sender,
+            receiver,
+            message,
+        });
+    });
+    /** SEND MESSAGE - END */
 
     socket.on('disconnect', () => {
         removeUser(socket.id);

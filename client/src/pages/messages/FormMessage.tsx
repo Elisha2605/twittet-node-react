@@ -51,6 +51,11 @@ const FormMessage: React.FC<FormMessageProps> = ({ socket, authUser, currentUser
                 receiver: currentUser?._id,
                 message: msg,
             });
+            socket.emit('sendMessageNotification', {
+                sender: authUser,
+                receiver: currentUser?._id,
+                message: msg,
+            });
         }
 
         onSendMessage(msg);
