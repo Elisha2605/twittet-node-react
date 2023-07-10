@@ -35,6 +35,7 @@ import faHomeSolid from '../../assets/faHome-solid.svg';
 import PopUpMenu from '../ui/PopUpMenu';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getAllNotifications, getMessageNotification, removeMessageNotification } from '../../api/notification.api';
+import { updateMessageStatus } from '../../api/message.api';
 
 interface NavigationProps {
     socket: any;
@@ -102,16 +103,26 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
             setNewMessage(msgNotification);
             setMessageNotification(msgNotification?.length)
             setIsMessageVisited(false);
-            setNewMessage(obj)
+            setNewMessage(obj);
 
         });
     }, [socket])
 
     useEffect(() => {
-        if (currentPath === `/message/${newMessage?.sender?._id}`) {
-            console.log('yeess');
-            setIsMessageVisited(true);
+        const messageNotification = async () => {
+            if (currentPath === `/message/${newMessage?.sender?._id}`) {
+                await updateMessageStatus(newMessage?.sender?._id); // set read = true
+                await removeMessageNotification(); // set isVisited = true
+                setIsMessageVisited(true);
+                setMessageNotification(null);
+                socket?.emit('sendMessageStatus', {
+                    messageId: newMessage?.message?._id,
+                    receiver: newMessage?.sender?._id,
+                    isMessageRead: true,
+                })
+            }
         }
+        messageNotification()
     }, [currentPath, newMessage])
     ////// Socket.io - END ////////
 

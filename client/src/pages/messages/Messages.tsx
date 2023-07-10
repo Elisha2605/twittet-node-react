@@ -243,6 +243,7 @@ const Message: FC<MessageProps> = ({ socket }) => {
                                     .map((conversation: any) => (
                                         <div key={conversation?._id}>
                                             <Conversation
+                                                socket={socket}
                                                 contacts={contacts}
                                                 otherUser={currentUser}
                                                 conversation={conversation}

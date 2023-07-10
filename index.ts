@@ -61,6 +61,14 @@ io.on('connection', (socket) => {
             message,
         });
     });
+    socket.on('sendMessageStatus', ({ messageId, receiver, isMessageRead }) => {
+        const receiverUser = getReceiverUser(receiver);
+        io.to(receiverUser?.socketId).emit('getMessageStatus', {
+            messageId,
+            receiver,
+            isMessageRead,
+        });
+    });
     /** SEND MESSAGE - END */
 
     socket.on('disconnect', () => {

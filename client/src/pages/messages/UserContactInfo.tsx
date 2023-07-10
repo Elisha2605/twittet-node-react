@@ -69,6 +69,7 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
                 if (receiverId === authUser?._id && isMessageRead === false) {
                     const res = await updateMessageStatus(senderId);
                     console.log(res);
+                    console.log('hello');
                 }
             };
             updateStatus();

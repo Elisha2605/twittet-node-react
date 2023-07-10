@@ -1,32 +1,46 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './conversation.module.css';
 import { getTimeAMPM } from '../../utils/helpers.utils';
 
 interface ConversationProps {
+    socket: any;
     otherUser: any;
     conversation: any;
     contacts: any;
 }
 
 const Conversation: React.FC<ConversationProps> = ({
+    socket,
     conversation,
     otherUser,
     contacts,
 }) => {
-    
+    const [isMessageRead, setIsMessageRead] = useState<any>(false);
+    const [msgStatus, setMsgStatus] = useState<any>();
+
     const messageStatus = () => {
         if (
-            contacts.some(
+            isMessageRead ||
+            (contacts.some(
                 (contact: any) =>
                     contact?.lastMessage?.sender === conversation?.sender &&
                     contact?.lastMessage?._id === conversation?._id
             ) &&
-            conversation?.read === true
+                conversation?.read === true)
         ) {
             return '· Seen';
         }
     };
 
+    useEffect(() => {
+        socket?.on('getMessageStatus', (data: any) => {
+            setIsMessageRead(data.isMessageRead);
+            setMsgStatus(data);
+        });
+        return () => {
+            socket?.off('getMessageStatus');
+        };
+    }, [socket]);
 
     return (
         <React.Fragment>
@@ -38,7 +52,10 @@ const Conversation: React.FC<ConversationProps> = ({
                                 {conversation?.text}
                             </p>
                             <p className={styles.textStatusAndTimeAuthUser}>
-                            <span>{getTimeAMPM(conversation?.createdAt)}</span>{' '}{messageStatus()}
+                                <span>
+                                    {getTimeAMPM(conversation?.createdAt)}
+                                </span>{' '}
+                                {messageStatus()}
                             </p>
                         </div>
                     ) : (
@@ -47,7 +64,9 @@ const Conversation: React.FC<ConversationProps> = ({
                                 <p>{conversation?.text}</p>
                             </div>
                             <p className={styles.textStatusAndTimeOtherUser}>
-                            <span>{getTimeAMPM(conversation?.createdAt)}</span>
+                                <span>
+                                    {getTimeAMPM(conversation?.createdAt)}
+                                </span>
                             </p>
                         </>
                     )}
