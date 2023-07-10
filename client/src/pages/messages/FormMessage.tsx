@@ -4,6 +4,9 @@ import ImageIcon from '../../components/icons/ImageIcon';
 import EmojiIcon from '../../components/icons/EmojiIcon';
 import faPaperPlane from '../../assets/faPaperPlane-regular.svg';
 import { sendMessage } from '../../api/message.api';
+import Picker from '@emoji-mart/react';
+import data from '@emoji-mart/data';
+import useClickOutSide from '../../hooks/useClickOutSide';
 
 interface FormMessageProps {
     socket: any;
@@ -12,9 +15,21 @@ interface FormMessageProps {
     onSendMessage: (message: any) => void;
 }
 
-const FormMessage: React.FC<FormMessageProps> = ({ socket, authUser, currentUser, onSendMessage }) => {
+const FormMessage: React.FC<FormMessageProps> = ({
+    socket,
+    authUser,
+    currentUser,
+    onSendMessage,
+}) => {
+    const [selectedEmoji, setSelectedEmoji] = useState<any>();
+    const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
     const [message, setMessage] = useState('');
+
+    const emojiPickerRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    useClickOutSide(emojiPickerRef, setOpenEmojiPicker);
+
 
     const handleInputChange = (
         event: React.ChangeEvent<HTMLTextAreaElement>
@@ -31,21 +46,42 @@ const FormMessage: React.FC<FormMessageProps> = ({ socket, authUser, currentUser
     };
 
     const handleKeyDown = (e: any) => {
-        if (e.key === "Enter") {
+        if (e.key === 'Enter') {
             handleSubmitForm(e);
         }
-    }
+    };
 
-    const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => { 
-        e.preventDefault();   
+    const handleEmojiSelect = (emoji: any) => {
+        const textarea = textareaRef.current;
+        setSelectedEmoji(emoji.native);
+        if (textarea) {
+            const startPos = textarea.selectionStart;
+            const endPos = textarea.selectionEnd;
+            const text = textarea.value;
+            const newText =
+                text.substring(0, startPos) +
+                emoji.native +
+                text.substring(endPos);
+            setMessage(newText);
+            textarea.focus();
+            textarea.setSelectionRange(
+                startPos + emoji.native.length,
+                startPos + emoji.native.length
+            );
+            setOpenEmojiPicker(false);
+        }
+    };
+
+    const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
         // ToDo: validation
 
         //send message
         const res = await sendMessage(currentUser?._id, message);
-        const { msg } = res
+        const { msg } = res;
         if (res.success) {
-        // ToDo: send real time msg
+            // ToDo: send real time msg
             socket.emit('sendMessage', {
                 sender: authUser,
                 receiver: currentUser?._id,
@@ -66,18 +102,35 @@ const FormMessage: React.FC<FormMessageProps> = ({ socket, authUser, currentUser
     };
 
     return (
-        <form className={styles.formContainer} onSubmit={handleSubmitForm} onKeyDown={handleKeyDown}>
+        <form
+            className={styles.formContainer}
+            onSubmit={handleSubmitForm}
+            onKeyDown={handleKeyDown}
+        >
             <div className={styles.formWrapper}>
                 <div className={styles.icons}>
                     <ImageIcon onChange={() => {}} />
-                    <EmojiIcon onClick={() => {}} />
+                    <EmojiIcon onClick={() => setOpenEmojiPicker(true)} />
+                    {openEmojiPicker && (
+                        <div
+                            ref={emojiPickerRef}
+                            className={styles.emojiPicker}
+                        >
+                            <Picker
+                                data={data}
+                                onEmojiSelect={handleEmojiSelect}
+                            />
+                        </div>
+                    )}
                 </div>
                 <textarea
                     ref={textareaRef}
                     className={styles.input}
                     placeholder="Start a new message"
                     value={message}
-                    onChange={handleInputChange}
+                    onChange={(e: any) => {
+                        handleInputChange(e);
+                    }}
                 />
                 <button type="submit" className={styles.btn}>
                     <img className={styles.disable} src={faPaperPlane} alt="" />

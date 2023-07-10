@@ -7,7 +7,7 @@
     flex-direction: column;
 }
 
-.authUser {
+.authUser, .textStatus {
     align-self: flex-end;
 }
 
@@ -16,14 +16,6 @@
     color: var(--color-white);
     padding: 10px 20px;
     border-radius: 20px 20px 4px 20px;
-    margin-bottom: 8px;
-}
-
-.otherUser {
-    align-self: flex-start;
-    background-color: var(--color-secondary-lighter);
-    padding: 10px 20px;
-    border-radius: 20px 20px 20px 4px;
     margin-bottom: 8px;
 }
 
@@ -44,5 +36,11 @@
     top: -0.5rem;
 }
 
-
+.otherUser {
+    align-self: flex-start;
+    background-color: var(--color-secondary-lighter);
+    padding: 10px 20px;
+    border-radius: 20px 20px 20px 4px;
+    margin-bottom: 8px;
+}
 

@@ -35,7 +35,7 @@
 }
 
 .messages {
-    height: calc(100vh - 8.5rem);
+    height: calc(100vh - 20%);
     overflow-y: scroll;
-    padding-bottom: 3rem;
+    padding-bottom: 4rem;
 }

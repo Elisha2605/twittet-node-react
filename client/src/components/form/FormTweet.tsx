@@ -349,7 +349,7 @@ const FormTweet: FC<FormProps> = ({
                                         onEmojiSelect={handleEmojiSelect} 
                                     />
                                 </div>
-                            )}
+                        )}
                         {/* <CalendarIcon /> */}
                     </div>
                     <div className={styles.buttonAndCounterWrapper}>
