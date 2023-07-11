@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './FormMessage.module.css';
 import ImageIcon from '../../components/icons/ImageIcon';
 import EmojiIcon from '../../components/icons/EmojiIcon';
@@ -7,6 +7,7 @@ import { sendMessage } from '../../api/message.api';
 import Picker from '@emoji-mart/react';
 import data from '@emoji-mart/data';
 import useClickOutSide from '../../hooks/useClickOutSide';
+import XmarkIcon from '../../components/icons/XmarkIcon';
 
 interface FormMessageProps {
     socket: any;
@@ -25,11 +26,14 @@ const FormMessage: React.FC<FormMessageProps> = ({
     const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
     const [message, setMessage] = useState('');
 
+    // Message Form states
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [previewImage, setPreviewImage] = useState<string | null>(null);
+
     const emojiPickerRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     useClickOutSide(emojiPickerRef, setOpenEmojiPicker);
-
 
     const handleInputChange = (
         event: React.ChangeEvent<HTMLTextAreaElement>
@@ -78,7 +82,7 @@ const FormMessage: React.FC<FormMessageProps> = ({
         // ToDo: validation
 
         //send message
-        const res = await sendMessage(currentUser?._id, message);
+        const res = await sendMessage(currentUser?._id, message, selectedFile);
         const { msg } = res;
         if (res.success) {
             // ToDo: send real time msg
@@ -99,43 +103,104 @@ const FormMessage: React.FC<FormMessageProps> = ({
         if (textareaRef.current) {
             textareaRef.current.style.height = 'auto';
         }
+
+        if (previewImage) {
+            clearTweetForm();
+        }
+    };
+
+    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files && event.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+            let imageUrl = URL.createObjectURL(file);
+            setPreviewImage(imageUrl);
+        }
+    };
+
+    const clearTweetForm = () => {
+        setSelectedFile(null);
+        setPreviewImage(null);
+    }
+    const handleCanselPreviewImage = () => {
+        setSelectedFile(null);
+        setPreviewImage(null);
     };
 
     return (
-        <form
-            className={styles.formContainer}
+        <form encType="multipart/form-data"
+            className={`${styles.formContainer} ${
+                previewImage ? styles.formContainerWithImage : ''
+            }`}
             onSubmit={handleSubmitForm}
             onKeyDown={handleKeyDown}
         >
-            <div className={styles.formWrapper}>
-                <div className={styles.icons}>
-                    <ImageIcon onChange={() => {}} />
-                    <EmojiIcon onClick={() => setOpenEmojiPicker(true)} />
-                    {openEmojiPicker && (
-                        <div
-                            ref={emojiPickerRef}
-                            className={styles.emojiPicker}
-                        >
-                            <Picker
-                                data={data}
-                                onEmojiSelect={handleEmojiSelect}
+            {previewImage ? (
+                <div className={styles.previewImage}>
+                    <div className={styles.previewImageWrapper}>
+                        <img
+                            id={previewImage}
+                            src={previewImage}
+                            alt="preview message img"
+                        />
+                        <XmarkIcon
+                            className={styles.cancelBtn}
+                            size={'lg'}
+                            onClick={handleCanselPreviewImage}
+                        />
+                        <button type="submit" className={styles.btnWithImage}>
+                            <img
+                                className={styles.disable}
+                                src={faPaperPlane}
+                                alt=""
                             />
-                        </div>
-                    )}
+                        </button>
+                    </div>
+                    <textarea
+                        ref={textareaRef}
+                        className={styles.inputWithImage}
+                        placeholder="Start a new message"
+                        value={message}
+                        onChange={(e: any) => {
+                            handleInputChange(e);
+                        }}
+                    />
                 </div>
-                <textarea
-                    ref={textareaRef}
-                    className={styles.input}
-                    placeholder="Start a new message"
-                    value={message}
-                    onChange={(e: any) => {
-                        handleInputChange(e);
-                    }}
-                />
-                <button type="submit" className={styles.btn}>
-                    <img className={styles.disable} src={faPaperPlane} alt="" />
-                </button>
-            </div>
+            ) : (
+                <div className={styles.formWrapper}>
+                    <div className={styles.icons}>
+                        <ImageIcon onChange={handleImageUpload} name={'messageImage'} />
+                        <EmojiIcon onClick={() => setOpenEmojiPicker(true)} />
+                        {openEmojiPicker && (
+                            <div
+                                ref={emojiPickerRef}
+                                className={styles.emojiPicker}
+                            >
+                                <Picker
+                                    data={data}
+                                    onEmojiSelect={handleEmojiSelect}
+                                />
+                            </div>
+                        )}
+                    </div>
+                    <textarea
+                        ref={textareaRef}
+                        className={styles.input}
+                        placeholder="Start a new message"
+                        value={message}
+                        onChange={(e: any) => {
+                            handleInputChange(e);
+                        }}
+                    />
+                    <button type="submit" className={styles.btn}>
+                        <img
+                            className={styles.disable}
+                            src={faPaperPlane}
+                            alt=""
+                        />
+                    </button>
+                </div>
+            )}
         </form>
     );
 };

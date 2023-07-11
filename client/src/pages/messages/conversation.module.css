@@ -1,5 +1,6 @@
 .container {
     padding: 0 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .conversationWrapper {
@@ -7,7 +8,8 @@
     flex-direction: column;
 }
 
-.authUser, .textStatus {
+.authUser,
+.textStatus {
     align-self: flex-end;
 }
 
@@ -17,6 +19,36 @@
     padding: 10px 20px;
     border-radius: 20px 20px 4px 20px;
     margin-bottom: 8px;
+    max-width: 25rem;
+    word-wrap: break-word;
+}
+
+.imageAuthUser img {
+    float: right;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 1rem;
+    margin-bottom: 0.5rem;
+    align-self: flex-end;
+}
+
+.imageFixedHeight img {
+    max-width: 71%;
+    max-height: 100%;
+}
+
+.textStatusAndTimeAuthUserNoImage {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-bottom: 0.2rem;
+    
+}
+
+.imageWithNoText {
+    display: flex;
+    flex-direction: column;
 }
 
 .textStatusAndTimeAuthUser {
@@ -25,7 +57,10 @@
     top: -0.5rem;
 }
 
-.textStatusAndTimeAuthUser, .textStatusAndTimeOtherUser {
+.textStatusAndTimeAuthUser,
+.textStatusAndTimeOtherUser,
+.textStatusAndTimeAuthUserNoImage,
+.textStatusAndTimeOtherUserNoImage {
     font-size: var(--font-size-sm);
     color: var(--color-secondary);
 }
@@ -36,11 +71,21 @@
     top: -0.5rem;
 }
 
-.otherUser {
+.otherUserText {
     align-self: flex-start;
     background-color: var(--color-secondary-lighter);
     padding: 10px 20px;
     border-radius: 20px 20px 20px 4px;
     margin-bottom: 8px;
+    max-width: 25rem;
+    word-wrap: break-word;
 }
 
+.otherUserWithNoText {
+    margin-bottom: 0.5rem;
+}
+
+.imageOtherUser img {
+    border-radius: 1rem;
+    align-self: flex-end;
+}

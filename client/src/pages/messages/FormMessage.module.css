@@ -4,6 +4,7 @@
     width: 100%;
     border-top: 1px solid var(--color-secondary-light);
     padding: 0.5rem 1rem;
+    background: var(--color-white);
 }
 
 .formWrapper {
@@ -13,7 +14,6 @@
 
 .input {
     width: 100%;
-    max-height: 13.5rem;
     resize: none;
     overflow-y: auto;
     border: none;
@@ -61,4 +61,72 @@
 .emojiPicker {
     position: absolute;
     margin-top: -22rem;
+}
+
+/* Preview image */
+.formContainerWithImage {
+    padding: 0.5rem 0.5rem;
+}
+.previewImage {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+    background: var(--color-secondary-lighter);
+    padding: 1rem;
+    border-radius: 1rem;
+
+}
+
+.previewImage img {
+    position: relative;
+    width: 12rem;
+    border-radius: 1rem;
+}
+
+.previewImageWrapper {
+    position: relative;
+    width: fit-content;
+    position: relative;
+}
+.cancelBtn {    
+    position: absolute;
+    right: 0.3rem;
+    top: 0.3rem;
+    color: var(--color-white);
+    background-color: rgba(0, 0, 0, 0.801);
+}
+
+.cancelBtn:hover {
+    background-color: rgba(33, 33, 33, 0.916);
+    transition: 0.1s ease-in-out;
+}
+
+.inputWithImage {
+    position: relative;
+    top: 1rem;
+    width: 100%;
+    max-height: 13.5rem;
+    resize: none;
+    overflow-y: auto;
+    border: none;
+    font-family: inherit;
+    font-size: var(--font-size-md);
+    background: var(--color-secondary-lighter);
+
+}
+
+.btnWithImage {
+    position: absolute;
+    right: -21.5rem;
+    top: 4rem;
+}
+
+.btnWithImage img {
+    width: 1.2rem;
+    cursor: pointer;
+}
+
+.inputWithImage:focus {
+    outline: none;
 }

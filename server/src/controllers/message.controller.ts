@@ -45,20 +45,19 @@ export const getConversationController = asyncHandler(
 
 export const sendMessageController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
+        console.log(req.body);
         const sender = req.user._id;
         const receiver = req.params.id;
         const text = req.body.text;
+        const image = req.files?.['messageImage']?.[0]?.filename ?? null;
 
         if (!sender || !receiver) {
             res.status(400).json({ inputError: 'Input error' });
             return;
         }
 
-        // temporary until image is emplimented
-        if (!text) {
-            res.status(400).json({
-                InvalidInput: 'text missing',
-            });
+        if (text === undefined && image === null) {
+            res.status(400).json({ InvalidInputError: 'Invalid Input' });
             return;
         }
 
@@ -73,7 +72,8 @@ export const sendMessageController = asyncHandler(
             const { success, message, status, payload } = await sendMessage(
                 sender,
                 receiver,
-                text
+                text,
+                image
             );
 
             if (success) {

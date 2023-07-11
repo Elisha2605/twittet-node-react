@@ -34,7 +34,8 @@ export const getConversation = async (
 export const sendMessage = async (
     sender: string,
     receiver: string,
-    text: string
+    text: string,
+    image: string
 ): Promise<ApiResponse<any>> => {
     try {
         const receiverUser = await Contact.findOne({ user: receiver });
@@ -43,6 +44,7 @@ export const sendMessage = async (
             sender: sender,
             receiver: receiver,
             text: text,
+            image: image,
             read: false,
         });
 
