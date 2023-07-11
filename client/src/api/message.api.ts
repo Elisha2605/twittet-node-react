@@ -1,4 +1,4 @@
-import { GETREQUESTOPTIONS, http } from '../config/axios.config';
+import { GETREQUESTOPTIONS, GETREQUESTOPTIONS_WITH_MULTIFROM, http } from '../config/axios.config';
 
 export const getConversation = async (id: string) => {
     try {
@@ -13,17 +13,29 @@ export const getConversation = async (id: string) => {
     }
 };
 
-export const sendMessage = async (receiverId: string, text: string) => {
+export const sendMessage = async (
+    receiverId: string,
+    text: string | null,
+    image: File | null
+) => {
     try {
         const res = await http.post(
             `/messages/send/${receiverId}`,
-            { text: text },
-            GETREQUESTOPTIONS()
+            {
+                text: text,
+                messageImage: image,
+            },
+            GETREQUESTOPTIONS_WITH_MULTIFROM()
         );
         return res.data;
-    } catch (error) {
-        console.error(error);
-        throw error;
+    } catch (error: any) {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('context');
+            window.location.href = '/';
+        } else {
+            console.error(error);
+            throw error;
+        }
     }
 };
 

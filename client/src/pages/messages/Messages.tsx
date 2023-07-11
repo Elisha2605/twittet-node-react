@@ -29,7 +29,9 @@ interface MessageProps {
     socket: any;
 }
 
-const Message: FC<MessageProps> = ({ socket }) => {
+const Message: FC<MessageProps> = ({ 
+    socket,
+}) => {
     const { path } = useParams<{ path: string }>();
 
     const [contacts, setContacts] = useState<any[]>([]);

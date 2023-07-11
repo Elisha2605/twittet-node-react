@@ -124,11 +124,11 @@ function App() {
 
     const handleCanselPreviewImage = () => {
         if (modalOpen) {
-            setPreviewImageModal('');
+            setPreviewImageModal(null);
             setSelectedFileModal(null);
-            setPreviewEditImageModal('');
+            setPreviewEditImageModal(null);
         } else {
-            setPreviewImageHome('');
+            setPreviewImageHome(null);
             setSelectedFileHome(null);
         }
       };

@@ -4,9 +4,10 @@ import React, { FC } from 'react';
 import styles from './ImageIcon.module.css';
 
 const ImageIcon: FC<{
+    name: string;
     className?: string;
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}> = ({ className, onChange }) => {
+}> = ({ name, className, onChange }) => {
     return (
         <React.Fragment>
             <label htmlFor="imageInput">

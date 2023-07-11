@@ -265,7 +265,7 @@ const FormNavigation: FC<FormNavigationProps> = ({
                 )}
                 <div className={styles.footer}>
                     <div className={styles.icons}>
-                        <ImageIcon onChange={onImageUpload} />
+                        <ImageIcon onChange={onImageUpload} name={'tweetImage'} />
                         <EmojiIcon onClick={() => setOpenEmojiPicker(true)} />
                             {openEmojiPicker && (
                                 <div ref={emojiPickerRef} className={`${styles.emojiPicker} ${!imagePreview ? styles.emojiPickerWithPreviewImg : ''}`}>

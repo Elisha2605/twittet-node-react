@@ -6,6 +6,7 @@ export const IMAGE_AVATAR_BASE_URL = `https://fake-twitter-uploads.s3.amazonaws.
 export const IMAGE_COVER_BASE_URL = `https://fake-twitter-uploads.s3.amazonaws.com/cover`
 export const IMAGE_TWEET_BASE_URL = `https://fake-twitter-uploads.s3.amazonaws.com/tweetImage`
 export const IMAGE_TWEET_REPLY_BASE_URL = `https://fake-twitter-uploads.s3.amazonaws.com/replyImage`
+export const IMAGE_MESSAGE_BASE_URL = `https://fake-twitter-uploads.s3.amazonaws.com/messageImage`
 
 export const IMAGE_AVATAR_DEFAULT = 'default-avatar.jpg'
 export const IMAGE_COVER_DEFAULT = `https://fake-twitter-uploads.s3.amazonaws.com/avatar/default-cover.jpg`
