@@ -1,0 +1,44 @@
+.authUser,
+.textStatus {
+    align-self: flex-end;
+}
+
+.authUserText {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    padding: 10px 20px;
+    border-radius: 20px 20px 4px 20px;
+    margin-bottom: 8px;
+    max-width: 25rem;
+    word-wrap: break-word;
+}
+
+.imageAuthUser img {
+    float: right;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 1rem;
+    margin-bottom: 0.5rem;
+    align-self: flex-end;
+}
+
+.textStatusAndTimeAuthUserNoImage {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-bottom: 0.2rem;
+    
+}
+
+.textStatusAndTimeAuthUser {
+    float: right;
+    position: relative;
+    top: -0.5rem;
+}
+
+.textStatusAndTimeAuthUser,
+.textStatusAndTimeAuthUserNoImage {
+    font-size: var(--font-size-sm);
+    color: var(--color-secondary);
+}

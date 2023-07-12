@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './conversation.module.css';
-import { getTimeAMPM } from '../../utils/helpers.utils';
-import { IMAGE_MESSAGE_BASE_URL } from '../../constants/common.constants';
+import AuthUserChat from './AuthUserChat';
+import OtherUserChat from './OtherUserChat';
 
 interface ConversationProps {
     socket: any;
     otherUser: any;
     conversation: any;
     contacts: any;
+    isLoading: boolean;
 }
 
 const Conversation: React.FC<ConversationProps> = ({
@@ -15,6 +16,7 @@ const Conversation: React.FC<ConversationProps> = ({
     conversation,
     otherUser,
     contacts,
+    isLoading,
 }) => {
     const [isMessageRead, setIsMessageRead] = useState<any>(false);
     const [msgStatus, setMsgStatus] = useState<any>();
@@ -61,120 +63,21 @@ const Conversation: React.FC<ConversationProps> = ({
             <div className={styles.container}>
                 <div className={styles.conversationWrapper}>
                     {conversation?.sender !== otherUser?._id ? (
-                        <>
-                            {conversation?.image && (
-                                <div>
-                                    <div
-                                        className={`${styles.imageAuthUser} ${
-                                            !conversation?.text
-                                                ? styles.textStatusAndTimeAuthUserNoImage
-                                                : ''
-                                        }`}
-                                    >
-                                        <img
-                                            ref={imgRef}
-                                            src={
-                                                conversation.image
-                                                    ? `${IMAGE_MESSAGE_BASE_URL}/${conversation.image}`
-                                                    : undefined
-                                            }
-                                            alt=""
-                                            onLoad={handleImageLoad}
-                                        />
-                                        {!conversation?.text && (
-                                            <p
-                                                className={
-                                                    styles.textStatusAndTimeAuthUserNoImage
-                                                }
-                                            >
-                                                <span>
-                                                    {getTimeAMPM(
-                                                        conversation?.createdAt
-                                                    )}
-                                                </span>{' '}
-                                                {messageStatus()}
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-                            {conversation?.text && (
-                                <div className={styles.authUser}>
-                                    <p className={styles.authUserText}>
-                                        {conversation?.text}
-                                    </p>
-                                    <p
-                                        className={
-                                            styles.textStatusAndTimeAuthUser
-                                        }
-                                    >
-                                        <span>
-                                            {getTimeAMPM(
-                                                conversation?.createdAt
-                                            )}
-                                        </span>{' '}
-                                        {messageStatus()}
-                                    </p>
-                                </div>
-                            )}
-                        </>
+                        <AuthUserChat
+                            conversation={conversation}
+                            imgRef={imgRef}
+                            handleImageLoad={handleImageLoad}
+                            messageStatus={messageStatus}
+                            isLoading={isLoading}
+                        />
                     ) : (
-                        <>
-                            {conversation?.image && (
-                                <div>
-                                    <div
-                                        className={`${styles.imageOtherUser} ${
-                                            !conversation?.text
-                                                ? styles.otherUserWithNoText
-                                                : null
-                                        }`}
-                                    >
-                                        <img
-                                            ref={imgRef}
-                                            src={
-                                                conversation.image
-                                                    ? `${IMAGE_MESSAGE_BASE_URL}/${conversation.image}`
-                                                    : undefined
-                                            }
-                                            alt=""
-                                            onLoad={handleImageLoad}
-                                        />
-                                        {!conversation?.text && (
-                                            <p
-                                                className={
-                                                    styles.textStatusAndTimeOtherUserNoImage
-                                                }
-                                            >
-                                                <span>
-                                                    {getTimeAMPM(
-                                                        conversation?.createdAt
-                                                    )}
-                                                </span>{' '}
-                                                {messageStatus()}
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-                            {conversation?.text && (
-                                <>
-                                    <div className={styles.otherUserText}>
-                                        <p>{conversation?.text}</p>
-                                    </div>
-                                    <p
-                                        className={
-                                            styles.textStatusAndTimeOtherUser
-                                        }
-                                    >
-                                        <span>
-                                            {getTimeAMPM(
-                                                conversation?.createdAt
-                                            )}
-                                        </span>
-                                    </p>
-                                </>
-                            )}
-                        </>
+                        <OtherUserChat
+                            conversation={conversation}
+                            imgRef={imgRef}
+                            handleImageLoad={handleImageLoad}
+                            messageStatus={messageStatus}
+                            isLoading={isLoading}
+                        />
                     )}
                 </div>
             </div>

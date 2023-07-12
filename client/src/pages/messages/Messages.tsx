@@ -39,6 +39,8 @@ const Message: FC<MessageProps> = ({
     const [conversations, setConversations] = useState<any>([]);
     const [newMessage, setNewMessage] = useState<any>();
 
+    const [isLoading, setIsloading] = useState<boolean>(false);
+
     const { showMessage } = useMessage();
     const navigate = useNavigate();
 
@@ -60,14 +62,17 @@ const Message: FC<MessageProps> = ({
     useEffect(() => {
         const fetchAllContactAndConversation = async () => {
             if (path!) {
+                setIsloading(true);
                 const { user } = await getUserById(path!);
                 const { conversation } = await getConversation(path!);
                 setCurrentUser(user);
+                setIsloading(false);
                 setConversations(conversation);
             }
         };
         fetchAllContactAndConversation();
     }, [contacts.length, path]);
+    
 
     const contactOnclikOption = async (option: any, contactId: any) => {
         if (option === CONTACT_OPTION.delete) {
@@ -249,6 +254,7 @@ const Message: FC<MessageProps> = ({
                                                 contacts={contacts}
                                                 otherUser={currentUser}
                                                 conversation={conversation}
+                                                isLoading={isLoading}
                                             />
                                         </div>
                                     ))}
