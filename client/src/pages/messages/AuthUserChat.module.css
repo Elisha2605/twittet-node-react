@@ -51,17 +51,21 @@
     float: right;
     position: relative;
     top: -0.5rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .textStatusAndTimeAuthUser,
 .textStatusAndTimeAuthUserNoImage {
+    display: flex;
+    flex-direction: row;
     font-size: var(--font-size-sm);
     color: var(--color-secondary);
 }
 
 .threeDotsWithImage {
     position: absolute;
-    left: 7.5rem;
+    left: 8.5rem;
     cursor: pointer;
     z-index: 1;
 }

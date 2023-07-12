@@ -7,6 +7,7 @@ interface Imessage extends mongoose.Document {
     text: string;
     image?: string;
     visited: boolean;
+    deletedBy: (string | ObjectId)[];
     read: boolean;
 }
 
@@ -30,6 +31,10 @@ const messageModel = {
     visited: {
         type: Boolean,
         default: false,
+    },
+    deletedBy: {
+        type: [Types.ObjectId],
+        ref: 'User',
     },
     read: {
         type: Boolean,

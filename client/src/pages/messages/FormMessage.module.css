@@ -130,3 +130,11 @@
 .inputWithImage:focus {
     outline: none;
 }
+
+.disabled img, .disabled:hover {
+    cursor: auto;
+}
+
+.disabled img {
+
+}

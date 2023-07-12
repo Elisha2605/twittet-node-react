@@ -33,7 +33,7 @@ const AuthUserChat: FC<AuthUserChatProps> = ({
         <>
             {conversation?.image && (
                 <div
-                    className={styles.imageAuthUserContainer}
+                    className={`${styles.imageAuthUserContainer}`}
                     onMouseEnter={() => setIsMenuHoveredWithImage(true)}
                     onMouseLeave={() => setIsMenuHoveredWithImage(false)}
                 >

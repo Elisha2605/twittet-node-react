@@ -12,11 +12,12 @@ export const getConversation = async (
                 { sender: authUser, receiver: otherUser },
                 { sender: otherUser, receiver: authUser },
             ],
+            deletedBy: { $ne: authUser }, // Exclude messages where authUser is in the deletedBy array
         });
 
         return {
             success: true,
-            message: 'fetched Conversation',
+            message: 'Fetched Conversation',
             status: 200,
             payload: conversation,
         };
@@ -145,26 +146,12 @@ export const updateMessageStatus = async (
 };
 
 export const deleteMessage = async (
-    sender: string,
-    messageId: string
+    user: string,
+    messageId: string,
+    isDeleteForBoth: boolean
 ): Promise<ApiResponse<any>> => {
     try {
-        const deletedMessage = await Message.findById({
-            _id: messageId,
-            sender: sender,
-        });
-
-        if (
-            deletedMessage &&
-            deletedMessage.sender.toString() !== sender.toString()
-        ) {
-            return {
-                success: true,
-                message: `You cannot delete another user's message!`,
-                status: 400,
-                payload: 0,
-            };
-        }
+        const deletedMessage = await Message.findById(messageId);
 
         if (!deletedMessage) {
             return {
@@ -175,7 +162,55 @@ export const deleteMessage = async (
             };
         }
 
-        await deletedMessage.deleteOne();
+        const authUser = user.toString();
+        const sender = deletedMessage.sender.toString();
+        const receiver = deletedMessage.receiver.toString();
+
+        // helper function
+        const hasUserDeletedMessage = () => {
+            return deletedMessage.deletedBy.includes(authUser);
+        };
+
+        // checking deletion permission
+        if (sender !== authUser && receiver !== authUser) {
+            return {
+                success: false,
+                message: 'Not Allowed to delete this message',
+                status: 400,
+                payload: {},
+            };
+        }
+
+        // delete for message for both users
+        if (sender === authUser && isDeleteForBoth) {
+            await deletedMessage.deleteOne();
+            return {
+                success: true,
+                message: `Message deleted for both users!`,
+                status: 200,
+                payload: true,
+            };
+        }
+
+        // check if user has already deleted the msg
+        if (deletedMessage && hasUserDeletedMessage()) {
+            return {
+                success: true,
+                message: `Message already deleted by: ${authUser}`,
+                status: 200,
+                payload: {},
+            };
+        }
+
+        if (deletedMessage && !hasUserDeletedMessage()) {
+            deletedMessage.deletedBy.push(authUser);
+            await deletedMessage.save();
+
+            if (deletedMessage.deletedBy.length === 2) {
+                await deletedMessage.deleteOne();
+                console.log('Message deleted by both users');
+            }
+        }
 
         return {
             success: true,

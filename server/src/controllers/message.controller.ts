@@ -139,9 +139,7 @@ export const deleteMessageController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const sender = req.user._id;
         const messageId = req.params.id;
-
-        console.log(sender);
-        console.log(messageId);
+        const isDeleteForBoth = req.body.deleteForBoth;
 
         if (!messageId) {
             res.status(400).json({ inputError: 'Input error' });
@@ -151,7 +149,8 @@ export const deleteMessageController = asyncHandler(
         try {
             const { success, message, status, payload } = await deleteMessage(
                 sender,
-                messageId
+                messageId,
+                isDeleteForBoth
             );
 
             if (success) {
