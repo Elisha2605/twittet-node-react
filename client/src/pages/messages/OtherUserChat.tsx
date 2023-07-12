@@ -79,7 +79,6 @@ const OtherUserChat: FC<OtherUserChatProp> = ({
                                 <span>
                                     {getTimeAMPM(conversation?.createdAt)}
                                 </span>{' '}
-                                {messageStatus()}
                             </p>
                         )}
                     </div>

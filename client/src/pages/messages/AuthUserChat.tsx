@@ -70,12 +70,11 @@ const AuthUserChat: FC<AuthUserChatProps> = ({
                             onLoad={handleImageLoad}
                         />
                         {!conversation?.text && (
-                            <p className={styles.textStatusAndTimeAuthUser}>
-                                <span>
-                                    {getTimeAMPM(conversation?.createdAt)}
-                                </span>{' '}
-                                {messageStatus()}
-                            </p>
+                            <div className={styles.textStatusAndTimeAuthUser}>
+                                <p>
+                                    {getTimeAMPM(conversation?.createdAt)} {messageStatus()}
+                                </p>
+                            </div>
                         )}
                     </div>
                 </div>
@@ -109,10 +108,9 @@ const AuthUserChat: FC<AuthUserChatProps> = ({
                         <div className={styles.authUserText}>
                             {conversation?.text}
                         </div>
-                        <p className={styles.textStatusAndTimeAuthUser}>
-                            <span>{getTimeAMPM(conversation?.createdAt)}</span>{' '}
-                            {messageStatus()}
-                        </p>
+                        <div className={styles.textStatusAndTimeAuthUser}>
+                            <span>{getTimeAMPM(conversation?.createdAt)} {messageStatus()}</span>
+                        </div>
                     </div>
                 </div>
             )}

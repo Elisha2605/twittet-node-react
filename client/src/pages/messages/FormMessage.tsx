@@ -160,13 +160,16 @@ const FormMessage: React.FC<FormMessageProps> = ({
                             size={'lg'}
                             onClick={handleCanselPreviewImage}
                         />
-                        <button type="submit" className={styles.btnWithImage}>
-                            <img
-                                className={styles.disable}
-                                src={faPaperPlane}
-                                alt=""
-                            />
-                        </button>
+                        {!isLoading && (
+                            <button type="submit" className={`${styles.btnWithImage}`}>
+                                <img
+                                    className={styles.disable}
+                                    src={faPaperPlane}
+                                    alt=""
+                                />
+                            </button>
+                       )}
+                       {isLoading && <LoadingRing size={'small'} />}
                     </div>
                     <textarea
                         ref={textareaRef}
