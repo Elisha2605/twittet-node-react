@@ -57,8 +57,6 @@
 
 .textStatusAndTimeAuthUser,
 .textStatusAndTimeAuthUserNoImage {
-    display: flex;
-    flex-direction: row;
     font-size: var(--font-size-sm);
     color: var(--color-secondary);
 }
