@@ -143,3 +143,53 @@ export const updateMessageStatus = async (
         return Promise.reject(errorResponse);
     }
 };
+
+export const deleteMessage = async (
+    sender: string,
+    messageId: string
+): Promise<ApiResponse<any>> => {
+    try {
+        const deletedMessage = await Message.findById({
+            _id: messageId,
+            sender: sender,
+        });
+
+        if (
+            deletedMessage &&
+            deletedMessage.sender.toString() !== sender.toString()
+        ) {
+            return {
+                success: true,
+                message: `You cannot delete another user's message!`,
+                status: 400,
+                payload: 0,
+            };
+        }
+
+        if (!deletedMessage) {
+            return {
+                success: true,
+                message: `'Message not found!`,
+                status: 404,
+                payload: 0,
+            };
+        }
+
+        await deletedMessage.deleteOne();
+
+        return {
+            success: true,
+            message: `Deleted message with id: ${deletedMessage._id}`,
+            status: 200,
+            payload: true,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};

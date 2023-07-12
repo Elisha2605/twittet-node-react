@@ -153,6 +153,12 @@ const Message: FC<MessageProps> = ({
         scrollToBottom();
     };
 
+    const onDeleteMessage = (messageId: string) => {
+        setConversations((prevState: any) => 
+            prevState.filter((conversation: any) => conversation?._id !== messageId)
+        )
+    }
+
     const location = useLocation();
     const currentPath = location.pathname;
 
@@ -255,6 +261,7 @@ const Message: FC<MessageProps> = ({
                                                 otherUser={currentUser}
                                                 conversation={conversation}
                                                 isLoading={isLoading}
+                                                onDeleteMessage={onDeleteMessage}
                                             />
                                         </div>
                                     ))}

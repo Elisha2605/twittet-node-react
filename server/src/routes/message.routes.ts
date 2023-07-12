@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+    deleteMessageController,
     getConversationController,
     sendMessageController,
     updateMessageStatusController,
@@ -22,5 +23,6 @@ messageRouter.patch(
     verifyUser(),
     updateMessageStatusController
 );
+messageRouter.delete('/delete/:id', verifyUser(), deleteMessageController);
 
 export default messageRouter;

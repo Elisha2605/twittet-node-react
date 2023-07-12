@@ -4,6 +4,7 @@ import AuthUserChat from './AuthUserChat';
 import OtherUserChat from './OtherUserChat';
 import { messageIcon, messageOption } from '../../data/menuOptions';
 import { MESSAGE_OPTION } from '../../constants/common.constants';
+import { deleteMessage } from '../../api/message.api';
 
 interface ConversationProps {
     socket: any;
@@ -11,6 +12,7 @@ interface ConversationProps {
     conversation: any;
     contacts: any;
     isLoading: boolean;
+    onDeleteMessage: (messageId: string) => void;
 }
 
 const Conversation: React.FC<ConversationProps> = ({
@@ -19,6 +21,7 @@ const Conversation: React.FC<ConversationProps> = ({
     otherUser,
     contacts,
     isLoading,
+    onDeleteMessage,
 }) => {
     const [isMessageRead, setIsMessageRead] = useState<any>(false);
     const [msgStatus, setMsgStatus] = useState<any>();
@@ -70,7 +73,10 @@ const Conversation: React.FC<ConversationProps> = ({
             console.log('copy message cliked');
         }
         if (option === MESSAGE_OPTION.delete) {
-            console.log('delete cliked');
+            const res = await deleteMessage(messageId)
+            if (res.success) {
+                onDeleteMessage(messageId)
+            }
         }
     }
 

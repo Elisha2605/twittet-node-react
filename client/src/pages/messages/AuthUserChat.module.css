@@ -10,6 +10,8 @@
     align-items: center;
     gap: 1rem;
     cursor: pointer;
+    width: 100%;
+    justify-content: flex-end;
 }
 
 .authUser,

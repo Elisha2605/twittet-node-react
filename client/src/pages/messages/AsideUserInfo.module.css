@@ -25,6 +25,9 @@
 .username {
     color: var(--color-secondary);
 }
+.fullname:hover {
+    text-decoration: underline;
+}
 
 .moreInfo {
     margin-top: 1rem;

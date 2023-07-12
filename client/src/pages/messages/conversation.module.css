@@ -5,8 +5,7 @@
 
 .conversationWrapper {
     display: flex;
-    flex-direction: column;
-}
+    flex-direction: column;}
 
 .imageFixedHeight img {
     max-width: 71%;
