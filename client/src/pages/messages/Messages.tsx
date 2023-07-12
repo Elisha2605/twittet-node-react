@@ -15,7 +15,7 @@ import {
     removeContact,
 } from '../../api/contact.api';
 import UserContactInfo from './UserContactInfo';
-import { messageIcon, messageOption } from '../../data/menuOptions';
+import { contactIcon, contactOption } from '../../data/menuOptions';
 import { useMessage } from '../../context/successMessage.context';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
@@ -223,8 +223,8 @@ const Message: FC<MessageProps> = ({
                                         <UserContactInfo
                                             authUser={ctx?.user}
                                             contact={contact}
-                                            menuOptions={messageOption}
-                                            menuIcons={messageIcon}
+                                            menuOptions={contactOption}
+                                            menuIcons={contactIcon}
                                             onClickOption={contactOnclikOption}
                                             newMessage={newMessage}
                                         />

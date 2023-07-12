@@ -1,3 +1,17 @@
+.imageAuthUserContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.authUser {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+}
+
 .authUser,
 .textStatus {
     align-self: flex-end;
@@ -23,9 +37,9 @@
     align-self: flex-end;
 }
 
-.textStatusAndTimeAuthUserNoImage {
+.textStatusAndTimeAuthUser {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-end;
     margin-bottom: 0.2rem;
     
@@ -41,4 +55,39 @@
 .textStatusAndTimeAuthUserNoImage {
     font-size: var(--font-size-sm);
     color: var(--color-secondary);
+}
+
+.threeDotsWithImage {
+    position: absolute;
+    left: 7.5rem;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.threeDots {
+    position: relative;
+    top: -1rem;
+}
+
+.popUpBoxWithImage {
+    width: 11.6rem;
+    top: 0rem;
+    left: -1.1rem;
+}
+
+.popUpBox {
+    position: absolute;
+    right: -2rem;
+    width: 10.8rem;
+    top: -6rem;
+
+}
+
+.popUpList, .popUpListWithImage {
+    padding: 0.5rem !important; 
+
+}
+
+.hide {
+    display: none;
 }

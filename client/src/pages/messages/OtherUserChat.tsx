@@ -1,14 +1,18 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import styles from './OtherUserChat.module.css';
 import { IMAGE_MESSAGE_BASE_URL } from '../../constants/common.constants';
 import { getTimeAMPM } from '../../utils/helpers.utils';
+import PopUpMenu from '../../components/ui/PopUpMenu';
 
 interface OtherUserChatProp {
     conversation: any;
     imgRef: any;
-    handleImageLoad: () => void;
-    messageStatus: Function;
     isLoading: boolean;
+    messageStatus: Function;
+    messageOption: any;
+    messageIcon: any;
+    onClickMessageOption: Function;
+    handleImageLoad: () => void;
 }
 
 const OtherUserChat: FC<OtherUserChatProp> = ({
@@ -17,11 +21,38 @@ const OtherUserChat: FC<OtherUserChatProp> = ({
     handleImageLoad,
     messageStatus,
     isLoading,
+    messageOption,
+    messageIcon,
+    onClickMessageOption,
 }) => {
+    const [isMenuHovered, setIsMenuHovered] = useState<boolean>(false);
+    const [isMenuHoveredWithImage, setIsMenuHoveredWithImage] =
+        useState<boolean>(false);
+
     return (
         <>
             {conversation?.image && (
-                <div>
+                <div
+                    className={styles.imageOtherUserContainer}
+                    onMouseEnter={() => setIsMenuHoveredWithImage(true)}
+                    onMouseLeave={() => setIsMenuHoveredWithImage(false)}
+                >
+                    {isMenuHoveredWithImage && (
+                        <div className={styles.threeDotsWithImage}>
+                            <PopUpMenu
+                                itemId={conversation?._id}
+                                options={messageOption}
+                                icons={messageIcon}
+                                onClick={(menuOptions, id) =>
+                                    onClickMessageOption!(menuOptions, id)
+                                }
+                                classNamePopUpBox={styles.popUpBoxWithImage}
+                                classNameMenuItemList={
+                                    styles.popUpListWithImage
+                                }
+                            />
+                        </div>
+                    )}
                     <div
                         className={`${styles.imageOtherUser} ${
                             !conversation?.text
@@ -55,14 +86,39 @@ const OtherUserChat: FC<OtherUserChatProp> = ({
                 </div>
             )}
             {conversation?.text && (
-                <>
-                    <div className={styles.otherUserText}>
-                        <p>{conversation?.text}</p>
+                <div
+                    className={styles.OtherUser}
+                    onMouseEnter={() => setIsMenuHovered(true)}
+                    onMouseLeave={() => setIsMenuHovered(false)}
+                >
+                    <div>
+                        <div className={styles.otherUserText}>
+                            <p>{conversation?.text}</p>
+                        </div>
+                        <p className={styles.textStatusAndTimeOtherUser}>
+                            <span>{getTimeAMPM(conversation?.createdAt)}</span>
+                        </p>
                     </div>
-                    <p className={styles.textStatusAndTimeOtherUser}>
-                        <span>{getTimeAMPM(conversation?.createdAt)}</span>
-                    </p>
-                </>
+                    {isMenuHovered && (
+                        <div
+                            className={`${styles.threeDots} ${
+                                conversation.image ? styles.hide : ''
+                            }`}
+                        >
+                            <PopUpMenu
+                                itemId={conversation?._id}
+                                options={messageOption}
+                                icons={messageIcon}
+                                onClick={(menuOptions, id) =>
+                                    onClickMessageOption!(menuOptions, id)
+                                }
+                                className={styles.popuContainer}
+                                classNamePopUpBox={styles.popUpBox}
+                                classNameMenuItemList={styles.popUpList}
+                            />
+                        </div>
+                    )}
+                </div>
             )}
         </>
     );
