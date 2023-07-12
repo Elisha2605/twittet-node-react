@@ -3,11 +3,13 @@ import styles from './FormMessage.module.css';
 import ImageIcon from '../../components/icons/ImageIcon';
 import EmojiIcon from '../../components/icons/EmojiIcon';
 import faPaperPlane from '../../assets/faPaperPlane-regular.svg';
+import faPaperPlaneDisable from '../../assets/faPaperPlane-disabled.svg';
 import { sendMessage } from '../../api/message.api';
 import Picker from '@emoji-mart/react';
 import data from '@emoji-mart/data';
 import useClickOutSide from '../../hooks/useClickOutSide';
 import XmarkIcon from '../../components/icons/XmarkIcon';
+import LoadingRing from '../../components/ui/LoadingRing';
 
 interface FormMessageProps {
     socket: any;
@@ -24,7 +26,8 @@ const FormMessage: React.FC<FormMessageProps> = ({
 }) => {
     const [selectedEmoji, setSelectedEmoji] = useState<any>();
     const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
-    const [message, setMessage] = useState('');
+    const [messageValue, setMessageValue] = useState('');
+    const [isLoading, setIsLoading] = useState<boolean>();
 
     // Message Form states
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -38,7 +41,7 @@ const FormMessage: React.FC<FormMessageProps> = ({
     const handleInputChange = (
         event: React.ChangeEvent<HTMLTextAreaElement>
     ) => {
-        setMessage(event.target.value);
+        setMessageValue(event.target.value);
         adjustTextareaHeight();
     };
 
@@ -66,7 +69,7 @@ const FormMessage: React.FC<FormMessageProps> = ({
                 text.substring(0, startPos) +
                 emoji.native +
                 text.substring(endPos);
-            setMessage(newText);
+            setMessageValue(newText);
             textarea.focus();
             textarea.setSelectionRange(
                 startPos + emoji.native.length,
@@ -78,11 +81,16 @@ const FormMessage: React.FC<FormMessageProps> = ({
 
     const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setIsLoading(true);
 
         // ToDo: validation
 
         //send message
-        const res = await sendMessage(currentUser?._id, message, selectedFile);
+        const res = await sendMessage(
+            currentUser?._id,
+            messageValue,
+            selectedFile
+        );
         const { msg } = res;
         if (res.success) {
             // ToDo: send real time msg
@@ -99,7 +107,7 @@ const FormMessage: React.FC<FormMessageProps> = ({
         }
 
         onSendMessage(msg);
-        setMessage('');
+        setMessageValue('');
         if (textareaRef.current) {
             textareaRef.current.style.height = 'auto';
         }
@@ -107,6 +115,7 @@ const FormMessage: React.FC<FormMessageProps> = ({
         if (previewImage) {
             clearTweetForm();
         }
+        setIsLoading(false)
     };
 
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -121,14 +130,17 @@ const FormMessage: React.FC<FormMessageProps> = ({
     const clearTweetForm = () => {
         setSelectedFile(null);
         setPreviewImage(null);
-    }
+    };
     const handleCanselPreviewImage = () => {
         setSelectedFile(null);
         setPreviewImage(null);
     };
 
+    const isDisabled = messageValue.length > 0;
+
     return (
-        <form encType="multipart/form-data"
+        <form
+            encType="multipart/form-data"
             className={`${styles.formContainer} ${
                 previewImage ? styles.formContainerWithImage : ''
             }`}
@@ -160,7 +172,7 @@ const FormMessage: React.FC<FormMessageProps> = ({
                         ref={textareaRef}
                         className={styles.inputWithImage}
                         placeholder="Start a new message"
-                        value={message}
+                        value={messageValue}
                         onChange={(e: any) => {
                             handleInputChange(e);
                         }}
@@ -169,7 +181,10 @@ const FormMessage: React.FC<FormMessageProps> = ({
             ) : (
                 <div className={styles.formWrapper}>
                     <div className={styles.icons}>
-                        <ImageIcon onChange={handleImageUpload} name={'messageImage'} />
+                        <ImageIcon
+                            onChange={handleImageUpload}
+                            name={'messageImage'}
+                        />
                         <EmojiIcon onClick={() => setOpenEmojiPicker(true)} />
                         {openEmojiPicker && (
                             <div
@@ -187,17 +202,26 @@ const FormMessage: React.FC<FormMessageProps> = ({
                         ref={textareaRef}
                         className={styles.input}
                         placeholder="Start a new message"
-                        value={message}
+                        value={messageValue}
                         onChange={(e: any) => {
                             handleInputChange(e);
                         }}
                     />
-                    <button type="submit" className={styles.btn}>
-                        <img
-                            className={styles.disable}
-                            src={faPaperPlane}
-                            alt=""
-                        />
+                    <button
+                        type="submit"
+                        className={`${styles.btn} ${
+                            !isDisabled && styles.disabled
+                        }`}
+                        disabled={!isDisabled}
+                    >
+                        {!isLoading && (
+                            <img
+                                className={styles.disable}
+                                src={!isDisabled ? faPaperPlaneDisable : faPaperPlane}
+                                alt=""
+                            />
+                        )}
+                        {isLoading && <LoadingRing size={'small'} />}
                     </button>
                 </div>
             )}

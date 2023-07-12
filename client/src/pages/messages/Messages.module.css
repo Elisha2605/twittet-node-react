@@ -39,3 +39,20 @@
     overflow-y: scroll;
     padding-bottom: 4rem;
 }
+
+.aside ::-webkit-scrollbar {
+    width: 0.4rem;
+}
+
+.aside ::-webkit-scrollbar-track {
+    background-color: var(--color-white);
+}
+
+.aside ::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 5px;
+}
+
+.aside ::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}

@@ -53,3 +53,9 @@ export enum NOTIFICATION_TYPE {
 export enum CONTACT_OPTION {
     delete = 'Delete conversation'
 }
+
+export enum MESSAGE_OPTION {
+    reply = 'Reply',
+    copyMessage = 'Copy message',
+    delete = 'Delete message',
+}

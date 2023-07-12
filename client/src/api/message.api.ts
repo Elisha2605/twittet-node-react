@@ -52,3 +52,16 @@ export const updateMessageStatus = async (senderId: string) => {
         throw error;
     }
 };
+
+export const deleteMessage = async (messageId: string) => {
+    try {
+        const res = await http.delete(
+            `/messages/delete/${messageId}`,
+            GETREQUESTOPTIONS()
+        );
+        return res.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};

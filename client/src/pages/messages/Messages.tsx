@@ -15,7 +15,7 @@ import {
     removeContact,
 } from '../../api/contact.api';
 import UserContactInfo from './UserContactInfo';
-import { messageIcon, messageOption } from '../../data/menuOptions';
+import { contactIcon, contactOption } from '../../data/menuOptions';
 import { useMessage } from '../../context/successMessage.context';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
@@ -39,6 +39,8 @@ const Message: FC<MessageProps> = ({
     const [conversations, setConversations] = useState<any>([]);
     const [newMessage, setNewMessage] = useState<any>();
 
+    const [isLoading, setIsloading] = useState<boolean>(false);
+
     const { showMessage } = useMessage();
     const navigate = useNavigate();
 
@@ -60,14 +62,17 @@ const Message: FC<MessageProps> = ({
     useEffect(() => {
         const fetchAllContactAndConversation = async () => {
             if (path!) {
+                setIsloading(true);
                 const { user } = await getUserById(path!);
                 const { conversation } = await getConversation(path!);
                 setCurrentUser(user);
+                setIsloading(false);
                 setConversations(conversation);
             }
         };
         fetchAllContactAndConversation();
     }, [contacts.length, path]);
+    
 
     const contactOnclikOption = async (option: any, contactId: any) => {
         if (option === CONTACT_OPTION.delete) {
@@ -148,6 +153,12 @@ const Message: FC<MessageProps> = ({
         scrollToBottom();
     };
 
+    const onDeleteMessage = (messageId: string) => {
+        setConversations((prevState: any) => 
+            prevState.filter((conversation: any) => conversation?._id !== messageId)
+        )
+    }
+
     const location = useLocation();
     const currentPath = location.pathname;
 
@@ -218,8 +229,8 @@ const Message: FC<MessageProps> = ({
                                         <UserContactInfo
                                             authUser={ctx?.user}
                                             contact={contact}
-                                            menuOptions={messageOption}
-                                            menuIcons={messageIcon}
+                                            menuOptions={contactOption}
+                                            menuIcons={contactIcon}
                                             onClickOption={contactOnclikOption}
                                             newMessage={newMessage}
                                         />
@@ -249,6 +260,8 @@ const Message: FC<MessageProps> = ({
                                                 contacts={contacts}
                                                 otherUser={currentUser}
                                                 conversation={conversation}
+                                                isLoading={isLoading}
+                                                onDeleteMessage={onDeleteMessage}
                                             />
                                         </div>
                                     ))}

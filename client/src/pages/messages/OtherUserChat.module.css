@@ -1,0 +1,81 @@
+.imageOtherUserContainer {
+    position: relative;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    cursor: pointer;
+}
+
+.threeDotsWithImage {
+    position: absolute;
+    right: 7.5rem;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.textStatusAndTimeOtherUser,
+.textStatusAndTimeOtherUserNoImage {
+    font-size: var(--font-size-sm);
+    color: var(--color-secondary);
+}
+
+.textStatusAndTimeOtherUser {
+    float: left;
+    position: relative;
+    top: -0.5rem;
+}
+
+.otherUserText {
+    align-self: flex-start;
+    background-color: var(--color-secondary-lighter);
+    padding: 10px 20px;
+    border-radius: 20px 20px 20px 4px;
+    margin-bottom: 8px;
+    max-width: 25rem;
+    word-wrap: break-word;
+}
+
+.otherUserWithNoText {
+    margin-bottom: 0.5rem;
+}
+
+.imageOtherUser img {
+    border-radius: 1rem;
+    align-self: flex-end;
+}
+
+.OtherUser {
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+}
+
+.threeDots {
+    position: relative;
+    top: -0.7rem;
+}
+
+.popUpBoxWithImage {
+    width: 11.6rem;
+    /* top: 0rem;
+    left: -1.1rem; */
+}
+
+.popUpBox {
+    position: absolute;
+    width: 10.8rem;
+    right: -7rem;
+    top: -6rem;
+
+}
+
+.popUpList, .popUpListWithImage {
+    padding: 0.5rem !important; 
+
+}
+
+.hide {
+    display: none;
+}

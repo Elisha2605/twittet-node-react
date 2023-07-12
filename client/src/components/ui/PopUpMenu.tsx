@@ -16,6 +16,7 @@ interface MenuPopUpProps {
     classNameContainer?: string;
     classNameWithTitle?: string;
     classNameMenuItemList?: string;
+    classNamePopUpBox?: string;
     classNameMenuIcon?: any;
     isMenuIcon?: boolean;
     isDisable?: boolean;
@@ -34,6 +35,7 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
     classNameWithTitle,
     classNameMenuItemList,
     classNameMenuIcon,
+    classNamePopUpBox,
     isMenuIcon = true,
     isDisable,
     children,
@@ -108,7 +110,7 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
                     <div className={className}>
                         <ul
                             className={`
-                                ${styles.menuList} ${
+                                ${styles.menuList} ${classNamePopUpBox} ${
                                 title
                                     ? `${styles.popUpWithTitle} ${classNameWithTitle} `
                                     : styles.popUpWithTitle

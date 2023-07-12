@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import asyncHandler from 'express-async-handler';
 import {
+    deleteMessage,
     getConversation,
     sendMessage,
     updateMessageStatus,
@@ -111,6 +112,46 @@ export const updateMessageStatusController = asyncHandler(
         try {
             const { success, message, status, payload } =
                 await updateMessageStatus(sender, receiver);
+
+            if (success) {
+                res.status(status).json({
+                    success: success,
+                    status: status,
+                    message: message,
+                    msg: payload,
+                });
+            } else {
+                res.status(status).json({
+                    success: success,
+                    status: status,
+                    message: message,
+                    msg: payload,
+                });
+            }
+            return;
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+export const deleteMessageController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const sender = req.user._id;
+        const messageId = req.params.id;
+        const isDeleteForBoth = req.body.deleteForBoth;
+
+        if (!messageId) {
+            res.status(400).json({ inputError: 'Input error' });
+            return;
+        }
+
+        try {
+            const { success, message, status, payload } = await deleteMessage(
+                sender,
+                messageId,
+                isDeleteForBoth
+            );
 
             if (success) {
                 res.status(status).json({

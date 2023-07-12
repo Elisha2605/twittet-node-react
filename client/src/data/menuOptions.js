@@ -2,10 +2,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit, faArrowRightFromBracket, faGear, faUserPlus, faRepeat, faPen } from '@fortawesome/free-solid-svg-icons';
 import EarthIcon from '../components/icons/EarthIcon';
 import HeartIcon from '../components/icons/HeartIcon';
-import { CONTACT_OPTION, MORE_NAV_OPTION, TWEET_AUDIENCE, TWEET_MENU, TWEET_REPLY } from '../constants/common.constants';
+import { CONTACT_OPTION, MESSAGE_OPTION, MORE_NAV_OPTION, TWEET_AUDIENCE, TWEET_MENU, TWEET_REPLY } from '../constants/common.constants';
 import UserIcon from '../components/icons/UserIcon';
 import AtIcon from '../components/icons/AtIcon';
 import BookmarkIcon from '../components/icons/BookmarkIcon';
+import { faCopy } from '@fortawesome/free-regular-svg-icons';
 
 // eslint-disable-next-line no-undef
 export const tweetMenuOptions = [TWEET_MENU.delete, TWEET_MENU.edit];
@@ -65,9 +66,21 @@ export const reTweetIcon = {
    'Quote Tweet': <FontAwesomeIcon icon={faPen} />
 } 
 
-export const messageOption = [
+export const contactOption = [
    CONTACT_OPTION.delete,
 ]
-export const messageIcon = {
+export const contactIcon = {
    'Delete conversation': <FontAwesomeIcon icon={faTrash} />,
-} 
+}
+
+export const messageOption = [
+   MESSAGE_OPTION.reply,
+   MESSAGE_OPTION.copyMessage,
+   MESSAGE_OPTION.delete,
+]
+export const messageIcon = {
+   'Reply': <FontAwesomeIcon icon={faRepeat} />,
+   'Copy message': <FontAwesomeIcon icon={faCopy} />,
+   'Delete message': <FontAwesomeIcon icon={faTrash} />,
+}
+
