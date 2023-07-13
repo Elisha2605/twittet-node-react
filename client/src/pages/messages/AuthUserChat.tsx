@@ -12,6 +12,7 @@ interface AuthUserChatProps {
     messageOption: any;
     messageIcon: any;
     onClickMessageOption: Function;
+    isMessageRead: boolean;
     handleImageLoad: () => void;
 }
 
@@ -22,8 +23,9 @@ const AuthUserChat: FC<AuthUserChatProps> = ({
     isLoading,
     messageOption,
     messageIcon,
-    handleImageLoad,
     onClickMessageOption,
+    isMessageRead,
+    handleImageLoad,
 }) => {
     const [isMenuHovered, setIsMenuHovered] = useState<boolean>(false);
     const [isMenuHoveredWithImage, setIsMenuHoveredWithImage] =

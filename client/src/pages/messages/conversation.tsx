@@ -37,6 +37,7 @@ const Conversation: React.FC<ConversationProps> = ({
             ) &&
             conversation?.read === true
         ) {
+            setIsMessageRead(true);
             return `${'· Seen'}`
         }
     };
@@ -94,6 +95,7 @@ const Conversation: React.FC<ConversationProps> = ({
                             messageOption={messageOption}
                             messageIcon={messageIcon}
                             onClickMessageOption={onClickMessageOption}
+                            isMessageRead={isMessageRead}
                         />
                     ) : (
                         <OtherUserChat
