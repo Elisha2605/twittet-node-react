@@ -97,7 +97,7 @@ const AuthUserChat: FC<AuthUserChatProps> = ({
                         <div
                             className={`${styles.threeDots} ${
                                 conversation.image ? styles.hide : ''
-                            } ${replyMessage?.text ? styles.popUpReply : ''}`}
+                            } ${replyMessage ? styles.popUpReply : ''}`}
                         >
                             <PopUpMenu
                                 itemId={conversation?._id}
