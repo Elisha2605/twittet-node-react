@@ -16,7 +16,8 @@ export const getConversation = async (id: string) => {
 export const sendMessage = async (
     receiverId: string,
     text: string | null,
-    image: File | null
+    image: File | null,
+    replyMessage: any | null,
 ) => {
     try {
         const res = await http.post(
@@ -24,6 +25,7 @@ export const sendMessage = async (
             {
                 text: text,
                 messageImage: image,
+                replyMessage: replyMessage
             },
             GETREQUESTOPTIONS_WITH_MULTIFROM()
         );

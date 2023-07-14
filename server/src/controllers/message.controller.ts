@@ -47,11 +47,11 @@ export const getConversationController = asyncHandler(
 
 export const sendMessageController = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        console.log(req.body);
         const sender = req.user._id;
         const receiver = req.params.id;
         const text = req.body.text;
         const image = req.files?.['messageImage']?.[0]?.filename ?? null;
+        const replyMessage = req.body.replyMessage;
 
         if (!sender || !receiver) {
             res.status(400).json({ inputError: 'Input error' });
@@ -75,7 +75,8 @@ export const sendMessageController = asyncHandler(
                 sender,
                 receiver,
                 text,
-                image
+                image,
+                replyMessage
             );
 
             if (success) {

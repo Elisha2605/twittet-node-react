@@ -39,18 +39,35 @@ export const sendMessage = async (
     sender: string,
     receiver: string,
     text: string,
-    image: string
+    image: string,
+    replyMessage: any
 ): Promise<ApiResponse<any>> => {
     try {
-        const receiverUser = await Contact.findOne({ user: receiver });
+        const repliedMessage = await Message.findById(replyMessage?._id);
 
-        const message = await Message.create({
-            sender: sender,
-            receiver: receiver,
-            text: text,
-            image: image,
-            read: false,
-        });
+        // if reply is true -> create reply message
+        if (replyMessage) {
+            const message = await Message.create({
+                type: MESSAGE_TYPE.reply,
+                sender: sender,
+                receiver: repliedMessage.receiver,
+                text: text,
+                image: image,
+                originalMessage: {
+                    text: repliedMessage.text,
+                    image: repliedMessage.image,
+                },
+                read: false,
+            });
+            return {
+                success: true,
+                message: 'Reply message sent',
+                status: 200,
+                payload: message,
+            };
+        }
+
+        const receiverUser = await Contact.findOne({ user: receiver });
 
         if (!receiverUser) {
             const receiverUser = new Contact({
@@ -94,6 +111,16 @@ export const sendMessage = async (
                 await receiverUser.save();
             }
         }
+
+        // message is regular -> create message
+        const message = await Message.create({
+            type: MESSAGE_TYPE.regular,
+            sender: sender,
+            receiver: receiver,
+            text: text,
+            image: image,
+            read: false,
+        });
 
         if (!message) {
             return {

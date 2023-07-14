@@ -91,15 +91,19 @@ const FormMessage: React.FC<FormMessageProps> = ({
         setIsLoading(true);
 
         // ToDo: validation
-        if (replyMessage) {
-            console.log(replyMessage);
-        }
+        // if (replyMessage) {
+        //     console.log(replyMessage);
+
+        //     setIsLoading(false);
+        //     return;
+        // }
 
         //send message
         const res = await sendMessage(
             currentUser?._id,
             messageValue,
-            selectedFile
+            selectedFile,
+            replyMessage ?? replyMessage
         );
         const { msg } = res;
         if (res.success) {
