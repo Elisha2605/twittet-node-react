@@ -45,7 +45,7 @@ const messageModel = {
             type: String,
             image: false,
         },
-        originalImage: {
+        image: {
             type: String,
             required: false,
         },

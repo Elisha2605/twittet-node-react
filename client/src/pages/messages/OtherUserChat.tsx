@@ -32,6 +32,8 @@ const OtherUserChat: FC<OtherUserChatProp> = ({
 
     const replyMessage = conversation.originalMessage;
 
+    console.log(replyMessage);
+
     return (
         <>
             {conversation?.image && (
@@ -94,20 +96,29 @@ const OtherUserChat: FC<OtherUserChatProp> = ({
                     onMouseLeave={() => setIsMenuHovered(false)}
                 >
                     <div className={styles.textWrapper}>
-                        {replyMessage?.text && (
-                            <div key={replyMessage._id}>
-                                <div className={styles.replyMessage}>
-                                    <div className={styles.replyImages}>
-                                        <img src={faReply} alt="" />
+                        {replyMessage?.text ||
+                            (replyMessage?.image && (
+                                <div key={replyMessage._id}>
+                                    <div className={styles.replyMessage}>
+                                        <div className={styles.replyImages}>
+                                            <img src={faReply} alt="" />
+                                        </div>
+                                        <p>Replying to</p>
                                     </div>
-                                    <p>Replying to</p>
-                                </div>
 
-                                <div className={styles.originalMessage}>
-                                    <p>{replyMessage?.text}</p>
+                                    <div className={styles.originalMessage}>
+                                        <img
+                                            src={
+                                                replyMessage.image
+                                                    ? `${IMAGE_MESSAGE_BASE_URL}/${replyMessage.image}`
+                                                    : undefined
+                                            }
+                                            alt=""
+                                        />
+                                        <p>{replyMessage?.text}</p>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            ))}
                         <div className={styles.otherUserText}>
                             <p>{conversation?.text}</p>
                         </div>

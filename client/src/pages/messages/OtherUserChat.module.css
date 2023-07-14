@@ -98,6 +98,8 @@
 }
 
 .originalMessage {
+    display: flex;
+    gap: 0.7rem;
     background: var(--color-secondary-lighter-message);
     color: var(--color-secondary);
     font-size: var(--font-size-sm);
@@ -109,6 +111,14 @@
     position: relative;
     top: 1.2rem;
     max-width: 25rem;
+}
+
+.originalMessage img {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.2rem;
+    margin-top: auto;
+    object-fit: contain;
 }
 
 .replyMessage {

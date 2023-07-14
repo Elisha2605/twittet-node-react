@@ -113,20 +113,29 @@ const AuthUserChat: FC<AuthUserChatProps> = ({
                         </div>
                     )}
                     <div className={styles.textWrapper}>
-                        {replyMessage?.text && (
-                            <div key={replyMessage._id}>
-                                <div className={styles.replyMessage}>
-                                    <div className={styles.replyImages}>
-                                        <img src={faReply} alt="" />
+                        {replyMessage?.text ||
+                            (replyMessage?.image && (
+                                <div key={replyMessage._id}>
+                                    <div className={styles.replyMessage}>
+                                        <div className={styles.replyImages}>
+                                            <img src={faReply} alt="" />
+                                        </div>
+                                        <p>Replying to</p>
                                     </div>
-                                    <p>Replying to</p>
-                                </div>
 
-                                <div className={styles.originalMessage}>
-                                    <p>{replyMessage?.text}</p>
+                                    <div className={styles.originalMessage}>
+                                        <p>{replyMessage?.text}</p>
+                                        <img
+                                            src={
+                                                replyMessage.image
+                                                    ? `${IMAGE_MESSAGE_BASE_URL}/${replyMessage.image}`
+                                                    : undefined
+                                            }
+                                            alt=""
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            ))}
                         <div className={styles.authUserText}>
                             {conversation?.text}
                         </div>
