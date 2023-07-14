@@ -46,7 +46,6 @@ const FormMessage: React.FC<FormMessageProps> = ({
 
     const isDisabled = messageValue.length > 0;
 
-
     const handleInputChange = (
         event: React.ChangeEvent<HTMLTextAreaElement>
     ) => {
@@ -91,7 +90,7 @@ const FormMessage: React.FC<FormMessageProps> = ({
     const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsLoading(true);
-        
+
         // ToDo: validation
 
         //send message
@@ -102,6 +101,7 @@ const FormMessage: React.FC<FormMessageProps> = ({
             replyMessage ?? replyMessage
         );
         const { msg } = res;
+        console.log(msg);
         if (res.success) {
             // ToDo: send real time msg
             socket.emit('sendMessage', {
@@ -151,9 +151,9 @@ const FormMessage: React.FC<FormMessageProps> = ({
 
     useEffect(() => {
         if (replyMessage) {
-            setShowReplyMessage(true)
-        };
-    }, [replyMessage])
+            setShowReplyMessage(true);
+        }
+    }, [replyMessage]);
 
     const handleCloseReplyMessage = () => {
         setShowReplyMessage(false);
@@ -171,7 +171,10 @@ const FormMessage: React.FC<FormMessageProps> = ({
                 onKeyDown={handleKeyDown}
             >
                 {showReplyMessage && (
-                    <ReplyMessage replyMessage={replyMessage} onCloseReplyMessage={handleCloseReplyMessage} />
+                    <ReplyMessage
+                        replyMessage={replyMessage}
+                        onCloseReplyMessage={handleCloseReplyMessage}
+                    />
                 )}
 
                 {previewImage ? (
@@ -188,15 +191,26 @@ const FormMessage: React.FC<FormMessageProps> = ({
                                 onClick={handleCanselPreviewImage}
                             />
                             {!isLoading && (
-                                <button type="submit" className={`${styles.btnWithImage}`}>
+                                <button
+                                    type="submit"
+                                    className={`${styles.btnWithImage}`}
+                                >
                                     <img
                                         className={styles.disable}
                                         src={faPaperPlane}
                                         alt=""
                                     />
                                 </button>
-                        )}
-                        {isLoading && <LoadingRing size={'small'} />}
+                            )}
+
+                            {isLoading && (
+                                <button
+                                    type="submit"
+                                    className={`${styles.btnWithImage}`}
+                                >
+                                    <LoadingRing size={'small'} />
+                                </button>
+                            )}
                         </div>
                         <textarea
                             ref={textareaRef}
@@ -215,7 +229,9 @@ const FormMessage: React.FC<FormMessageProps> = ({
                                 onChange={handleImageUpload}
                                 name={'messageImage'}
                             />
-                            <EmojiIcon onClick={() => setOpenEmojiPicker(true)} />
+                            <EmojiIcon
+                                onClick={() => setOpenEmojiPicker(true)}
+                            />
                             {openEmojiPicker && (
                                 <div
                                     ref={emojiPickerRef}
@@ -247,7 +263,11 @@ const FormMessage: React.FC<FormMessageProps> = ({
                             {!isLoading && (
                                 <img
                                     className={styles.disable}
-                                    src={!isDisabled ? faPaperPlaneDisable : faPaperPlane}
+                                    src={
+                                        !isDisabled
+                                            ? faPaperPlaneDisable
+                                            : faPaperPlane
+                                    }
                                     alt=""
                                 />
                             )}

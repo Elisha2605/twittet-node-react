@@ -58,7 +58,7 @@ export const sendMessageController = asyncHandler(
             return;
         }
 
-        if (text === undefined && image === null) {
+        if (!text && image === null) {
             res.status(400).json({ InvalidInputError: 'Invalid Input' });
             return;
         }

@@ -86,7 +86,7 @@ const Conversation: React.FC<ConversationProps> = ({
         <React.Fragment>
             <div className={styles.container}>
                 <div className={styles.conversationWrapper}>
-                    {conversation?.sender !== otherUser?._id ? (
+                    {conversation?.sender?._id !== otherUser?._id ? (
                         <AuthUserChat
                             conversation={conversation}
                             imgRef={imgRef}

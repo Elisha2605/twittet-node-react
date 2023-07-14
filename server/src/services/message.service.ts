@@ -47,7 +47,7 @@ export const sendMessage = async (
 
         // if reply is true -> create reply message
         if (replyMessage) {
-            const message = await Message.create({
+            const message = new Message({
                 type: MESSAGE_TYPE.reply,
                 sender: sender,
                 receiver: receiver,
@@ -57,13 +57,24 @@ export const sendMessage = async (
                     text: repliedMessage.text,
                     image: repliedMessage.image,
                 },
+                createdAt: new Date(),
                 read: false,
             });
+
+            const savedReplyMessage = await message.save();
+            const populatedReplyMessage = {
+                ...savedReplyMessage.toObject(),
+                sender: {
+                    name: replyMessage.sender.name,
+                    _id: replyMessage.sender._id,
+                },
+            };
+
             return {
                 success: true,
                 message: 'Reply message sent',
                 status: 200,
-                payload: message,
+                payload: populatedReplyMessage,
             };
         }
 
@@ -113,7 +124,7 @@ export const sendMessage = async (
         }
 
         // message is regular -> create message
-        const message = await Message.create({
+        const message = new Message({
             type: MESSAGE_TYPE.regular,
             sender: sender,
             receiver: receiver,
@@ -122,7 +133,9 @@ export const sendMessage = async (
             read: false,
         });
 
-        if (!message) {
+        const savedMessage = await message.save();
+
+        if (!savedMessage) {
             return {
                 success: true,
                 message: 'Could not send message',
@@ -131,11 +144,17 @@ export const sendMessage = async (
             };
         }
 
+        const populatedMessage = await savedMessage.populate({
+            path: 'sender',
+            select: 'name',
+            model: 'User',
+        });
+
         return {
             success: true,
             message: 'Message sent',
             status: 200,
-            payload: message,
+            payload: populatedMessage,
         };
     } catch (error) {
         const errorResponse: ErrorResponse = {
