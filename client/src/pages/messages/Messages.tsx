@@ -36,7 +36,7 @@ const Message: FC<MessageProps> = ({ socket }) => {
     const [currentUser, setCurrentUser] = useState<any>();
     const [conversations, setConversations] = useState<any>([]);
     const [newMessage, setNewMessage] = useState<any>();
-    const [replyMessage, setReplyMessage] = useState<any>();
+    const [replyMessage, setReplyMessage] = useState<any | null>();
 
     const [isLoading, setIsloading] = useState<boolean>(false);
 
@@ -177,6 +177,7 @@ const Message: FC<MessageProps> = ({ socket }) => {
     useEffect(() => {
         socket?.on('getMessage', (obj: any) => {
             const { sender, message } = obj;
+            console.log(message);
             if (sender?._id === path) {
                 setConversations((prevState: any) => [...prevState, message]);
                 scrollToBottom();
@@ -198,7 +199,7 @@ const Message: FC<MessageProps> = ({ socket }) => {
     }, [socket, path, contacts, navigate]);
 
     const onMessageReply = (replyMessage: any) => {
-        setReplyMessage(replyMessage)
+        setReplyMessage(replyMessage);
     }
 
     return (
@@ -280,6 +281,7 @@ const Message: FC<MessageProps> = ({ socket }) => {
                             currentUser={currentUser}
                             onSendMessage={onSendMessage}
                             replyMessage={replyMessage}
+                            setReplyMessage={setReplyMessage}
                         />
                     </div>
                 </Aside>

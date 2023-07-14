@@ -16,7 +16,8 @@ interface FormMessageProps {
     socket: any;
     authUser: any;
     currentUser: any;
-    replyMessage: any;
+    replyMessage: any | null;
+    setReplyMessage: any;
     onSendMessage: (message: any) => void;
 }
 
@@ -25,6 +26,7 @@ const FormMessage: React.FC<FormMessageProps> = ({
     authUser,
     currentUser,
     replyMessage,
+    setReplyMessage,
     onSendMessage,
 }) => {
     const [selectedEmoji, setSelectedEmoji] = useState<any>();
@@ -89,14 +91,8 @@ const FormMessage: React.FC<FormMessageProps> = ({
     const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsLoading(true);
-
+        
         // ToDo: validation
-        // if (replyMessage) {
-        //     console.log(replyMessage);
-
-        //     setIsLoading(false);
-        //     return;
-        // }
 
         //send message
         const res = await sendMessage(
@@ -129,6 +125,7 @@ const FormMessage: React.FC<FormMessageProps> = ({
         if (previewImage) {
             clearTweetForm();
         }
+        clearTweetForm();
         setIsLoading(false);
     };
 
@@ -144,6 +141,8 @@ const FormMessage: React.FC<FormMessageProps> = ({
     const clearTweetForm = () => {
         setSelectedFile(null);
         setPreviewImage(null);
+        setShowReplyMessage(false);
+        setReplyMessage(null);
     };
     const handleCanselPreviewImage = () => {
         setSelectedFile(null);
@@ -158,6 +157,7 @@ const FormMessage: React.FC<FormMessageProps> = ({
 
     const handleCloseReplyMessage = () => {
         setShowReplyMessage(false);
+        setReplyMessage(null);
     };
 
     return (

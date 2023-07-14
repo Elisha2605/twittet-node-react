@@ -32,8 +32,6 @@ const OtherUserChat: FC<OtherUserChatProp> = ({
 
     const replyMessage = conversation.originalMessage;
 
-    console.log(replyMessage);
-
     return (
         <>
             {conversation?.image && (

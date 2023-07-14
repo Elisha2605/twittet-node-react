@@ -50,7 +50,7 @@ export const sendMessage = async (
             const message = await Message.create({
                 type: MESSAGE_TYPE.reply,
                 sender: sender,
-                receiver: repliedMessage.receiver,
+                receiver: receiver,
                 text: text,
                 image: image,
                 originalMessage: {
@@ -169,7 +169,7 @@ export const replyToMessage = async (
         const repliedMessage = await Message.create({
             type: MESSAGE_TYPE.reply,
             sender: sender,
-            receiver: message.receiver,
+            receiver: message.sender,
             text: text,
             image: image,
             originalMessage: { text: message.text, image: message.image },
