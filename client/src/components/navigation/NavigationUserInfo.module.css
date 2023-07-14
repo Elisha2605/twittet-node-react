@@ -47,9 +47,8 @@
 }
 
 .menuOption {
-    position: absolute;
-    top: -4.5rem;
-    left: 2rem;
+    position: relative;
+    top: -8rem;
 }
 
 .name {
