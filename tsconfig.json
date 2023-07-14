@@ -8,14 +8,13 @@
         "outDir": "dist",
         "baseUrl": ".",
         "paths": {
-            "@server/*": ["server/src/*"]
+            "*": ["node_modules/*", "server/*"]
         }
     },
     "include": [
         "server/src/**/*.ts",
         "server/src/types/*.ts",
-        "index.ts",
-        "server/src/strategies/jwt.strategy.js"
-    ],
+        "index.ts"
+, "server/src/strategies/jwt.strategy.js"    ],
     "exclude": ["node_modules", ".vscode"]
 }

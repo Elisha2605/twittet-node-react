@@ -1,7 +1,7 @@
+import { MESSAGE_TYPE } from '../../src/constants/message.contants';
 import Contact from '../../src/models/contact.model';
 import Message from '../../src/models/message.model';
 import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
-import { MESSAGE_TYPE } from '@server/constants/message.contants';
 
 export const getConversation = async (
     authUser: string,
