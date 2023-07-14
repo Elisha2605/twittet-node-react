@@ -5,6 +5,7 @@ import OtherUserChat from './OtherUserChat';
 import { messageIcon, messageOption } from '../../data/menuOptions';
 import { MESSAGE_OPTION } from '../../constants/common.constants';
 import { deleteMessage } from '../../api/message.api';
+import { useMessage } from '../../context/successMessage.context';
 
 interface ConversationProps {
     socket: any;
@@ -29,6 +30,7 @@ const Conversation: React.FC<ConversationProps> = ({
     const [msgStatus, setMsgStatus] = useState<any>();
 
     const imgRef = useRef<HTMLImageElement>(null);
+    const { showMessage } = useMessage();
 
     const messageStatus = () => {
         if (
@@ -72,7 +74,8 @@ const Conversation: React.FC<ConversationProps> = ({
             onReplyMessage(conversation);
         } 
         if (option === MESSAGE_OPTION.copyMessage) {
-            console.log('copy message cliked');
+            navigator.clipboard.writeText(conversation.text)
+            showMessage('Copied to clipboard', 'success')
         }
         if (option === MESSAGE_OPTION.delete) {
             const res = await deleteMessage(messageId);

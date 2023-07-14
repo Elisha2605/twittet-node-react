@@ -62,13 +62,12 @@ export const sendMessage = async (
             });
 
             const savedReplyMessage = await message.save();
-            const populatedReplyMessage = {
-                ...savedReplyMessage.toObject(),
-                sender: {
-                    name: replyMessage.sender.name,
-                    _id: replyMessage.sender._id,
-                },
-            };
+
+            const populatedReplyMessage = await savedReplyMessage.populate({
+                path: 'sender',
+                select: 'name _id',
+                model: 'User',
+            });
 
             return {
                 success: true,

@@ -34,13 +34,21 @@ const AuthUserChat: FC<AuthUserChatProps> = ({
 
     const replyMessage = conversation.originalMessage;
 
+    const onMouseEneterWithImage = () => {
+        setIsMenuHoveredWithImage(true)
+    }
+
+    const onMouseLeaveWithImage = () => {
+        setIsMenuHoveredWithImage(false)
+    }
+
     return (
         <>
             {conversation?.image && (
                 <div
                     className={`${styles.imageAuthUserContainer}`}
-                    onMouseEnter={() => setIsMenuHoveredWithImage(true)}
-                    onMouseLeave={() => setIsMenuHoveredWithImage(false)}
+                    onMouseEnter={onMouseEneterWithImage}
+                    onMouseLeave={onMouseLeaveWithImage}
                 >
                     {isMenuHoveredWithImage && (
                         <div className={styles.threeDotsWithImage}>
