@@ -75,9 +75,9 @@ const Conversation: React.FC<ConversationProps> = ({
             console.log('copy message cliked');
         }
         if (option === MESSAGE_OPTION.delete) {
-            const res = await deleteMessage(messageId)
+            const res = await deleteMessage(messageId);
             if (res.success) {
-                onDeleteMessage(messageId)
+                onDeleteMessage(messageId);
             }
         }
     }

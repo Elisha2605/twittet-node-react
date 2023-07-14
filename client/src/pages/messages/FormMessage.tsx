@@ -125,7 +125,7 @@ const FormMessage: React.FC<FormMessageProps> = ({
         if (previewImage) {
             clearTweetForm();
         }
-        setIsLoading(false)
+        setIsLoading(false);
     };
 
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {

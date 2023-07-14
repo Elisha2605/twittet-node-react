@@ -147,12 +147,7 @@ const Message: FC<MessageProps> = ({ socket }) => {
 
     const onSendMessage = (message: any) => {
         console.log(message);
-        setConversations((prevState: any) => [...prevState, {
-            sender: message.sender.name,
-            text: message.text,
-            createdAt: message.createdAt,
-            read: message.read,
-        }]);
+        setConversations((prevState: any) => [...prevState, message]);
         updateContactState(message);
         scrollToBottom();
     };
