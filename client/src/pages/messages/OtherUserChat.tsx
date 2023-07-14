@@ -3,6 +3,7 @@ import styles from './OtherUserChat.module.css';
 import { IMAGE_MESSAGE_BASE_URL } from '../../constants/common.constants';
 import { getTimeAMPM } from '../../utils/helpers.utils';
 import PopUpMenu from '../../components/ui/PopUpMenu';
+import faReply from '../../assets/faReply-solid-grey.svg';
 
 interface OtherUserChatProp {
     conversation: any;
@@ -28,6 +29,8 @@ const OtherUserChat: FC<OtherUserChatProp> = ({
     const [isMenuHovered, setIsMenuHovered] = useState<boolean>(false);
     const [isMenuHoveredWithImage, setIsMenuHoveredWithImage] =
         useState<boolean>(false);
+
+    const replyMessage = conversation.originalMessage;
 
     return (
         <>
@@ -90,7 +93,21 @@ const OtherUserChat: FC<OtherUserChatProp> = ({
                     onMouseEnter={() => setIsMenuHovered(true)}
                     onMouseLeave={() => setIsMenuHovered(false)}
                 >
-                    <div>
+                    <div className={styles.textWrapper}>
+                        {replyMessage?.text && (
+                            <div key={replyMessage._id}>
+                                <div className={styles.replyMessage}>
+                                    <div className={styles.replyImages}>
+                                        <img src={faReply} alt="" />
+                                    </div>
+                                    <p>Replying to</p>
+                                </div>
+
+                                <div className={styles.originalMessage}>
+                                    <p>{replyMessage?.text}</p>
+                                </div>
+                            </div>
+                        )}
                         <div className={styles.otherUserText}>
                             <p>{conversation?.text}</p>
                         </div>

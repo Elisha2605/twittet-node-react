@@ -69,9 +69,7 @@ const Conversation: React.FC<ConversationProps> = ({
     const onClickMessageOption = async (option: any, messageId: any) => {
 
         if (option === MESSAGE_OPTION.reply) {
-            console.log(messageId);
             onReplyMessage(conversation);
-            console.log('reply clicked');
         } 
         if (option === MESSAGE_OPTION.copyMessage) {
             console.log('copy message cliked');

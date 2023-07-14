@@ -18,7 +18,7 @@
     /* color hover */
     --color-primary-darker: #0d8cce;
     --color-primary-light: #8ac7e8;
-    --color-primary-lighter: rgb(225, 242, 252);
+    --color-primary-lighter: rgb(239, 243, 244);
     --color-secondary-light: #e1e8ed;
     --color-secondary-dark: #ccd6dd57;
     --color-secondary-lighter: #f2f4f6;
@@ -28,6 +28,7 @@
     --color-green-lighter: #edfef3;
     --color-error-light: #ffece9;
 
+    --color-secondary-lighter-message: rgb(247, 249, 249);
     /* color transparent */
     --color-black-transparent: #0000008a;
 

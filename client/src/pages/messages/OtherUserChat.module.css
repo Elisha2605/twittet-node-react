@@ -80,3 +80,48 @@
 .hide {
     display: none;
 }
+
+.textWrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.otherUserText {
+    align-self: flex-start;
+    background-color: var(--color-secondary-lighter);
+    padding: 10px 20px;
+    border-radius: 20px 20px 20px 4px;
+    margin-bottom: 8px;
+    max-width: 25rem;
+    word-wrap: break-word;
+}
+
+.originalMessage {
+    background: var(--color-secondary-lighter-message);
+    color: var(--color-secondary);
+    font-size: var(--font-size-sm);
+    padding: 0.6rem;
+    width: fit-content;
+    border-radius: 1rem;
+    padding-bottom: 1.4rem;
+    z-index: -1;
+    position: relative;
+    top: 1.2rem;
+    max-width: 25rem;
+}
+
+.replyMessage {
+    display: flex;
+    position: relative;
+    gap: 0.2rem;
+    top: 0.8rem;
+    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
+    color: var(--color-secondary);
+}
+
+.replyImages img {
+    width: 0.8rem;
+    transform: scaleX(-1);
+}

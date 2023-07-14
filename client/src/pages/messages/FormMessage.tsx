@@ -148,7 +148,7 @@ const FormMessage: React.FC<FormMessageProps> = ({
 
     useEffect(() => {
         if (replyMessage) {
-            setShowReplyMessage(replyMessage)
+            setShowReplyMessage(true)
         };
     }, [replyMessage])
 

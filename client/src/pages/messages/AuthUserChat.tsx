@@ -3,6 +3,7 @@ import styles from './AuthUserChat.module.css';
 import { IMAGE_MESSAGE_BASE_URL } from '../../constants/common.constants';
 import { getTimeAMPM } from '../../utils/helpers.utils';
 import PopUpMenu from '../../components/ui/PopUpMenu';
+import faReply from '../../assets/faReply-solid-grey.svg';
 
 interface AuthUserChatProps {
     conversation: any;
@@ -30,7 +31,7 @@ const AuthUserChat: FC<AuthUserChatProps> = ({
     const [isMenuHovered, setIsMenuHovered] = useState<boolean>(false);
     const [isMenuHoveredWithImage, setIsMenuHoveredWithImage] =
         useState<boolean>(false);
-    
+
     const replyMessage = conversation.originalMessage;
 
     return (
@@ -96,7 +97,7 @@ const AuthUserChat: FC<AuthUserChatProps> = ({
                         <div
                             className={`${styles.threeDots} ${
                                 conversation.image ? styles.hide : ''
-                            }`}
+                            } ${replyMessage?.text ? styles.popUpReply : ''}`}
                         >
                             <PopUpMenu
                                 itemId={conversation?._id}
@@ -112,12 +113,17 @@ const AuthUserChat: FC<AuthUserChatProps> = ({
                         </div>
                     )}
                     <div className={styles.textWrapper}>
-                        {conversation.originalMessage?.text && (
-                            <div>
-                                <p className={styles.replyMessage}>reply</p>
+                        {replyMessage?.text && (
+                            <div key={replyMessage._id}>
+                                <div className={styles.replyMessage}>
+                                    <div className={styles.replyImages}>
+                                        <img src={faReply} alt="" />
+                                    </div>
+                                    <p>Replying to</p>
+                                </div>
 
                                 <div className={styles.originalMessage}>
-                                    <p>{conversation.originalMessage?.text}</p>
+                                    <p>{replyMessage?.text}</p>
                                 </div>
                             </div>
                         )}
@@ -138,4 +144,3 @@ const AuthUserChat: FC<AuthUserChatProps> = ({
 };
 
 export default AuthUserChat;
-
