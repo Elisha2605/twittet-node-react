@@ -1,6 +1,7 @@
 import Contact from '../../src/models/contact.model';
 import Message from '../../src/models/message.model';
 import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
+import { MESSAGE_TYPE } from '@server/constants/message.contants';
 
 export const getConversation = async (
     authUser: string,
@@ -12,8 +13,10 @@ export const getConversation = async (
                 { sender: authUser, receiver: otherUser },
                 { sender: otherUser, receiver: authUser },
             ],
-            deletedBy: { $ne: authUser }, // Exclude messages where authUser is in the deletedBy array
-        });
+            deletedBy: { $ne: authUser },
+        })
+            .populate('sender', 'name')
+            .exec();
 
         return {
             success: true,
@@ -106,6 +109,51 @@ export const sendMessage = async (
             message: 'Message sent',
             status: 200,
             payload: message,
+        };
+    } catch (error) {
+        const errorResponse: ErrorResponse = {
+            success: false,
+            message: error.message || 'Internal server error',
+            status: error.statusCode || 500,
+            error: error,
+        };
+        return Promise.reject(errorResponse);
+    }
+};
+
+export const replyToMessage = async (
+    messageId: string,
+    sender: string,
+    text: string,
+    image: string
+): Promise<ApiResponse<any>> => {
+    try {
+        const message = await Message.findById(messageId);
+
+        if (!message) {
+            return {
+                success: true,
+                message: 'message not found',
+                status: 404,
+                payload: 0,
+            };
+        }
+
+        const repliedMessage = await Message.create({
+            type: MESSAGE_TYPE.reply,
+            sender: sender,
+            receiver: message.receiver,
+            text: text,
+            image: image,
+            originalMessage: { text: message.text, image: message.image },
+            read: false,
+        });
+
+        return {
+            success: true,
+            message: 'Replied successfully to the message',
+            status: 200,
+            payload: repliedMessage,
         };
     } catch (error) {
         const errorResponse: ErrorResponse = {

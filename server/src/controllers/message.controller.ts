@@ -3,6 +3,7 @@ import asyncHandler from 'express-async-handler';
 import {
     deleteMessage,
     getConversation,
+    replyToMessage,
     sendMessage,
     updateMessageStatus,
 } from '../../src/services/message.service';
@@ -73,6 +74,61 @@ export const sendMessageController = asyncHandler(
             const { success, message, status, payload } = await sendMessage(
                 sender,
                 receiver,
+                text,
+                image
+            );
+
+            if (success) {
+                res.status(status).json({
+                    success: success,
+                    status: status,
+                    message: message,
+                    msg: payload,
+                });
+            } else {
+                res.status(status).json({
+                    success: success,
+                    status: status,
+                    message: message,
+                    msg: payload,
+                });
+            }
+            return;
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
+export const replyToMessageController = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        console.log(req.body);
+        const messageId = req.params.id;
+        const sender = req.user._id;
+        const text = req.body.text;
+        const image = req.files?.['messageImage']?.[0]?.filename ?? null;
+
+        if (!sender || !messageId) {
+            res.status(400).json({ inputError: 'Input error' });
+            return;
+        }
+
+        if (text === undefined && image === null) {
+            res.status(400).json({ InvalidInputError: 'Invalid Input' });
+            return;
+        }
+
+        if (text !== undefined && text.length > 10000) {
+            res.status(400).json({
+                InvalidInput:
+                    'message text must not be greater than 10.000 characters',
+            });
+            return;
+        }
+        try {
+            const { success, message, status, payload } = await replyToMessage(
+                messageId,
+                sender,
                 text,
                 image
             );

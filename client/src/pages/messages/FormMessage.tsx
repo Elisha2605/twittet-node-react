@@ -10,11 +10,13 @@ import data from '@emoji-mart/data';
 import useClickOutSide from '../../hooks/useClickOutSide';
 import XmarkIcon from '../../components/icons/XmarkIcon';
 import LoadingRing from '../../components/ui/LoadingRing';
+import ReplyMessage from './ReplyMessage';
 
 interface FormMessageProps {
     socket: any;
     authUser: any;
     currentUser: any;
+    replyMessage: any;
     onSendMessage: (message: any) => void;
 }
 
@@ -22,12 +24,14 @@ const FormMessage: React.FC<FormMessageProps> = ({
     socket,
     authUser,
     currentUser,
+    replyMessage,
     onSendMessage,
 }) => {
     const [selectedEmoji, setSelectedEmoji] = useState<any>();
     const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
     const [messageValue, setMessageValue] = useState('');
     const [isLoading, setIsLoading] = useState<boolean>();
+    const [showReplyMessage, setShowReplyMessage] = useState<boolean>();
 
     // Message Form states
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -37,6 +41,9 @@ const FormMessage: React.FC<FormMessageProps> = ({
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     useClickOutSide(emojiPickerRef, setOpenEmojiPicker);
+
+    const isDisabled = messageValue.length > 0;
+
 
     const handleInputChange = (
         event: React.ChangeEvent<HTMLTextAreaElement>
@@ -84,6 +91,9 @@ const FormMessage: React.FC<FormMessageProps> = ({
         setIsLoading(true);
 
         // ToDo: validation
+        if (replyMessage) {
+            console.log(replyMessage);
+        }
 
         //send message
         const res = await sendMessage(
@@ -136,99 +146,113 @@ const FormMessage: React.FC<FormMessageProps> = ({
         setPreviewImage(null);
     };
 
-    const isDisabled = messageValue.length > 0;
+    useEffect(() => {
+        if (replyMessage) {
+            setShowReplyMessage(replyMessage)
+        };
+    }, [replyMessage])
+
+    const handleCloseReplyMessage = () => {
+        setShowReplyMessage(false);
+    };
 
     return (
-        <form
-            encType="multipart/form-data"
-            className={`${styles.formContainer} ${
-                previewImage ? styles.formContainerWithImage : ''
-            }`}
-            onSubmit={handleSubmitForm}
-            onKeyDown={handleKeyDown}
-        >
-            {previewImage ? (
-                <div className={styles.previewImage}>
-                    <div className={styles.previewImageWrapper}>
-                        <img
-                            id={previewImage}
-                            src={previewImage}
-                            alt="preview message img"
-                        />
-                        <XmarkIcon
-                            className={styles.cancelBtn}
-                            size={'lg'}
-                            onClick={handleCanselPreviewImage}
-                        />
-                        {!isLoading && (
-                            <button type="submit" className={`${styles.btnWithImage}`}>
-                                <img
-                                    className={styles.disable}
-                                    src={faPaperPlane}
-                                    alt=""
-                                />
-                            </button>
-                       )}
-                       {isLoading && <LoadingRing size={'small'} />}
-                    </div>
-                    <textarea
-                        ref={textareaRef}
-                        className={styles.inputWithImage}
-                        placeholder="Start a new message"
-                        value={messageValue}
-                        onChange={(e: any) => {
-                            handleInputChange(e);
-                        }}
-                    />
-                </div>
-            ) : (
-                <div className={styles.formWrapper}>
-                    <div className={styles.icons}>
-                        <ImageIcon
-                            onChange={handleImageUpload}
-                            name={'messageImage'}
-                        />
-                        <EmojiIcon onClick={() => setOpenEmojiPicker(true)} />
-                        {openEmojiPicker && (
-                            <div
-                                ref={emojiPickerRef}
-                                className={styles.emojiPicker}
-                            >
-                                <Picker
-                                    data={data}
-                                    onEmojiSelect={handleEmojiSelect}
-                                />
-                            </div>
-                        )}
-                    </div>
-                    <textarea
-                        ref={textareaRef}
-                        className={styles.input}
-                        placeholder="Start a new message"
-                        value={messageValue}
-                        onChange={(e: any) => {
-                            handleInputChange(e);
-                        }}
-                    />
-                    <button
-                        type="submit"
-                        className={`${styles.btn} ${
-                            !isDisabled && styles.disabled
-                        }`}
-                        disabled={!isDisabled}
-                    >
-                        {!isLoading && (
+        <React.Fragment>
+            <form
+                encType="multipart/form-data"
+                className={`${styles.formContainer} ${
+                    previewImage ? styles.formContainerWithImage : ''
+                }`}
+                onSubmit={handleSubmitForm}
+                onKeyDown={handleKeyDown}
+            >
+                {showReplyMessage && (
+                    <ReplyMessage replyMessage={replyMessage} onCloseReplyMessage={handleCloseReplyMessage} />
+                )}
+
+                {previewImage ? (
+                    <div className={styles.previewImage}>
+                        <div className={styles.previewImageWrapper}>
                             <img
-                                className={styles.disable}
-                                src={!isDisabled ? faPaperPlaneDisable : faPaperPlane}
-                                alt=""
+                                id={previewImage}
+                                src={previewImage}
+                                alt="preview message img"
                             />
+                            <XmarkIcon
+                                className={styles.cancelBtn}
+                                size={'lg'}
+                                onClick={handleCanselPreviewImage}
+                            />
+                            {!isLoading && (
+                                <button type="submit" className={`${styles.btnWithImage}`}>
+                                    <img
+                                        className={styles.disable}
+                                        src={faPaperPlane}
+                                        alt=""
+                                    />
+                                </button>
                         )}
                         {isLoading && <LoadingRing size={'small'} />}
-                    </button>
-                </div>
-            )}
-        </form>
+                        </div>
+                        <textarea
+                            ref={textareaRef}
+                            className={styles.inputWithImage}
+                            placeholder="Start a new message"
+                            value={messageValue}
+                            onChange={(e: any) => {
+                                handleInputChange(e);
+                            }}
+                        />
+                    </div>
+                ) : (
+                    <div className={styles.formWrapper}>
+                        <div className={styles.icons}>
+                            <ImageIcon
+                                onChange={handleImageUpload}
+                                name={'messageImage'}
+                            />
+                            <EmojiIcon onClick={() => setOpenEmojiPicker(true)} />
+                            {openEmojiPicker && (
+                                <div
+                                    ref={emojiPickerRef}
+                                    className={styles.emojiPicker}
+                                >
+                                    <Picker
+                                        data={data}
+                                        onEmojiSelect={handleEmojiSelect}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                        <textarea
+                            ref={textareaRef}
+                            className={styles.input}
+                            placeholder="Start a new message"
+                            value={messageValue}
+                            onChange={(e: any) => {
+                                handleInputChange(e);
+                            }}
+                        />
+                        <button
+                            type="submit"
+                            className={`${styles.btn} ${
+                                !isDisabled && styles.disabled
+                            }`}
+                            disabled={!isDisabled}
+                        >
+                            {!isLoading && (
+                                <img
+                                    className={styles.disable}
+                                    src={!isDisabled ? faPaperPlaneDisable : faPaperPlane}
+                                    alt=""
+                                />
+                            )}
+                            {isLoading && <LoadingRing size={'small'} />}
+                        </button>
+                    </div>
+                )}
+            </form>
+        </React.Fragment>
     );
 };
 

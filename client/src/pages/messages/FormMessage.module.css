@@ -19,7 +19,146 @@
     border: none;
     background: var(--color-secondary-lighter);
     border-radius: 1.5rem;
-    font-family: inherit;
+    font-family: inherit;.formContainer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        border-top: 1px solid var(--color-secondary-light);
+        background: var(--color-white);
+    }
+    
+    .formWrapper {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+    }
+    
+    .input {
+        width: 100%;
+        resize: none;
+        overflow-y: auto;
+        border: none;
+        background: var(--color-secondary-lighter);
+        border-radius: 1.5rem;
+        font-family: inherit;
+        font-size: var(--font-size-md);
+        padding-top: 1.4rem;
+        padding-left: 7rem;
+        padding-right: 5rem;;
+    }
+    
+    /* .input::placeholder {
+      position: absolute;
+      top: 50%; 
+      transform: translateY(-50%);
+      padding-left: 1rem;
+      color: #999999;
+    } */
+    
+    .input:focus {
+        outline: none;
+    }
+    
+    .icons {
+        position: absolute;
+        display: flex;
+        gap: 0.5rem;
+        margin-left: 1rem;
+        padding-top: 0.4rem;
+    }
+    
+    .btn {
+        position: absolute;
+        display: flex;
+        right: 2rem;
+        padding-top: 0.2rem;
+    }
+    
+    .btn img {
+        width: 1.2rem;
+        cursor: pointer;
+    }
+    
+    .emojiPicker {
+        position: absolute;
+        margin-top: -25rem;
+    }
+    
+    /* Preview image */
+    .formContainerWithImage {
+        padding: 0.5rem 0.5rem;
+    }
+    .previewImage {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        width: 100%;
+        background: var(--color-secondary-lighter);
+        padding: 1rem;
+        border-radius: 1rem;
+    
+    }
+    
+    .previewImage img {
+        position: relative;
+        width: 12rem;
+        border-radius: 1rem;
+    }
+    
+    .previewImageWrapper {
+        position: relative;
+        width: fit-content;
+        position: relative;
+    }
+    .cancelBtn {    
+        position: absolute;
+        right: 0.3rem;
+        top: 0.3rem;
+        color: var(--color-white);
+        background-color: rgba(0, 0, 0, 0.801);
+    }
+    
+    .cancelBtn:hover {
+        background-color: rgba(33, 33, 33, 0.916);
+        transition: 0.1s ease-in-out;
+    }
+    
+    .inputWithImage {
+        position: relative;
+        top: 1rem;
+        width: 100%;
+        max-height: 13.5rem;
+        resize: none;
+        overflow-y: auto;
+        border: none;
+        font-family: inherit;
+        font-size: var(--font-size-md);
+        background: var(--color-secondary-lighter);
+    
+    }
+    
+    .btnWithImage {
+        position: absolute;
+        right: -21.5rem;
+        top: 4rem;
+    }
+    
+    .btnWithImage img {
+        width: 1.2rem;
+        cursor: pointer;
+    }
+    
+    .inputWithImage:focus {
+        outline: none;
+    }
+    
+    .disabled img, .disabled:hover {
+        cursor: auto;
+    }
+    
+    .disabled img {
+    
+    }
     font-size: var(--font-size-md);
     padding-top: 1.4rem;
     padding-left: 7rem;

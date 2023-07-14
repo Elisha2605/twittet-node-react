@@ -30,6 +30,8 @@ const AuthUserChat: FC<AuthUserChatProps> = ({
     const [isMenuHovered, setIsMenuHovered] = useState<boolean>(false);
     const [isMenuHoveredWithImage, setIsMenuHoveredWithImage] =
         useState<boolean>(false);
+    
+    const replyMessage = conversation.originalMessage;
 
     return (
         <>
@@ -49,11 +51,13 @@ const AuthUserChat: FC<AuthUserChatProps> = ({
                                     onClickMessageOption!(menuOptions, id)
                                 }
                                 classNamePopUpBox={styles.popUpBoxWithImage}
-                                classNameMenuItemList={styles.popUpListWithImage}
-
+                                classNameMenuItemList={
+                                    styles.popUpListWithImage
+                                }
                             />
                         </div>
                     )}
+
                     <div
                         className={`${styles.imageAuthUser} ${
                             !conversation?.text
@@ -74,7 +78,8 @@ const AuthUserChat: FC<AuthUserChatProps> = ({
                         {!conversation?.text && (
                             <div className={styles.textStatusAndTimeAuthUser}>
                                 <p>
-                                    {getTimeAMPM(conversation?.createdAt)} {messageStatus()}
+                                    {getTimeAMPM(conversation?.createdAt)}{' '}
+                                    {messageStatus()}
                                 </p>
                             </div>
                         )}
@@ -106,12 +111,24 @@ const AuthUserChat: FC<AuthUserChatProps> = ({
                             />
                         </div>
                     )}
-                    <div>
+                    <div className={styles.textWrapper}>
+                        {conversation.originalMessage?.text && (
+                            <div>
+                                <p className={styles.replyMessage}>reply</p>
+
+                                <div className={styles.originalMessage}>
+                                    <p>{conversation.originalMessage?.text}</p>
+                                </div>
+                            </div>
+                        )}
                         <div className={styles.authUserText}>
                             {conversation?.text}
                         </div>
                         <div className={styles.textStatusAndTimeAuthUser}>
-                            <span>{getTimeAMPM(conversation?.createdAt)} {messageStatus()}</span>
+                            <span>
+                                {getTimeAMPM(conversation?.createdAt)}{' '}
+                                {messageStatus()}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -121,3 +138,4 @@ const AuthUserChat: FC<AuthUserChatProps> = ({
 };
 
 export default AuthUserChat;
+

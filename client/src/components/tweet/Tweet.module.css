@@ -136,8 +136,14 @@
     max-width: 6rem;
     height: 6rem;
 }
+
 .reTweetWithImageImage img {
     width: 100%;
     height: 100%;
     border-radius: 1rem;
+}
+
+.deletedTweet {
+    padding: 1rem;
+    color: var(--color-secondary);
 }

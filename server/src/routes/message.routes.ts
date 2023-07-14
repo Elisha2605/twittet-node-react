@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
     deleteMessageController,
     getConversationController,
+    replyToMessageController,
     sendMessageController,
     updateMessageStatusController,
 } from '../../src/controllers/message.controller';
@@ -17,6 +18,13 @@ messageRouter.post(
     upload.fields([{ name: 'messageImage', maxCount: 1 }]),
     uploadToS3(['messageImage']),
     sendMessageController
+);
+messageRouter.post(
+    '/reply/:id',
+    verifyUser(),
+    upload.fields([{ name: 'messageImage', maxCount: 1 }]),
+    uploadToS3(['messageImage']),
+    replyToMessageController
 );
 messageRouter.patch(
     '/update-status/:id',

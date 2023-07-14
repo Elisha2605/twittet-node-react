@@ -12,6 +12,7 @@ interface ConversationProps {
     conversation: any;
     contacts: any;
     isLoading: boolean;
+    onReplyMessage: (message: any) => void;
     onDeleteMessage: (messageId: string) => void;
 }
 
@@ -22,6 +23,7 @@ const Conversation: React.FC<ConversationProps> = ({
     contacts,
     isLoading,
     onDeleteMessage,
+    onReplyMessage,
 }) => {
     const [isMessageRead, setIsMessageRead] = useState<any>(false);
     const [msgStatus, setMsgStatus] = useState<any>();
@@ -68,6 +70,7 @@ const Conversation: React.FC<ConversationProps> = ({
 
         if (option === MESSAGE_OPTION.reply) {
             console.log(messageId);
+            onReplyMessage(conversation);
             console.log('reply clicked');
         } 
         if (option === MESSAGE_OPTION.copyMessage) {
@@ -85,7 +88,7 @@ const Conversation: React.FC<ConversationProps> = ({
         <React.Fragment>
             <div className={styles.container}>
                 <div className={styles.conversationWrapper}>
-                    {conversation?.sender !== otherUser?._id ? (
+                    {conversation?.sender?._id !== otherUser?._id ? (
                         <AuthUserChat
                             conversation={conversation}
                             imgRef={imgRef}

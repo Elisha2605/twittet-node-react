@@ -29,15 +29,14 @@ interface MessageProps {
     socket: any;
 }
 
-const Message: FC<MessageProps> = ({ 
-    socket,
-}) => {
+const Message: FC<MessageProps> = ({ socket }) => {
     const { path } = useParams<{ path: string }>();
 
     const [contacts, setContacts] = useState<any[]>([]);
     const [currentUser, setCurrentUser] = useState<any>();
     const [conversations, setConversations] = useState<any>([]);
     const [newMessage, setNewMessage] = useState<any>();
+    const [replyMessage, setReplyMessage] = useState<any>();
 
     const [isLoading, setIsloading] = useState<boolean>(false);
 
@@ -72,7 +71,6 @@ const Message: FC<MessageProps> = ({
         };
         fetchAllContactAndConversation();
     }, [contacts.length, path]);
-    
 
     const contactOnclikOption = async (option: any, contactId: any) => {
         if (option === CONTACT_OPTION.delete) {
@@ -148,29 +146,38 @@ const Message: FC<MessageProps> = ({
     };
 
     const onSendMessage = (message: any) => {
-        setConversations((prevState: any) => [...prevState, message]);
+        console.log(message);
+        setConversations((prevState: any) => [...prevState, {
+            sender: message.sender.name,
+            text: message.text,
+            createdAt: message.createdAt,
+            read: message.read,
+        }]);
         updateContactState(message);
         scrollToBottom();
     };
 
     const onDeleteMessage = (messageId: string) => {
-        setConversations((prevState: any) => 
-            prevState.filter((conversation: any) => conversation?._id !== messageId)
-        )
-    }
+        setConversations((prevState: any) =>
+            prevState.filter(
+                (conversation: any) => conversation?._id !== messageId
+            )
+        );
+    };
 
     const location = useLocation();
     const currentPath = location.pathname;
 
     const messageStatusUpdate = async (message: any) => {
         if (
-            currentPath === `/message/${message?.sender?._id}` && message?.read === false
+            currentPath === `/message/${message?.sender?._id}` &&
+            message?.read === false
         ) {
             await updateMessageStatus(message?.sender?._id);
         } else {
             setNewMessage(message);
         }
-    }
+    };
 
     useEffect(() => {
         socket?.on('getMessage', (obj: any) => {
@@ -189,12 +196,15 @@ const Message: FC<MessageProps> = ({
 
             // update message status
             messageStatusUpdate(message);
-            
         });
         return () => {
             socket?.off('getMessage');
         };
     }, [socket, path, contacts, navigate]);
+
+    const onMessageReply = (replyMessage: any) => {
+        setReplyMessage(replyMessage)
+    }
 
     return (
         <React.Fragment>
@@ -261,7 +271,10 @@ const Message: FC<MessageProps> = ({
                                                 otherUser={currentUser}
                                                 conversation={conversation}
                                                 isLoading={isLoading}
-                                                onDeleteMessage={onDeleteMessage}
+                                                onDeleteMessage={
+                                                    onDeleteMessage
+                                                }
+                                                onReplyMessage={onMessageReply}
                                             />
                                         </div>
                                     ))}
@@ -271,6 +284,7 @@ const Message: FC<MessageProps> = ({
                             authUser={ctx?.user}
                             currentUser={currentUser}
                             onSendMessage={onSendMessage}
+                            replyMessage={replyMessage}
                         />
                     </div>
                 </Aside>

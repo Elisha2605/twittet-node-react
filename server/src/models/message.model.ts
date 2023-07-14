@@ -1,17 +1,28 @@
 import mongoose, { ObjectId, Types } from 'mongoose';
 import { handleError } from '../../src/utils/db.util';
+import { MESSAGE_TYPE } from '../../src/constants/message.contants';
 
 interface Imessage extends mongoose.Document {
+    type: string;
     sender: string | ObjectId;
     receiver: string | ObjectId;
     text: string;
     image?: string;
+    originalMessage: {
+        text: string;
+        image: string;
+    };
     visited: boolean;
     deletedBy: (string | ObjectId)[];
     read: boolean;
 }
 
 const messageModel = {
+    type: {
+        type: String,
+        required: true,
+        default: MESSAGE_TYPE.regular,
+    },
     sender: {
         type: Types.ObjectId,
         required: true,
@@ -27,6 +38,17 @@ const messageModel = {
     },
     image: {
         type: String,
+        required: false,
+    },
+    originalMessage: {
+        text: {
+            type: String,
+            image: false,
+        },
+        originalImage: {
+            type: String,
+            required: false,
+        },
     },
     visited: {
         type: Boolean,

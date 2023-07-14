@@ -146,6 +146,8 @@ const Tweet: FC<TweetProps> = ({
         }
     };
 
+    console.log(tweet);
+
     return (
         <React.Fragment>
             <div className={`${styles.container}`} key={tweetId}>
@@ -201,60 +203,66 @@ const Tweet: FC<TweetProps> = ({
                                 </div>
                             )}
                             <div className={`${styles.retweetContainer} ${hasRetweetAndTweetImage ? styles.reTweetWithImageContainer : ''}`} onClick={() => navigate(`/tweet/${retweetId}`)}>
-                                <UserInfoRetweet
-                                    userId={retweetUserId}
-                                    tweet={retweet}
-                                    avatar={avatar}
-                                    name={retweetUserName}
-                                    username={retweetUserUsername}
-                                    isVerified={isVerfiedRetweetUser}
-                                    time={retweetCreatedAt}
-                                    isOption={true}
-                                    className={styles.userInfoRetweet}
-                                    options={tweetMenuOptions}
-                                    icons={tweetMenuIcons}
-                                    onClickOption={onClickMenu}
-                                    isNavigate={true}
-                                />
-                                <div
-                                    className={`${styles.retweetBody} ${hasRetweetAndTweetImage ? styles.reTweetWithImageBody : ''}`}
-                                    key={retweetId}
-                                    onClick={(e: any) => {
-                                        e.stopPropagation();
-                                        navigate(`/tweet/${retweetId}`);
-                                        }
-                                }>
-                                    <p className={`${styles.reTweetText} ${hasRetweetAndTweetImage ? styles.reTweetWithImageText : ''}`}>
-                                        {renderColoredText(retweetText && retweetText.length > 150 ? retweetText.substring(0, 150) + '...' : retweetText)}
-                                    </p>
-                                    {retweetImage && (
-                                        <div className={`${styles.reTweetImage} ${hasRetweetAndTweetImage ? styles.reTweetWithImageImage : ''}`}>
-                                            {!isReply ? (
-                                                <img
+                            {retweet.tweet ? (
+                                <>
+                                    <UserInfoRetweet
+                                        userId={retweetUserId}
+                                        tweet={retweet}
+                                        avatar={avatar}
+                                        name={retweetUserName}
+                                        username={retweetUserUsername}
+                                        isVerified={isVerfiedRetweetUser}
+                                        time={retweetCreatedAt}
+                                        isOption={true}
+                                        className={styles.userInfoRetweet}
+                                        options={tweetMenuOptions}
+                                        icons={tweetMenuIcons}
+                                        onClickOption={onClickMenu}
+                                        isNavigate={true}
+                                    />
+                                    <div
+                                        className={`${styles.retweetBody} ${hasRetweetAndTweetImage ? styles.reTweetWithImageBody : ''}`}
+                                        key={retweetId}
+                                        onClick={(e: any) => {
+                                            e.stopPropagation();
+                                            navigate(`/tweet/${retweetId}`);
+                                            }
+                                    }>
+                                        <p className={`${styles.reTweetText} ${hasRetweetAndTweetImage ? styles.reTweetWithImageText : ''}`}>
+                                            {renderColoredText(retweetText && retweetText.length > 150 ? retweetText.substring(0, 150) + '...' : retweetText)}
+                                        </p>
+                                        {retweetImage && (
+                                            <div className={`${styles.reTweetImage} ${hasRetweetAndTweetImage ? styles.reTweetWithImageImage : ''}`}>
+                                                {!isReply ? (
+                                                    <img
+                                                        ref={imgRef}
+                                                        src={
+                                                            retweetImage
+                                                                ? `${IMAGE_TWEET_BASE_URL}/${retweetImage}`
+                                                                : undefined
+                                                        }
+                                                        alt=""
+                                                        onLoad={handleImageLoad}
+                                                    />
+                                                ): (
+                                                    <img
                                                     ref={imgRef}
                                                     src={
                                                         retweetImage
-                                                            ? `${IMAGE_TWEET_BASE_URL}/${retweetImage}`
+                                                            ? `${IMAGE_TWEET_REPLY_BASE_URL}/${retweetImage}`
                                                             : undefined
                                                     }
                                                     alt=""
                                                     onLoad={handleImageLoad}
                                                 />
-                                            ): (
-                                                <img
-                                                ref={imgRef}
-                                                src={
-                                                    retweetImage
-                                                        ? `${IMAGE_TWEET_REPLY_BASE_URL}/${retweetImage}`
-                                                        : undefined
-                                                }
-                                                alt=""
-                                                onLoad={handleImageLoad}
-                                            />
-                                            )}
-                                        </div>
-                                    )}
-                                </div>           
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>           
+                                </>
+                            ): (
+                                <p className={styles.deletedTweet}>This Tweet was deleted by the Tweet author.</p>
+                            )}
                             </div>
                         </div>
                     {/* RETWEET - END */}
