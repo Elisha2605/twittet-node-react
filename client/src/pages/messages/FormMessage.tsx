@@ -152,6 +152,7 @@ const FormMessage: React.FC<FormMessageProps> = ({
     useEffect(() => {
         if (replyMessage) {
             setShowReplyMessage(true);
+            textareaRef.current?.focus();
         }
     }, [replyMessage]);
 

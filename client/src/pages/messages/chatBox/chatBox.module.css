@@ -1,0 +1,41 @@
+/* ChatBox.module.css */
+
+.chatBox {
+    position: fixed;
+    bottom: 0;
+    right: 1rem;
+    width: 400px;
+    height: 550px;
+    background-color: var(--color-white);
+
+    border-radius: 1rem 1rem 0 0;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.40);
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+  }
+  
+  .chatBoxHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Adjusted alignment */
+    padding: 13px 8px;
+    cursor: pointer;
+
+  }
+  
+  .chatBoxTitle {
+    font-size: var(--font-size-lg);
+    font-weight: bold;
+    margin-left: 8px;
+  }
+  
+  .chatBoxContent {
+    height: 100%; /* Added height */
+    overflow-y: auto; /* Added overflow-y */
+  }
+  
+  .rollUp {
+    transform: translateY(calc(100% - 56px)); /* Adjusted transform value */
+  }
+  

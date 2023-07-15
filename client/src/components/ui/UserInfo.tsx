@@ -5,8 +5,10 @@ import Certified from '../../assets/certified.svg';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../context/user.context';
 import faLockSolid from '../../assets/faLock-solid.svg';
-import { IMAGE_AVATAR_BASE_URL, IMAGE_AVATAR_DEFAULT } from '../../constants/common.constants';
-
+import {
+    IMAGE_AVATAR_BASE_URL,
+    IMAGE_AVATAR_DEFAULT,
+} from '../../constants/common.constants';
 
 interface UserInfoProps {
     user?: any;
@@ -51,7 +53,6 @@ const UserInfo: FC<UserInfoProps> = ({
     isOnHover = false,
     isNavigate = true,
 }) => {
-
     const [authUser, setAuthUser] = useState<any>(null);
 
     const ctx = useContext(AuthContext);
@@ -59,7 +60,7 @@ const UserInfo: FC<UserInfoProps> = ({
         const getAuthUser = async () => {
             const { user } = ctx.getUserContext();
             setAuthUser(user);
-        }
+        };
         getAuthUser();
     }, []);
 
@@ -67,20 +68,31 @@ const UserInfo: FC<UserInfoProps> = ({
 
     const onNavigateToProfile = () => {
         if (isNavigate) {
-            navigate(`/profile/${userId}`)
+            navigate(`/profile/${userId}`);
         }
-    }
-    
+    };
 
     return (
         <React.Fragment>
-            <div className={`${styles.container} ${isOnHover ? styles.onHoverUser : ''}`}>
+            <div
+                className={`${styles.container} ${
+                    isOnHover ? styles.onHoverUser : ''
+                }`}
+            >
                 {avatar && (
-                    <div className={styles.avatar} onClick={onNavigateToProfile}>
+                    <div
+                        className={styles.avatar}
+                        onClick={onNavigateToProfile}
+                    >
                         <a href={link}>
-                            <img src={avatar
-                                    ? `${IMAGE_AVATAR_BASE_URL}/${avatar}`
-                                    : `${IMAGE_AVATAR_BASE_URL}/${IMAGE_AVATAR_DEFAULT}`} alt="" />
+                            <img
+                                src={
+                                    avatar
+                                        ? `${IMAGE_AVATAR_BASE_URL}/${avatar}`
+                                        : `${IMAGE_AVATAR_BASE_URL}/${IMAGE_AVATAR_DEFAULT}`
+                                }
+                                alt=""
+                            />
                         </a>
                     </div>
                 )}
@@ -88,23 +100,39 @@ const UserInfo: FC<UserInfoProps> = ({
                     {isOption ? (
                         <div className={styles.userInfoOptionWrapper}>
                             <div className={styles.userInfo}>
-                                <p className={styles.name} onClick={onNavigateToProfile}>
+                                <p
+                                    className={styles.name}
+                                    onClick={onNavigateToProfile}
+                                >
                                     {/* this is for TweetReply */}
-                                    {isReply && name.length > 6 ? name.substring(0, 6) + '...' : name}{' '}
+                                    {isReply && name.length > 6
+                                        ? name.substring(0, 6) + '...'
+                                        : name}{' '}
                                 </p>
                                 {tweet?.user?.isProtected && (
                                     <div className={styles.isProtected}>
                                         <img src={faLockSolid} alt="" />
                                     </div>
                                 )}
-                                <span>
-                                    {isVerified && (
-                                        <img className={styles.certifiedIcon} src={Certified} alt="" />
-                                    )}
-                                </span>
-                               
-                                <p className={styles.username} onClick={onNavigateToProfile}>
-                                    @{isReply && username.length > 6 ? username.substring(0, 6) + '...' : username} {time && ` · ${time}`}{' '}
+                                {isVerified && (
+                                    <span className={styles.x}>
+                                        <img
+                                            className={styles.certifiedIcon}
+                                            src={Certified}
+                                            alt=""
+                                        />
+                                    </span>
+                                )}
+
+                                <p
+                                    className={styles.username}
+                                    onClick={onNavigateToProfile}
+                                >
+                                    @
+                                    {isReply && username.length > 6
+                                        ? username.substring(0, 6) + '...'
+                                        : username}{' '}
+                                    {time && ` · ${time}`}{' '}
                                 </p>
                             </div>
                             {authUser?._id === tweet?.user?._id && (
@@ -121,21 +149,26 @@ const UserInfo: FC<UserInfoProps> = ({
                         </div>
                     ) : (
                         <>
-                            <div className={styles.userInfo} onClick={onNavigateToProfile}>
+                            <div
+                                className={styles.userInfo}
+                                onClick={onNavigateToProfile}
+                            >
                                 <p className={styles.name}>
-                                {name}{' '}
-                                {user?.isProtected && (
-                                    <span className={styles.isProtected}>
-                                        <img src={faLockSolid} alt="" />
-                                    </span>
-                                )}
-                                {isVerified && (
-                                        <img className={styles.certifiedIcon} src={Certified} alt="" />
-                                )}{' '}
+                                    {name}{' '}
+                                    {user?.isProtected && (
+                                        <span className={styles.isProtected}>
+                                            <img src={faLockSolid} alt="" />
+                                        </span>
+                                    )}
+                                    {isVerified && (
+                                        <img
+                                            className={styles.certifiedIcon}
+                                            src={Certified}
+                                            alt=""
+                                        />
+                                    )}{' '}
                                 </p>
-                                <p className={styles.username}>
-                                    @{username}
-                                </p>
+                                <p className={styles.username}>@{username}</p>
                             </div>
                             {children}
                         </>

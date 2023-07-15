@@ -42,28 +42,28 @@ const NavigationUserInfo: FC<NavigationUserInfoProps> = ({
                             alt=""
                         />
                     </div>
-                    <div className={`${styles.userWrapper}`}>
-                        <div className={styles.userInfo}>
-                            <div className={styles.name}>
-                                <p className={styles.firstname}>{user?.name}</p>
-                                {user?.isProtected && (
-                                    <div className={styles.isProtected}>
-                                        <img src={faLockSolid} alt="" />
-                                    </div>
+                    <div className={styles.userInfo}>
+                        <div className={styles.name}>
+                            <p className={styles.firstname}>{user?.name}</p>
+                            {user?.isProtected && (
+                                <div className={styles.isProtected}>
+                                    <img src={faLockSolid} alt="" />
+                                </div>
+                            )}
+                            <span>
+                                {user?.isVerified && (
+                                    <img
+                                        className={styles.certifiedIcon}
+                                        src={Certified}
+                                        alt=""
+                                    />
                                 )}
-                                <span>
-                                    {user?.isVerified && (
-                                        <img
-                                            className={styles.certifiedIcon}
-                                            src={Certified}
-                                            alt=""
-                                        />
-                                    )}
-                                </span>
-                            </div>
-                            <p className={styles.username}>@{user?.username}</p>
+                            </span>
                         </div>
+                        <p className={styles.username}>@{user?.username}</p>
                     </div>
+
+                    <div className={styles.threeDots}>···</div>
                 </div>
             </PopUpMenu>
         </React.Fragment>

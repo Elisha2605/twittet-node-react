@@ -146,8 +146,6 @@ const Tweet: FC<TweetProps> = ({
         }
     };
 
-    console.log(tweet);
-
     return (
         <React.Fragment>
             <div className={`${styles.container}`} key={tweetId}>

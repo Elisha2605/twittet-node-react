@@ -79,7 +79,7 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
     useEffect(() => {
         if (
             newMessage &&
-            newMessage?.sender === contactId &&
+            newMessage?.sender?._id === contactId &&
             currentPath !== `/message/${contactId}`
         ) {
             setIncomingMsg(true);

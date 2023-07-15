@@ -28,6 +28,7 @@ import { useMessage } from './context/successMessage.context';
 import AccessDenied from './pages/access-denied';
 import TermsOfService from './pages/termsOfService';
 import { io } from 'socket.io-client';
+import ChatBox from './pages/messages/chatBox/chatBox';
 
 function App() {
 
@@ -220,6 +221,8 @@ function App() {
                     <BrowserRouter>
                         <div className={`${Layout.navigation}`}>
                             <Navigation socket={socket} />
+                            {}
+                            {/* <ChatBox /> */}
                             <NavigationTweetModal 
                                 selectedFile={selectedFileModal}
                                 previewImage={previewImageModal}                                    
