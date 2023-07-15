@@ -26,7 +26,7 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
     onClickOption,
     newMessage,
 }) => {
-    const [isRead, setIsRead] = useState<boolean>(true);
+    const [isRead, setIsRead] = useState<boolean>(false);
     const [incomingMsg, setIncomingMsg] = useState<boolean>(false);
     const [isMenuHovered, setIsMenuHovered] = useState<boolean>(false);
 
@@ -65,6 +65,7 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
     useEffect(() => {
         if (currentPath === `/message/${contactId}`) {
             setIncomingMsg(false);
+            setIsRead(true);
             const updateStatus = async () => {
                 if (receiverId === authUser?._id && isMessageRead === false) {
                     const res = await updateMessageStatus(senderId);
@@ -74,6 +75,12 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
             updateStatus();
         }
     }, [currentPath, contact]);
+
+    useEffect(() => {
+        if (isMessageRead && receiverId === authUser?._id) {
+            setIsRead(true)
+        }
+    }, [isMessageRead, receiverId, authUser])
 
     // set the notification dot on incoming message
     useEffect(() => {
