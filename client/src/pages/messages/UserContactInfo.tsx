@@ -26,7 +26,7 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
     onClickOption,
     newMessage,
 }) => {
-    const [isRead, setIsRead] = useState<boolean>(false);
+    const [isRead, setIsRead] = useState<boolean>(true);
     const [incomingMsg, setIncomingMsg] = useState<boolean>(false);
     const [isMenuHovered, setIsMenuHovered] = useState<boolean>(false);
 
