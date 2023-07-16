@@ -37,6 +37,8 @@ const Message: FC<MessageProps> = ({ socket }) => {
     const [conversations, setConversations] = useState<any>([]);
     const [newMessage, setNewMessage] = useState<any>();
     const [replyMessage, setReplyMessage] = useState<any | null>();
+    const [isRead, setIsRead] = useState<boolean>(false);
+
 
     const [isLoading, setIsloading] = useState<boolean>(false);
 
@@ -202,6 +204,13 @@ const Message: FC<MessageProps> = ({ socket }) => {
         setReplyMessage(replyMessage);
     }
 
+
+    const navigateToConversation = (e: React.MouseEvent, contactId: string) => {
+        e.stopPropagation()
+        setIsRead(true);
+        navigate(`/message/${contactId}`);
+    };
+
     return (
         <React.Fragment>
             <div className={Layout.mainSectionMessageContainer}>
@@ -239,6 +248,7 @@ const Message: FC<MessageProps> = ({ socket }) => {
                                             menuIcons={contactIcon}
                                             onClickOption={contactOnclikOption}
                                             newMessage={newMessage}
+                                            navigateToConversation={(e: any) => navigateToConversation(e, contact?._id)}
                                         />
                                     </div>
                                 ))}

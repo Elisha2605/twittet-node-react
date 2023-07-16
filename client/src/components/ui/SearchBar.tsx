@@ -13,6 +13,7 @@ interface SearchBarProps {
     classNameContainer?: string;
     classNameInput?: string;
     isNavigate?: boolean;
+    classSearchResults?: string;
     onUserSelected?: (contact: any) => void;
     onClickBtn?: () => void;
     center?: boolean;
@@ -23,6 +24,7 @@ const SearchBar: FC<SearchBarProps> = ({
     isButton,
     classNameContainer,
     classNameInput,
+    classSearchResults,
     isNavigate,
     onUserSelected,
     onClickBtn,
@@ -76,7 +78,7 @@ const SearchBar: FC<SearchBarProps> = ({
                 {isFocused && (
                     <div
                         ref={searchResultsRef}
-                        className={styles.searchResults}
+                        className={`${styles.searchResults} ${classSearchResults}`}
                         onBlur={() => setIsFocused(false)}
                         onClick={() => {
                             setIsFocused(false);

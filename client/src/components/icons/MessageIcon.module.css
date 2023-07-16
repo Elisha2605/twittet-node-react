@@ -1,0 +1,9 @@
+.faMessage {
+    padding: 0.6rem 0.7rem;
+    border-radius: 50%;
+}
+
+.faMessage:hover {
+    background: var(--color-secondary-lighter);
+    cursor: pointer;
+}

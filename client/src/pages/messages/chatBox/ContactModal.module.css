@@ -1,0 +1,63 @@
+.modalContainer {
+    max-width: 37.5rem !important;
+    max-height: 50rem !important;
+    height: 40rem !important;
+    overflow-x: hidden;
+}
+
+.modalWrapper {
+    padding: 2rem 0.1rem 0 0.1rem !important;
+}
+
+.headerWrapper {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    gap: 2rem;
+    top: 0.5rem;
+    left: 0.5rem;
+    font-size: var(--font-size-xl);
+}
+
+.headerWrapper svg:hover {
+    background-color: var(--color-secondary-light);
+}
+
+.titleAndBtnWrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 1rem;
+}
+.button {
+    padding: 0.3rem 1.2rem;
+    align-self: flex-end;
+    margin-right: 2rem;
+    font-size: var(--font-size-ms);
+}
+
+.searchBarContainer {
+    margin-top: 1rem;
+    border-style: solid;
+    border-width: 0 0 0.5px 0;
+    border-bottom-color: var(--color-secondary);
+}
+.searchBar {
+    margin-bottom: 0;
+}
+.searchBarInput {
+    background: var(--color-white);
+    border-radius: 0;
+}
+
+.searchBarInput:focus {
+    border: 0;
+}
+
+.searchResult {
+    box-shadow: none;
+    border-radius: none;
+}

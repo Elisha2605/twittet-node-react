@@ -28,7 +28,8 @@ import { useMessage } from './context/successMessage.context';
 import AccessDenied from './pages/access-denied';
 import TermsOfService from './pages/termsOfService';
 import { io } from 'socket.io-client';
-import ChatBox from './pages/messages/chatBox/chatBox';
+import ChatBox from './pages/messages/chatBox/ChatBox';
+import ContactModal from './pages/messages/chatBox/ContactModal';
 
 function App() {
 
@@ -59,6 +60,10 @@ function App() {
 
     // useContexts
     const { showMessage } = useMessage();
+
+    // message
+    const [addedContact, setAddContact] = useState<string | null>(null);
+    const [deletedContactId, setDeletedContactId] = useState<any>();
 
     const { modalOpen, openModal } = useContext(ModalContext);
     const context = useContext(AuthContext);
@@ -190,6 +195,14 @@ function App() {
         }
     }  
 
+    // message
+    const onAddContact = (contactId: string) => {
+        setAddContact(contactId)
+    }
+    const onDeletContact = (contactId: string) => {
+        setDeletedContactId(contactId)
+    }
+
     // Index page
     if (!ctx?.isLoggedIn) {
         return (
@@ -221,8 +234,8 @@ function App() {
                     <BrowserRouter>
                         <div className={`${Layout.navigation}`}>
                             <Navigation socket={socket} />
-                            {}
-                            {/* <ChatBox /> */}
+                            <ChatBox deleteContactId={deletedContactId!} addedContact={addedContact!}  />
+                            <ContactModal onDeletContact={onDeletContact} onAddContact={onAddContact} />
                             <NavigationTweetModal 
                                 selectedFile={selectedFileModal}
                                 previewImage={previewImageModal}                                    

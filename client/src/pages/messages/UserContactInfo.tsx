@@ -15,7 +15,8 @@ interface UserContactInfoProps {
     menuOptions?: string[];
     menuIcons?: Record<string, React.ReactNode>;
     onClickOption?: Function;
-    newMessage: any;
+    newMessage?: any;
+    navigateToConversation: (e: React.MouseEvent, id: string) => void;
 }
 
 const UserContactInfo: React.FC<UserContactInfoProps> = ({
@@ -25,6 +26,7 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
     menuIcons,
     onClickOption,
     newMessage,
+    navigateToConversation,
 }) => {
     const [isRead, setIsRead] = useState<boolean>(false);
     const [incomingMsg, setIncomingMsg] = useState<boolean>(false);
@@ -51,12 +53,6 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
         const shortName =
             name?.length > 11 ? name.substring(0, 11) + '...' : name;
         return shortName;
-    };
-
-    const navigateToConversation = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        setIsRead(true);
-        navigate(`/message/${contactId}`);
     };
 
     // update Message status
@@ -108,7 +104,7 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
             className={`${styles.container} ${notification} ${
                 incomingMsg ? styles.notification : ''
             }`}
-            onClick={navigateToConversation}
+            onClick={(e) => navigateToConversation(e, contactId)}
             onMouseEnter={() => setIsMenuHovered(true)}
             onMouseLeave={() => setIsMenuHovered(false)}
         >
