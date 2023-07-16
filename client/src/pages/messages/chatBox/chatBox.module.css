@@ -18,10 +18,9 @@
   .chatBoxHeader {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Adjusted alignment */
+    justify-content: space-between;
     padding: 13px 8px;
     cursor: pointer;
-
   }
   
   .chatBoxTitle {
@@ -41,6 +40,7 @@
 
   /* Header */
   .headerIcons {
+    position: relative;
     display: flex;
     margin-right: 1rem;
   }
@@ -65,3 +65,42 @@
     transition: 0.2s ease-in;
     background: var(--color-secondary-lighter);
   }
+
+  /* conversation */
+  .userContactInfo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 3px 8px;
+    cursor: pointer;
+  }
+  .backBtn {
+    position: relative;
+    top: 0.1rem;
+  }
+  .userContactInfo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    cursor: pointer;
+  } 
+  .name {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-600);
+  }
+  .username {
+    color: var(--color-secondary);
+  }
+
+
+  /* messages */
+  .messages {
+    height: calc(100vh - 43%);
+    overflow-y: scroll;
+    padding-bottom: 4rem;
+}
+
+.hideConversation {
+  display: none;
+}

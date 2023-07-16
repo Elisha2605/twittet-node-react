@@ -114,6 +114,7 @@ const FormMessage: React.FC<FormMessageProps> = ({
                 receiver: currentUser?._id,
                 message: msg,
             });
+            setIsLoading(false);
         }
 
         onSendMessage(msg);

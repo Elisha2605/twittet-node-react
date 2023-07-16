@@ -30,23 +30,29 @@ import TermsOfService from './pages/termsOfService';
 import { io } from 'socket.io-client';
 import ChatBox from './pages/messages/chatBox/ChatBox';
 import ContactModal from './pages/messages/chatBox/ContactModal';
+import ChatBoxConversation from './pages/messages/chatBox/ChatBoxConversation';
 
 function App() {
-
     const [showBackground, setShowBackground] = useState(false); // Add state to control whether to show the blue background
 
     const [tweet, setTweet] = useState<any>();
 
     // Home Form states
     const [selectedFileHome, setSelectedFileHome] = useState<File | null>(null);
-    const [previewImageHome, setPreviewImageHome] = useState<string | null>(null);
+    const [previewImageHome, setPreviewImageHome] = useState<string | null>(
+        null
+    );
     const [valueHome, setValueHome] = useState('');
 
     // Modal Form states
-    const [selectedFileModal, setSelectedFileModal] = useState<File | null>(null);
-    const [previewImageModal, setPreviewImageModal] = useState<string | null>(null);
+    const [selectedFileModal, setSelectedFileModal] = useState<File | null>(
+        null
+    );
+    const [previewImageModal, setPreviewImageModal] = useState<string | null>(
+        null
+    );
     const [valueModal, setValueModal] = useState('');
-    
+
     const [onEditTweet, setOnEditTweets] = useState<any[]>([]);
 
     // cross-components states
@@ -56,7 +62,9 @@ function App() {
 
     // Tweet Edit modal
     const [valueEditModal, setValueEditModal] = useState('');
-    const [previewEditImageModal, setPreviewEditImageModal] = useState<string | null>(null);
+    const [previewEditImageModal, setPreviewEditImageModal] = useState<
+        string | null
+    >(null);
 
     // useContexts
     const { showMessage } = useMessage();
@@ -69,49 +77,52 @@ function App() {
     const context = useContext(AuthContext);
     let ctx: StoredContext = context.getUserContext();
 
-//////////////
+    //////////////
     const [socket, setSocket] = useState<any>(null);
 
     useEffect(() => {
-        const url = process.env.NODE_ENV === 'production'
-        ? 'https://fake-twitter.herokuapp.com'
-        : 'http://localhost:4000';
-       setSocket(io(url)); // make this dynamic also with heroku
-    }, [])
+        const url =
+            process.env.NODE_ENV === 'production'
+                ? 'https://fake-twitter.herokuapp.com'
+                : 'http://localhost:4000';
+        setSocket(io(url)); // make this dynamic also with heroku
+    }, []);
 
     useEffect(() => {
         socket?.emit('newUser', ctx?.user);
-    }, [socket, ctx])
+    }, [socket, ctx]);
 
-//////////////
+    //////////////
 
     const handleAddTweet = (tweet: any) => {
         setOnAddTweets((prevTweets) => [tweet, ...prevTweets]);
     };
 
     const handleEditTweet = (editedTweet: any) => {
-        setOnEditTweets(editedTweet)
-    }
-    
+        setOnEditTweets(editedTweet);
+    };
+
     // On Login blue background
     const handleLoginSuccess = () => {
         setShowBackground(true); // Seting the showBackground state to true when login is successful
-        const loginTimemout =  setTimeout(() => {
+        const loginTimemout = setTimeout(() => {
             setShowBackground(false); // Seting the showBackground state to false after 1.5 seconds
-        }, 1000)
+        }, 1000);
         clearTimeout(loginTimemout);
     };
 
-    const handleTextAreaOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const handleTextAreaOnChange = (
+        e: React.ChangeEvent<HTMLTextAreaElement>
+    ) => {
         const val = e.target?.value;
         if (modalOpen) {
-            setValueModal(val)
-            setValueEditModal(val)
+            setValueModal(val);
+            setValueEditModal(val);
         } else {
             setValueHome(val);
         }
     };
-    
+
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files && event.target.files[0];
         if (file) {
@@ -137,7 +148,7 @@ function App() {
             setPreviewImageHome(null);
             setSelectedFileHome(null);
         }
-      };
+    };
 
     const clearTweetForm = () => {
         if (modalOpen) {
@@ -148,9 +159,13 @@ function App() {
         setSelectedFileHome(null);
         setPreviewImageHome(null);
         setValueHome('');
-    }
+    };
 
-    const handleTweetMenuOptionClick = async (option: string, tweetId: string, tweet: any) => {
+    const handleTweetMenuOptionClick = async (
+        option: string,
+        tweetId: string,
+        tweet: any
+    ) => {
         if (option === TWEET_MENU.delete) {
             const res = await deleteTweet(tweetId);
             const { tweet } = res;
@@ -160,48 +175,50 @@ function App() {
             openModal('edit-tweet-modal');
             setEditTweetModal(tweet);
             setValueEditModal(tweet.text);
-            const image = tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`;
+            const image =
+                tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet.image}`;
             setPreviewEditImageModal(image);
-        } 
+        }
     };
 
     const onReTweet = async (option: any, tweet: any) => {
         console.log(tweet);
         if (option === TWEET_MENU.undoRetweet) {
             const res = await retweet(tweet?._id);
-            if (res.message === "Undo Retweet") {
+            if (res.message === 'Undo Retweet') {
                 showMessage('Undo Retweet successful', 'success');
-                setOnDeleteTweet(tweet)
+                setOnDeleteTweet(tweet);
             }
         }
         if (option === TWEET_MENU.retweet) {
             const res = await retweet(tweet?._id, null, tweet?.image);
-                const newTweet = {
-                    ...res.tweet
-                };
-                handleAddTweet(newTweet)
-                if (res.success) {
-                    showMessage('Your retweet was sent', 'success');
-                }
+            const newTweet = {
+                ...res.tweet,
+            };
+            handleAddTweet(newTweet);
+            if (res.success) {
+                showMessage('Your retweet was sent', 'success');
+            }
         }
         if (option === TWEET_MENU.quoteTweet) {
             // changle the name of the states
-            setTweet(tweet)
-            openModal('retweet-modal')
+            setTweet(tweet);
+            openModal('retweet-modal');
             setEditTweetModal(tweet);
             setValueEditModal(tweet?.text);
-            const image = tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet?.image}`;
+            const image =
+                tweet.image && `${IMAGE_TWEET_BASE_URL}/${tweet?.image}`;
             setPreviewEditImageModal(image);
         }
-    }  
+    };
 
     // message
     const onAddContact = (contactId: string) => {
-        setAddContact(contactId)
-    }
+        setAddContact(contactId);
+    };
     const onDeletContact = (contactId: string) => {
-        setDeletedContactId(contactId)
-    }
+        setDeletedContactId(contactId);
+    };
 
     // Index page
     if (!ctx?.isLoggedIn) {
@@ -209,8 +226,14 @@ function App() {
             <React.Fragment>
                 <BrowserRouter>
                     <Routes>
-                        <Route path="/" element={<Index onSuccess={handleLoginSuccess} />} />
-                        <Route path="/terms-of-service" element={<TermsOfService />} />
+                        <Route
+                            path="/"
+                            element={<Index onSuccess={handleLoginSuccess} />}
+                        />
+                        <Route
+                            path="/terms-of-service"
+                            element={<TermsOfService />}
+                        />
                         <Route
                             path="*"
                             element={<Navigate to="/" replace={true} />}
@@ -218,55 +241,77 @@ function App() {
                     </Routes>
                 </BrowserRouter>
             </React.Fragment>
-        )
+        );
     }
 
     // Dashboard
     return (
         <React.Fragment>
-            <div className={`${styles.App} ${showBackground ? styles['show-background'] : ''}`}>
-            {showBackground && <div className={styles.blueBackground} >
-                <div className={styles.twitterIcon}>
-                    <TwitterIcon size={'2xl'} color={'var(--color-white)'} />
-                </div> 
-             </div>} {/* Conditionally render the blue background */}
+            <div
+                className={`${styles.App} ${
+                    showBackground ? styles['show-background'] : ''
+                }`}
+            >
+                {showBackground && (
+                    <div className={styles.blueBackground}>
+                        <div className={styles.twitterIcon}>
+                            <TwitterIcon
+                                size={'2xl'}
+                                color={'var(--color-white)'}
+                            />
+                        </div>
+                    </div>
+                )}{' '}
+                {/* Conditionally render the blue background */}
                 <div>
                     <BrowserRouter>
                         <div className={`${Layout.navigation}`}>
                             <Navigation socket={socket} />
-                            <ChatBox deleteContactId={deletedContactId!} addedContact={addedContact!}  />
-                            <ContactModal onDeletContact={onDeletContact} onAddContact={onAddContact} />
-                            <NavigationTweetModal 
+                            <ChatBox
+                                socket={socket}
+                                deleteContactId={deletedContactId!}
+                                addedContact={addedContact!}
+                            />
+                            <ContactModal
+                                onDeletContact={onDeletContact}
+                                onAddContact={onAddContact}
+                            />
+                            <NavigationTweetModal
                                 selectedFile={selectedFileModal}
-                                previewImage={previewImageModal}                                    
+                                previewImage={previewImageModal}
                                 value={valueModal}
                                 clearTweetForm={clearTweetForm}
                                 handleTextAreaOnChange={handleTextAreaOnChange}
-                                handleCanselPreviewImage={handleCanselPreviewImage}
+                                handleCanselPreviewImage={
+                                    handleCanselPreviewImage
+                                }
                                 handleImageUpload={handleImageUpload}
                                 onAddTweet={handleAddTweet}
                                 onEditTweet={handleEditTweet}
                             />
-                            <EditTweetModal 
+                            <EditTweetModal
                                 selectedFile={selectedFileModal}
-                                previewImage={previewEditImageModal}                                    
+                                previewImage={previewEditImageModal}
                                 value={valueEditModal}
                                 clearTweetForm={clearTweetForm}
                                 handleTextAreaOnChange={handleTextAreaOnChange}
-                                handleCanselPreviewImage={handleCanselPreviewImage}
+                                handleCanselPreviewImage={
+                                    handleCanselPreviewImage
+                                }
                                 handleImageUpload={handleImageUpload}
                                 onEditTweet={handleEditTweet}
-                                
                                 editTweetModal={editTweetModal}
                             />
-                            <RetweetModal 
+                            <RetweetModal
                                 originalTweet={tweet}
                                 selectedFile={selectedFileModal}
-                                previewImage={previewEditImageModal}                                    
+                                previewImage={previewEditImageModal}
                                 value={valueEditModal}
                                 clearTweetForm={clearTweetForm}
                                 handleTextAreaOnChange={handleTextAreaOnChange}
-                                handleCanselPreviewImage={handleCanselPreviewImage}
+                                handleCanselPreviewImage={
+                                    handleCanselPreviewImage
+                                }
                                 handleImageUpload={handleImageUpload}
                                 onAddTweet={handleAddTweet}
                             />
@@ -276,71 +321,113 @@ function App() {
                         </>
                         <div className={Layout.page}>
                             <Routes>
-                                <Route path='/access-denied' element={<AccessDenied />} ></Route>
-                                <Route path="/" element={
-                                    <Home
-                                        socket={socket}
-                                        onClickTweetMenu={handleTweetMenuOptionClick}
-                                        onDeleteTweet={onDeleteTweet}
-                                        onAddTweet={onAddTweet}
-                                        onEditTweet={onEditTweet}
-                                        selectedFile={selectedFileHome}
-                                        previewImage={previewImageHome}                                    
-                                        value={valueHome}
-                                        handleTextAreaOnChange={handleTextAreaOnChange}
-                                        handleCanselPreviewImage={handleCanselPreviewImage}
-                                        handleImageUpload={handleImageUpload} 
-                                        clearTweetForm={clearTweetForm}
-                                        onClickRetweet={onReTweet}
-                                    />
-                                }/>
+                                <Route
+                                    path="/access-denied"
+                                    element={<AccessDenied />}
+                                ></Route>
+                                <Route
+                                    path="/"
+                                    element={
+                                        <Home
+                                            socket={socket}
+                                            onClickTweetMenu={
+                                                handleTweetMenuOptionClick
+                                            }
+                                            onDeleteTweet={onDeleteTweet}
+                                            onAddTweet={onAddTweet}
+                                            onEditTweet={onEditTweet}
+                                            selectedFile={selectedFileHome}
+                                            previewImage={previewImageHome}
+                                            value={valueHome}
+                                            handleTextAreaOnChange={
+                                                handleTextAreaOnChange
+                                            }
+                                            handleCanselPreviewImage={
+                                                handleCanselPreviewImage
+                                            }
+                                            handleImageUpload={
+                                                handleImageUpload
+                                            }
+                                            clearTweetForm={clearTweetForm}
+                                            onClickRetweet={onReTweet}
+                                        />
+                                    }
+                                />
                                 <Route path="/explore" element={<Explore />} />
                                 <Route
                                     path="/notification"
-                                        element={<Notifications  />}
+                                    element={<Notifications />}
                                 />
-                                <Route path="/message/:path?" element={<Message 
-                                        socket={socket}
-                                    />} 
+                                <Route
+                                    path="/message/:path?"
+                                    element={<Message socket={socket} />}
                                 />
                                 <Route
                                     path="/bookmarks"
-                                    element={<Bookmarks 
-                                        socket={socket}
-                                        onClickTweetMenu={handleTweetMenuOptionClick} 
-                                        onEditTweet={onEditTweet} 
-                                        onDeleteTweet={onDeleteTweet} 
-                                        onClickRetweet={onReTweet}
-                                    />}
+                                    element={
+                                        <Bookmarks
+                                            socket={socket}
+                                            onClickTweetMenu={
+                                                handleTweetMenuOptionClick
+                                            }
+                                            onEditTweet={onEditTweet}
+                                            onDeleteTweet={onDeleteTweet}
+                                            onClickRetweet={onReTweet}
+                                        />
+                                    }
                                 />
-                                <Route path="/profile/:id" element={<Profile 
-                                    onAddTweet={onAddTweet} 
-                                    onDeleteTweet={onDeleteTweet} 
-                                    onEditTweet={onEditTweet}
-                                    onClickRetweet={onReTweet}
-                                    onClickTweetMenu={handleTweetMenuOptionClick} />} 
+                                <Route
+                                    path="/profile/:id"
+                                    element={
+                                        <Profile
+                                            onAddTweet={onAddTweet}
+                                            onDeleteTweet={onDeleteTweet}
+                                            onEditTweet={onEditTweet}
+                                            onClickRetweet={onReTweet}
+                                            onClickTweetMenu={
+                                                handleTweetMenuOptionClick
+                                            }
+                                        />
+                                    }
                                 />
-                                <Route path="/follow-status/:path/:id/*" element={<FollowStatus />} />
-                                <Route 
-                                    path="/tweet/image/:id" 
-                                    element={ <TweetPage
-                                        onEditTweet={onEditTweet}
-                                        onDeleteTweet={onDeleteTweet}
-                                        onClickTweetMenu={handleTweetMenuOptionClick} 
-                                        onClickRetweet={onReTweet}
-                                    />} 
+                                <Route
+                                    path="/follow-status/:path/:id/*"
+                                    element={<FollowStatus />}
                                 />
-                                <Route 
-                                    path="/tweet/:id" 
-                                    element={ <TweetPageNoImage 
-                                        onEditTweet={onEditTweet}
-                                        onDeleteTweet={onDeleteTweet}
-                                        onClickTweetMenu={handleTweetMenuOptionClick} 
-                                        onClickRetweet={onReTweet} 
-                                    />} 
+                                <Route
+                                    path="/tweet/image/:id"
+                                    element={
+                                        <TweetPage
+                                            onEditTweet={onEditTweet}
+                                            onDeleteTweet={onDeleteTweet}
+                                            onClickTweetMenu={
+                                                handleTweetMenuOptionClick
+                                            }
+                                            onClickRetweet={onReTweet}
+                                        />
+                                    }
                                 />
-                                <Route path="/follower-requests" element={ <FollowerRequests />} />
-                                <Route path="/settings/:path" element={ <Settings />} />
+                                <Route
+                                    path="/tweet/:id"
+                                    element={
+                                        <TweetPageNoImage
+                                            onEditTweet={onEditTweet}
+                                            onDeleteTweet={onDeleteTweet}
+                                            onClickTweetMenu={
+                                                handleTweetMenuOptionClick
+                                            }
+                                            onClickRetweet={onReTweet}
+                                        />
+                                    }
+                                />
+                                <Route
+                                    path="/follower-requests"
+                                    element={<FollowerRequests />}
+                                />
+                                <Route
+                                    path="/settings/:path"
+                                    element={<Settings />}
+                                />
                                 <Route
                                     path="*"
                                     element={<Navigate to="/" replace={true} />}
@@ -351,7 +438,7 @@ function App() {
                 </div>
             </div>
         </React.Fragment>
-    )
+    );
 }
 
 export default App;

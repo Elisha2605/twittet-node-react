@@ -1,23 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './conversation.module.css';
-import AuthUserChat from './AuthUserChat';
-import OtherUserChat from './OtherUserChat';
-import { messageIcon, messageOption } from '../../data/menuOptions';
-import { MESSAGE_OPTION } from '../../constants/common.constants';
-import { deleteMessage } from '../../api/message.api';
-import { useMessage } from '../../context/successMessage.context';
+import AuthUserChat from '../AuthUserChat';
+import OtherUserChat from '../OtherUserChat';
+import { messageIcon, messageOption } from '../../../data/menuOptions';
+import { MESSAGE_OPTION } from '../../../constants/common.constants';
+import { deleteMessage } from '../../../api/message.api';
+import { useMessage } from '../../../context/successMessage.context';
+import { useParams } from 'react-router-dom';
 
-interface ConversationProps {
+interface ChatBoxConversationProps {
     socket: any;
     otherUser: any;
     conversation: any;
     contacts: any;
-    isLoading?: boolean;
+    isLoading: boolean;
     onReplyMessage: (message: any) => void;
     onDeleteMessage: (messageId: string) => void;
 }
 
-const Conversation: React.FC<ConversationProps> = ({
+const ChatBoxConversation: React.FC<ChatBoxConversationProps> = ({
     socket,
     conversation,
     otherUser,
@@ -26,6 +27,9 @@ const Conversation: React.FC<ConversationProps> = ({
     onDeleteMessage,
     onReplyMessage,
 }) => {
+
+    const { path } = useParams<{ path: string }>();
+
     const [isMessageRead, setIsMessageRead] = useState<any>(false);
     const [msgStatus, setMsgStatus] = useState<any>();
 
@@ -95,7 +99,7 @@ const Conversation: React.FC<ConversationProps> = ({
                             imgRef={imgRef}
                             handleImageLoad={handleImageLoad}
                             messageStatus={messageStatus}
-                            isLoading={isLoading!}
+                            isLoading={isLoading}
                             messageOption={messageOption}
                             messageIcon={messageIcon}
                             onClickMessageOption={onClickMessageOption}
@@ -107,7 +111,7 @@ const Conversation: React.FC<ConversationProps> = ({
                             imgRef={imgRef}
                             handleImageLoad={handleImageLoad}
                             messageStatus={messageStatus}
-                            isLoading={isLoading!}
+                            isLoading={isLoading}
                             messageOption={messageOption}
                             messageIcon={messageIcon}
                             onClickMessageOption={onClickMessageOption}
@@ -119,4 +123,4 @@ const Conversation: React.FC<ConversationProps> = ({
     );
 };
 
-export default Conversation;
+export default ChatBoxConversation;
