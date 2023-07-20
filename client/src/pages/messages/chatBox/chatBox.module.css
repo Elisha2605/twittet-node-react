@@ -7,100 +7,108 @@
     width: 400px;
     height: 550px;
     background-color: var(--color-white);
-
     border-radius: 1rem 1rem 0 0;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.40);
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.4);
     overflow: hidden;
     transition: transform 0.3s ease-in-out;
-    z-index: 1000;
-  }
-  
-  .chatBoxHeader {
+    z-index: 1;
+}
+
+.chatBoxHeader {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 13px 8px;
+    padding: 7px 8px;
     cursor: pointer;
-  }
-  
-  .chatBoxTitle {
+}
+
+.chatBoxConversationHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 8px;
+    cursor: pointer;
+}
+
+.chatBoxTitle {
     font-size: var(--font-size-lg);
     font-weight: bold;
     margin-left: 8px;
-  }
-  
-  .chatBoxContent {
+}
+
+.chatBoxContent {
     height: 100%; /* Added height */
     overflow-y: auto; /* Added overflow-y */
-  }
-  
-  .rollUp {
-    transform: translateY(calc(100% - 56px)); /* Adjusted transform value */
-  }
+}
 
-  /* Header */
-  .headerIcons {
+.rollUp {
+    transform: translateY(calc(100% - 53px)); /* Adjusted transform value */
+}
+
+/* Header */
+.headerIcons {
     position: relative;
     display: flex;
     margin-right: 1rem;
-  }
+}
 
-  .iconItem {
+.iconItem {
     width: 2.5rem;
     height: 2.5rem;
-  }
+}
 
-  .iconItem img {
+.iconItem img {
     width: 100%;
     height: 100%;
     object-fit: contain;
-  }
+}
 
-  .addIcon, .chevronsIcon {
+.addIcon,
+.chevronsIcon {
     border-radius: 50%;
     padding: 4px 8px;
-  }
-  
-  .addIcon:hover, .chevronsIcon:hover {
+}
+
+.addIcon:hover,
+.chevronsIcon:hover {
     transition: 0.2s ease-in;
     background: var(--color-secondary-lighter);
-  }
+}
 
-  /* conversation */
-  .userContactInfo {
+/* conversation */
+.userContactInfo {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 3px 8px;
     cursor: pointer;
-  }
-  .backBtn {
+}
+.backBtn {
     position: relative;
     top: 0.1rem;
-  }
-  .userContactInfo {
+}
+.userContactInfo {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     cursor: pointer;
-  } 
-  .name {
+}
+.name {
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-600);
-  }
-  .username {
+}
+.username {
     color: var(--color-secondary);
-  }
+    font-size: var(--font-size-sm);
+}
 
-
-  /* messages */
-  .messages {
-    height: calc(100vh - 43%);
+/* messages */
+.messages {
+    height: calc(100% - 3.5rem);
     overflow-y: scroll;
     padding-bottom: 4rem;
 }
 
 .hideConversation {
-  display: none;
+    display: none;
 }

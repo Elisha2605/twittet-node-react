@@ -3,7 +3,6 @@ import styles from './ContactModal.module.css';
 
 import Modal from '../../../components/ui/Modal';
 import XmarkIcon from '../../../components/icons/XmarkIcon';
-import Button, { ButtonSize, ButtonType } from '../../../components/ui/Button';
 import { ModalContext } from '../../../context/modal.context';
 import SearchBar from '../../../components/ui/SearchBar';
 import {
@@ -16,6 +15,7 @@ import AuthContext, { StoredContext } from '../../../context/user.context';
 import { contactIcon, contactOption } from '../../../data/menuOptions';
 import { CONTACT_OPTION } from '../../../constants/common.constants';
 import { useMessage } from '../../../context/successMessage.context';
+import ChatBoxUserContact from './ChatBoxUserContact';
 
 interface ContactModalProps {
     onAddContact: (contatcId: string) => void;
@@ -92,7 +92,7 @@ const ContactModal: FC<ContactModalProps> = ({ onAddContact, onDeletContact }) =
                     {contacts.length > 0 &&
                         contacts.map((contact: any) => (
                             <div key={contact?._id} className={''}>
-                                <UserContactInfo
+                                <ChatBoxUserContact
                                     authUser={ctx?.user}
                                     contact={contact}
                                     menuOptions={contactOption}

@@ -15,6 +15,7 @@ import ArrowLeftIcon from '../../../components/icons/ArrowLeftIcon';
 import AsideUserInfo from '../AsideUserInfo';
 import FormMessage from '../FormMessage';
 import Conversation from '../conversation';
+import ChatBoxUserContact from './ChatBoxUserContact';
 
 interface ChatBoxProps {
     socket: any;
@@ -70,7 +71,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
         fetchAllContactAndConversation();
     }, [clickedUser]);
 
-    const contactOnclikOption = async (option: any, contactId: any) => {
+    const contactOnclikOption = async (e: React.MouseEvent, option: any, contactId: any) => {
+        e.stopPropagation();
         if (option === CONTACT_OPTION.delete) {
             await removeContact(contactId);
             setContacts((prevState: any) =>
@@ -178,7 +180,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
             {clickedUser ? (
                 <>
                     <div
-                        className={styles.chatBoxHeader}
+                        className={styles.chatBoxConversationHeader}
                         onClick={handleHeaderClick}
                     >
                         <div className={styles.userContactInfo}>
@@ -285,7 +287,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
                                     className={''}
                                     onClick={() => handleUserClick(contact)}
                                 >
-                                    <UserContactInfo
+                                    <ChatBoxUserContact
                                         authUser={authUser}
                                         contact={contact}
                                         menuOptions={contactOption}

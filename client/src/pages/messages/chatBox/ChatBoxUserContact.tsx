@@ -7,7 +7,7 @@ import {
 import PopUpMenu from '../../../components/ui/PopUpMenu';
 import { getTimeDifference } from '../../../utils/helpers.utils';
 import { updateMessageStatus } from '../../../api/message.api';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 interface ChatBoxUserContactProps {
     authUser: any;
@@ -44,8 +44,6 @@ const ChatBoxUserContact: React.FC<ChatBoxUserContactProps> = ({
     const lastMessageTime = getTimeDifference(
         new Date(contact?.lastMessage?.createdAt).getTime()
     );
-
-    const navigate = useNavigate();
 
     const lastMessageSubStringed = (text: string) => {
         const msg = text?.length > 30 ? text.substring(0, 30) + '...' : text;
@@ -139,17 +137,18 @@ const ChatBoxUserContact: React.FC<ChatBoxUserContactProps> = ({
                                     incomingMsg ? styles.notificationDot : ''
                                 }`}
                             ></p>
-                            {isMenuHovered && (
+                            {/* {isMenuHovered && ( */}
                                 <PopUpMenu
                                     itemId={contactId}
                                     options={menuOptions!}
                                     icons={menuIcons!}
-                                    onClick={(event, menuOptions, id) =>
-                                        onClickOption!(event, menuOptions, id)
+                                    isOnClickWithEvent={true}
+                                    onClickWithEvent={(event, menuOptions, id, value) =>
+                                        onClickOption!(event, menuOptions, id, value)
                                     }
                                     classNameMenuIcon={styles.menuIcon}
                                 />
-                            )}
+                            {/* )} */}
                         </div>
                     </div>
                     {contact && (

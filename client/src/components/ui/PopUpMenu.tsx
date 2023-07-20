@@ -21,10 +21,12 @@ interface MenuPopUpProps {
     isMenuIcon?: boolean;
     isDisable?: boolean;
     children?: React.ReactNode;
-    onClick: (option: string, id: string, value?: any) => void;
+    isOnClickWithEvent?: boolean;
+    onClickWithEvent?: (event: React.MouseEvent, option: string, id: string, value?: any) => void;
+    onClick?: (option: string, id: string, value?: any) => void;
 }
 
-const MenuPopUp: FC<MenuPopUpProps> = ({
+const PopUpMenu: FC<MenuPopUpProps> = ({
     itemId,
     value,
     title,
@@ -39,7 +41,9 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
     isMenuIcon = true,
     isDisable,
     children,
+    isOnClickWithEvent,
     onClick,
+    onClickWithEvent,
 }) => {
     const [authUser, setAuthUser] = useState<any>(null);
     const [showMenu, setShowMenu] = useState(false);
@@ -66,7 +70,8 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
         }
     }, [contextStr]);
 
-    const handleButtonClick = () => {
+    const handleButtonClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
         if (isDisable) {
             return;
         }
@@ -79,12 +84,17 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
         value?: any
     ) => {
         setShowMenu(false);
-        onClick(option, id, value);
+        onClick!(option, id, value);
     };
 
     const handleRetweetClick = (option: string, value?: any) => {
         setShowMenu(false);
-        onClick(option, value);
+        onClick!(option, value);
+    };
+
+    const HandleOnClickWithEvent = (event: React.MouseEvent, option: string, id: string, value?: any) => {
+        setShowMenu(false);
+        onClickWithEvent!(event, option, id, value);
     };
 
     useClickOutSide(menuRef, setShowMenu);
@@ -135,13 +145,20 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
                                             ? styles.test
                                             : ''
                                     }`}
-                                    onClick={() => {
+                                    onClick={(event: React.MouseEvent) => {
                                         if (
                                             option === TWEET_MENU.retweet || option === TWEET_MENU.undoRetweet ||
                                             option === TWEET_MENU.quoteTweet
                                         ) {
                                             handleRetweetClick(option, value);
-                                        } else {
+                                        } else if (isOnClickWithEvent) {
+                                            HandleOnClickWithEvent(
+                                                event,
+                                                option,
+                                                itemId!,
+                                                value,
+                                            )
+                                        }else {
                                             handleOnClickOptionMenu(
                                                 option,
                                                 itemId!,
@@ -183,4 +200,4 @@ const MenuPopUp: FC<MenuPopUpProps> = ({
     );
 };
 
-export default MenuPopUp;
+export default PopUpMenu;
