@@ -1,0 +1,80 @@
+.container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: 100%;
+}
+
+.container:hover {
+    background: var(--color-secondary-lighter);
+    transition: 0.1s ease-in;
+}
+
+.avatar {
+    max-width: 100%;
+    max-height: 100%;
+    margin-top: 0.4rem;
+}
+
+.avatar img {
+    width: 3rem;
+    height: 3rem;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.avatar:hover {
+    filter: brightness(0.8);
+    transition: .2s;
+    cursor: pointer;
+}
+
+.contactWrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.5rem;
+}
+
+.contactInfo {
+    display: flex;
+    gap: 0.3rem;
+}
+
+.contactName {
+    display: flex;
+    gap: 0.3rem;
+    font-weight: var(--font-weight-600);
+}
+
+.contactUserName, .contactLastMsgTime {
+    color: var(--color-secondary);
+}
+
+.menuIcon {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 1rem;
+}
+
+.notification {
+    background: var(--color-secondary-lighter);
+}
+
+.notificationDot {
+    position: absolute;
+    background: var(--color-primary);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    right: 2.2rem;
+    top: 0.4rem;
+}
+
+.menuIcon:hover {
+    display: block;
+    transition: 0.1s ease-in;
+}

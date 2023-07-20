@@ -28,9 +28,8 @@ import { useMessage } from './context/successMessage.context';
 import AccessDenied from './pages/access-denied';
 import TermsOfService from './pages/termsOfService';
 import { io } from 'socket.io-client';
-import ChatBox from './pages/messages/chatBox/ChatBox';
 import ContactModal from './pages/messages/chatBox/ContactModal';
-import ChatBoxConversation from './pages/messages/chatBox/ChatBoxConversation';
+import ChatBox from './pages/messages/chatBox/ChatBox';
 
 function App() {
     const [showBackground, setShowBackground] = useState(false); // Add state to control whether to show the blue background
@@ -267,15 +266,6 @@ function App() {
                     <BrowserRouter>
                         <div className={`${Layout.navigation}`}>
                             <Navigation socket={socket} />
-                            <ChatBox
-                                socket={socket}
-                                deleteContactId={deletedContactId!}
-                                addedContact={addedContact!}
-                            />
-                            <ContactModal
-                                onDeletContact={onDeletContact}
-                                onAddContact={onAddContact}
-                            />
                             <NavigationTweetModal
                                 selectedFile={selectedFileModal}
                                 previewImage={previewImageModal}
@@ -320,6 +310,15 @@ function App() {
                             <HomeEditTwitterCirlceModal />
                         </>
                         <div className={Layout.page}>
+                            <ChatBox
+                                socket={socket}
+                                deleteContactId={deletedContactId!}
+                                addedContact={addedContact!}
+                            />
+                            <ContactModal
+                                onDeletContact={onDeletContact}
+                                onAddContact={onAddContact}
+                            />
                             <Routes>
                                 <Route
                                     path="/access-denied"
