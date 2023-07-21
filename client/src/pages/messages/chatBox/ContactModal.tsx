@@ -10,7 +10,6 @@ import {
     getAllContacts,
     removeContact,
 } from '../../../api/contact.api';
-import UserContactInfo from '../UserContactInfo';
 import AuthContext, { StoredContext } from '../../../context/user.context';
 import { contactIcon, contactOption } from '../../../data/menuOptions';
 import { CONTACT_OPTION } from '../../../constants/common.constants';
@@ -98,7 +97,6 @@ const ContactModal: FC<ContactModalProps> = ({ onAddContact, onDeletContact }) =
                                     menuOptions={contactOption}
                                     menuIcons={contactIcon}
                                     onClickOption={contactOnclikOption}
-                                    navigateToConversation={() => {}}
                                 />
                             </div>
                         ))}

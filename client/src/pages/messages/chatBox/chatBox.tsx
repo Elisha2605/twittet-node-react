@@ -10,12 +10,14 @@ import faAdd from '../../../assets/faAdd-regular.svg';
 import faChevronsUp from '../../../assets/faChevronsUp.svg';
 import faChevronsDown from '../../../assets/faChevronsDown.svg';
 import { ModalContext } from '../../../context/modal.context';
-import { getConversation } from '../../../api/message.api';
+import { getConversation, updateMessageStatus } from '../../../api/message.api';
 import ArrowLeftIcon from '../../../components/icons/ArrowLeftIcon';
 import AsideUserInfo from '../AsideUserInfo';
 import FormMessage from '../FormMessage';
 import Conversation from '../conversation';
 import ChatBoxUserContact from './ChatBoxUserContact';
+import { getMessageNotification, removeMessageNotification } from '../../../api/notification.api';
+import { useLocation } from 'react-router-dom';
 
 interface ChatBoxProps {
     socket: any;
@@ -27,10 +29,17 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
     const [isRolledUp, setIsRolledUp] = useState(false);
     const [contacts, setContacts] = useState<any[]>([]);
     const [newMessage, setNewMessage] = useState<any>();
-    const [clickedUser, setClickedUser] = useState<any>(null);
+    const [selectedContact, setSelectedContact] = useState<any>(null);
     const [conversations, setConversations] = useState<any>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [replyMessage, setReplyMessage] = useState<any | null>();
+    
+    const [boxHighlight, setBoxHighlight] = useState(false);
+    const [notificationDot, setNotificationDot] = useState<boolean>(false);
+
+    const [contactNotificationDot, setContactNotificationDot] = useState<boolean>(false);
+
+    const [showConversation, setShowConversation] = useState<boolean>(false);
 
 
     const { openModal } = useContext(ModalContext);
@@ -39,10 +48,23 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
     let ctx: StoredContext = context.getUserContext();
     const authUser = ctx.user;
 
+    const location = useLocation();
+    const currentPath = location.pathname;
+    const isMessagePage = currentPath.startsWith('/message');
+
     const { showMessage } = useMessage();
 
-    const handleHeaderClick = () => {
+    const handleHeaderClick = async () => {
+        await removeMessageNotification();
         setIsRolledUp(!isRolledUp);
+        setNotificationDot(false)
+    };
+
+    const handleUserClick = async (user: any) => {
+        
+        await updateMessageStatus(user?._id);
+        setSelectedContact(user);
+        setShowConversation(true);
     };
 
     // fetch contacts
@@ -55,21 +77,26 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
         fetchAllContacts();
     }, []);
 
+    const goBack = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setShowConversation(false);
+    };
+
     // fetch conversations
     useEffect(() => {
         const fetchAllContactAndConversation = async () => {
             setIsLoading(true);
 
-            if (clickedUser!) {
+            if (selectedContact!) {
                 const { conversation } = await getConversation(
-                    clickedUser?._id!
+                    selectedContact?._id!
                 );
                 setConversations(conversation)
             }
             setIsLoading(false);
         };
         fetchAllContactAndConversation();
-    }, [clickedUser]);
+    }, [selectedContact]);
 
     const contactOnclikOption = async (e: React.MouseEvent, option: any, contactId: any) => {
         e.stopPropagation();
@@ -97,24 +124,10 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
         openModal('contact-modal');
     };
 
-    const handleUserClick = (user: any) => {
-        setClickedUser(user);
-    };
-
-    const navigateToConversation = () => {
-        // Perform navigation logic here
-        // You can use the clickedUser to render the appropriate conversation
-    };
-
-    const goBack = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        setClickedUser(null);
-    };
-
     const messagesContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (clickedUser) {
+        if (selectedContact) {
             scrollToBottom();
         }
     }, [conversations]);
@@ -125,7 +138,24 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
             messagesContainerRef.current.scrollTop =
                 scrollHeight - clientHeight;
         }
-    };;
+    };
+
+    useEffect(() => {
+        socket?.on('getMessageNotification', async (obj: any) => {
+            const { msgNotification } = await getMessageNotification();
+            setNewMessage(msgNotification);
+            setNewMessage(obj);
+
+            setBoxHighlight(true);
+            setNotificationDot(true);
+
+            // Set a timeout to make boxHighlight false after 3000 milliseconds (3 seconds)
+            setTimeout(() => {
+                setBoxHighlight(false);
+            }, 3000);
+
+        });
+    }, [socket]);
 
     
     const updateContactState = (message: any, contactUser?: any) => {
@@ -139,6 +169,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
                         ...contact,
                         lastMessage: {
                             text: message.text,
+                            read: true,
                             createdAt: message.createdAt,
                         },
                     };
@@ -152,8 +183,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
     useEffect(() => {
         socket?.on('getMessage', (obj: any) => {
             const { sender, message } = obj;
-            console.log(message);
-            if (sender?._id === clickedUser?._id) {
+            if (sender?._id === selectedContact?._id) {
                 setConversations((prevState: any) => [...prevState, message]);
                 scrollToBottom();
             }
@@ -162,7 +192,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
         return () => {
             socket?.off('getMessage');
         };
-    }, [socket, clickedUser]);
+    }, [socket, selectedContact]);
 
     const onSendMessage = (message: any) => {
         console.log(message);
@@ -175,135 +205,139 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
         setReplyMessage(replyMessage);
     }
 
-    return (
-        <div className={`${styles.chatBox} ${isRolledUp ? styles.rollUp : ''}`}>
-            {clickedUser ? (
-                <>
-                    <div
-                        className={styles.chatBoxConversationHeader}
-                        onClick={handleHeaderClick}
-                    >
-                        <div className={styles.userContactInfo}>
-                            {!isRolledUp && (
-                                <div onClick={goBack}>
-                                    <ArrowLeftIcon className={styles.backBtn} />
-                                </div>
-                            )}
-                            <div>
-                                <div className={styles.name}>
-                                    {clickedUser?.name}
-                                </div>
-                                <div className={styles.username}>
-                                    @{clickedUser?.username}
-                                </div>
-                            </div>
-                        </div>
+    const boxBlueHighlight = !isMessagePage && boxHighlight && isRolledUp ? styles.boxHighlight : ''
 
-                        <div className={styles.headerIcons}>
+    const dotHighlight = !isMessagePage && notificationDot && isRolledUp || contacts.some((contact: any) => contact.lastMessage?.visited === false) ? styles.dot : ''
+
+    return (
+        <>
+            {!isMessagePage && (
+
+                <div className={`${styles.chatBox} ${isRolledUp ? styles.rollUp : ''}`}>
+                    {showConversation ? (
+                        <>
                             <div
-                                className={`${styles.iconItem} ${styles.addIcon}`}
-                                onClick={onAddContact}
+                                className={`${styles.chatBoxConversationHeader} ${boxBlueHighlight}`}
+                                onClick={handleHeaderClick}
                             >
-                                <img src={faAdd} alt="" />
-                            </div>
-                            <div
-                                className={`${styles.iconItem} ${styles.chevronsIcon}`}
-                            >
-                                <img
-                                    src={
-                                        isRolledUp
-                                            ? faChevronsUp
-                                            : faChevronsDown
-                                    }
-                                    alt=""
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    {!isLoading && (
-                        <div className={styles.messages} ref={messagesContainerRef}>
-                            <AsideUserInfo user={clickedUser} />
-                            <div className={styles.messagesContainer}>
-                                    {clickedUser &&
-                                        conversations
-                                            .slice()
-                                            .map((conversation: any) => (
-                                                <div key={conversation?._id}>
-                                                    <Conversation
-                                                        socket={socket}
-                                                        contacts={contacts}
-                                                        otherUser={clickedUser}
-                                                        conversation={conversation}
-                                                        onDeleteMessage={() => {}}
-                                                        onReplyMessage={onMessageReply}
-                                                    />
-                                                </div>
-                                            ))}
+                                <div className={styles.userContactInfo}>
+                                    {!isRolledUp && (
+                                        <div onClick={goBack}>
+                                            <ArrowLeftIcon className={styles.backBtn} />
+                                        </div>
+                                    )}
+                                    <div>
+                                        <div className={styles.name}>
+                                            {selectedContact?.name}
+                                        </div>
+                                        <div className={styles.username}>
+                                            @{selectedContact?.username}
+                                        </div>
+                                    </div>
                                 </div>
-                            <FormMessage
-                                socket={socket}
-                                authUser={authUser}
-                                currentUser={clickedUser}
-                                replyMessage={replyMessage}
-                                setReplyMessage={setReplyMessage}
-                                onSendMessage={onSendMessage}
-                            />
-                        </div>
-                    )}
-                </>
-            ) : (
-                <>
-                    <div
-                        className={styles.chatBoxHeader}
-                        onClick={handleHeaderClick}
-                    >
-                        <div className={styles.chatBoxTitle}>Messages</div>
-                        <div className={styles.headerIcons}>
-                            <div
-                                className={`${styles.iconItem} ${styles.addIcon}`}
-                                onClick={onAddContact}
-                            >
-                                <img src={faAdd} alt="" />
+
+                                <div className={styles.headerIcons}>
+                                    <div
+                                        className={`${styles.iconItem} ${styles.chevronsIcon}`}
+                                    >
+                                        <img
+                                            src={
+                                                isRolledUp
+                                                    ? faChevronsUp
+                                                    : faChevronsDown
+                                            }
+                                            alt=""
+                                        />
+                                    </div>
+                                </div>
                             </div>
-                            <div
-                                className={`${styles.iconItem} ${styles.chevronsIcon}`}
-                            >
-                                <img
-                                    src={
-                                        isRolledUp
-                                            ? faChevronsUp
-                                            : faChevronsDown
-                                    }
-                                    alt=""
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className={styles.chatBoxContent}>
-                        {contacts.length > 0 &&
-                            contacts.map((contact: any) => (
-                                <div
-                                    key={contact?._id}
-                                    className={''}
-                                    onClick={() => handleUserClick(contact)}
-                                >
-                                    <ChatBoxUserContact
+                            {!isLoading && (
+                                <div className={styles.messages} ref={messagesContainerRef}>
+                                    <AsideUserInfo user={selectedContact} />
+                                    <div className={styles.messagesContainer}>
+                                            {selectedContact &&
+                                                conversations
+                                                    .slice()
+                                                    .map((conversation: any) => (
+                                                        <div key={conversation?._id}>
+                                                            <Conversation
+                                                                socket={socket}
+                                                                contacts={contacts}
+                                                                otherUser={selectedContact}
+                                                                conversation={conversation}
+                                                                onDeleteMessage={() => {}}
+                                                                onReplyMessage={onMessageReply}
+                                                            />
+                                                        </div>
+                                                    ))}
+                                        </div>
+                                    <FormMessage
+                                        socket={socket}
                                         authUser={authUser}
-                                        contact={contact}
-                                        menuOptions={contactOption}
-                                        menuIcons={contactIcon}
-                                        onClickOption={contactOnclikOption}
-                                        newMessage={newMessage}
-                                        navigateToConversation={
-                                            navigateToConversation
-                                        }
+                                        currentUser={selectedContact}
+                                        replyMessage={replyMessage}
+                                        setReplyMessage={setReplyMessage}
+                                        onSendMessage={onSendMessage}
                                     />
                                 </div>
-                            ))}
-                    </div>
-                </>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            <div
+                                className={`${styles.chatBoxHeader} ${boxBlueHighlight}`}
+                                onClick={handleHeaderClick}
+                            >
+                                <div className={styles.chatBoxTitle}>
+                                    <p>Messages</p>
+                                    <span className={`${boxBlueHighlight ? styles.whiteDot : dotHighlight}`}></span>
+                                </div>
+                                <div className={styles.headerIcons}>
+                                    <div
+                                        className={`${styles.iconItem} ${styles.addIcon}`}
+                                        onClick={onAddContact}
+                                    >
+                                        <img src={faAdd} alt="" />
+                                    </div>
+                                    <div
+                                        className={`${styles.iconItem} ${styles.chevronsIcon}`}
+                                    >
+                                        <img
+                                            src={
+                                                isRolledUp
+                                                    ? faChevronsUp
+                                                    : faChevronsDown
+                                            }
+                                            alt=""
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className={styles.chatBoxContent}>
+                                {contacts.length > 0 &&
+                                    contacts.map((contact: any) => (
+                                        <div
+                                            key={contact?._id}
+                                            className={''}
+                                            onClick={() => handleUserClick(contact)}
+                                        >
+                                            <ChatBoxUserContact
+                                                authUser={authUser}
+                                                contact={contact}
+                                                menuOptions={contactOption}
+                                                menuIcons={contactIcon}
+                                                onClickOption={contactOnclikOption}
+                                                newMessage={newMessage}
+                                                chatBoxUser={selectedContact}
+                                            />
+                                        </div>
+                                    ))}
+                            </div>
+                        </>
+                    )}
+                </div>
             )}
-        </div>
+        </>
     );
 };
 

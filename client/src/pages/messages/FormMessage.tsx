@@ -101,7 +101,6 @@ const FormMessage: React.FC<FormMessageProps> = ({
             replyMessage ?? replyMessage
         );
         const { msg } = res;
-        console.log(msg);
         if (res.success) {
             // ToDo: send real time msg
             socket.emit('sendMessage', {

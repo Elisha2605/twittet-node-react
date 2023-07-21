@@ -31,7 +31,6 @@ const UserContactInfo: React.FC<UserContactInfoProps> = ({
     const [isRead, setIsRead] = useState<boolean>(false);
     const [incomingMsg, setIncomingMsg] = useState<boolean>(false);
     const [isMenuHovered, setIsMenuHovered] = useState<boolean>(false);
-
     const contactId = contact?._id;
     const lastMessage = contact?.lastMessage?.text;
     const senderId = contact?.lastMessage?.sender;

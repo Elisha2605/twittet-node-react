@@ -100,13 +100,11 @@ const Navigation: React.FC<NavigationProps> = ({ socket }) => {
     useEffect(() => {
         socket?.on('getMessageNotification', async (obj: any) => {
             const { msgNotification } = await getMessageNotification();
-            setNewMessage(msgNotification);
             setMessageNotification(msgNotification?.length)
             setIsMessageVisited(false);
             setNewMessage(obj);
-
         });
-    }, [socket])
+    }, [socket]);
 
     useEffect(() => {
         const messageNotification = async () => {

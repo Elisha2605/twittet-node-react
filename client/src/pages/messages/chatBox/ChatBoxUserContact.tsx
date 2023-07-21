@@ -17,7 +17,7 @@ interface ChatBoxUserContactProps {
     onClickOption?: Function;
     newMessage?: any;
     chatBoxUser?: any;
-    navigateToConversation: (e: React.MouseEvent, id: string) => void;
+    contactNotificationDot?: boolean;
 }
 
 const ChatBoxUserContact: React.FC<ChatBoxUserContactProps> = ({
@@ -28,9 +28,8 @@ const ChatBoxUserContact: React.FC<ChatBoxUserContactProps> = ({
     onClickOption,
     newMessage,
     chatBoxUser,
-    navigateToConversation,
+    contactNotificationDot,
 }) => {
-    
     const [isRead, setIsRead] = useState<boolean>(false);
     const [incomingMsg, setIncomingMsg] = useState<boolean>(false);
     const [isMenuHovered, setIsMenuHovered] = useState<boolean>(false);
@@ -57,55 +56,45 @@ const ChatBoxUserContact: React.FC<ChatBoxUserContactProps> = ({
     };
 
     // update Message status
-    const location = useLocation();
-    const currentPath = location.pathname;
-    useEffect(() => {
-        if (currentPath === `/message/${contactId}`) {
-            setIncomingMsg(false);
-            setIsRead(true);
-            const updateStatus = async () => {
-                if (receiverId === authUser?._id && isMessageRead === false) {
-                    const res = await updateMessageStatus(senderId);
-                    console.log(res);
-                }
-            };
-            updateStatus();
-        }
-    }, [currentPath, contact]);
-
     useEffect(() => {
         if (isMessageRead && receiverId === authUser?._id) {
-            setIsRead(true)
+            setIsRead(true);
         }
-    }, [isMessageRead, receiverId, authUser])
+    }, [isMessageRead, receiverId, authUser]);
 
     // set the notification dot on incoming message
     useEffect(() => {
-        if (
-            newMessage &&
-            newMessage?.sender?._id === contactId &&
-            currentPath !== `/message/${contactId}`
-        ) {
+        if (newMessage && newMessage?.sender?._id === contactId) {
             setIncomingMsg(true);
         }
     }, [contactId, newMessage]);
 
-    const notification = `${
+    useEffect(() => {
+        if (newMessage?.sender?._id === chatBoxUser?._id) {
+            setIncomingMsg(false);
+            setIsRead(true);
+        }
+    }, [chatBoxUser?._id]);
+
+    const notificationHighlight = `${
         senderId === contactId && !isRead ? styles.notification : ''
     }`;
 
     const notificationDot = `${
-        !isMessageRead && senderId === contactId && !isRead
+        !isMessageRead && !isRead && senderId === contactId
             ? styles.notificationDot
             : ''
     }`;
 
+    useEffect(() => {
+        console.log(contact?.lastMessage);
+    }, [contact?.lastMessage])
+
     return (
         <div
-            className={`${styles.container} ${notification} ${
+            className={`${styles.container} ${notificationHighlight} ${
                 incomingMsg ? styles.notification : ''
             }`}
-            onClick={(e) => navigateToConversation(e, contactId)}
             onMouseEnter={() => setIsMenuHovered(true)}
             onMouseLeave={() => setIsMenuHovered(false)}
         >
@@ -138,16 +127,26 @@ const ChatBoxUserContact: React.FC<ChatBoxUserContactProps> = ({
                                 }`}
                             ></p>
                             {/* {isMenuHovered && ( */}
-                                <PopUpMenu
-                                    itemId={contactId}
-                                    options={menuOptions!}
-                                    icons={menuIcons!}
-                                    isOnClickWithEvent={true}
-                                    onClickWithEvent={(event, menuOptions, id, value) =>
-                                        onClickOption!(event, menuOptions, id, value)
-                                    }
-                                    classNameMenuIcon={styles.menuIcon}
-                                />
+                            <PopUpMenu
+                                itemId={contactId}
+                                options={menuOptions!}
+                                icons={menuIcons!}
+                                isOnClickWithEvent={true}
+                                onClickWithEvent={(
+                                    event,
+                                    menuOptions,
+                                    id,
+                                    value
+                                ) =>
+                                    onClickOption!(
+                                        event,
+                                        menuOptions,
+                                        id,
+                                        value
+                                    )
+                                }
+                                classNameMenuIcon={styles.menuIcon}
+                            />
                             {/* )} */}
                         </div>
                     </div>

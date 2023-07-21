@@ -14,26 +14,45 @@
     z-index: 1;
 }
 
-.chatBoxHeader {
+.chatBoxHeader, .chatBoxConversationHeader {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 7px 8px;
     cursor: pointer;
 }
-
+.chatBoxHeader {
+    padding: 7px 8px;
+}
 .chatBoxConversationHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     padding: 0px 8px;
-    cursor: pointer;
+}
+
+.boxHighlight {
+    background: var(--color-primary);
+    color: var(--color-white);
 }
 
 .chatBoxTitle {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
     font-size: var(--font-size-lg);
     font-weight: bold;
     margin-left: 8px;
+}
+
+.dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    background: var(--color-primary);
+    border-radius: 50%;
+}
+
+.whiteDot {
+    width: 0.5rem;
+    height: 0.5rem;
+    background: var(--color-white);
+    border-radius: 50%;
 }
 
 .chatBoxContent {
@@ -92,6 +111,7 @@
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
+    gap: 1rem;
 }
 .name {
     font-size: var(--font-size-lg);
@@ -104,7 +124,7 @@
 
 /* messages */
 .messages {
-    height: calc(100% - 3.5rem);
+    height: calc(100% - 5rem);
     overflow-y: scroll;
     padding-bottom: 4rem;
 }
