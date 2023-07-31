@@ -209,10 +209,10 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
 
     const dotHighlight = !isMessagePage && notificationDot && isRolledUp || contacts.some((contact: any) => contact.lastMessage?.visited === false) ? styles.dot : ''
 
+    console.log(contacts);
     return (
         <>
             {!isMessagePage && (
-
                 <div className={`${styles.chatBox} ${isRolledUp ? styles.rollUp : ''}`}>
                     {showConversation ? (
                         <>

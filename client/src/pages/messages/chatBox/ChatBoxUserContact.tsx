@@ -86,10 +86,6 @@ const ChatBoxUserContact: React.FC<ChatBoxUserContactProps> = ({
             : ''
     }`;
 
-    useEffect(() => {
-        console.log(contact?.lastMessage);
-    }, [contact?.lastMessage])
-
     return (
         <div
             className={`${styles.container} ${notificationHighlight} ${
