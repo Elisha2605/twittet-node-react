@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, {
+    useContext,
+    useEffect,
+    useLayoutEffect,
+    useRef,
+    useState,
+} from 'react';
 import styles from './ChatBox.module.css';
 import { getAllContacts, removeContact } from '../../../api/contact.api';
 import UserContactInfo from '../UserContactInfo';
@@ -16,7 +22,10 @@ import AsideUserInfo from '../AsideUserInfo';
 import FormMessage from '../FormMessage';
 import Conversation from '../conversation';
 import ChatBoxUserContact from './ChatBoxUserContact';
-import { getMessageNotification, removeMessageNotification } from '../../../api/notification.api';
+import {
+    getMessageNotification,
+    removeMessageNotification,
+} from '../../../api/notification.api';
 import { useLocation } from 'react-router-dom';
 
 interface ChatBoxProps {
@@ -25,7 +34,11 @@ interface ChatBoxProps {
     deleteContactId: string;
 }
 
-const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId }) => {
+const ChatBox: React.FC<ChatBoxProps> = ({
+    socket,
+    addedContact,
+    deleteContactId,
+}) => {
     const [isRolledUp, setIsRolledUp] = useState(false);
     const [contacts, setContacts] = useState<any[]>([]);
     const [newMessage, setNewMessage] = useState<any>();
@@ -33,14 +46,14 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
     const [conversations, setConversations] = useState<any>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [replyMessage, setReplyMessage] = useState<any | null>();
-    
+
     const [boxHighlight, setBoxHighlight] = useState(false);
     const [notificationDot, setNotificationDot] = useState<boolean>(false);
 
-    const [contactNotificationDot, setContactNotificationDot] = useState<boolean>(false);
+    const [contactNotificationDot, setContactNotificationDot] =
+        useState<boolean>(false);
 
     const [showConversation, setShowConversation] = useState<boolean>(false);
-
 
     const { openModal } = useContext(ModalContext);
 
@@ -57,11 +70,10 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
     const handleHeaderClick = async () => {
         await removeMessageNotification();
         setIsRolledUp(!isRolledUp);
-        setNotificationDot(false)
+        setNotificationDot(false);
     };
 
     const handleUserClick = async (user: any) => {
-        
         await updateMessageStatus(user?._id);
         setSelectedContact(user);
         setShowConversation(true);
@@ -91,14 +103,18 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
                 const { conversation } = await getConversation(
                     selectedContact?._id!
                 );
-                setConversations(conversation)
+                setConversations(conversation);
             }
             setIsLoading(false);
         };
         fetchAllContactAndConversation();
     }, [selectedContact]);
 
-    const contactOnclikOption = async (e: React.MouseEvent, option: any, contactId: any) => {
+    const contactOnclikOption = async (
+        e: React.MouseEvent,
+        option: any,
+        contactId: any
+    ) => {
         e.stopPropagation();
         if (option === CONTACT_OPTION.delete) {
             await removeContact(contactId);
@@ -153,11 +169,9 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
             setTimeout(() => {
                 setBoxHighlight(false);
             }, 3000);
-
         });
     }, [socket]);
 
-    
     const updateContactState = (message: any, contactUser?: any) => {
         setContacts((prevContacts) =>
             prevContacts.map((contact) => {
@@ -203,17 +217,25 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
 
     const onMessageReply = (replyMessage: any) => {
         setReplyMessage(replyMessage);
-    }
+    };
 
-    const boxBlueHighlight = !isMessagePage && boxHighlight && isRolledUp ? styles.boxHighlight : ''
+    const boxBlueHighlight =
+        !isMessagePage && boxHighlight && isRolledUp ? styles.boxHighlight : '';
 
-    const dotHighlight = !isMessagePage && notificationDot && isRolledUp || contacts.some((contact: any) => contact.lastMessage?.visited === false) ? styles.dot : ''
+    const dotHighlight =
+        (!isMessagePage && notificationDot && isRolledUp) ||
+        contacts.some((contact: any) => contact.lastMessage?.visited === false)
+            ? styles.dot
+            : '';
 
-    console.log(contacts);
     return (
         <>
-            {!isMessagePage && (
-                <div className={`${styles.chatBox} ${isRolledUp ? styles.rollUp : ''}`}>
+            {!isMessagePage && contacts.length > 0 && (
+                <div
+                    className={`${styles.chatBox} ${
+                        isRolledUp ? styles.rollUp : ''
+                    }`}
+                >
                     {showConversation ? (
                         <>
                             <div
@@ -223,7 +245,9 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
                                 <div className={styles.userContactInfo}>
                                     {!isRolledUp && (
                                         <div onClick={goBack}>
-                                            <ArrowLeftIcon className={styles.backBtn} />
+                                            <ArrowLeftIcon
+                                                className={styles.backBtn}
+                                            />
                                         </div>
                                     )}
                                     <div>
@@ -252,25 +276,36 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
                                 </div>
                             </div>
                             {!isLoading && (
-                                <div className={styles.messages} ref={messagesContainerRef}>
+                                <div
+                                    className={styles.messages}
+                                    ref={messagesContainerRef}
+                                >
                                     <AsideUserInfo user={selectedContact} />
                                     <div className={styles.messagesContainer}>
-                                            {selectedContact &&
-                                                conversations
-                                                    .slice()
-                                                    .map((conversation: any) => (
-                                                        <div key={conversation?._id}>
-                                                            <Conversation
-                                                                socket={socket}
-                                                                contacts={contacts}
-                                                                otherUser={selectedContact}
-                                                                conversation={conversation}
-                                                                onDeleteMessage={() => {}}
-                                                                onReplyMessage={onMessageReply}
-                                                            />
-                                                        </div>
-                                                    ))}
-                                        </div>
+                                        {selectedContact &&
+                                            conversations
+                                                .slice()
+                                                .map((conversation: any) => (
+                                                    <div
+                                                        key={conversation?._id}
+                                                    >
+                                                        <Conversation
+                                                            socket={socket}
+                                                            contacts={contacts}
+                                                            otherUser={
+                                                                selectedContact
+                                                            }
+                                                            conversation={
+                                                                conversation
+                                                            }
+                                                            onDeleteMessage={() => {}}
+                                                            onReplyMessage={
+                                                                onMessageReply
+                                                            }
+                                                        />
+                                                    </div>
+                                                ))}
+                                    </div>
                                     <FormMessage
                                         socket={socket}
                                         authUser={authUser}
@@ -290,7 +325,13 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
                             >
                                 <div className={styles.chatBoxTitle}>
                                     <p>Messages</p>
-                                    <span className={`${boxBlueHighlight ? styles.whiteDot : dotHighlight}`}></span>
+                                    <span
+                                        className={`${
+                                            boxBlueHighlight
+                                                ? styles.whiteDot
+                                                : dotHighlight
+                                        }`}
+                                    ></span>
                                 </div>
                                 <div className={styles.headerIcons}>
                                     <div
@@ -319,14 +360,18 @@ const ChatBox: React.FC<ChatBoxProps> = ({ socket, addedContact, deleteContactId
                                         <div
                                             key={contact?._id}
                                             className={''}
-                                            onClick={() => handleUserClick(contact)}
+                                            onClick={() =>
+                                                handleUserClick(contact)
+                                            }
                                         >
                                             <ChatBoxUserContact
                                                 authUser={authUser}
                                                 contact={contact}
                                                 menuOptions={contactOption}
                                                 menuIcons={contactIcon}
-                                                onClickOption={contactOnclikOption}
+                                                onClickOption={
+                                                    contactOnclikOption
+                                                }
                                                 newMessage={newMessage}
                                                 chatBoxUser={selectedContact}
                                             />
