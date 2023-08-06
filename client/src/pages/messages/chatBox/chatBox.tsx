@@ -19,12 +19,13 @@ import ArrowLeftIcon from '../../../components/icons/ArrowLeftIcon';
 import AsideUserInfo from '../AsideUserInfo';
 import FormMessage from '../FormMessage';
 import Conversation from '../conversation';
-import ChatBoxUserContact from './ChatBoxUserContact';
+
 import {
     getMessageNotification,
     removeMessageNotification,
 } from '../../../api/notification.api';
 import { useLocation } from 'react-router-dom';
+import ChatBoxUserContact from './ChatBoxUserContact';
 
 interface ChatBoxProps {
     socket: any;

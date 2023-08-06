@@ -16,6 +16,7 @@ import { CONTACT_OPTION } from '../../../constants/common.constants';
 import { useMessage } from '../../../context/successMessage.context';
 import ChatBoxUserContact from './ChatBoxUserContact';
 
+
 interface ContactModalProps {
     onAddContact: (contatcId: string) => void;
     onDeletContact: (contactId: string) => void;
