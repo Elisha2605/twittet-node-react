@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import styles from './conversation.module.css';
+import styles from './Conversation.module.css';
 import AuthUserChat from './AuthUserChat';
 import OtherUserChat from './OtherUserChat';
 import { messageIcon, messageOption } from '../../data/menuOptions';
