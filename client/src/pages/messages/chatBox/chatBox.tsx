@@ -18,7 +18,7 @@ import { getConversation, updateMessageStatus } from '../../../api/message.api';
 import ArrowLeftIcon from '../../../components/icons/ArrowLeftIcon';
 import AsideUserInfo from '../AsideUserInfo';
 import FormMessage from '../FormMessage';
-import Conversation from '../conversation';
+import Conversation from '../Conversation';
 import ChatBoxUserContact from './ChatBoxUserContact';
 import {
     getMessageNotification,
