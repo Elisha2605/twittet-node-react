@@ -1,13 +1,11 @@
 import React, {
     useContext,
     useEffect,
-    useLayoutEffect,
     useRef,
     useState,
 } from 'react';
 import styles from './ChatBox.module.css';
 import { getAllContacts, removeContact } from '../../../api/contact.api';
-import UserContactInfo from '../UserContactInfo';
 import { contactIcon, contactOption } from '../../../data/menuOptions';
 import AuthContext, { StoredContext } from '../../../context/user.context';
 import { CONTACT_OPTION } from '../../../constants/common.constants';
@@ -49,9 +47,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({
 
     const [boxHighlight, setBoxHighlight] = useState(false);
     const [notificationDot, setNotificationDot] = useState<boolean>(false);
-
-    const [contactNotificationDot, setContactNotificationDot] =
-        useState<boolean>(false);
 
     const [showConversation, setShowConversation] = useState<boolean>(false);
 

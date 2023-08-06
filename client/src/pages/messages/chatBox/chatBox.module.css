@@ -132,3 +132,26 @@
 .hideConversation {
     display: none;
 }
+
+
+/* .divContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.div1 {
+    position: absolute;
+    width: 100%;
+    height: 20%;
+    background: rebeccapurple;
+}
+.div2 {
+    position: absolute;
+    width: 100%;
+    height: 20%;
+    background: red;
+}
+
+.changePosition {
+    z-index: 2;
+} */

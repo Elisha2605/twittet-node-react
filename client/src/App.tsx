@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import styles from './App.module.css';
 import Navigation from './components/navigation/Navigation';
 import Layout from './Layout.module.css';
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Profile from './pages/profile/Profile';
 import Explore from './pages/explore/Explore';
 import Bookmarks from './pages/bookmarks/Bookmarks';

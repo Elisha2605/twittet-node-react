@@ -1,12 +1,12 @@
-import { Request, Response, NextFunction } from 'express';
+import { RequestHandler } from 'express';
 import asyncHandler from 'express-async-handler';
 import {
     getUserSavedTweets,
     saveTweetToBookmark,
 } from '../../src/services/bookmark.service';
 
-export const getUserSavedTweetController = asyncHandler(
-    async (req: Request, res: Response, next: NextFunction) => {
+export const getUserSavedTweetController: RequestHandler = asyncHandler(
+    async (req, res, next) => {
         const userId = req.user._id;
         if (!userId) {
             res.status(400).json({ inputError: 'Input error' });
@@ -31,8 +31,8 @@ export const getUserSavedTweetController = asyncHandler(
     }
 );
 
-export const saveTweetToBookmarkController = asyncHandler(
-    async (req: Request, res: Response, next: NextFunction) => {
+export const saveTweetToBookmarkController: RequestHandler = asyncHandler(
+    async (req, res, next) => {
         const userId = req.user._id;
         const tweetId = req.params.id;
         if (!userId || !tweetId) {

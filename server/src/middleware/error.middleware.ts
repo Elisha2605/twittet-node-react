@@ -15,6 +15,11 @@ export default function errorHandler(
         mailError(err, req);
     }
 
+    if (err.message) {
+        res.status(500).json({
+            error: err.message,
+        });
+    }
     res.status(500).json({
         error: 'Internal server error',
     });
