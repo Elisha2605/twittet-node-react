@@ -31,7 +31,6 @@ import { io } from 'socket.io-client';
 import ContactModal from './pages/messages/ChatBox/ContactModal';
 import ChatBox from './pages/messages/ChatBox/ChatBox';
 
-
 function App() {
     const [showBackground, setShowBackground] = useState(false); // Add state to control whether to show the blue background
 

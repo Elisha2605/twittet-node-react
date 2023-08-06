@@ -20,10 +20,11 @@ import { useMessage } from '../../context/successMessage.context';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getUserById } from '../../api/user.api';
 import { getConversation, updateMessageStatus } from '../../api/message.api';
-import Conversation from './Conversation';
 import AsideUserInfo from './AsideUserInfo';
 import FormMessage from './FormMessage';
 import AuthContext, { StoredContext } from '../../context/user.context';
+import Conversation from './Conversation';
+
 
 interface MessageProps {
     socket: any;

@@ -19,7 +19,6 @@ import ArrowLeftIcon from '../../../components/icons/ArrowLeftIcon';
 import AsideUserInfo from '../AsideUserInfo';
 import FormMessage from '../FormMessage';
 import Conversation from '../Conversation';
-
 import {
     getMessageNotification,
     removeMessageNotification,
