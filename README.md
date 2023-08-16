@@ -1,9 +1,9 @@
 # Fake Twitter App
 <sub>Developer: Elisha Ngoma</sub>
 
-This is a web application built as part of my bachelor project. The app mimics the functionality of Twitter, allowing users to create accounts, post tweets, follow other users, and engage with their tweets through likes and comments.
+This is a web application built as part of my bachelor project. The app mimics the functionality of Twitter, allowing users to create accounts, post tweets, follow other users, and engage with their tweets through likes and comments and much more.
 
-The app is built using HTML, CSS, React in the frontend, and Node.js with express and TypeScript on the backend. It utilizes various APIs to fetch and display real-time data such as trending topics and user profiles.
+The app is built using React and TypeScript in the frontend, and Node.js with express, TypeScript, and MongoDB on the backend.
 
 The purpose of this project is to demonstrate my proficiency in web development and showcase my understanding of popular web technologies. Feel free to explore the app and provide any feedback or suggestions for improvements. 
 

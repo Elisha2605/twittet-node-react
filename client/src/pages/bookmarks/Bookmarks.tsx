@@ -45,13 +45,12 @@ const Bookmarks: FC<BookmarkProps> = ({
     }, []);
 
     useEffect(() => {
-        const getSavedTweets = async () => {
+        (async () => {
             setIsLoading(true);
             const { tweets } = await getUserSavedTweets();
             setSavedTweets(tweets);
             setIsLoading(false);
-        };
-        getSavedTweets();
+        })();
     }, []);
 
     // On like tweet
