@@ -1,9 +1,9 @@
 import { fetchUserInfo } from '../../src/aggregations/user/fetchUserInfo.aggregation';
-import User from '../../src/models/user.model';
+import User, { IUser } from '../../src/models/user.model';
 import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
 import { CustomError } from '../../src/utils/helpers';
 
-export const getAllUsers = async (): Promise<any> => {
+export const getAllUsers = async (): Promise<ApiResponse<IUser[]>> => {
     try {
         const users = await User.find({});
         if (users.length < 0) {
@@ -29,7 +29,7 @@ export const getAllUsers = async (): Promise<any> => {
 // authUser
 export const getAuthUserInfo = async (
     userId: string
-): Promise<ApiResponse<any>> => {
+): Promise<ApiResponse<IUser[]>> => {
     try {
         const user = await fetchUserInfo(userId);
 
@@ -54,7 +54,9 @@ export const getAuthUserInfo = async (
 };
 
 // other user
-export const getUserById = async (userId: string): Promise<any> => {
+export const getUserById = async (
+    userId: string
+): Promise<ApiResponse<IUser>> => {
     try {
         const user = await fetchUserInfo(userId);
         return {
@@ -74,14 +76,14 @@ export const getUserById = async (userId: string): Promise<any> => {
     }
 };
 
-export const getUserInfo = async (userId: string): Promise<any> => {
+export const getUserInfo = async (userId: string): Promise<IUser> => {
     const user = await User.findById(userId);
     return user;
 };
 
 export const searchUsers = async (
     searchTerm: string
-): Promise<ApiResponse<any>> => {
+): Promise<ApiResponse<IUser[]>> => {
     try {
         const regex = new RegExp(searchTerm, 'i');
         const users = await User.find({
@@ -107,7 +109,7 @@ export const searchUsers = async (
 
 export const searchUserByEmail = async (
     searchTerm: string
-): Promise<ApiResponse<any>> => {
+): Promise<ApiResponse<IUser[]>> => {
     try {
         const regex = new RegExp(searchTerm, 'i');
         const users = await User.find({ email: regex });
@@ -131,7 +133,7 @@ export const searchUserByEmail = async (
 
 export const searchUserByUserName = async (
     searchTerm: string
-): Promise<ApiResponse<any>> => {
+): Promise<ApiResponse<IUser[]>> => {
     try {
         const regex = new RegExp(searchTerm, 'i');
         const users = await User.find({ username: regex });
@@ -161,7 +163,7 @@ export const editUserProfile = async (
     bio: string,
     location: string,
     website: string
-): Promise<ApiResponse<any>> => {
+): Promise<ApiResponse<IUser>> => {
     try {
         const user = await User.findById(userId);
 
@@ -198,7 +200,7 @@ export const editUserProfile = async (
 export const editUserName = async (
     userId: string,
     username: string
-): Promise<ApiResponse<any>> => {
+): Promise<ApiResponse<IUser>> => {
     console.log(username);
     try {
         const user = await User.findOne({
@@ -210,7 +212,6 @@ export const editUserName = async (
                 success: false,
                 message: 'username not found',
                 status: 404,
-                payload: {},
             };
         }
 
@@ -238,7 +239,7 @@ export const editUserName = async (
 export const editEmail = async (
     userId: string,
     email: string
-): Promise<ApiResponse<any>> => {
+): Promise<ApiResponse<IUser>> => {
     try {
         const user = await User.findOne({ _id: userId });
 
@@ -277,7 +278,7 @@ export const editEmail = async (
 export const editProtected = async (
     userId: string,
     isProtected: boolean
-): Promise<ApiResponse<any>> => {
+): Promise<ApiResponse<IUser>> => {
     try {
         const user = await User.findOne({ _id: userId });
 
@@ -286,7 +287,6 @@ export const editProtected = async (
                 success: false,
                 message: 'username not found',
                 status: 404,
-                payload: {},
             };
         }
 
