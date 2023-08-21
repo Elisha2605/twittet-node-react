@@ -1,110 +1,14 @@
 import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
 import Contact from '../../src/models/contact.model';
 import { fetchUserInfo } from '../../src/aggregations/user/fetchUserInfo.aggregation';
-import mongoose from 'mongoose';
+import { fetchAllContacts } from 'src/aggregations/contact/fetchAllContacts.aggregation';
+import { fetchContactById } from 'src/aggregations/contact/fetchContactById';
 
 export const getAllContacts = async (
     userId: string
 ): Promise<ApiResponse<any>> => {
     try {
-        const contacts = await Contact.aggregate([
-            {
-                $match: { user: new mongoose.Types.ObjectId(userId) },
-            },
-            {
-                $lookup: {
-                    from: 'User',
-                    localField: 'contactList.user',
-                    foreignField: '_id',
-                    as: 'contacts',
-                },
-            },
-            {
-                $unwind: '$contacts',
-            },
-            {
-                $lookup: {
-                    from: 'Message',
-                    let: { user: '$user', contact: '$contacts._id' },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: {
-                                    $or: [
-                                        {
-                                            $and: [
-                                                { $eq: ['$sender', '$$user'] },
-                                                {
-                                                    $eq: [
-                                                        '$receiver',
-                                                        '$$contact',
-                                                    ],
-                                                },
-                                            ],
-                                        },
-                                        {
-                                            $and: [
-                                                {
-                                                    $eq: [
-                                                        '$sender',
-                                                        '$$contact',
-                                                    ],
-                                                },
-                                                {
-                                                    $eq: [
-                                                        '$receiver',
-                                                        '$$user',
-                                                    ],
-                                                },
-                                            ],
-                                        },
-                                    ],
-                                },
-                            },
-                        },
-                        {
-                            $sort: { createdAt: -1 },
-                        },
-                        {
-                            $limit: 1,
-                        },
-                    ],
-                    as: 'lastMessage',
-                },
-            },
-            {
-                $unwind: {
-                    path: '$lastMessage',
-                    preserveNullAndEmptyArrays: true,
-                },
-            },
-            {
-                $addFields: {
-                    contactListIndex: {
-                        $indexOfArray: ['$contactList.user', '$contacts._id'],
-                    },
-                },
-            },
-            {
-                $sort: {
-                    contactListIndex: 1,
-                },
-            },
-            {
-                $project: {
-                    _id: '$contacts._id',
-                    name: '$contacts.name',
-                    username: '$contacts.username',
-                    avatar: '$contacts.avatar',
-                    isVerified: '$contacts.isVerified',
-                    isProtected: '$contacts.isProtected',
-                    lastMessage: {
-                        $ifNull: ['$lastMessage', null],
-                    },
-                },
-            },
-        ]);
-
+        const contacts = await fetchAllContacts(userId);
         return {
             success: true,
             message: 'Fetched contacts',
@@ -127,101 +31,7 @@ export const getContactById = async (
     contactId: string
 ): Promise<ApiResponse<any>> => {
     try {
-        const contact = await Contact.aggregate([
-            {
-                $match: {
-                    user: new mongoose.Types.ObjectId(userId),
-                    'contactList.user': new mongoose.Types.ObjectId(contactId),
-                },
-            },
-            {
-                $lookup: {
-                    from: 'User',
-                    localField: 'contactList.user',
-                    foreignField: '_id',
-                    as: 'contacts',
-                },
-            },
-            {
-                $unwind: '$contacts',
-            },
-            {
-                $lookup: {
-                    from: 'Message',
-                    let: { user: '$user', contact: '$contacts._id' },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: {
-                                    $or: [
-                                        {
-                                            $and: [
-                                                { $eq: ['$sender', '$$user'] },
-                                                {
-                                                    $eq: [
-                                                        '$receiver',
-                                                        '$$contact',
-                                                    ],
-                                                },
-                                            ],
-                                        },
-                                        {
-                                            $and: [
-                                                {
-                                                    $eq: [
-                                                        '$sender',
-                                                        '$$contact',
-                                                    ],
-                                                },
-                                                {
-                                                    $eq: [
-                                                        '$receiver',
-                                                        '$$user',
-                                                    ],
-                                                },
-                                            ],
-                                        },
-                                    ],
-                                },
-                            },
-                        },
-                        {
-                            $sort: { createdAt: -1 },
-                        },
-                        {
-                            $limit: 1,
-                        },
-                    ],
-                    as: 'lastMessage',
-                },
-            },
-            {
-                $unwind: {
-                    path: '$lastMessage',
-                    preserveNullAndEmptyArrays: true,
-                },
-            },
-            {
-                $addFields: {
-                    contactListIndex: {
-                        $indexOfArray: ['$contactList.user', '$contacts._id'],
-                    },
-                },
-            },
-            {
-                $project: {
-                    _id: '$contacts._id',
-                    name: '$contacts.name',
-                    username: '$contacts.username',
-                    avatar: '$contacts.avatar',
-                    isVerified: '$contacts.isVerified',
-                    isProtected: '$contacts.isProtected',
-                    lastMessage: {
-                        $ifNull: ['$lastMessage', null],
-                    },
-                },
-            },
-        ]);
+        const contact = await fetchContactById(userId, contactId);
 
         if (contact.length === 0) {
             return {
