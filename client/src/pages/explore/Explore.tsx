@@ -25,7 +25,7 @@ const Explore = () => {
                     <div className={styles.main}>
                         {/* TweetForm */}
 
-                        <PageUnderConstruction message={'Maybe display some weather info'} />
+                        <PageUnderConstruction message={''} />
                         
                         {/* TweetForm */}
                         

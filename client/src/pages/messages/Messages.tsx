@@ -24,6 +24,7 @@ import AsideUserInfo from './AsideUserInfo';
 import FormMessage from './FormMessage';
 import AuthContext, { StoredContext } from '../../context/user.context';
 import Conversation from './Conversation';
+import ContentNotAvailable from '../../components/ui/ContentNotAvailable';
 
 
 interface MessageProps {
@@ -232,6 +233,14 @@ const Message: FC<MessageProps> = ({ socket }) => {
                                 center={true}
                             />
 
+                            {contacts.length === 0 && (
+                                <ContentNotAvailable
+                                    title={"You have no contact!"}
+                                    message={
+                                        'Search users and add them on your contact list!'
+                                    }
+                                />
+                            )}
                             {contacts.length > 0 &&
                                 contacts.map((contact: any) => (
                                     <div
@@ -262,6 +271,14 @@ const Message: FC<MessageProps> = ({ socket }) => {
                     <Header border={false} clasName={styles.asideHeader}>
                         <DetailIcon className={styles.detailIcon} />
                     </Header>
+                    {contacts.length === 0 && (
+                         <ContentNotAvailable
+                            title={"You haven't received or sent any message yet!"}
+                            message={
+                                'All your messages will be displayed here!'
+                            }
+                        />
+                    )}
                     <div className={styles.messages} ref={messagesContainerRef}>
                         {path && currentUser && (
                             <AsideUserInfo user={currentUser} />
