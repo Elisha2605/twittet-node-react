@@ -11,7 +11,7 @@ import {
 } from '../../src/constants/tweet.constants';
 import Follow from '../../src/models/follow.model';
 import Like from '../../src/models/like.model';
-import Tweet from '../../src/models/tweet.model';
+import Tweet, { ITweet } from '../../src/models/tweet.model';
 import User from '../../src/models/user.model';
 import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
 import { CustomError } from '../../src/utils/helpers';
@@ -20,7 +20,7 @@ import { fetchTweetReplies } from '../../src/aggregations/tweet/fetchTweetReplie
 
 export const getAllTweets = async (
     userId: string
-): Promise<ApiResponse<any>> => {
+): Promise<ApiResponse<ITweet[]>> => {
     try {
         const tweets = await getTweets(userId);
 
@@ -29,7 +29,6 @@ export const getAllTweets = async (
                 success: true,
                 message: 'Not tweets found!',
                 status: 404,
-                payload: [],
             };
         }
         return {
@@ -52,7 +51,7 @@ export const getAllTweets = async (
 export const getTweetReplies = async (
     tweetId: string,
     userId: string
-): Promise<ApiResponse<any>> => {
+): Promise<ApiResponse<ITweet[]>> => {
     try {
         const replies = await fetchTweetReplies(tweetId, userId);
 
@@ -61,7 +60,6 @@ export const getTweetReplies = async (
                 success: true,
                 message: 'Replies not found!',
                 status: 404,
-                payload: [],
             };
         }
         return {
@@ -81,17 +79,18 @@ export const getTweetReplies = async (
     }
 };
 
-export const getTweetById = async (tweetId: string): Promise<any> => {
+export const getTweetById = async (
+    tweetId: string
+): Promise<ApiResponse<ITweet[]>> => {
     try {
         const viewedTweet = await Tweet.findById(tweetId);
-        const tweet: any = await fetchTweetById(tweetId);
+        const tweet = await fetchTweetById(tweetId);
 
         if (!viewedTweet) {
             return {
                 success: true,
                 message: 'Tweet not found!',
                 status: 404,
-                payload: {},
             };
         }
 
@@ -102,9 +101,10 @@ export const getTweetById = async (tweetId: string): Promise<any> => {
                 success: true,
                 message: 'Tweet not found!',
                 status: 404,
-                payload: {},
             };
         }
+
+        console.log(tweet);
 
         return {
             success: true,

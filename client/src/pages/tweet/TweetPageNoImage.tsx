@@ -429,7 +429,7 @@ const TweetPageNoImage: FC<TweetPageNoImageProps> = ({
                                         {/*  */}
                                     </div>
                                 </div>
-                                {tweetReplies.map((tweet: any) => (
+                                {tweetReplies?.map((tweet: any) => (
                                     <div
                                         className={styles.asideReplySection}
                                         key={tweet?._id}
