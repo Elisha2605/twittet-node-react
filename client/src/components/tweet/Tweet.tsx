@@ -44,20 +44,18 @@ const Tweet: FC<TweetProps> = ({
     isLiked,
     isReply,
     isRetweet = false,
-    onRemoveFromBookmarks
+    onRemoveFromBookmarks,
 }) => {
-
     const [authUser, setAuthUser] = useState<any>(null);
     const [followers, setFollowers] = useState<any>([]);
 
     const imgRef = useRef<HTMLImageElement>(null);
-    
+
     // regular tweet
     const tweetId = tweet?._id;
     const createdAt = getTimeDifference(new Date(tweet?.createdAt).getTime());
     const tweetImage = tweet?.image;
     const text = tweet?.text;
-
     const userId = tweet?.user?._id;
     const name = tweet?.user?.name;
     const username = tweet?.user?.username;
@@ -67,7 +65,9 @@ const Tweet: FC<TweetProps> = ({
     // reTweet
     const { retweet } = tweet;
     const retweetId = retweet?.tweet?._id;
-    const retweetCreatedAt = getTimeDifference(new Date(retweet?.tweet?.createdAt).getTime());
+    const retweetCreatedAt = getTimeDifference(
+        new Date(retweet?.tweet?.createdAt).getTime()
+    );
     const retweetImage = retweet?.tweet?.image;
     const retweetText = retweet?.tweet?.text;
 
@@ -84,7 +84,7 @@ const Tweet: FC<TweetProps> = ({
         const getAuthUser = async () => {
             const { user } = ctx.getUserContext();
             setAuthUser(user);
-        }
+        };
         getAuthUser();
     }, []);
 
@@ -106,7 +106,7 @@ const Tweet: FC<TweetProps> = ({
         });
     };
 
-    const hasRetweetAndTweetImage =  retweetImage && tweetImage;
+    const hasRetweetAndTweetImage = retweetImage && tweetImage;
 
     useEffect(() => {
         const fetchAuthUserData = async () => {
@@ -117,10 +117,12 @@ const Tweet: FC<TweetProps> = ({
     }, []);
 
     const isOnlyPeopleYouFollow = (userId: string): boolean => {
-        return followers &&
-                tweet?.user?._id !== authUser?._id &&
-                tweet?.reply === TWEET_REPLY.peopleYouFollow &&
-                followers.some((following: any) => following?.user?._id === userId)
+        return (
+            followers &&
+            tweet?.user?._id !== authUser?._id &&
+            tweet?.reply === TWEET_REPLY.peopleYouFollow &&
+            followers.some((following: any) => following?.user?._id === userId)
+        );
     };
 
     const isMention = (userId: string): boolean => {
@@ -137,12 +139,13 @@ const Tweet: FC<TweetProps> = ({
 
     const handleImageLoad = () => {
         if (imgRef.current) {
-          // Check if the image height exceeds the threshold
-          if (imgRef.current.offsetHeight > 200) { // Set your desired threshold here
-            // Add the 'imageFixedHeight' class to limit the image height
-            const parentElement = imgRef.current.parentNode as HTMLElement;
-            parentElement.classList.add(styles.imageFixedHeight);
-          }
+            // Check if the image height exceeds the threshold
+            if (imgRef.current.offsetHeight > 200) {
+                // Set your desired threshold here
+                // Add the 'imageFixedHeight' class to limit the image height
+                const parentElement = imgRef.current.parentNode as HTMLElement;
+                parentElement.classList.add(styles.imageFixedHeight);
+            }
         }
     };
 
@@ -155,10 +158,13 @@ const Tweet: FC<TweetProps> = ({
                     <>
                         {!tweetImage && !text && authUser && (
                             <div className={styles.whoRetweeted}>
-                                <FontAwesomeIcon icon={faRepeat} className={styles.faRepeat} />
+                                <FontAwesomeIcon
+                                    icon={faRepeat}
+                                    className={styles.faRepeat}
+                                />
                                 {authUser?._id === userId ? (
                                     <div>You Retweeted</div>
-                                ): (
+                                ) : (
                                     <p>{name} Retweeted</p>
                                 )}
                             </div>
@@ -200,74 +206,116 @@ const Tweet: FC<TweetProps> = ({
                                     />
                                 </div>
                             )}
-                            <div className={`${styles.retweetContainer} ${hasRetweetAndTweetImage ? styles.reTweetWithImageContainer : ''}`} onClick={() => navigate(`/tweet/${retweetId}`)}>
-                            {retweet.tweet ? (
-                                <>
-                                    <UserInfoRetweet
-                                        userId={retweetUserId}
-                                        tweet={retweet}
-                                        avatar={avatar}
-                                        name={retweetUserName}
-                                        username={retweetUserUsername}
-                                        isVerified={isVerfiedRetweetUser}
-                                        time={retweetCreatedAt}
-                                        isOption={true}
-                                        className={styles.userInfoRetweet}
-                                        options={tweetMenuOptions}
-                                        icons={tweetMenuIcons}
-                                        onClickOption={onClickMenu}
-                                        isNavigate={true}
-                                    />
-                                    <div
-                                        className={`${styles.retweetBody} ${hasRetweetAndTweetImage ? styles.reTweetWithImageBody : ''}`}
-                                        key={retweetId}
-                                        onClick={(e: any) => {
-                                            e.stopPropagation();
-                                            navigate(`/tweet/${retweetId}`);
-                                            }
-                                    }>
-                                        <p className={`${styles.reTweetText} ${hasRetweetAndTweetImage ? styles.reTweetWithImageText : ''}`}>
-                                            {renderColoredText(retweetText && retweetText.length > 150 ? retweetText.substring(0, 150) + '...' : retweetText)}
-                                        </p>
-                                        {retweetImage && (
-                                            <div className={`${styles.reTweetImage} ${hasRetweetAndTweetImage ? styles.reTweetWithImageImage : ''}`}>
-                                                {!isReply ? (
-                                                    <img
-                                                        ref={imgRef}
-                                                        src={
-                                                            retweetImage
-                                                                ? `${IMAGE_TWEET_BASE_URL}/${retweetImage}`
-                                                                : undefined
-                                                        }
-                                                        alt=""
-                                                        onLoad={handleImageLoad}
-                                                    />
-                                                ): (
-                                                    <img
-                                                    ref={imgRef}
-                                                    src={
-                                                        retweetImage
-                                                            ? `${IMAGE_TWEET_REPLY_BASE_URL}/${retweetImage}`
-                                                            : undefined
-                                                    }
-                                                    alt=""
-                                                    onLoad={handleImageLoad}
-                                                />
+                            <div
+                                className={`${styles.retweetContainer} ${
+                                    hasRetweetAndTweetImage
+                                        ? styles.reTweetWithImageContainer
+                                        : ''
+                                }`}
+                                onClick={() => navigate(`/tweet/${retweetId}`)}
+                            >
+                                {retweet.tweet ? (
+                                    <>
+                                        <UserInfoRetweet
+                                            userId={retweetUserId}
+                                            tweet={retweet}
+                                            avatar={retweetUserAvatar}
+                                            name={retweetUserName}
+                                            username={retweetUserUsername}
+                                            isVerified={isVerfiedRetweetUser}
+                                            time={retweetCreatedAt}
+                                            isOption={true}
+                                            className={styles.userInfoRetweet}
+                                            options={tweetMenuOptions}
+                                            icons={tweetMenuIcons}
+                                            onClickOption={onClickMenu}
+                                            isNavigate={true}
+                                        />
+                                        <div
+                                            className={`${styles.retweetBody} ${
+                                                hasRetweetAndTweetImage
+                                                    ? styles.reTweetWithImageBody
+                                                    : ''
+                                            }`}
+                                            key={retweetId}
+                                            onClick={(e: any) => {
+                                                e.stopPropagation();
+                                                navigate(`/tweet/${retweetId}`);
+                                            }}
+                                        >
+                                            <p
+                                                className={`${
+                                                    styles.reTweetText
+                                                } ${
+                                                    hasRetweetAndTweetImage
+                                                        ? styles.reTweetWithImageText
+                                                        : ''
+                                                }`}
+                                            >
+                                                {renderColoredText(
+                                                    retweetText &&
+                                                        retweetText.length > 150
+                                                        ? retweetText.substring(
+                                                              0,
+                                                              150
+                                                          ) + '...'
+                                                        : retweetText
                                                 )}
-                                            </div>
-                                        )}
-                                    </div>           
-                                </>
-                            ): (
-                                <p className={styles.deletedTweet}>This Tweet was deleted by the Tweet author.</p>
-                            )}
+                                            </p>
+                                            {retweetImage && (
+                                                <div
+                                                    className={`${
+                                                        styles.reTweetImage
+                                                    } ${
+                                                        hasRetweetAndTweetImage
+                                                            ? styles.reTweetWithImageImage
+                                                            : ''
+                                                    }`}
+                                                >
+                                                    {!isReply ? (
+                                                        <img
+                                                            ref={imgRef}
+                                                            src={
+                                                                retweetImage
+                                                                    ? `${IMAGE_TWEET_BASE_URL}/${retweetImage}`
+                                                                    : undefined
+                                                            }
+                                                            alt=""
+                                                            onLoad={
+                                                                handleImageLoad
+                                                            }
+                                                        />
+                                                    ) : (
+                                                        <img
+                                                            ref={imgRef}
+                                                            src={
+                                                                retweetImage
+                                                                    ? `${IMAGE_TWEET_REPLY_BASE_URL}/${retweetImage}`
+                                                                    : undefined
+                                                            }
+                                                            alt=""
+                                                            onLoad={
+                                                                handleImageLoad
+                                                            }
+                                                        />
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </>
+                                ) : (
+                                    <p className={styles.deletedTweet}>
+                                        This Tweet was deleted by the Tweet
+                                        author.
+                                    </p>
+                                )}
                             </div>
                         </div>
-                    {/* RETWEET - END */}
+                        {/* RETWEET - END */}
                     </>
-                ): (
+                ) : (
                     <>
-                    {/* RGULAR TWEET - START */}
+                        {/* RGULAR TWEET - START */}
 
                         <UserInfo
                             userId={userId}
@@ -293,13 +341,13 @@ const Tweet: FC<TweetProps> = ({
                                 {renderColoredText(tweet.text)}
                             </p>
                             {tweetImage && (
-                                <div 
-                                    className={`${styles.image}`} 
+                                <div
+                                    className={`${styles.image}`}
                                     onClick={(e: any) => {
                                         e.stopPropagation();
                                         navigate(`/tweet/image/${tweet._id}`);
-                                    }
-                                }>
+                                    }}
+                                >
                                     {tweet?.isReply ? (
                                         <img
                                             ref={imgRef}
@@ -311,7 +359,7 @@ const Tweet: FC<TweetProps> = ({
                                             alt=""
                                             onLoad={handleImageLoad}
                                         />
-                                    ): (
+                                    ) : (
                                         <img
                                             ref={imgRef}
                                             src={
@@ -329,7 +377,7 @@ const Tweet: FC<TweetProps> = ({
                     </>
                 )}
                 {/* RGULAR TWEET - END */}
-                
+
                 {tweet.audience === TWEET_AUDIENCE.twitterCircle ? (
                     <div className={styles.twitterCircle}>
                         <span className={styles.icon}>
@@ -340,16 +388,21 @@ const Tweet: FC<TweetProps> = ({
                             this Tweet
                         </span>
                     </div>
-                ) : (tweet?.type !== TWEET_TYPE.reTweet && tweet.reply === TWEET_REPLY.peopleYouFollow 
-                     && isOnlyPeopleYouFollow(userId)) || (tweet?.type !== TWEET_TYPE.reTweet && tweet.reply === TWEET_REPLY.peopleYouFollow && tweet?.user?._id === authUser?._id) ? (
+                ) : (tweet?.type !== TWEET_TYPE.reTweet &&
+                      tweet.reply === TWEET_REPLY.peopleYouFollow &&
+                      isOnlyPeopleYouFollow(userId)) ||
+                  (tweet?.type !== TWEET_TYPE.reTweet &&
+                      tweet.reply === TWEET_REPLY.peopleYouFollow &&
+                      tweet?.user?._id === authUser?._id) ? (
                     <div className={styles.tweetReply}>
                         <span className={styles.icon}>
                             <UserIcon isSmall={true} />
                         </span>{' '}
                         <span>You can reply to this conversation</span>
                     </div>
-                ) : (tweet.reply === TWEET_REPLY.onlyPeopleYouMention  && isMention(authUser?._id)) && (
-                     (
+                ) : (
+                    tweet.reply === TWEET_REPLY.onlyPeopleYouMention &&
+                    isMention(authUser?._id) && (
                         <div className={styles.tweetReply}>
                             <span className={styles.icon}>
                                 <AtIcon isSmall={true} />
@@ -360,10 +413,11 @@ const Tweet: FC<TweetProps> = ({
                 )}
                 <TweetFooter
                     socket={socket}
-
                     tweet={tweet}
                     replies={tweet?.replyCount === 0 ? '' : tweet?.replyCount}
-                    reTweets={tweet?.retweetCount === 0 ? '' : tweet?.retweetCount}
+                    reTweets={
+                        tweet?.retweetCount === 0 ? '' : tweet?.retweetCount
+                    }
                     likes={tweet?.totalLikes > 0 ? tweet?.totalLikes : ''}
                     views={tweet?.viewCount > 0 ? tweet?.viewCount : ''}
                     onClickRetweet={onClickRetweet}

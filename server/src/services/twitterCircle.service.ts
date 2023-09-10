@@ -1,13 +1,15 @@
-import TwitterCircle from '../../src/models/twitterCircle.model';
+import TwitterCircle, { ITwitterCircle } from '../../src/models/twitterCircle.model';
 import User from '../../src/models/user.model';
 import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
 import { CustomError } from '../../src/utils/helpers';
 
 export const getUserTwitterCircleMembers = async (
     userId: string
-): Promise<ApiResponse<any>> => {
+): Promise<ApiResponse<ITwitterCircle>> => {
     try {
-        const user = await TwitterCircle.findOne({ user: userId })
+        const userTwitterCircleMembers = await TwitterCircle.findOne({
+            user: userId,
+        })
             .populate({
                 path: 'user',
                 select: 'name username avatar isVerified isProtected',
@@ -18,20 +20,21 @@ export const getUserTwitterCircleMembers = async (
             })
             .exec();
 
-        if (!user) {
+        if (!userTwitterCircleMembers) {
             return {
                 success: true,
                 message: 'No members yet',
                 status: 404,
-                payload: [],
             };
         }
+
+        console.log(userTwitterCircleMembers);
 
         return {
             success: true,
             message: 'Twitter Circle members',
             status: 200,
-            payload: user,
+            payload: userTwitterCircleMembers,
         };
     } catch (error) {
         const errorResponse: ErrorResponse = {
@@ -47,7 +50,7 @@ export const getUserTwitterCircleMembers = async (
 export const addUserToTwitterCircle = async (
     userId: string,
     addId: string
-): Promise<ApiResponse<any>> => {
+): Promise<ApiResponse<ITwitterCircle>> => {
     try {
         const owner = await User.findById(userId);
         const member = await User.findById(addId);
@@ -107,7 +110,6 @@ export const addUserToTwitterCircle = async (
         await owner.save();
 
         const membersList = await existingOwner.save();
-
         return {
             success: true,
             message: 'Added a new member in your Twitter Circle',
