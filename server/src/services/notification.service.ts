@@ -3,7 +3,7 @@ import { NOTIFICATION_TYPE } from '../../src/constants/notification.constants';
 import Notification from '../../src/models/notification.model';
 import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
 import Message from '../../src/models/message.model';
-import { fetchAllNotifications } from 'src/aggregations/notification/fetchAllNotications';
+import { fetchAllNotifications } from '../../src/aggregations/notification/fetchAllNotications';
 
 export const getAllNotification = async (
     userId: string
