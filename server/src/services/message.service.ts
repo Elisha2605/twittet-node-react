@@ -301,7 +301,7 @@ export const deleteMessage = async (
 
             if (deletedMessage.deletedBy.length === 2) {
                 await deletedMessage.deleteOne();
-                console.log('Message deleted by both users');
+                // console.log('Message deleted by both users');
             }
         }
 

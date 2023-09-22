@@ -24,12 +24,12 @@ export const requestPasswordReset = async (
             };
         }
 
-        console.log(`Password initiation: ${user.email}`);
+        // console.log(`Password initiation: ${user.email}`);
 
         const expiry = new Date(new Date().getTime() + 30 * 60 * 1000);
 
         const token = generatePasswordToken();
-        console.log(`Password token: ${token}`);
+        // console.log(`Password token: ${token}`);
 
         const newPasswordInitiation = new PasswordReset({
             user: user.id,

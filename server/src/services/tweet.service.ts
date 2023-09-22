@@ -104,8 +104,6 @@ export const getTweetById = async (
             };
         }
 
-        console.log(tweet);
-
         return {
             success: true,
             message: 'Successfully fetched tweet',

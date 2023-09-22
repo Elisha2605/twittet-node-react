@@ -201,7 +201,6 @@ export const editUserName = async (
     userId: string,
     username: string
 ): Promise<ApiResponse<IUser>> => {
-    console.log(username);
     try {
         const user = await User.findOne({
             _id: userId,

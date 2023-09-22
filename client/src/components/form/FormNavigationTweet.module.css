@@ -1,6 +1,5 @@
 .container {
-    overflow-x: hidden;
-
+    /* overflow-x: hidden; */
 }
 
 .textarea {
@@ -93,6 +92,7 @@
     position: relative;
     top: -1rem;
     left: -13.7rem;
+    z-index: 4000;
 }
 
 .tweetReplyPopUpBox {

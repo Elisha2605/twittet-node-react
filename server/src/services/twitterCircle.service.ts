@@ -30,8 +30,6 @@ export const getUserTwitterCircleMembers = async (
             };
         }
 
-        console.log(userTwitterCircleMembers);
-
         return {
             success: true,
             message: 'Twitter Circle members',
