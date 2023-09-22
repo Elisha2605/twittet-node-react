@@ -1,8 +1,8 @@
 import { ApiResponse, ErrorResponse } from '../../src/types/apiResponse.types';
 import Contact from '../../src/models/contact.model';
 import { fetchUserInfo } from '../../src/aggregations/user/fetchUserInfo.aggregation';
-import { fetchAllContacts } from 'src/aggregations/contact/fetchAllContacts.aggregation';
-import { fetchContactById } from 'src/aggregations/contact/fetchContactById';
+import { fetchAllContacts } from '../../src/aggregations/contact/fetchAllContacts.aggregation';
+import { fetchContactById } from '../../src/aggregations/contact/fetchContactById';
 
 export const getAllContacts = async (
     userId: string
