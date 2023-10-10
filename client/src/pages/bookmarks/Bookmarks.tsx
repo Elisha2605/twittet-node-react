@@ -121,7 +121,7 @@ const Bookmarks: FC<BookmarkProps> = ({
                         <div className={styles.headerWrapper}>
                             <HeaderTitle
                                 title={'Bookmarks'}
-                                subTitle={'@Alvin44943'}
+                                subTitle={`@${authUser?.username}`}
                             />
                             <PopUpMenu
                                 options={tweetMenuOptions}
